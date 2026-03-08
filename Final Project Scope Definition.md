@@ -1,7 +1,7 @@
 # 🏙️ Final Project Scope Definition
 
 ## 🏗️ 1. Project Title
-**Smart Urban Intelligence Digital Twin – Egypt**
+**Egypt Smart City Digital Twin**
 AI-Powered City Monitoring and Prediction System
 
 ---
