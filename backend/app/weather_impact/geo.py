@@ -575,4 +575,65 @@ def check_postgis_optional_status():
         print("PostGIS load is requested (USE_POSTGIS=true).")
 
 
+def create_spatial_foundation_map():
+    """Create a static map visualization of the spatial foundation layers."""
+    import matplotlib.pyplot as plt
+    from matplotlib.lines import Line2D
+    
+    paths.ensure_data_dirs()
+    logger.info("Generating static spatial foundation map...")
+    
+    # 1. Load datasets
+    boundary_gdf = data_loader.read_geojson(paths.NASR_CITY_BOUNDARY_PATH)
+    grid_gdf = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    roads_gdf = data_loader.read_geojson(paths.ROADS_WITH_ZONE_IDS_PATH)
+    facilities_gdf = data_loader.read_geojson(paths.NASR_CITY_FACILITIES_PATH)
+    
+    # 2. Ensure they are in EPSG:4326 for coordinate plotting
+    boundary_gdf = boundary_gdf.to_crs("EPSG:4326")
+    grid_gdf = grid_gdf.to_crs("EPSG:4326")
+    roads_gdf = roads_gdf.to_crs("EPSG:4326")
+    facilities_gdf = facilities_gdf.to_crs("EPSG:4326")
+    
+    # 3. Create plot
+    fig, ax = plt.subplots(figsize=(12, 10))
+    
+    # Plot boundary (filled with light color, thick outline)
+    boundary_gdf.plot(ax=ax, color="#e6f2ff", edgecolor="#0066cc", linewidth=2.5, alpha=0.5)
+    
+    # Plot 500m grid (no fill, thin dashed gridlines)
+    grid_gdf.plot(ax=ax, facecolor="none", edgecolor="#808080", linewidth=0.8, linestyle="--", alpha=0.7)
+    
+    # Plot roads (thin gray/black lines)
+    roads_gdf.plot(ax=ax, color="#4d4d4d", linewidth=0.5, alpha=0.8)
+    
+    # Plot emergency facilities (red markers)
+    if not facilities_gdf.empty:
+        facilities_gdf.plot(ax=ax, color="#cc0000", markersize=35, marker="^", alpha=0.9)
+    
+    # 4. Styling
+    ax.set_title("Nasr City Emergency Mobility - Spatial Foundation Map", fontsize=14, fontweight="bold", pad=15)
+    ax.set_xlabel("Longitude", fontsize=10)
+    ax.set_ylabel("Latitude", fontsize=10)
+    ax.grid(True, linestyle=":", alpha=0.5)
+    
+    # Create a custom legend
+    legend_elements = [
+        Line2D([0], [0], color="#0066cc", lw=2.5, label="Nasr City Boundary"),
+        Line2D([0], [0], color="#808080", lw=0.8, linestyle="--", label="500m Grid Cells"),
+        Line2D([0], [0], color="#4d4d4d", lw=0.5, label="Roads Network"),
+        Line2D([0], [0], marker="^", color="w", label="Emergency Facility", markerfacecolor="#cc0000", markersize=8)
+    ]
+    ax.legend(handles=legend_elements, loc="upper right", frameon=True, facecolor="white", edgecolor="#e0e0e0")
+    
+    # Save the figure
+    logger.info(f"Saving map screenshot to: {paths.SPATIAL_FOUNDATION_MAP_PATH}")
+    paths.SPATIAL_FOUNDATION_MAP_PATH.parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(paths.SPATIAL_FOUNDATION_MAP_PATH, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    
+    return str(paths.SPATIAL_FOUNDATION_MAP_PATH)
+
+
+
 
