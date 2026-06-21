@@ -1,0 +1,38 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-dotenv
+requests
+pandas
+numpy
+geopandas
+shapely
+pyproj
+fiona
+rtree
+osmnx
+networkx
+rasterio
+rioxarray
+geemap
+earthengine-api
+matplotlib
+plotly
+scikit-learn
+joblib
+sqlalchemy
+psycopg2-binary
+geoalchemy2
+python-multipart
+pytest
+httpx
+
+# Recommended runtime:
+# python>=3.11,<3.12
+# osmnx>=2.0
+# geopandas>=0.14
+# shapely>=2.0
+# networkx>=3.0
+# scikit-learn>=1.4
+# fastapi>=0.110
