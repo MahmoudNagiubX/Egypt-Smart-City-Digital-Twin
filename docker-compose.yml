@@ -1,0 +1,17 @@
+services:
+  postgis:
+    image: postgis/postgis:15-3.4
+    container_name: smart_city_postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: smart_city
+      POSTGRES_USER: smartcity
+      POSTGRES_PASSWORD: smartcity123
+    ports:
+      - "5432:5432"
+    volumes:
+      - smart_city_postgis_data:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  smart_city_postgis_data:
