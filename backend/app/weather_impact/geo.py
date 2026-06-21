@@ -460,3 +460,100 @@ def generate_grid_cells(cell_size_m: int = 500):
     
     return grid_gdf
 
+
+def join_roads_to_grid():
+    """Assign each road segment to a grid zone based on largest intersection length.
+    
+    Returns:
+        GeoDataFrame: Processed roads with zone_code, road_id, length_m,
+                      base_speed_kph, and base_travel_time_sec.
+    """
+    paths.ensure_data_dirs()
+    logger.info("Joining roads to grid zones...")
+    
+    # 1. Load roads and grid
+    roads_gdf = data_loader.read_geojson(paths.NASR_CITY_ROADS_PATH)
+    grid_gdf = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    
+    # 2. Ensure both are in EPSG:4326
+    roads_gdf = roads_gdf.to_crs("EPSG:4326")
+    grid_gdf = grid_gdf.to_crs("EPSG:4326")
+    
+    # Create unique road_id
+    roads_gdf["road_id"] = [f"NSR-ROAD-{i+1:05d}" for i in range(len(roads_gdf))]
+    
+    # Normalize road columns
+    roads_gdf["length_m"] = roads_gdf["length"].astype(float)
+    
+    # Normalize speed_kph
+    if "speed_kph" in roads_gdf.columns:
+        def clean_speed(val):
+            if pd.isna(val) or val is None:
+                return 50.0
+            if isinstance(val, list):
+                val = val[0]
+            try:
+                return float(val)
+            except (ValueError, TypeError):
+                return 50.0
+        roads_gdf["base_speed_kph"] = roads_gdf["speed_kph"].apply(clean_speed)
+    else:
+        roads_gdf["base_speed_kph"] = 50.0
+        
+    # Normalize travel_time
+    if "travel_time" in roads_gdf.columns:
+        def clean_travel_time(val):
+            if pd.isna(val) or val is None:
+                return None
+            if isinstance(val, list):
+                val = val[0]
+            try:
+                return float(val)
+            except (ValueError, TypeError):
+                return None
+        roads_gdf["base_travel_time_sec"] = roads_gdf["travel_time"].apply(clean_travel_time)
+    else:
+        roads_gdf["base_travel_time_sec"] = None
+        
+    # Fallback calculation if travel time is missing or None
+    mask = roads_gdf["base_travel_time_sec"].isna()
+    if mask.any():
+        speeds = roads_gdf.loc[mask, "base_speed_kph"].astype(float)
+        speeds = speeds.replace(0, 50.0)  # Avoid division by zero
+        roads_gdf.loc[mask, "base_travel_time_sec"] = roads_gdf.loc[mask, "length_m"].astype(float) * 3.6 / speeds
+        
+    # 3. Reproject to EPSG:3857 for spatial operations
+    roads_metric = roads_gdf.to_crs("EPSG:3857")
+    grid_metric = grid_gdf.to_crs("EPSG:3857")
+    
+    # Perform intersection overlay
+    intersected = gpd.overlay(roads_metric[["road_id", "geometry"]], grid_metric[["zone_code", "geometry"]], how="intersection")
+    
+    # Calculate intersection lengths
+    intersected["inter_length"] = intersected.geometry.length
+    
+    # Sort and drop duplicates to keep the zone with the largest intersection length
+    best_joins = intersected.sort_values(by="inter_length", ascending=False).drop_duplicates(subset=["road_id"])
+    
+    # Map back to roads
+    zone_mapping = dict(zip(best_joins["road_id"], best_joins["zone_code"]))
+    roads_gdf["zone_code"] = roads_gdf["road_id"].map(zone_mapping)
+    
+    # 9. Reproject back to EPSG:4326
+    roads_gdf = roads_gdf.to_crs("EPSG:4326")
+    
+    # Filter and keep only required columns
+    keep_cols = ["road_id", "zone_code", "length_m", "base_speed_kph", "base_travel_time_sec", "geometry"]
+    roads_final = roads_gdf[keep_cols].copy()
+    
+    # 10. Save
+    logger.info(f"Saving joined roads to: {paths.ROADS_WITH_ZONE_IDS_PATH}")
+    data_loader.write_geojson(roads_final, paths.ROADS_WITH_ZONE_IDS_PATH)
+    
+    assigned_count = int(roads_final["zone_code"].notna().sum())
+    pct = (assigned_count / len(roads_final)) * 100
+    logger.info(f"Roads assigned to zones: {assigned_count}/{len(roads_final)} ({pct:.2f}%)")
+    
+    return roads_final
+
+
