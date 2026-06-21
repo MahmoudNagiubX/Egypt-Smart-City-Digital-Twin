@@ -1,0 +1,1 @@
+"""Weather-impact scoring helpers."""
