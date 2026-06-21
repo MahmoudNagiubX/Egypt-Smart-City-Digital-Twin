@@ -391,3 +391,72 @@ def _clean_gdf_for_geojson(gdf):
 
 
 # pandas already imported at top
+
+
+def generate_grid_cells(cell_size_m: int = 500):
+    """Generate analysis grid cells over Nasr City boundary.
+    
+    Args:
+        cell_size_m: Size of square grid cells in meters (default 500).
+        
+    Returns:
+        GeoDataFrame with grid cells, zone_code, and area_m2.
+    """
+    paths.ensure_data_dirs()
+    logger.info(f"Generating {cell_size_m}m grid cells over Nasr City boundary...")
+    
+    # 1. Load boundary
+    boundary_gdf = data_loader.read_geojson(paths.NASR_CITY_BOUNDARY_PATH)
+    
+    # 2. Ensure CRS is EPSG:4326
+    boundary_gdf = boundary_gdf.to_crs("EPSG:4326")
+    
+    # 3. Reproject boundary to metric CRS (EPSG:3857)
+    boundary_metric = boundary_gdf.to_crs("EPSG:3857")
+    
+    # 4. Get bounds of boundary in metric CRS
+    minx, miny, maxx, maxy = boundary_metric.total_bounds
+    
+    # 5. Generate square grid cells
+    grid_cells = []
+    x = minx
+    while x < maxx:
+        y = miny
+        while y < maxy:
+            grid_cells.append(box(x, y, x + cell_size_m, y + cell_size_m))
+            y += cell_size_m
+        x += cell_size_m
+        
+    grid_gdf = gpd.GeoDataFrame(geometry=grid_cells, crs="EPSG:3857")
+    
+    # 6. Clip/intersect cells to the Nasr City boundary
+    boundary_union = boundary_metric.geometry.unary_union
+    grid_gdf["geometry"] = grid_gdf.geometry.intersection(boundary_union)
+    
+    # 7. Remove empty and non-polygon geometries
+    grid_gdf = grid_gdf[~grid_gdf.geometry.is_empty]
+    grid_gdf = grid_gdf[grid_gdf.geom_type.isin(["Polygon", "MultiPolygon"])]
+    
+    if grid_gdf.empty:
+        raise ValueError("No grid cells intersected the boundary.")
+        
+    # Sort grid cells spatially (Y descending, X ascending)
+    centroids = grid_gdf.geometry.centroid
+    grid_gdf["centroid_x"] = centroids.x
+    grid_gdf["centroid_y"] = centroids.y
+    grid_gdf = grid_gdf.sort_values(by=["centroid_y", "centroid_x"], ascending=[False, True]).reset_index(drop=True)
+    grid_gdf = grid_gdf.drop(columns=["centroid_x", "centroid_y"])
+    
+    # 8. Add zone_code and area_m2
+    grid_gdf["area_m2"] = grid_gdf.geometry.area
+    grid_gdf["zone_code"] = [f"NSR-GRID-{i+1:03d}" for i in range(len(grid_gdf))]
+    
+    # 9. Reproject to EPSG:4326
+    grid_gdf = grid_gdf.to_crs("EPSG:4326")
+    
+    # 10. Save to file
+    logger.info(f"Saving grid with {len(grid_gdf)} cells to: {paths.NASR_CITY_GRID_PATH}")
+    data_loader.write_geojson(grid_gdf, paths.NASR_CITY_GRID_PATH)
+    
+    return grid_gdf
+

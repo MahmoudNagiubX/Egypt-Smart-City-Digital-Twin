@@ -22,6 +22,7 @@ NASR_CITY_DIR = DATA_DIR / "nasr_city"
 NASR_CITY_RAW = NASR_CITY_DIR / "raw"
 NASR_CITY_PROCESSED = NASR_CITY_DIR / "processed"
 NASR_CITY_OUTPUTS = NASR_CITY_DIR / "outputs"
+NASR_CITY_MAPS = NASR_CITY_DIR / "maps"
 
 # Nasr City output files
 NASR_CITY_BOUNDARY_PATH = NASR_CITY_PROCESSED / "nasr_city_boundary.geojson"
@@ -30,6 +31,9 @@ NASR_CITY_NODES_PATH = NASR_CITY_PROCESSED / "nasr_city_nodes.geojson"
 NASR_CITY_ROADS_PATH = NASR_CITY_PROCESSED / "nasr_city_roads.geojson"
 NASR_CITY_FACILITIES_PATH = NASR_CITY_PROCESSED / "nasr_city_emergency_facilities.geojson"
 SPATIAL_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "spatial_validation_report.json"
+NASR_CITY_GRID_PATH = NASR_CITY_PROCESSED / "nasr_city_grid_500m.geojson"
+ROADS_WITH_ZONE_IDS_PATH = NASR_CITY_PROCESSED / "roads_with_zone_ids.geojson"
+SPATIAL_FOUNDATION_MAP_PATH = NASR_CITY_MAPS / "spatial_foundation_map.png"
 
 
 def ensure_data_dirs():
@@ -46,6 +50,7 @@ def ensure_data_dirs():
         NASR_CITY_RAW,
         NASR_CITY_PROCESSED,
         NASR_CITY_OUTPUTS,
+        NASR_CITY_MAPS,
     ]
     for directory in directories:
         directory.mkdir(parents=True, exist_ok=True)
@@ -66,4 +71,7 @@ def get_data_path_summary():
         "nasr_city_roads": str(NASR_CITY_ROADS_PATH),
         "nasr_city_facilities": str(NASR_CITY_FACILITIES_PATH),
         "spatial_validation_report": str(SPATIAL_VALIDATION_REPORT_PATH),
+        "nasr_city_grid": str(NASR_CITY_GRID_PATH),
+        "roads_with_zone_ids": str(ROADS_WITH_ZONE_IDS_PATH),
+        "spatial_foundation_map": str(SPATIAL_FOUNDATION_MAP_PATH),
     }

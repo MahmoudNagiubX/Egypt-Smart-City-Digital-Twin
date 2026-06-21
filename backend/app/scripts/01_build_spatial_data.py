@@ -99,6 +99,68 @@ def run_validate_step():
         return False
 
 
+def run_grid_step():
+    """Execute Step 2.5: Generate 500m grid cells."""
+    logger.info("=" * 60)
+    logger.info("STEP 2.5: Generate 500m grid cells")
+    logger.info("=" * 60)
+    
+    try:
+        grid_gdf = geo.generate_grid_cells()
+        logger.info(f"✓ Grid generated. Count: {len(grid_gdf)}")
+        logger.info(f"✓ Saved to: {paths.NASR_CITY_GRID_PATH}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Grid step failed: {e}", exc_info=True)
+        return False
+
+
+def run_join_step():
+    """Execute Step 2.6: Spatial join roads to grid."""
+    logger.info("=" * 60)
+    logger.info("STEP 2.6: Spatial join roads to grid")
+    logger.info("=" * 60)
+    
+    try:
+        roads_gdf = geo.join_roads_to_grid()
+        logger.info(f"✓ Spatial join complete. Roads processed: {len(roads_gdf)}")
+        logger.info(f"✓ Saved to: {paths.ROADS_WITH_ZONE_IDS_PATH}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Join step failed: {e}", exc_info=True)
+        return False
+
+
+def run_postgis_step():
+    """Execute Step 2.7: Check PostGIS optional status."""
+    logger.info("=" * 60)
+    logger.info("STEP 2.7: Check PostGIS optional status")
+    logger.info("=" * 60)
+    
+    try:
+        geo.check_postgis_optional_status()
+        logger.info("✓ PostGIS optional status checked successfully.")
+        return True
+    except Exception as e:
+        logger.error(f"✗ PostGIS step failed: {e}", exc_info=True)
+        return False
+
+
+def run_map_step():
+    """Execute Step 2.8: Create static map screenshot."""
+    logger.info("=" * 60)
+    logger.info("STEP 2.8: Create static map screenshot")
+    logger.info("=" * 60)
+    
+    try:
+        map_path = geo.create_spatial_foundation_map()
+        logger.info(f"✓ Static map screenshot created successfully at: {map_path}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Map step failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -106,14 +168,14 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["boundary", "roads", "facilities", "validate"],
+        choices=["boundary", "roads", "facilities", "validate", "grid", "join", "postgis", "map"],
         required=True,
         help="Step to execute",
     )
     
     args = parser.parse_args()
     
-    logger.info(f"Starting Phase 2 Part A - Step: {args.step}")
+    logger.info(f"Starting Phase 2 - Step: {args.step}")
     
     if args.step == "boundary":
         success = run_boundary_step()
@@ -123,6 +185,14 @@ def main():
         success = run_facilities_step()
     elif args.step == "validate":
         success = run_validate_step()
+    elif args.step == "grid":
+        success = run_grid_step()
+    elif args.step == "join":
+        success = run_join_step()
+    elif args.step == "postgis":
+        success = run_postgis_step()
+    elif args.step == "map":
+        success = run_map_step()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
