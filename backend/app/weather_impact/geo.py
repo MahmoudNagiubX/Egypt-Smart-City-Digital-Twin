@@ -273,17 +273,17 @@ def validate_spatial_data():
             report["roads_crs"] = str(roads_gdf.crs)
             
             # Check for missing geometries
-            report["missing_road_geometries"] = roads_gdf.geometry.isna().sum()
+            report["missing_road_geometries"] = int(roads_gdf.geometry.isna().sum())
             
             # Check for missing attributes
             if "length" in roads_gdf.columns:
-                report["missing_road_lengths"] = roads_gdf["length"].isna().sum()
+                report["missing_road_lengths"] = int(roads_gdf["length"].isna().sum())
             
             if "travel_time" in roads_gdf.columns:
-                report["missing_travel_time"] = roads_gdf["travel_time"].isna().sum()
+                report["missing_travel_time"] = int(roads_gdf["travel_time"].isna().sum())
             
             if "speed_kph" in roads_gdf.columns:
-                report["missing_speed_kph"] = roads_gdf["speed_kph"].isna().sum()
+                report["missing_speed_kph"] = int(roads_gdf["speed_kph"].isna().sum())
             
             # Get bounds
             if len(roads_gdf) > 0 and roads_gdf.geometry.notna().any():
