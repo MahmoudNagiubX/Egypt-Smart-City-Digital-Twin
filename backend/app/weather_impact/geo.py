@@ -557,3 +557,22 @@ def join_roads_to_grid():
     return roads_final
 
 
+def check_postgis_optional_status():
+    """Confirm PostGIS optional status based on configuration settings."""
+    try:
+        from config import settings
+    except ImportError:
+        try:
+            from ..config import settings
+        except ImportError:
+            class FallbackSettings:
+                use_postgis = False
+            settings = FallbackSettings()
+            
+    if not settings.use_postgis:
+        print("PostGIS load skipped because USE_POSTGIS=false. GeoJSON-first MVP remains ready.")
+    else:
+        print("PostGIS load is requested (USE_POSTGIS=true).")
+
+
+
