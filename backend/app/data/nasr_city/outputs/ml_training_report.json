@@ -17,13 +17,13 @@
   },
   "numeric_feature_count": 54,
   "excluded_columns": [
+    "zone_code",
+    "data_driven_weather_impact_score",
     "observed_rain_hazard_score",
+    "observed_exposure_score",
     "event_id",
     "timestamp",
-    "zone_code",
-    "observed_exposure_score",
-    "target_type",
-    "data_driven_weather_impact_score"
+    "target_type"
   ],
   "status": "ok",
   "warnings": []

@@ -108,6 +108,30 @@ def run_card():
         return False
 
 
+def run_all():
+    """Execute all steps in sequence."""
+    logger.info("=" * 60)
+    logger.info("RUNNING FULL MODEL TRAINING PIPELINE")
+    logger.info("=" * 60)
+    
+    steps = [
+        ("inspect", run_inspect),
+        ("features", run_features),
+        ("train", run_train),
+        ("evaluate", run_evaluate),
+        ("explain", run_explain),
+        ("card", run_card)
+    ]
+    
+    for name, func in steps:
+        if not func():
+            logger.error(f"✗ Pipeline failed at step '{name}'")
+            return False
+            
+    logger.info("✓ Full pipeline completed successfully.")
+    return True
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -115,7 +139,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["inspect", "features", "train", "evaluate", "explain", "card"],
+        choices=["inspect", "features", "train", "evaluate", "explain", "card", "all"],
         required=True,
         help="Step to execute",
     )
@@ -137,6 +161,8 @@ def main():
         success = run_explain()
     elif args.step == "card":
         success = run_card()
+    elif args.step == "all":
+        success = run_all()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
