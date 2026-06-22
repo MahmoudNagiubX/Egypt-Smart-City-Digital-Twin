@@ -984,6 +984,132 @@ def build_ml_ready_zone_features():
     return df_final_filtered
 
 
+def create_feature_validation_report():
+    """Generate validation report for the feature engineering outputs."""
+    paths.ensure_data_dirs()
+    logger.info("Generating feature validation report...")
+    
+    # 1. Initialize report
+    report = {
+        "grid_cells": 416,
+        "scenario_count": 5,
+        "expected_rows": 2080,
+        "actual_rows": 0,
+        "required_columns_present": False,
+        "missing_required_columns": [],
+        "normalized_score_columns_valid": True,
+        "score_columns_out_of_range": [],
+        "critical_null_counts": {},
+        "elevation_source_counts": {},
+        "status": "pending",
+        "warnings": []
+    }
+    
+    # 2. Check files existence
+    required_files = {
+        "grid_road_features": paths.GRID_ROAD_FEATURES_PATH,
+        "grid_weather_scenario_features": paths.GRID_WEATHER_SCENARIO_FEATURES_PATH,
+        "grid_elevation_features": paths.GRID_ELEVATION_FEATURES_PATH,
+        "zone_features_ml_ready_csv": paths.ZONE_FEATURES_CSV_PATH,
+        "zone_features_ml_ready_geojson": paths.ZONE_FEATURES_GEOJSON_PATH
+    }
+    
+    missing_files = []
+    for name, path in required_files.items():
+        if not path.exists():
+            missing_files.append(name)
+            
+    if missing_files:
+        report["status"] = "failed"
+        report["warnings"].append(f"Missing required files: {', '.join(missing_files)}")
+        data_loader.save_json(report, paths.FEATURE_VALIDATION_REPORT_PATH)
+        return report
+        
+    try:
+        # Load final dataset
+        df = data_loader.read_csv(paths.ZONE_FEATURES_CSV_PATH)
+        report["actual_rows"] = len(df)
+        
+        # 3. Check required columns
+        required_cols = [
+            "zone_code", "scenario_id", "scenario_name", "rain_1h_mm", "rain_3h_mm",
+            "rain_6h_mm", "rain_24h_mm", "temperature_2m", "apparent_temperature",
+            "relative_humidity_2m", "wind_speed_10m", "hour", "is_rush_hour",
+            "road_count", "road_length_m", "road_density_m_per_km2",
+            "avg_base_speed_kph", "avg_base_travel_time_sec", "elevation_mean",
+            "elevation_min", "elevation_max", "slope_mean", "road_density_score",
+            "road_count_score", "rainfall_score", "rainfall_accumulation_score",
+            "temperature_score", "humidity_score", "wind_score", "rush_hour_score",
+            "low_elevation_score", "low_slope_score", "builtup_proxy_score",
+            "impervious_proxy_score", "low_vegetation_proxy_score", "elevation_source"
+        ]
+        
+        missing_cols = [c for c in required_cols if c not in df.columns]
+        report["missing_required_columns"] = missing_cols
+        report["required_columns_present"] = len(missing_cols) == 0
+        
+        # 4. Check normalized score columns range
+        score_cols = [
+            "road_density_score", "road_count_score", "rainfall_score",
+            "rainfall_accumulation_score", "temperature_score", "humidity_score",
+            "wind_score", "rush_hour_score", "low_elevation_score", "low_slope_score",
+            "builtup_proxy_score", "impervious_proxy_score", "low_vegetation_proxy_score"
+        ]
+        
+        for c in score_cols:
+            if c in df.columns:
+                series = df[c].dropna()
+                if not ((series >= 0.0) & (series <= 1.0)).all():
+                    report["normalized_score_columns_valid"] = False
+                    report["score_columns_out_of_range"].append(c)
+                    
+        # 5. Check null counts
+        for c in required_cols:
+            if c in df.columns:
+                null_cnt = int(df[c].isna().sum())
+                if null_cnt > 0:
+                    report["critical_null_counts"][c] = null_cnt
+                    
+        # 6. Check elevation sources
+        if "elevation_source" in df.columns:
+            sources = df["elevation_source"].value_counts().to_dict()
+            report["elevation_source_counts"] = {k: int(v) for k, v in sources.items()}
+            
+            # Check if fallback_proxy was used
+            if "fallback_proxy" in report["elevation_source_counts"]:
+                report["warnings"].append("Earth Engine elevation fallback was used during feature extraction.")
+                
+        # 7. Check row count mismatch
+        if report["actual_rows"] != report["expected_rows"]:
+            report["warnings"].append(f"Row count mismatch: Expected {report['expected_rows']}, got {report['actual_rows']}.")
+            
+        # Determine status
+        if not report["required_columns_present"]:
+            report["status"] = "failed"
+            report["warnings"].append("Some required columns are missing.")
+        elif not report["normalized_score_columns_valid"]:
+            report["status"] = "failed"
+            report["warnings"].append("Some normalized score columns contain values outside [0, 1].")
+        elif len(report["critical_null_counts"]) > 0:
+            report["status"] = "failed"
+            report["warnings"].append("Critical null values detected in output columns.")
+        else:
+            if len(report["warnings"]) > 0:
+                report["status"] = "ok_with_warnings"
+            else:
+                report["status"] = "ok"
+                
+    except Exception as e:
+        report["status"] = "failed"
+        report["warnings"].append(f"Validation failed with exception: {e}")
+        
+    # Save report
+    data_loader.save_json(report, paths.FEATURE_VALIDATION_REPORT_PATH)
+    logger.info(f"Saved feature validation report to {paths.FEATURE_VALIDATION_REPORT_PATH}")
+    return report
+
+
+
 
 
 

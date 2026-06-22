@@ -78,6 +78,22 @@ def run_final_step():
         return False
 
 
+def run_validate_step():
+    """Execute Step 4.6: Add feature validation report."""
+    logger.info("=" * 60)
+    logger.info("STEP 4.6: Add feature validation report")
+    logger.info("=" * 60)
+    
+    try:
+        report = geo.create_feature_validation_report()
+        logger.info(f"✓ Feature validation report generated. Status: {report['status']}")
+        logger.info(f"✓ Saved to: {paths.FEATURE_VALIDATION_REPORT_PATH}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Feature validation report failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -104,10 +120,15 @@ def main():
     elif args.step == "final":
         success = run_final_step()
     elif args.step == "validate":
-        logger.info("Validate features placeholder")
-        success = True
+        success = run_validate_step()
     elif args.step == "all":
-        success = run_road_density_step()
+        success = (
+            run_road_density_step() and
+            run_weather_scenarios_step() and
+            run_elevation_step() and
+            run_final_step() and
+            run_validate_step()
+        )
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
