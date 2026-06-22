@@ -37,6 +37,21 @@ def run_collect_step(start_date=None, end_date=None):
         return False
 
 
+def run_clean_step():
+    """Execute Step 3.2: Clean weather data."""
+    logger.info("=" * 60)
+    logger.info("STEP 3.2: Clean weather data and compute rolling features")
+    logger.info("=" * 60)
+    
+    try:
+        df = weather.clean_weather_data()
+        logger.info(f"✓ Weather data cleaned and features computed. Rows: {len(df)}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Weather cleaning failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -64,8 +79,7 @@ def main():
     if args.step == "collect":
         success = run_collect_step(args.start_date, args.end_date)
     elif args.step == "clean":
-        logger.info("Clean step placeholder")
-        success = True
+        success = run_clean_step()
     elif args.step == "scenarios":
         logger.info("Scenarios step placeholder")
         success = True
