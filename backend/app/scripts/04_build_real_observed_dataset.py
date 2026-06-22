@@ -126,6 +126,21 @@ def run_validate_step():
         return False
 
 
+def run_audit_step():
+    """Execute Step 3 (Phase 4C): Create real data source audit report."""
+    logger.info("=" * 60)
+    logger.info("STEP 3: Real data source audit report")
+    logger.info("=" * 60)
+    
+    try:
+        report = geo.create_real_data_source_audit_report()
+        logger.info(f"✓ Real data source audit report generated. Status: {report['status']}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Audit report failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -133,7 +148,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["weather", "gpm", "builtup", "landcover", "population", "merge", "validate", "all"],
+        choices=["weather", "gpm", "builtup", "landcover", "population", "merge", "dataset", "audit", "validate", "all"],
         required=True,
         help="Step to execute",
     )
@@ -153,8 +168,10 @@ def main():
         success = run_landcover_step()
     elif args.step == "population":
         success = run_population_step()
-    elif args.step == "merge":
+    elif args.step in ["merge", "dataset"]:
         success = run_merge_step()
+    elif args.step == "audit":
+        success = run_audit_step()
     elif args.step == "validate":
         success = run_validate_step()
     elif args.step == "all":
@@ -165,6 +182,7 @@ def main():
             run_landcover_step() and
             run_population_step() and
             run_merge_step() and
+            run_audit_step() and
             run_validate_step()
         )
     else:
