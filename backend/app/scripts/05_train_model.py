@@ -63,6 +63,21 @@ def run_train():
         return False
 
 
+def run_evaluate():
+    """Execute Step 4: Evaluate models and save metrics."""
+    logger.info("=" * 60)
+    logger.info("STEP 4: Evaluate models and save metrics")
+    logger.info("=" * 60)
+    
+    try:
+        comparison = model.evaluate_models()
+        logger.info(f"✓ Model evaluation completed. Best model: {comparison['best_model']}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Model evaluation failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -70,7 +85,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["inspect", "features", "train"],
+        choices=["inspect", "features", "train", "evaluate"],
         required=True,
         help="Step to execute",
     )
@@ -86,6 +101,8 @@ def main():
         success = run_features()
     elif args.step == "train":
         success = run_train()
+    elif args.step == "evaluate":
+        success = run_evaluate()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False

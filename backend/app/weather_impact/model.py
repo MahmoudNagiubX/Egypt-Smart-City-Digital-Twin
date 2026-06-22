@@ -224,3 +224,119 @@ def train_models():
         logger.warning(f"HistGradientBoostingRegressor training failed: {e}. Continuing without HGB.")
         
     return rf, (hgb if hgb_success else None), X_train, X_test, y_train, y_test
+
+
+def evaluate_models():
+    """Evaluate baseline, RF, and HGB models on test dataset and save metrics."""
+    paths.ensure_data_dirs()
+    logger.info("Evaluating models...")
+    
+    import joblib
+    from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, accuracy_score, confusion_matrix
+    
+    datasets_path = paths.NASR_CITY_MODELS / "split_datasets.joblib"
+    if not datasets_path.exists():
+        raise FileNotFoundError(f"Split datasets not found at: {datasets_path}. Train step must be executed first.")
+    
+    data = joblib.load(datasets_path)
+    X_train = data["X_train"]
+    X_test = data["X_test"]
+    y_train = data["y_train"]
+    y_test = data["y_test"]
+    
+    def get_severity_class(score):
+        if score < 0.33:
+            return "low"
+        elif score < 0.66:
+            return "medium"
+        else:
+            return "high"
+            
+    def get_metrics_dict(y_true, y_pred, model_name):
+        mae = mean_absolute_error(y_true, y_pred)
+        rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+        r2 = r2_score(y_true, y_pred)
+        
+        y_true_sev_mapped = [get_severity_class(s) for s in y_true]
+        y_pred_sev = [get_severity_class(s) for s in y_pred]
+        sev_acc = accuracy_score(y_true_sev_mapped, y_pred_sev)
+        cm = confusion_matrix(y_true_sev_mapped, y_pred_sev, labels=["low", "medium", "high"]).tolist()
+        
+        true_counts = pd.Series(y_true_sev_mapped).value_counts().to_dict()
+        pred_counts = pd.Series(y_pred_sev).value_counts().to_dict()
+        
+        return {
+            "model_name": model_name,
+            "honesty_note": (
+                "These metrics evaluate the models against the data_driven_weather_impact_score target, "
+                "which is an engineered risk score derived from real observed weather and geospatial features. "
+                "These are not verified street-level flood incident labels, and no operational flood prediction accuracy is claimed."
+            ),
+            "mae": float(mae),
+            "rmse": float(rmse),
+            "r2": float(r2),
+            "target_min": float(y_true.min()),
+            "target_max": float(y_true.max()),
+            "target_mean": float(y_true.mean()),
+            "prediction_min": float(y_pred.min()),
+            "prediction_max": float(y_pred.max()),
+            "prediction_mean": float(y_pred.mean()),
+            "severity_accuracy": float(sev_acc),
+            "severity_confusion_matrix": cm,
+            "true_severity_counts": {
+                "low": int(true_counts.get("low", 0)),
+                "medium": int(true_counts.get("medium", 0)),
+                "high": int(true_counts.get("high", 0))
+            },
+            "predicted_severity_counts": {
+                "low": int(pred_counts.get("low", 0)),
+                "medium": int(pred_counts.get("medium", 0)),
+                "high": int(pred_counts.get("high", 0))
+            }
+        }
+        
+    train_mean = y_train.mean()
+    y_pred_baseline = np.full_like(y_test, fill_value=train_mean)
+    baseline_metrics = get_metrics_dict(y_test, y_pred_baseline, "Baseline (Mean Predictor)")
+    data_loader.save_json(baseline_metrics, paths.BASELINE_MODEL_METRICS_PATH)
+    logger.info(f"Saved baseline metrics to {paths.BASELINE_MODEL_METRICS_PATH}")
+    
+    if not paths.RF_MODEL_PATH.exists():
+        raise FileNotFoundError(f"RF model not found at: {paths.RF_MODEL_PATH}")
+    rf = joblib.load(paths.RF_MODEL_PATH)
+    y_pred_rf = rf.predict(X_test)
+    rf_metrics = get_metrics_dict(y_test, y_pred_rf, "Random Forest")
+    data_loader.save_json(rf_metrics, paths.RF_METRICS_PATH)
+    logger.info(f"Saved RF metrics to {paths.RF_METRICS_PATH}")
+    
+    hgb_metrics = None
+    if paths.HGB_MODEL_PATH.exists():
+        hgb = joblib.load(paths.HGB_MODEL_PATH)
+        y_pred_hgb = hgb.predict(X_test)
+        hgb_metrics = get_metrics_dict(y_test, y_pred_hgb, "HistGradientBoosting")
+        data_loader.save_json(hgb_metrics, paths.HGB_METRICS_PATH)
+        logger.info(f"Saved HGB metrics to {paths.HGB_METRICS_PATH}")
+        
+    models = [baseline_metrics, rf_metrics]
+    if hgb_metrics is not None:
+        models.append(hgb_metrics)
+        
+    sorted_models = sorted(models, key=lambda m: (m["mae"], -m["r2"]))
+    best_model = sorted_models[0]
+    
+    comparison = {
+        "best_model": best_model["model_name"],
+        "metric_comparison": {
+            m["model_name"]: {
+                "mae": m["mae"],
+                "rmse": m["rmse"],
+                "r2": m["r2"],
+                "severity_accuracy": m["severity_accuracy"]
+            } for m in models
+        }
+    }
+    
+    data_loader.save_json(comparison, paths.MODEL_COMPARISON_PATH)
+    logger.info(f"Saved model comparison to {paths.MODEL_COMPARISON_PATH}")
+    
+    return comparison
