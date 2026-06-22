@@ -33,6 +33,21 @@ def run_inspect():
         return False
 
 
+def run_features():
+    """Execute Step 2: Build ML feature matrix."""
+    logger.info("=" * 60)
+    logger.info("STEP 2: Build ML feature matrix")
+    logger.info("=" * 60)
+    
+    try:
+        X, y, events = model.build_feature_matrix()
+        logger.info(f"✓ ML feature matrix built. Shapes: X={X.shape}, y={y.shape}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Feature matrix build failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -40,7 +55,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["inspect"],
+        choices=["inspect", "features"],
         required=True,
         help="Step to execute",
     )
@@ -52,6 +67,8 @@ def main():
     success = False
     if args.step == "inspect":
         success = run_inspect()
+    elif args.step == "features":
+        success = run_features()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
