@@ -907,6 +907,84 @@ def extract_elevation_features(project_id: str = "smart-city-digital-twin"):
     return df
 
 
+def build_ml_ready_zone_features():
+    """Merge and normalize all weather and spatial features into final ML-ready datasets."""
+    paths.ensure_data_dirs()
+    logger.info("Building final ML-ready zone features...")
+    
+    # 1. Load inputs
+    df_weather = data_loader.read_csv(paths.GRID_WEATHER_SCENARIO_FEATURES_PATH)
+    df_road = data_loader.read_csv(paths.GRID_ROAD_FEATURES_PATH)
+    df_elev = data_loader.read_csv(paths.GRID_ELEVATION_FEATURES_PATH)
+    grid_gdf = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    
+    # 2. Merge road and elevation features
+    df_zone = df_road.merge(df_elev, on="zone_code", how="inner")
+    
+    # 3. Merge weather scenarios with zone features
+    df_final = df_weather.merge(df_zone, on="zone_code", how="inner")
+    
+    # 4. Import scoring helpers
+    from . import scoring
+    
+    # 5. Calculate normalized feature scores
+    df_final["road_density_score"] = scoring.normalize_series(df_final["road_density_m_per_km2"])
+    df_final["road_count_score"] = scoring.normalize_series(df_final["road_count"])
+    
+    # Rainfall scores
+    rain_score, rain_acc_score = scoring.rainfall_to_score(
+        df_final["rain_1h_mm"],
+        df_final["rain_3h_mm"],
+        df_final["rain_6h_mm"],
+        df_final["rain_24h_mm"]
+    )
+    df_final["rainfall_score"] = rain_score
+    df_final["rainfall_accumulation_score"] = rain_acc_score
+    
+    # Temperature score
+    df_final["temperature_score"] = scoring.temperature_to_score(
+        df_final["temperature_2m"],
+        df_final["apparent_temperature"]
+    )
+    
+    # Other weather scores
+    df_final["humidity_score"] = scoring.normalize_series(df_final["relative_humidity_2m"])
+    df_final["wind_score"] = scoring.normalize_series(df_final["wind_speed_10m"])
+    df_final["rush_hour_score"] = df_final["is_rush_hour"].astype(float)
+    
+    # Built-up proxies
+    df_final["builtup_proxy_score"] = scoring.clip01((df_final["road_density_score"] + df_final["road_count_score"]) / 2.0)
+    df_final["impervious_proxy_score"] = df_final["builtup_proxy_score"]
+    df_final["low_vegetation_proxy_score"] = scoring.clip01(0.5 + 0.3 * df_final["builtup_proxy_score"])
+    
+    # 6. Keep only required columns
+    required_cols = [
+        "zone_code", "scenario_id", "scenario_name", "rain_1h_mm", "rain_3h_mm",
+        "rain_6h_mm", "rain_24h_mm", "temperature_2m", "apparent_temperature",
+        "relative_humidity_2m", "wind_speed_10m", "hour", "is_rush_hour",
+        "road_count", "road_length_m", "road_density_m_per_km2",
+        "avg_base_speed_kph", "avg_base_travel_time_sec", "elevation_mean",
+        "elevation_min", "elevation_max", "slope_mean", "road_density_score",
+        "road_count_score", "rainfall_score", "rainfall_accumulation_score",
+        "temperature_score", "humidity_score", "wind_score", "rush_hour_score",
+        "low_elevation_score", "low_slope_score", "builtup_proxy_score",
+        "impervious_proxy_score", "low_vegetation_proxy_score", "elevation_source"
+    ]
+    df_final_filtered = df_final[required_cols].copy()
+    
+    # 7. Save final CSV dataset
+    data_loader.write_csv(df_final_filtered, paths.ZONE_FEATURES_CSV_PATH)
+    logger.info(f"Saved final ML features CSV to {paths.ZONE_FEATURES_CSV_PATH}")
+    
+    # 8. Save final GeoJSON dataset
+    df_geojson = grid_gdf[["zone_code", "geometry"]].merge(df_final_filtered, on="zone_code", how="inner")
+    data_loader.write_geojson(df_geojson, paths.ZONE_FEATURES_GEOJSON_PATH)
+    logger.info(f"Saved final ML features GeoJSON to {paths.ZONE_FEATURES_GEOJSON_PATH}")
+    
+    return df_final_filtered
+
+
+
 
 
 

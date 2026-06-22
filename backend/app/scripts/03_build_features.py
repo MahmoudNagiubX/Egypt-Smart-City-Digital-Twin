@@ -63,6 +63,21 @@ def run_elevation_step():
         return False
 
 
+def run_final_step():
+    """Execute Step 4.5: Export ML ready feature dataset."""
+    logger.info("=" * 60)
+    logger.info("STEP 4.5: Export ML ready feature dataset")
+    logger.info("=" * 60)
+    
+    try:
+        df = geo.build_ml_ready_zone_features()
+        logger.info(f"✓ ML features exported successfully. Rows: {len(df)}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ ML features export failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -87,8 +102,7 @@ def main():
     elif args.step == "elevation":
         success = run_elevation_step()
     elif args.step == "final":
-        logger.info("Final features placeholder")
-        success = True
+        success = run_final_step()
     elif args.step == "validate":
         logger.info("Validate features placeholder")
         success = True
