@@ -78,6 +78,21 @@ def run_evaluate():
         return False
 
 
+def run_explain():
+    """Execute Step 5: Export feature importance and predictions."""
+    logger.info("=" * 60)
+    logger.info("STEP 5: Export feature importance and predictions")
+    logger.info("=" * 60)
+    
+    try:
+        df_imp, sample_df = model.export_model_explainability()
+        logger.info("✓ Model explainability exported successfully.")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Model explainability failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -85,7 +100,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["inspect", "features", "train", "evaluate"],
+        choices=["inspect", "features", "train", "evaluate", "explain"],
         required=True,
         help="Step to execute",
     )
@@ -103,6 +118,8 @@ def main():
         success = run_train()
     elif args.step == "evaluate":
         success = run_evaluate()
+    elif args.step == "explain":
+        success = run_explain()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False

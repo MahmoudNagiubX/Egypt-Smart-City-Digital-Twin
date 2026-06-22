@@ -340,3 +340,83 @@ def evaluate_models():
     logger.info(f"Saved model comparison to {paths.MODEL_COMPARISON_PATH}")
     
     return comparison
+
+
+def export_model_explainability():
+    """Export feature importance metrics, plot, and prediction sample CSV."""
+    paths.ensure_data_dirs()
+    logger.info("Exporting model explainability artifacts...")
+    
+    import joblib
+    import matplotlib.pyplot as plt
+    
+    datasets_path = paths.NASR_CITY_MODELS / "split_datasets.joblib"
+    if not datasets_path.exists():
+        raise FileNotFoundError(f"Split datasets not found at: {datasets_path}")
+        
+    data = joblib.load(datasets_path)
+    X_train = data["X_train"]
+    X_test = data["X_test"]
+    y_test = data["y_test"]
+    
+    if not paths.RF_MODEL_PATH.exists():
+        raise FileNotFoundError(f"RF model not found at: {paths.RF_MODEL_PATH}")
+    rf = joblib.load(paths.RF_MODEL_PATH)
+    
+    importances = rf.feature_importances_
+    features = X_train.columns.tolist()
+    
+    df_imp = pd.DataFrame({
+        "feature": features,
+        "importance": importances
+    })
+    df_imp = df_imp.sort_values("importance", ascending=False).reset_index(drop=True)
+    df_imp["rank"] = df_imp.index + 1
+    
+    data_loader.write_csv(df_imp, paths.FEATURE_IMPORTANCE_PATH)
+    logger.info(f"Saved feature importance CSV to {paths.FEATURE_IMPORTANCE_PATH}")
+    
+    top20 = df_imp.head(20).copy()
+    plt.figure(figsize=(10, 8))
+    plt.barh(top20["feature"][::-1], top20["importance"][::-1], color="teal", edgecolor="gray")
+    plt.xlabel("Importance Score")
+    plt.title("Nasr City Weather Impact Model - Top 20 Feature Importances")
+    plt.tight_layout()
+    plt.savefig(paths.FEATURE_IMPORTANCE_PLOT_PATH, dpi=150)
+    plt.close()
+    logger.info(f"Saved feature importance plot to {paths.FEATURE_IMPORTANCE_PLOT_PATH}")
+    
+    df_orig = pd.read_csv(paths.REAL_OBSERVED_TRAINING_DATASET_PATH)
+    test_meta = df_orig.loc[X_test.index].copy()
+    
+    y_pred_rf = rf.predict(X_test)
+    
+    def get_severity_class(score):
+        if score < 0.33:
+            return "low"
+        elif score < 0.66:
+            return "medium"
+        else:
+            return "high"
+            
+    sample_df = pd.DataFrame({
+        "zone_code": test_meta.get("zone_code", np.nan),
+        "event_id": test_meta.get("event_id", np.nan),
+        "timestamp": test_meta.get("timestamp", np.nan),
+        "y_true": y_test,
+        "y_pred_rf": y_pred_rf
+    })
+    
+    if paths.HGB_MODEL_PATH.exists():
+        hgb = joblib.load(paths.HGB_MODEL_PATH)
+        y_pred_hgb = hgb.predict(X_test)
+        sample_df["y_pred_hgb"] = y_pred_hgb
+        
+    sample_df["absolute_error_rf"] = np.abs(sample_df["y_true"] - sample_df["y_pred_rf"])
+    sample_df["true_severity"] = sample_df["y_true"].apply(get_severity_class)
+    sample_df["predicted_severity_rf"] = sample_df["y_pred_rf"].apply(get_severity_class)
+    
+    data_loader.write_csv(sample_df, paths.PREDICTION_SAMPLE_PATH)
+    logger.info(f"Saved prediction sample CSV to {paths.PREDICTION_SAMPLE_PATH}")
+    
+    return df_imp, sample_df
