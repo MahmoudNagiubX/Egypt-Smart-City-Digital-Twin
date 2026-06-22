@@ -24,6 +24,7 @@ NASR_CITY_PROCESSED = NASR_CITY_DIR / "processed"
 NASR_CITY_OUTPUTS = NASR_CITY_DIR / "outputs"
 NASR_CITY_MAPS = NASR_CITY_DIR / "maps"
 NASR_CITY_SAMPLES = NASR_CITY_DIR / "samples"
+NASR_CITY_MODELS = NASR_CITY_DIR / "models"
 
 # Nasr City output files
 NASR_CITY_BOUNDARY_PATH = NASR_CITY_PROCESSED / "nasr_city_boundary.geojson"
@@ -60,6 +61,21 @@ GRID_POPULATION_FEATURES_PATH = NASR_CITY_PROCESSED / "grid_population_features.
 REAL_OBSERVED_TRAINING_DATASET_PATH = NASR_CITY_PROCESSED / "real_observed_training_dataset.csv"
 REAL_DATA_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "real_data_validation_report.json"
 
+# ML training output paths
+ML_FEATURE_COLUMNS_PATH = NASR_CITY_MODELS / "ml_feature_columns.json"
+TRAIN_TEST_SPLIT_SUMMARY_PATH = NASR_CITY_MODELS / "train_test_split_summary.json"
+BASELINE_MODEL_METRICS_PATH = NASR_CITY_MODELS / "baseline_model_metrics.json"
+RF_MODEL_PATH = NASR_CITY_MODELS / "weather_impact_rf_model.joblib"
+RF_METRICS_PATH = NASR_CITY_MODELS / "weather_impact_rf_metrics.json"
+HGB_MODEL_PATH = NASR_CITY_MODELS / "weather_impact_hgb_model.joblib"
+HGB_METRICS_PATH = NASR_CITY_MODELS / "weather_impact_hgb_metrics.json"
+MODEL_COMPARISON_PATH = NASR_CITY_MODELS / "model_comparison.json"
+FEATURE_IMPORTANCE_PATH = NASR_CITY_MODELS / "feature_importance.csv"
+FEATURE_IMPORTANCE_PLOT_PATH = NASR_CITY_MODELS / "feature_importance.png"
+PREDICTION_SAMPLE_PATH = NASR_CITY_MODELS / "prediction_sample.csv"
+MODEL_CARD_PATH = NASR_CITY_MODELS / "MODEL_CARD.md"
+ML_TRAINING_REPORT_PATH = NASR_CITY_OUTPUTS / "ml_training_report.json"
+
 
 def ensure_data_dirs():
     """Create all required data directories."""
@@ -77,6 +93,7 @@ def ensure_data_dirs():
         NASR_CITY_OUTPUTS,
         NASR_CITY_MAPS,
         NASR_CITY_SAMPLES,
+        NASR_CITY_MODELS,
     ]
     for directory in directories:
         directory.mkdir(parents=True, exist_ok=True)
