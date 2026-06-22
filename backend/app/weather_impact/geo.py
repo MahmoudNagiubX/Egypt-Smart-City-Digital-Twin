@@ -1272,7 +1272,7 @@ def extract_builtup_features(project_id: str = "smart-city-digital-twin"):
     logger.info("Extracting GHSL builtup features...")
     
     grid = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
-    builtup_source = "ghsl_p2023a"
+    builtup_source = "ghsl_p2023a_2020"
     builtup_warning = ""
     rows = []
     
@@ -1284,45 +1284,97 @@ def extract_builtup_features(project_id: str = "smart-city-digital-twin"):
         
         features = []
         for _, row in grid.iterrows():
-            geom_dict = json.loads(gpd.GeoSeries([row.geometry]).to_json())["features"][0]["geometry"]
+            geom = row.geometry
+            if geom is None or geom.is_empty:
+                continue
+            if not geom.is_valid:
+                geom = geom.buffer(0)
+            geom_dict = json.loads(gpd.GeoSeries([geom]).to_json())["features"][0]["geometry"]
             ee_geom = ee.Geometry(geom_dict)
             features.append(ee.Feature(ee_geom, {"zone_code": row["zone_code"]}))
         grid_fc = ee.FeatureCollection(features)
         
-        ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_S").filterDate("2018-01-01", "2025-12-31").first()
-        if ghsl is None:
-            ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_S").first()
-            
+        # Load GHSL image 2020
+        ghsl = ee.Image("JRC/GHSL/P2023A/GHS_BUILT_S/2020")
         built_img = ghsl.select(["built_surface", "built_surface_nres"])
         
+        # Reduce over zones
+        reducer = ee.Reducer.mean() \
+            .combine(ee.Reducer.sum(), "", True) \
+            .combine(ee.Reducer.max(), "", True)
+            
         reduced = built_img.reduceRegions(
             collection=grid_fc,
-            reducer=ee.Reducer.mean().combine(ee.Reducer.sum(), "", True),
+            reducer=reducer,
             scale=100
         )
         
         results = reduced.select(
-            ["zone_code", "built_surface_mean", "built_surface_sum", "built_surface_nres_mean"],
+            ["zone_code", "built_surface_mean", "built_surface_sum", "built_surface_max", 
+             "built_surface_nres_mean", "built_surface_nres_sum", "built_surface_nres_max"],
             retainGeometry=False
         ).getInfo()["features"]
         
         for feat in results:
             props = feat["properties"]
             zc = props.get("zone_code")
-            mean_built = props.get("built_surface_mean", 0.0)
-            sum_built = props.get("built_surface_sum", 0.0)
-            nres_built = props.get("built_surface_nres_mean", 0.0)
             
-            rows.append({
-                "zone_code": zc,
-                "built_surface_mean": float(mean_built),
-                "built_surface_sum": float(sum_built),
-                "built_surface_nres_mean": float(nres_built),
-                "builtup_source": builtup_source,
-            })
+            # Helper to retrieve floats safely
+            def get_val(name):
+                v = props.get(name)
+                if v is None:
+                    return None
+                try:
+                    return float(v)
+                except (ValueError, TypeError):
+                    return None
+                    
+            mean_built = get_val("built_surface_mean")
+            sum_built = get_val("built_surface_sum")
+            max_built = get_val("built_surface_max")
+            nres_mean = get_val("built_surface_nres_mean")
+            nres_sum = get_val("built_surface_nres_sum")
             
+            # If any are None, we use a partial fallback for that zone
+            is_null = (mean_built is None or sum_built is None or max_built is None or 
+                       nres_mean is None or nres_sum is None)
+                       
+            if is_null:
+                logger.warning(f"Zone {zc} returned null from GHSL. Using partial fallback.")
+                source = "ghsl_partial_null_fallback"
+                
+                dens = 0.5
+                length = 1000.0
+                if paths.GRID_ROAD_FEATURES_PATH.exists():
+                    df_road = data_loader.read_csv(paths.GRID_ROAD_FEATURES_PATH)
+                    road_row = df_road[df_road["zone_code"] == zc]
+                    if not road_row.empty:
+                        length = float(road_row.iloc[0].get("road_length_m", 1000.0))
+                        dens = float(road_row.iloc[0].get("road_density_m_per_km2", 0.0)) / 10000.0
+                        dens = min(1.0, max(0.0, dens))
+                
+                rows.append({
+                    "zone_code": zc,
+                    "built_surface_mean": float(dens),
+                    "built_surface_sum": float(length),
+                    "built_surface_max": float(dens * 100.0),
+                    "built_surface_nres_mean": float(dens * 0.3),
+                    "built_surface_nres_sum": float(length * 0.3),
+                    "builtup_source": source,
+                })
+            else:
+                rows.append({
+                    "zone_code": zc,
+                    "built_surface_mean": float(mean_built),
+                    "built_surface_sum": float(sum_built),
+                    "built_surface_max": float(max_built),
+                    "built_surface_nres_mean": float(nres_mean),
+                    "built_surface_nres_sum": float(nres_sum),
+                    "builtup_source": builtup_source,
+                })
+                
     except Exception as e:
-        logger.warning(f"GHSL builtup extraction failed: {e}. Using fallback proxy values.")
+        logger.warning(f"GHSL builtup extraction failed entirely: {e}. Using fallback proxy values.")
         builtup_source = "fallback_proxy"
         builtup_warning = str(e)
         rows = []
@@ -1342,7 +1394,9 @@ def extract_builtup_features(project_id: str = "smart-city-digital-twin"):
                     "zone_code": zc,
                     "built_surface_mean": float(dens),
                     "built_surface_sum": float(length),
+                    "built_surface_max": float(dens * 100.0),
                     "built_surface_nres_mean": float(dens * 0.3),
+                    "built_surface_nres_sum": float(length * 0.3),
                     "builtup_source": builtup_source,
                 })
         else:
@@ -1351,7 +1405,9 @@ def extract_builtup_features(project_id: str = "smart-city-digital-twin"):
                     "zone_code": zc,
                     "built_surface_mean": road_density_score,
                     "built_surface_sum": road_length,
+                    "built_surface_max": road_density_score * 100.0,
                     "built_surface_nres_mean": road_density_score * 0.3,
+                    "built_surface_nres_sum": road_length * 0.3,
                     "builtup_source": builtup_source,
                 })
                 
