@@ -323,4 +323,42 @@ def create_weather_validation_report():
     return report
 
 
+def build_grid_weather_scenario_features() -> pd.DataFrame:
+    """Build cross-joined grid zone × weather scenario features."""
+    logger.info("Building grid weather scenario features...")
+    
+    # 1. Load grid zones
+    grid = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    zone_codes = grid["zone_code"].unique().tolist()
+    
+    # 2. Load weather scenarios
+    scenarios = data_loader.load_json(paths.WEATHER_SCENARIOS_PATH)
+    
+    # 3. Cross join zones and scenarios
+    rows = []
+    for zc in zone_codes:
+        for sc in scenarios:
+            rows.append({
+                "zone_code": zc,
+                "scenario_id": sc["scenario_id"],
+                "scenario_name": sc["name"],
+                "rain_1h_mm": float(sc["rain_1h_mm"]),
+                "rain_3h_mm": float(sc["rain_3h_mm"]),
+                "rain_6h_mm": float(sc["rain_6h_mm"]),
+                "rain_24h_mm": float(sc["rain_24h_mm"]),
+                "temperature_2m": float(sc["temperature_2m"]),
+                "apparent_temperature": float(sc["apparent_temperature"]),
+                "relative_humidity_2m": float(sc["relative_humidity_2m"]),
+                "wind_speed_10m": float(sc["wind_speed_10m"]),
+                "hour": int(sc["hour"]),
+                "is_rush_hour": bool(sc["is_rush_hour"])
+            })
+            
+    df = pd.DataFrame(rows)
+    data_loader.write_csv(df, paths.GRID_WEATHER_SCENARIO_FEATURES_PATH)
+    logger.info(f"Saved {len(df)} weather scenario features to {paths.GRID_WEATHER_SCENARIO_FEATURES_PATH}")
+    return df
+
+
+
 

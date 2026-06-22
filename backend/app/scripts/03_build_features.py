@@ -33,6 +33,21 @@ def run_road_density_step():
         return False
 
 
+def run_weather_scenarios_step():
+    """Execute Step 4.2: Build weather scenario features."""
+    logger.info("=" * 60)
+    logger.info("STEP 4.2: Build weather scenario features")
+    logger.info("=" * 60)
+    
+    try:
+        df = weather.build_grid_weather_scenario_features()
+        logger.info(f"✓ Weather scenario features built. Rows: {len(df)}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Weather scenario features failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -53,8 +68,7 @@ def main():
     if args.step == "road-density":
         success = run_road_density_step()
     elif args.step == "weather-scenarios":
-        logger.info("Weather-scenarios placeholder")
-        success = True
+        success = run_weather_scenarios_step()
     elif args.step == "elevation":
         logger.info("Elevation placeholder")
         success = True

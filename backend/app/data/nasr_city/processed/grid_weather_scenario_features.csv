@@ -1,0 +1,2081 @@
+zone_code,scenario_id,scenario_name,rain_1h_mm,rain_3h_mm,rain_6h_mm,rain_24h_mm,temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,hour,is_rush_hour
+NSR-GRID-001,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-001,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-001,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-001,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-001,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-002,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-002,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-002,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-002,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-002,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-003,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-003,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-003,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-003,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-003,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-004,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-004,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-004,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-004,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-004,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-005,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-005,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-005,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-005,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-005,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-006,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-006,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-006,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-006,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-006,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-007,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-007,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-007,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-007,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-007,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-008,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-008,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-008,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-008,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-008,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-009,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-009,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-009,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-009,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-009,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-010,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-010,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-010,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-010,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-010,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-011,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-011,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-011,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-011,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-011,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-012,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-012,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-012,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-012,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-012,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-013,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-013,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-013,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-013,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-013,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-014,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-014,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-014,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-014,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-014,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-015,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-015,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-015,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-015,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-015,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-016,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-016,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-016,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-016,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-016,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-017,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-017,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-017,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-017,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-017,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-018,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-018,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-018,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-018,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-018,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-019,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-019,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-019,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-019,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-019,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-020,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-020,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-020,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-020,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-020,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-021,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-021,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-021,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-021,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-021,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-022,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-022,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-022,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-022,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-022,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-023,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-023,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-023,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-023,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-023,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-024,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-024,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-024,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-024,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-024,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-025,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-025,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-025,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-025,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-025,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-026,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-026,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-026,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-026,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-026,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-027,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-027,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-027,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-027,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-027,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-028,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-028,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-028,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-028,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-028,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-029,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-029,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-029,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-029,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-029,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-030,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-030,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-030,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-030,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-030,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-031,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-031,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-031,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-031,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-031,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-032,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-032,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-032,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-032,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-032,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-033,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-033,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-033,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-033,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-033,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-034,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-034,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-034,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-034,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-034,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-035,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-035,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-035,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-035,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-035,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-036,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-036,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-036,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-036,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-036,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-037,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-037,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-037,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-037,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-037,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-038,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-038,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-038,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-038,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-038,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-039,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-039,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-039,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-039,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-039,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-040,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-040,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-040,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-040,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-040,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-041,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-041,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-041,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-041,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-041,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-042,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-042,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-042,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-042,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-042,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-043,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-043,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-043,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-043,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-043,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-044,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-044,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-044,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-044,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-044,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-045,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-045,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-045,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-045,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-045,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-046,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-046,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-046,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-046,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-046,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-047,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-047,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-047,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-047,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-047,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-048,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-048,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-048,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-048,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-048,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-049,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-049,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-049,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-049,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-049,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-050,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-050,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-050,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-050,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-050,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-051,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-051,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-051,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-051,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-051,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-052,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-052,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-052,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-052,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-052,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-053,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-053,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-053,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-053,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-053,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-054,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-054,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-054,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-054,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-054,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-055,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-055,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-055,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-055,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-055,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-056,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-056,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-056,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-056,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-056,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-057,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-057,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-057,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-057,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-057,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-058,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-058,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-058,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-058,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-058,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-059,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-059,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-059,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-059,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-059,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-060,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-060,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-060,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-060,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-060,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-061,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-061,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-061,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-061,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-061,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-062,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-062,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-062,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-062,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-062,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-063,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-063,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-063,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-063,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-063,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-064,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-064,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-064,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-064,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-064,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-065,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-065,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-065,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-065,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-065,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-066,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-066,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-066,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-066,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-066,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-067,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-067,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-067,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-067,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-067,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-068,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-068,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-068,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-068,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-068,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-069,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-069,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-069,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-069,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-069,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-070,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-070,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-070,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-070,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-070,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-071,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-071,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-071,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-071,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-071,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-072,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-072,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-072,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-072,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-072,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-073,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-073,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-073,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-073,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-073,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-074,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-074,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-074,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-074,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-074,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-075,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-075,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-075,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-075,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-075,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-076,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-076,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-076,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-076,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-076,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-077,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-077,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-077,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-077,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-077,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-078,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-078,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-078,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-078,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-078,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-079,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-079,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-079,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-079,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-079,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-080,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-080,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-080,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-080,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-080,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-081,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-081,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-081,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-081,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-081,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-082,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-082,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-082,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-082,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-082,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-083,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-083,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-083,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-083,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-083,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-084,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-084,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-084,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-084,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-084,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-085,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-085,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-085,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-085,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-085,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-086,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-086,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-086,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-086,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-086,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-087,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-087,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-087,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-087,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-087,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-088,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-088,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-088,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-088,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-088,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-089,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-089,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-089,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-089,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-089,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-090,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-090,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-090,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-090,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-090,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-091,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-091,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-091,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-091,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-091,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-092,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-092,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-092,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-092,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-092,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-093,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-093,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-093,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-093,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-093,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-094,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-094,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-094,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-094,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-094,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-095,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-095,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-095,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-095,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-095,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-096,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-096,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-096,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-096,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-096,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-097,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-097,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-097,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-097,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-097,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-098,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-098,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-098,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-098,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-098,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-099,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-099,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-099,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-099,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-099,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-100,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-100,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-100,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-100,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-100,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-101,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-101,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-101,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-101,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-101,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-102,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-102,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-102,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-102,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-102,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-103,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-103,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-103,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-103,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-103,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-104,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-104,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-104,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-104,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-104,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-105,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-105,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-105,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-105,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-105,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-106,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-106,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-106,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-106,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-106,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-107,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-107,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-107,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-107,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-107,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-108,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-108,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-108,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-108,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-108,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-109,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-109,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-109,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-109,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-109,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-110,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-110,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-110,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-110,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-110,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-111,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-111,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-111,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-111,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-111,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-112,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-112,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-112,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-112,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-112,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-113,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-113,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-113,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-113,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-113,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-114,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-114,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-114,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-114,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-114,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-115,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-115,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-115,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-115,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-115,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-116,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-116,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-116,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-116,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-116,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-117,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-117,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-117,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-117,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-117,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-118,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-118,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-118,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-118,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-118,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-119,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-119,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-119,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-119,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-119,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-120,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-120,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-120,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-120,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-120,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-121,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-121,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-121,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-121,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-121,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-122,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-122,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-122,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-122,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-122,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-123,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-123,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-123,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-123,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-123,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-124,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-124,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-124,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-124,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-124,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-125,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-125,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-125,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-125,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-125,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-126,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-126,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-126,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-126,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-126,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-127,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-127,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-127,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-127,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-127,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-128,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-128,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-128,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-128,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-128,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-129,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-129,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-129,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-129,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-129,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-130,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-130,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-130,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-130,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-130,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-131,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-131,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-131,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-131,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-131,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-132,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-132,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-132,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-132,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-132,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-133,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-133,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-133,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-133,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-133,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-134,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-134,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-134,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-134,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-134,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-135,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-135,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-135,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-135,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-135,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-136,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-136,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-136,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-136,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-136,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-137,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-137,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-137,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-137,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-137,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-138,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-138,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-138,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-138,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-138,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-139,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-139,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-139,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-139,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-139,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-140,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-140,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-140,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-140,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-140,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-141,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-141,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-141,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-141,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-141,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-142,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-142,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-142,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-142,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-142,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-143,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-143,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-143,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-143,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-143,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-144,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-144,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-144,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-144,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-144,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-145,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-145,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-145,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-145,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-145,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-146,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-146,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-146,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-146,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-146,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-147,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-147,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-147,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-147,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-147,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-148,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-148,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-148,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-148,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-148,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-149,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-149,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-149,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-149,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-149,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-150,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-150,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-150,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-150,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-150,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-151,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-151,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-151,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-151,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-151,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-152,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-152,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-152,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-152,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-152,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-153,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-153,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-153,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-153,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-153,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-154,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-154,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-154,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-154,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-154,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-155,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-155,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-155,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-155,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-155,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-156,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-156,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-156,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-156,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-156,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-157,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-157,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-157,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-157,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-157,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-158,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-158,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-158,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-158,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-158,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-159,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-159,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-159,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-159,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-159,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-160,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-160,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-160,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-160,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-160,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-161,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-161,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-161,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-161,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-161,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-162,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-162,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-162,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-162,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-162,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-163,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-163,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-163,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-163,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-163,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-164,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-164,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-164,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-164,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-164,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-165,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-165,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-165,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-165,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-165,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-166,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-166,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-166,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-166,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-166,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-167,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-167,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-167,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-167,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-167,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-168,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-168,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-168,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-168,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-168,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-169,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-169,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-169,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-169,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-169,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-170,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-170,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-170,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-170,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-170,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-171,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-171,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-171,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-171,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-171,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-172,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-172,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-172,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-172,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-172,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-173,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-173,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-173,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-173,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-173,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-174,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-174,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-174,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-174,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-174,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-175,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-175,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-175,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-175,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-175,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-176,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-176,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-176,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-176,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-176,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-177,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-177,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-177,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-177,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-177,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-178,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-178,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-178,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-178,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-178,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-179,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-179,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-179,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-179,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-179,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-180,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-180,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-180,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-180,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-180,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-181,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-181,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-181,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-181,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-181,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-182,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-182,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-182,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-182,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-182,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-183,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-183,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-183,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-183,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-183,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-184,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-184,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-184,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-184,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-184,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-185,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-185,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-185,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-185,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-185,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-186,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-186,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-186,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-186,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-186,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-187,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-187,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-187,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-187,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-187,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-188,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-188,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-188,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-188,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-188,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-189,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-189,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-189,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-189,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-189,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-190,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-190,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-190,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-190,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-190,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-191,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-191,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-191,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-191,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-191,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-192,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-192,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-192,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-192,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-192,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-193,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-193,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-193,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-193,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-193,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-194,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-194,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-194,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-194,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-194,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-195,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-195,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-195,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-195,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-195,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-196,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-196,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-196,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-196,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-196,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-197,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-197,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-197,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-197,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-197,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-198,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-198,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-198,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-198,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-198,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-199,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-199,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-199,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-199,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-199,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-200,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-200,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-200,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-200,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-200,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-201,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-201,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-201,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-201,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-201,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-202,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-202,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-202,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-202,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-202,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-203,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-203,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-203,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-203,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-203,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-204,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-204,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-204,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-204,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-204,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-205,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-205,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-205,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-205,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-205,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-206,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-206,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-206,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-206,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-206,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-207,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-207,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-207,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-207,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-207,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-208,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-208,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-208,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-208,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-208,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-209,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-209,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-209,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-209,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-209,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-210,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-210,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-210,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-210,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-210,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-211,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-211,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-211,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-211,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-211,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-212,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-212,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-212,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-212,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-212,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-213,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-213,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-213,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-213,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-213,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-214,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-214,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-214,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-214,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-214,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-215,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-215,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-215,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-215,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-215,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-216,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-216,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-216,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-216,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-216,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-217,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-217,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-217,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-217,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-217,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-218,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-218,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-218,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-218,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-218,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-219,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-219,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-219,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-219,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-219,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-220,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-220,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-220,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-220,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-220,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-221,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-221,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-221,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-221,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-221,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-222,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-222,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-222,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-222,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-222,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-223,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-223,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-223,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-223,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-223,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-224,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-224,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-224,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-224,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-224,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-225,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-225,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-225,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-225,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-225,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-226,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-226,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-226,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-226,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-226,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-227,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-227,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-227,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-227,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-227,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-228,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-228,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-228,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-228,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-228,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-229,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-229,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-229,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-229,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-229,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-230,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-230,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-230,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-230,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-230,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-231,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-231,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-231,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-231,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-231,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-232,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-232,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-232,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-232,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-232,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-233,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-233,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-233,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-233,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-233,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-234,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-234,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-234,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-234,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-234,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-235,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-235,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-235,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-235,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-235,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-236,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-236,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-236,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-236,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-236,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-237,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-237,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-237,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-237,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-237,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-238,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-238,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-238,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-238,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-238,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-239,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-239,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-239,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-239,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-239,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-240,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-240,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-240,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-240,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-240,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-241,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-241,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-241,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-241,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-241,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-242,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-242,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-242,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-242,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-242,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-243,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-243,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-243,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-243,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-243,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-244,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-244,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-244,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-244,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-244,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-245,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-245,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-245,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-245,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-245,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-246,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-246,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-246,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-246,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-246,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-247,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-247,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-247,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-247,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-247,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-248,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-248,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-248,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-248,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-248,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-249,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-249,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-249,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-249,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-249,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-250,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-250,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-250,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-250,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-250,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-251,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-251,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-251,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-251,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-251,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-252,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-252,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-252,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-252,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-252,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-253,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-253,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-253,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-253,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-253,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-254,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-254,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-254,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-254,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-254,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-255,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-255,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-255,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-255,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-255,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-256,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-256,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-256,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-256,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-256,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-257,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-257,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-257,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-257,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-257,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-258,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-258,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-258,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-258,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-258,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-259,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-259,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-259,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-259,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-259,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-260,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-260,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-260,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-260,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-260,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-261,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-261,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-261,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-261,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-261,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-262,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-262,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-262,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-262,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-262,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-263,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-263,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-263,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-263,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-263,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-264,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-264,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-264,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-264,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-264,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-265,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-265,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-265,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-265,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-265,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-266,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-266,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-266,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-266,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-266,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-267,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-267,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-267,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-267,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-267,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-268,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-268,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-268,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-268,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-268,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-269,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-269,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-269,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-269,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-269,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-270,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-270,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-270,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-270,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-270,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-271,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-271,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-271,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-271,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-271,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-272,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-272,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-272,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-272,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-272,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-273,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-273,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-273,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-273,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-273,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-274,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-274,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-274,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-274,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-274,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-275,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-275,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-275,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-275,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-275,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-276,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-276,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-276,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-276,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-276,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-277,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-277,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-277,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-277,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-277,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-278,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-278,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-278,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-278,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-278,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-279,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-279,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-279,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-279,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-279,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-280,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-280,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-280,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-280,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-280,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-281,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-281,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-281,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-281,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-281,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-282,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-282,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-282,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-282,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-282,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-283,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-283,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-283,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-283,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-283,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-284,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-284,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-284,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-284,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-284,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-285,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-285,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-285,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-285,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-285,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-286,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-286,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-286,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-286,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-286,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-287,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-287,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-287,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-287,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-287,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-288,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-288,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-288,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-288,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-288,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-289,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-289,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-289,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-289,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-289,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-290,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-290,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-290,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-290,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-290,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-291,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-291,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-291,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-291,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-291,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-292,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-292,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-292,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-292,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-292,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-293,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-293,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-293,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-293,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-293,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-294,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-294,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-294,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-294,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-294,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-295,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-295,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-295,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-295,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-295,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-296,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-296,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-296,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-296,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-296,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-297,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-297,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-297,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-297,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-297,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-298,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-298,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-298,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-298,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-298,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-299,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-299,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-299,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-299,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-299,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-300,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-300,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-300,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-300,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-300,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-301,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-301,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-301,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-301,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-301,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-302,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-302,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-302,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-302,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-302,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-303,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-303,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-303,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-303,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-303,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-304,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-304,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-304,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-304,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-304,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-305,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-305,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-305,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-305,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-305,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-306,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-306,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-306,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-306,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-306,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-307,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-307,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-307,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-307,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-307,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-308,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-308,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-308,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-308,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-308,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-309,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-309,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-309,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-309,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-309,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-310,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-310,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-310,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-310,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-310,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-311,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-311,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-311,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-311,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-311,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-312,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-312,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-312,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-312,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-312,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-313,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-313,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-313,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-313,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-313,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-314,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-314,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-314,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-314,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-314,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-315,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-315,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-315,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-315,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-315,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-316,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-316,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-316,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-316,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-316,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-317,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-317,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-317,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-317,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-317,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-318,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-318,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-318,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-318,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-318,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-319,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-319,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-319,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-319,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-319,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-320,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-320,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-320,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-320,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-320,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-321,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-321,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-321,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-321,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-321,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-322,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-322,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-322,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-322,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-322,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-323,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-323,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-323,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-323,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-323,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-324,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-324,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-324,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-324,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-324,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-325,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-325,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-325,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-325,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-325,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-326,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-326,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-326,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-326,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-326,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-327,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-327,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-327,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-327,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-327,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-328,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-328,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-328,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-328,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-328,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-329,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-329,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-329,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-329,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-329,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-330,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-330,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-330,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-330,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-330,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-331,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-331,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-331,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-331,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-331,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-332,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-332,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-332,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-332,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-332,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-333,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-333,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-333,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-333,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-333,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-334,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-334,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-334,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-334,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-334,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-335,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-335,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-335,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-335,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-335,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-336,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-336,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-336,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-336,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-336,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-337,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-337,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-337,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-337,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-337,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-338,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-338,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-338,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-338,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-338,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-339,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-339,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-339,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-339,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-339,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-340,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-340,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-340,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-340,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-340,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-341,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-341,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-341,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-341,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-341,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-342,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-342,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-342,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-342,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-342,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-343,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-343,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-343,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-343,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-343,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-344,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-344,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-344,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-344,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-344,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-345,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-345,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-345,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-345,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-345,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-346,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-346,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-346,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-346,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-346,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-347,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-347,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-347,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-347,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-347,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-348,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-348,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-348,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-348,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-348,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-349,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-349,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-349,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-349,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-349,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-350,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-350,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-350,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-350,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-350,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-351,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-351,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-351,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-351,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-351,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-352,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-352,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-352,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-352,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-352,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-353,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-353,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-353,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-353,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-353,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-354,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-354,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-354,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-354,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-354,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-355,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-355,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-355,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-355,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-355,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-356,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-356,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-356,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-356,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-356,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-357,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-357,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-357,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-357,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-357,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-358,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-358,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-358,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-358,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-358,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-359,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-359,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-359,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-359,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-359,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-360,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-360,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-360,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-360,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-360,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-361,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-361,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-361,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-361,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-361,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-362,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-362,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-362,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-362,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-362,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-363,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-363,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-363,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-363,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-363,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-364,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-364,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-364,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-364,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-364,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-365,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-365,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-365,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-365,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-365,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-366,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-366,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-366,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-366,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-366,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-367,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-367,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-367,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-367,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-367,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-368,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-368,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-368,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-368,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-368,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-369,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-369,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-369,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-369,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-369,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-370,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-370,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-370,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-370,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-370,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-371,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-371,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-371,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-371,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-371,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-372,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-372,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-372,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-372,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-372,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-373,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-373,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-373,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-373,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-373,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-374,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-374,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-374,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-374,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-374,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-375,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-375,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-375,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-375,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-375,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-376,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-376,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-376,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-376,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-376,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-377,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-377,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-377,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-377,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-377,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-378,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-378,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-378,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-378,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-378,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-379,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-379,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-379,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-379,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-379,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-380,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-380,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-380,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-380,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-380,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-381,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-381,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-381,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-381,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-381,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-382,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-382,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-382,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-382,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-382,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-383,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-383,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-383,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-383,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-383,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-384,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-384,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-384,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-384,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-384,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-385,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-385,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-385,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-385,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-385,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-386,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-386,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-386,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-386,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-386,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-387,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-387,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-387,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-387,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-387,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-388,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-388,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-388,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-388,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-388,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-389,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-389,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-389,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-389,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-389,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-390,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-390,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-390,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-390,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-390,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-391,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-391,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-391,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-391,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-391,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-392,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-392,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-392,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-392,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-392,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-393,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-393,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-393,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-393,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-393,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-394,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-394,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-394,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-394,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-394,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-395,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-395,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-395,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-395,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-395,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-396,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-396,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-396,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-396,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-396,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-397,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-397,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-397,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-397,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-397,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-398,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-398,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-398,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-398,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-398,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-399,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-399,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-399,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-399,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-399,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-400,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-400,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-400,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-400,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-400,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-401,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-401,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-401,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-401,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-401,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-402,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-402,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-402,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-402,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-402,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-403,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-403,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-403,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-403,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-403,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-404,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-404,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-404,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-404,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-404,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-405,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-405,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-405,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-405,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-405,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-406,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-406,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-406,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-406,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-406,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-407,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-407,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-407,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-407,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-407,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-408,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-408,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-408,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-408,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-408,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-409,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-409,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-409,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-409,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-409,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-410,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-410,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-410,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-410,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-410,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-411,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-411,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-411,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-411,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-411,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-412,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-412,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-412,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-412,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-412,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-413,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-413,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-413,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-413,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-413,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-414,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-414,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-414,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-414,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-414,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-415,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-415,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-415,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-415,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-415,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
+NSR-GRID-416,normal_day,Normal Dry Day,0.0,0.0,0.0,0.0,30.0,31.0,45.0,12.0,12,False
+NSR-GRID-416,light_rain,Light Rain,2.0,4.0,5.0,7.0,25.0,25.5,65.0,15.0,9,True
+NSR-GRID-416,heavy_rain_rush_hour,Heavy Rain During Rush Hour,12.0,24.0,32.0,40.0,23.0,23.5,80.0,22.0,17,True
+NSR-GRID-416,extreme_rain,Extreme Rain Event,25.0,50.0,70.0,90.0,22.0,22.5,88.0,30.0,18,True
+NSR-GRID-416,hot_day_optional,Hot Urban Heat Day,0.0,0.0,0.0,0.0,40.0,43.0,35.0,10.0,14,False
