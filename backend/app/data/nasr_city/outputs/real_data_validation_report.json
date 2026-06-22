@@ -10,16 +10,23 @@
   "builtup_source_status": "fallback_used",
   "landcover_source_status": "ok",
   "population_source_status": "ok",
+  "ghsl_real_rows": 12450,
+  "ghsl_fallback_rows": 30,
+  "ghsl_real_percentage": 99.75961538461539,
+  "demo_scenarios_used_for_training": false,
+  "official_flood_labels_available": false,
+  "target_type": "engineered_from_real_observations",
+  "source_audit_report_exists": true,
   "missing_columns": [],
   "critical_null_counts": {
     "elevation_warning": 12480,
+    "builtup_warning": 12480,
     "landcover_warning": 12480,
     "population_warning": 12480,
     "gpm_warning": 12480
   },
-  "target_type": "engineered_from_real_observations",
   "status": "ok_with_warnings",
   "warnings": [
-    "GHSL built-up density extraction used fallback proxy values."
+    "GHSL built-up density extraction used fallback proxy values for 30 rows."
   ]
 }
