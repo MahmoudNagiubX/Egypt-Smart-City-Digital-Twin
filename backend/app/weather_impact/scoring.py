@@ -76,3 +76,34 @@ def temperature_to_score(temperature_2m, apparent_temperature):
         score = max(0.0, min(1.0, temp_diff * 0.5 + app_diff * 0.5))
         
     return score
+
+
+def calculate_real_data_targets(df):
+    """Calculate observed_rain_hazard_score, observed_exposure_score, and data_driven_weather_impact_score."""
+    # observed_rain_hazard_score
+    # Uses rain_1h_mm and rain_24h_mm
+    rain_1h = df["rain_1h_mm"]
+    rain_24 = df["rain_24h_mm"]
+    df["observed_rain_hazard_score"] = normalize_series(rain_1h * 0.4 + rain_24 * 0.6)
+    
+    # observed_exposure_score
+    # Uses population_sum (or proxy) and built_surface_mean
+    pop_sum = df["population_sum"]
+    built_surface = df["built_surface_mean"]
+    df["observed_exposure_score"] = normalize_series(pop_sum * 0.6 + built_surface * 0.4)
+    
+    # data_driven_weather_impact_score
+    # Combine hazard, exposure, and vulnerability (low_elevation_score, low_slope_score)
+    low_elev = df.get("low_elevation_score", 0.5)
+    low_slope = df.get("low_slope_score", 0.5)
+    
+    impact = (
+        df["observed_rain_hazard_score"] * 0.4 +
+        df["observed_exposure_score"] * 0.3 +
+        low_elev * 0.15 +
+        low_slope * 0.15
+    )
+    df["data_driven_weather_impact_score"] = normalize_series(impact)
+    df["target_type"] = "engineered_from_real_observations"
+    
+    return df

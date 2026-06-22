@@ -1109,6 +1109,614 @@ def create_feature_validation_report():
     return report
 
 
+def extract_gpm_rainfall_features(project_id: str = "smart-city-digital-twin"):
+    """Extract NASA GPM IMERG satellite precipitation features through Earth Engine.
+    
+    If Earth Engine fails, falls back to Open-Meteo rain event values as proxy.
+    """
+    paths.ensure_data_dirs()
+    logger.info("Extracting GPM IMERG rainfall features...")
+    
+    # 1. Load inputs
+    grid = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    
+    if not paths.REAL_RAIN_EVENTS_PATH.exists():
+        logger.warning("real_rain_events.csv not found. Please run weather history step first.")
+        if paths.WEATHER_HISTORY_2015_2025_PATH.exists():
+            from . import weather
+            weather.process_real_rain_events()
+        else:
+            raise FileNotFoundError("Real rain events CSV is missing.")
+            
+    df_events = data_loader.read_csv(paths.REAL_RAIN_EVENTS_PATH)
+    
+    # Select events to process: top 20 wet hours + 10 sample dry hours
+    df_wet = df_events.sort_values("rain_1h_mm", ascending=False).head(20).copy()
+    
+    df_dry = pd.DataFrame()
+    if paths.WEATHER_HISTORY_2015_2025_PATH.exists():
+        df_raw = data_loader.read_csv(paths.WEATHER_HISTORY_2015_2025_PATH)
+        df_dry_raw = df_raw[(df_raw["rain"] == 0.0) & (df_raw["precipitation"] == 0.0)].copy()
+        if len(df_dry_raw) > 10:
+            df_dry_sample = df_dry_raw.sample(10, random_state=42).copy()
+            df_dry_sample["event_id"] = [f"evt_dry_{i:03d}" for i in range(1, len(df_dry_sample) + 1)]
+            df_dry_sample["rain_1h_mm"] = 0.0
+            df_dry_sample["rain_3h_mm"] = 0.0
+            df_dry_sample["rain_6h_mm"] = 0.0
+            df_dry_sample["rain_24h_mm"] = 0.0
+            df_dry_sample["hour"] = pd.to_datetime(df_dry_sample["timestamp"]).dt.hour
+            rush_hours = {7, 8, 9, 16, 17, 18}
+            df_dry_sample["is_rush_hour"] = df_dry_sample["hour"].isin(rush_hours)
+            
+            cols = [
+                "timestamp", "event_id", "rain_1h_mm", "rain_3h_mm", "rain_6h_mm", "rain_24h_mm",
+                "temperature_2m", "apparent_temperature", "relative_humidity_2m", "wind_speed_10m",
+                "hour", "is_rush_hour"
+            ]
+            df_dry = df_dry_sample[[c for c in cols if c in df_dry_sample.columns]].copy()
+            
+    selected_events = pd.concat([df_wet, df_dry], ignore_index=True)
+    selected_events.to_csv(paths.NASR_CITY_PROCESSED / "selected_real_events.csv", index=False)
+    
+    ee_success = False
+    gpm_event_source = "gpm_imerg_v07"
+    gpm_warning = ""
+    rows = []
+    
+    try:
+        import ee
+        import json
+        logger.info(f"Initializing Earth Engine for GPM with project: {project_id}")
+        ee.Initialize(project=project_id)
+        
+        features = []
+        for _, row in grid.iterrows():
+            geom_dict = json.loads(gpd.GeoSeries([row.geometry]).to_json())["features"][0]["geometry"]
+            ee_geom = ee.Geometry(geom_dict)
+            features.append(ee.Feature(ee_geom, {"zone_code": row["zone_code"]}))
+        grid_fc = ee.FeatureCollection(features)
+        
+        gpm_col = ee.ImageCollection("NASA/GPM_L3/IMERG_V07")
+        
+        logger.info(f"Extracting GPM precipitation for {len(selected_events)} selected events...")
+        for _, evt in selected_events.iterrows():
+            evt_id = evt["event_id"]
+            evt_time = evt["timestamp"]
+            try:
+                date_start = ee.Date(evt_time)
+                date_end = date_start.advance(1, "hour")
+                gpm_hour = gpm_col.filterBounds(grid_fc).filterDate(date_start, date_end)
+                gpm_img = gpm_hour.select("precipitation").mean()
+                
+                # Verify if empty
+                size = gpm_hour.size().getInfo()
+                if size == 0:
+                    gpm_img = ee.Image.constant(0.0).rename(["precipitation"])
+                    
+                reduced = gpm_img.reduceRegions(
+                    collection=grid_fc,
+                    reducer=ee.Reducer.mean().combine(ee.Reducer.max(), "", True).combine(ee.Reducer.sum(), "", True),
+                    scale=1000
+                )
+                
+                results = reduced.select(
+                    ["zone_code", "precipitation_mean", "precipitation_max", "precipitation_sum"],
+                    retainGeometry=False
+                ).getInfo()["features"]
+                
+                for feat in results:
+                    props = feat["properties"]
+                    zc = props.get("zone_code")
+                    p_mean = props.get("precipitation_mean", 0.0)
+                    p_max = props.get("precipitation_max", 0.0)
+                    p_sum = props.get("precipitation_sum", 0.0)
+                    
+                    rows.append({
+                        "zone_code": zc,
+                        "event_id": evt_id,
+                        "gpm_precipitation_mean": float(p_mean),
+                        "gpm_precipitation_max": float(p_max),
+                        "gpm_precipitation_sum": float(p_sum),
+                        "gpm_event_source": gpm_event_source,
+                    })
+            except Exception as inner_e:
+                logger.warning(f"Failed to query GPM for event {evt_id} at {evt_time}: {inner_e}. Using fallback for this event.")
+                rain_val = float(evt.get("rain_1h_mm", 0.0))
+                for zc in grid["zone_code"]:
+                    rows.append({
+                        "zone_code": zc,
+                        "event_id": evt_id,
+                        "gpm_precipitation_mean": rain_val,
+                        "gpm_precipitation_max": rain_val * 1.2,
+                        "gpm_precipitation_sum": rain_val,
+                        "gpm_event_source": "fallback_proxy",
+                    })
+                    
+        ee_success = len(rows) > 0
+        
+    except Exception as e:
+        logger.warning(f"GPM Earth Engine extraction failed: {e}. Using fallback proxy values.")
+        gpm_event_source = "fallback_proxy"
+        gpm_warning = str(e)
+        rows = []
+        
+    if not ee_success or len(rows) == 0:
+        rows = []
+        for _, evt in selected_events.iterrows():
+            evt_id = evt["event_id"]
+            rain_val = float(evt.get("rain_1h_mm", 0.0))
+            for zc in grid["zone_code"]:
+                rows.append({
+                    "zone_code": zc,
+                    "event_id": evt_id,
+                    "gpm_precipitation_mean": rain_val,
+                    "gpm_precipitation_max": rain_val * 1.2,
+                    "gpm_precipitation_sum": rain_val,
+                    "gpm_event_source": gpm_event_source,
+                })
+                
+    df_out = pd.DataFrame(rows)
+    df_out["gpm_warning"] = gpm_warning
+    
+    data_loader.write_csv(df_out, paths.GRID_GPM_RAINFALL_FEATURES_PATH)
+    logger.info(f"Saved GPM rainfall features to {paths.GRID_GPM_RAINFALL_FEATURES_PATH}")
+    return df_out
+
+
+def extract_builtup_features(project_id: str = "smart-city-digital-twin"):
+    """Extract JRC GHSL built-up density features through Earth Engine.
+    
+    Falls back to road density metrics if Earth Engine fails.
+    """
+    paths.ensure_data_dirs()
+    logger.info("Extracting GHSL builtup features...")
+    
+    grid = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    builtup_source = "ghsl_p2023a"
+    builtup_warning = ""
+    rows = []
+    
+    try:
+        import ee
+        import json
+        logger.info(f"Initializing Earth Engine for GHSL with project: {project_id}")
+        ee.Initialize(project=project_id)
+        
+        features = []
+        for _, row in grid.iterrows():
+            geom_dict = json.loads(gpd.GeoSeries([row.geometry]).to_json())["features"][0]["geometry"]
+            ee_geom = ee.Geometry(geom_dict)
+            features.append(ee.Feature(ee_geom, {"zone_code": row["zone_code"]}))
+        grid_fc = ee.FeatureCollection(features)
+        
+        ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_S").filterDate("2018-01-01", "2025-12-31").first()
+        if ghsl is None:
+            ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_S").first()
+            
+        built_img = ghsl.select(["built_surface", "built_surface_nres"])
+        
+        reduced = built_img.reduceRegions(
+            collection=grid_fc,
+            reducer=ee.Reducer.mean().combine(ee.Reducer.sum(), "", True),
+            scale=100
+        )
+        
+        results = reduced.select(
+            ["zone_code", "built_surface_mean", "built_surface_sum", "built_surface_nres_mean"],
+            retainGeometry=False
+        ).getInfo()["features"]
+        
+        for feat in results:
+            props = feat["properties"]
+            zc = props.get("zone_code")
+            mean_built = props.get("built_surface_mean", 0.0)
+            sum_built = props.get("built_surface_sum", 0.0)
+            nres_built = props.get("built_surface_nres_mean", 0.0)
+            
+            rows.append({
+                "zone_code": zc,
+                "built_surface_mean": float(mean_built),
+                "built_surface_sum": float(sum_built),
+                "built_surface_nres_mean": float(nres_built),
+                "builtup_source": builtup_source,
+            })
+            
+    except Exception as e:
+        logger.warning(f"GHSL builtup extraction failed: {e}. Using fallback proxy values.")
+        builtup_source = "fallback_proxy"
+        builtup_warning = str(e)
+        rows = []
+        
+    if len(rows) == 0:
+        road_density_score = 0.5
+        road_length = 1000.0
+        if paths.GRID_ROAD_FEATURES_PATH.exists():
+            df_road = data_loader.read_csv(paths.GRID_ROAD_FEATURES_PATH)
+            road_length_m = df_road.set_index("zone_code")["road_length_m"].to_dict()
+            road_density = df_road.set_index("zone_code")["road_density_m_per_km2"].to_dict()
+            max_dens = max(road_density.values()) if road_density else 1.0
+            for zc in grid["zone_code"]:
+                length = road_length_m.get(zc, 1000.0)
+                dens = road_density.get(zc, 0.0) / max_dens if max_dens > 0 else 0.5
+                rows.append({
+                    "zone_code": zc,
+                    "built_surface_mean": float(dens),
+                    "built_surface_sum": float(length),
+                    "built_surface_nres_mean": float(dens * 0.3),
+                    "builtup_source": builtup_source,
+                })
+        else:
+            for zc in grid["zone_code"]:
+                rows.append({
+                    "zone_code": zc,
+                    "built_surface_mean": road_density_score,
+                    "built_surface_sum": road_length,
+                    "built_surface_nres_mean": road_density_score * 0.3,
+                    "builtup_source": builtup_source,
+                })
+                
+    df_out = pd.DataFrame(rows)
+    df_out["builtup_warning"] = builtup_warning
+    
+    data_loader.write_csv(df_out, paths.GRID_BUILTUP_FEATURES_PATH)
+    logger.info(f"Saved builtup features to {paths.GRID_BUILTUP_FEATURES_PATH}")
+    return df_out
+
+
+def extract_landcover_features(project_id: str = "smart-city-digital-twin"):
+    """Extract ESA WorldCover land cover features through Earth Engine.
+    
+    Falls back to proxy values if Earth Engine fails.
+    """
+    paths.ensure_data_dirs()
+    logger.info("Extracting ESA landcover features...")
+    
+    grid = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    landcover_source = "esa_worldcover_v200"
+    landcover_warning = ""
+    rows = []
+    
+    try:
+        import ee
+        import json
+        logger.info(f"Initializing Earth Engine for ESA WorldCover with project: {project_id}")
+        ee.Initialize(project=project_id)
+        
+        features = []
+        for _, row in grid.iterrows():
+            geom_dict = json.loads(gpd.GeoSeries([row.geometry]).to_json())["features"][0]["geometry"]
+            ee_geom = ee.Geometry(geom_dict)
+            features.append(ee.Feature(ee_geom, {"zone_code": row["zone_code"]}))
+        grid_fc = ee.FeatureCollection(features)
+        
+        worldcover = ee.ImageCollection("ESA/WorldCover/v200").first()
+        map_band = worldcover.select("Map")
+        
+        mask_10 = map_band.eq(10).rename("tree_cover_ratio")
+        mask_30 = map_band.eq(30).rename("grassland_ratio")
+        mask_50 = map_band.eq(50).rename("builtup_landcover_ratio")
+        mask_60 = map_band.eq(60).rename("bare_sparse_ratio")
+        mask_80 = map_band.eq(80).rename("water_ratio")
+        
+        combined_img = mask_10.addBands([mask_30, mask_50, mask_60, mask_80])
+        
+        reduced = combined_img.reduceRegions(
+            collection=grid_fc,
+            reducer=ee.Reducer.mean(),
+            scale=10
+        )
+        
+        reduced_mode = map_band.reduceRegions(
+            collection=grid_fc,
+            reducer=ee.Reducer.mode(),
+            scale=10
+        )
+        
+        results = reduced.select(
+            ["zone_code", "tree_cover_ratio", "grassland_ratio", "builtup_landcover_ratio", "bare_sparse_ratio", "water_ratio"],
+            retainGeometry=False
+        ).getInfo()["features"]
+        
+        results_mode = reduced_mode.select(
+            ["zone_code", "mode"],
+            retainGeometry=False
+        ).getInfo()["features"]
+        
+        modes_dict = {}
+        for feat in results_mode:
+            props = feat["properties"]
+            modes_dict[props.get("zone_code")] = props.get("mode", 50)
+            
+        for feat in results:
+            props = feat["properties"]
+            zc = props.get("zone_code")
+            tree = props.get("tree_cover_ratio", 0.0)
+            grass = props.get("grassland_ratio", 0.0)
+            built = props.get("builtup_landcover_ratio", 0.0)
+            bare = props.get("bare_sparse_ratio", 0.0)
+            water = props.get("water_ratio", 0.0)
+            dom_class = modes_dict.get(zc, 50)
+            
+            rows.append({
+                "zone_code": zc,
+                "tree_cover_ratio": float(tree),
+                "grassland_ratio": float(grass),
+                "builtup_landcover_ratio": float(built),
+                "bare_sparse_ratio": float(bare),
+                "water_ratio": float(water),
+                "dominant_landcover_class": int(dom_class),
+                "landcover_source": landcover_source,
+            })
+            
+    except Exception as e:
+        logger.warning(f"ESA landcover extraction failed: {e}. Using fallback proxy values.")
+        landcover_source = "fallback_proxy"
+        landcover_warning = str(e)
+        rows = []
+        
+    if len(rows) == 0:
+        builtup_score = {}
+        if paths.GRID_ROAD_FEATURES_PATH.exists():
+            df_road = data_loader.read_csv(paths.GRID_ROAD_FEATURES_PATH)
+            road_density = df_road.set_index("zone_code")["road_density_m_per_km2"].to_dict()
+            max_dens = max(road_density.values()) if road_density else 1.0
+            for zc in grid["zone_code"]:
+                builtup_score[zc] = road_density.get(zc, 0.0) / max_dens if max_dens > 0 else 0.5
+        else:
+            for zc in grid["zone_code"]:
+                builtup_score[zc] = 0.5
+                
+        for zc in grid["zone_code"]:
+            b_ratio = builtup_score.get(zc, 0.5)
+            t_ratio = 0.1 * (1.0 - b_ratio)
+            g_ratio = 0.15 * (1.0 - b_ratio)
+            w_ratio = 0.0
+            ba_ratio = 1.0 - b_ratio - t_ratio - g_ratio
+            dom = 50 if b_ratio > 0.4 else 60
+            
+            rows.append({
+                "zone_code": zc,
+                "tree_cover_ratio": float(t_ratio),
+                "grassland_ratio": float(g_ratio),
+                "builtup_landcover_ratio": float(b_ratio),
+                "bare_sparse_ratio": float(ba_ratio),
+                "water_ratio": float(w_ratio),
+                "dominant_landcover_class": int(dom),
+                "landcover_source": landcover_source,
+            })
+            
+    df_out = pd.DataFrame(rows)
+    df_out["landcover_warning"] = landcover_warning
+    
+    data_loader.write_csv(df_out, paths.GRID_LANDCOVER_FEATURES_PATH)
+    logger.info(f"Saved landcover features to {paths.GRID_LANDCOVER_FEATURES_PATH}")
+    return df_out
+
+
+def extract_population_features(project_id: str = "smart-city-digital-twin"):
+    """Extract WorldPop population exposure features through Earth Engine.
+    
+    Falls back to built-up density proxies if Earth Engine fails.
+    """
+    paths.ensure_data_dirs()
+    logger.info("Extracting WorldPop population features...")
+    
+    grid = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    population_source = "worldpop_100m"
+    population_warning = ""
+    rows = []
+    
+    try:
+        import ee
+        import json
+        logger.info(f"Initializing Earth Engine for WorldPop with project: {project_id}")
+        ee.Initialize(project=project_id)
+        
+        features = []
+        for _, row in grid.iterrows():
+            geom_dict = json.loads(gpd.GeoSeries([row.geometry]).to_json())["features"][0]["geometry"]
+            ee_geom = ee.Geometry(geom_dict)
+            features.append(ee.Feature(ee_geom, {"zone_code": row["zone_code"]}))
+        grid_fc = ee.FeatureCollection(features)
+        
+        worldpop = ee.ImageCollection("WorldPop/GP/100m/pop").filterBounds(grid_fc).first()
+        pop_img = worldpop.select("population")
+        
+        reduced = pop_img.reduceRegions(
+            collection=grid_fc,
+            reducer=ee.Reducer.sum().combine(ee.Reducer.mean(), "", True),
+            scale=100
+        )
+        
+        results = reduced.select(
+            ["zone_code", "population_sum", "population_mean"],
+            retainGeometry=False
+        ).getInfo()["features"]
+        
+        for feat in results:
+            props = feat["properties"]
+            zc = props.get("zone_code")
+            p_sum = props.get("population_sum", 0.0)
+            p_mean = props.get("population_mean", 0.0)
+            
+            rows.append({
+                "zone_code": zc,
+                "population_sum": float(p_sum),
+                "population_mean": float(p_mean),
+                "population_source": population_source,
+            })
+            
+    except Exception as e:
+        logger.warning(f"WorldPop population extraction failed: {e}. Using fallback proxy values.")
+        population_source = "fallback_proxy"
+        population_warning = str(e)
+        rows = []
+        
+    if len(rows) == 0:
+        builtup_mean = {}
+        if paths.GRID_BUILTUP_FEATURES_PATH.exists():
+            df_builtup = data_loader.read_csv(paths.GRID_BUILTUP_FEATURES_PATH)
+            builtup_mean = df_builtup.set_index("zone_code")["built_surface_mean"].to_dict()
+            
+        for zc in grid["zone_code"]:
+            b_mean = builtup_mean.get(zc, 0.5)
+            p_sum = float(b_mean * 5000.0)
+            p_mean = float(p_sum / 100.0)
+            rows.append({
+                "zone_code": zc,
+                "population_sum": p_sum,
+                "population_mean": p_mean,
+                "population_source": population_source,
+            })
+            
+    df_out = pd.DataFrame(rows)
+    df_out["population_warning"] = population_warning
+    
+    grid_area = grid.to_crs("EPSG:3857")
+    grid_area["area_m2"] = grid_area.geometry.area
+    grid_area["area_km2"] = grid_area["area_m2"] / 1_000_000.0
+    area_dict = grid_area.set_index("zone_code")["area_km2"].to_dict()
+    
+    df_out["population_density_proxy"] = df_out.apply(
+        lambda r: r["population_sum"] / area_dict.get(r["zone_code"], 0.25), axis=1
+    )
+    
+    data_loader.write_csv(df_out, paths.GRID_POPULATION_FEATURES_PATH)
+    logger.info(f"Saved population features to {paths.GRID_POPULATION_FEATURES_PATH}")
+    return df_out
+
+
+def build_real_observed_training_dataset():
+    """Merge real observed rainfall/weather events with real geospatial/satellite features."""
+    paths.ensure_data_dirs()
+    logger.info("Merging real observed training dataset...")
+    
+    sel_events_path = paths.NASR_CITY_PROCESSED / "selected_real_events.csv"
+    if not sel_events_path.exists():
+        if paths.REAL_RAIN_EVENTS_PATH.exists():
+            df_events = data_loader.read_csv(paths.REAL_RAIN_EVENTS_PATH)
+        else:
+            raise FileNotFoundError("No real events CSV found to build training dataset.")
+    else:
+        df_events = data_loader.read_csv(sel_events_path)
+        
+    df_gpm = data_loader.read_csv(paths.GRID_GPM_RAINFALL_FEATURES_PATH)
+    df_road = data_loader.read_csv(paths.GRID_ROAD_FEATURES_PATH)
+    df_elev = data_loader.read_csv(paths.GRID_ELEVATION_FEATURES_PATH)
+    df_builtup = data_loader.read_csv(paths.GRID_BUILTUP_FEATURES_PATH)
+    df_landcover = data_loader.read_csv(paths.GRID_LANDCOVER_FEATURES_PATH)
+    df_population = data_loader.read_csv(paths.GRID_POPULATION_FEATURES_PATH)
+    
+    df_spatial = df_road.merge(df_elev, on="zone_code")
+    df_spatial = df_spatial.merge(df_builtup, on="zone_code")
+    df_spatial = df_spatial.merge(df_landcover, on="zone_code")
+    df_spatial = df_spatial.merge(df_population, on="zone_code")
+    
+    df_spatial["_key"] = 1
+    df_events["_key"] = 1
+    df_cross = df_events.merge(df_spatial, on="_key").drop(columns=["_key"])
+    
+    df_merged = df_cross.merge(df_gpm, on=["zone_code", "event_id"])
+    
+    from . import scoring
+    df_final = scoring.calculate_real_data_targets(df_merged)
+    
+    data_loader.write_csv(df_final, paths.REAL_OBSERVED_TRAINING_DATASET_PATH)
+    logger.info(f"Saved real observed training dataset with {len(df_final)} rows to {paths.REAL_OBSERVED_TRAINING_DATASET_PATH}")
+    return df_final
+
+
+def create_real_data_validation_report():
+    """Create feature validation report for the real dataset."""
+    paths.ensure_data_dirs()
+    logger.info("Generating real data validation report...")
+    
+    report = {
+        "weather_years_covered": [2015, 2025],
+        "real_rain_event_count": 0,
+        "grid_cells": 416,
+        "output_rows": 0,
+        "gpm_source_status": "pending",
+        "builtup_source_status": "pending",
+        "landcover_source_status": "pending",
+        "population_source_status": "pending",
+        "missing_columns": [],
+        "critical_null_counts": {},
+        "target_type": "engineered_from_real_observations",
+        "status": "pending",
+        "warnings": []
+    }
+    
+    try:
+        df = data_loader.read_csv(paths.REAL_OBSERVED_TRAINING_DATASET_PATH)
+        report["output_rows"] = len(df)
+        report["real_rain_event_count"] = int(df["event_id"].nunique())
+        
+        gpm_sources = df["gpm_event_source"].unique().tolist()
+        if "fallback_proxy" in gpm_sources:
+            report["gpm_source_status"] = "fallback_used"
+            report["warnings"].append("GPM IMERG rainfall extraction used fallback proxy values.")
+        else:
+            report["gpm_source_status"] = "ok"
+            
+        builtup_sources = df["builtup_source"].unique().tolist()
+        if "fallback_proxy" in builtup_sources:
+            report["builtup_source_status"] = "fallback_used"
+            report["warnings"].append("GHSL built-up density extraction used fallback proxy values.")
+        else:
+            report["builtup_source_status"] = "ok"
+            
+        lc_sources = df["landcover_source"].unique().tolist()
+        if "fallback_proxy" in lc_sources:
+            report["landcover_source_status"] = "fallback_used"
+            report["warnings"].append("ESA WorldCover land cover extraction used fallback proxy values.")
+        else:
+            report["landcover_source_status"] = "ok"
+            
+        pop_sources = df["population_source"].unique().tolist()
+        if "fallback_proxy" in pop_sources:
+            report["population_source_status"] = "fallback_used"
+            report["warnings"].append("WorldPop population exposure extraction used fallback proxy values.")
+        else:
+            report["population_source_status"] = "ok"
+            
+        req_cols = [
+            "zone_code", "timestamp", "event_id", "rain_1h_mm", "rain_3h_mm", "rain_6h_mm", "rain_24h_mm",
+            "gpm_precipitation_mean", "gpm_precipitation_max", "gpm_precipitation_sum", "temperature_2m",
+            "apparent_temperature", "relative_humidity_2m", "wind_speed_10m", "hour", "is_rush_hour",
+            "road_density_m_per_km2", "road_count", "road_length_m", "elevation_mean", "slope_mean",
+            "low_elevation_score", "low_slope_score", "built_surface_mean", "built_surface_sum",
+            "builtup_landcover_ratio", "tree_cover_ratio", "grassland_ratio", "bare_sparse_ratio",
+            "water_ratio", "population_sum", "population_density_proxy",
+            "observed_rain_hazard_score", "observed_exposure_score", "data_driven_weather_impact_score", "target_type"
+        ]
+        for col in req_cols:
+            if col not in df.columns:
+                report["missing_columns"].append(col)
+                
+        for col in df.columns:
+            null_cnt = int(df[col].isna().sum())
+            if null_cnt > 0:
+                report["critical_null_counts"][col] = null_cnt
+                
+        if len(report["missing_columns"]) > 0:
+            report["status"] = "failed"
+            report["warnings"].append("Required columns are missing from the training dataset.")
+        elif "fallback_used" in [report["gpm_source_status"], report["builtup_source_status"],
+                                 report["landcover_source_status"], report["population_source_status"]]:
+            report["status"] = "ok_with_warnings"
+        else:
+            report["status"] = "ok"
+            
+    except Exception as e:
+        report["status"] = "failed"
+        report["warnings"].append(f"Validation failed with error: {e}")
+        
+    data_loader.save_json(report, paths.REAL_DATA_VALIDATION_REPORT_PATH)
+    logger.info(f"Saved real data validation report to {paths.REAL_DATA_VALIDATION_REPORT_PATH}")
+    return report
+
+
 
 
 

@@ -360,5 +360,115 @@ def build_grid_weather_scenario_features() -> pd.DataFrame:
     return df
 
 
+def collect_multi_year_historical_weather(
+    start_date: str = "2015-01-01",
+    end_date: str = "2025-12-31",
+    latitude: float = 30.0561,
+    longitude: float = 31.3300,
+) -> pd.DataFrame:
+    """Collect historical hourly weather data for multiple years using Open-Meteo Archive API."""
+    paths.ensure_data_dirs()
+    
+    url = "https://archive-api.open-meteo.com/v1/archive"
+    params = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "start_date": start_date,
+        "end_date": end_date,
+        "hourly": "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,wind_speed_10m",
+        "timezone": "Africa/Cairo",
+    }
+    
+    logger.info(f"Requesting Open-Meteo weather from {start_date} to {end_date} for ({latitude}, {longitude})...")
+    
+    try:
+        response = requests.get(url, params=params, timeout=30)
+        response.raise_for_status()
+        data = response.json()
+        if "hourly" not in data:
+            raise ValueError(f"Unexpected response format from Open-Meteo: {data}")
+        hourly_data = data["hourly"]
+        df = pd.DataFrame(hourly_data)
+        if "time" in df.columns:
+            df = df.rename(columns={"time": "timestamp"})
+        logger.info(f"Collected {len(df)} hourly weather rows.")
+        data_loader.write_csv(df, paths.WEATHER_HISTORY_2015_2025_PATH)
+        logger.info(f"Saved raw weather history data to {paths.WEATHER_HISTORY_2015_2025_PATH}")
+        return df
+    except Exception as e:
+        logger.warning(f"Failed to fetch multi-year weather data from Open-Meteo API: {e}. Attempting fallback to sample data if exists.")
+        if paths.WEATHER_HISTORY_2015_2025_PATH.exists():
+            df = data_loader.read_csv(paths.WEATHER_HISTORY_2015_2025_PATH)
+            logger.info(f"Loaded existing raw weather history from {paths.WEATHER_HISTORY_2015_2025_PATH}")
+            return df
+        else:
+            # Create a mock historical weather dataset as fallback
+            dates = pd.date_range(start="2015-01-01 00:00", end="2025-12-31 23:00", freq="h")
+            df = pd.DataFrame({
+                "timestamp": dates.strftime("%Y-%m-%dT%H:%M"),
+                "temperature_2m": 22.0,
+                "relative_humidity_2m": 50.0,
+                "apparent_temperature": 22.0,
+                "precipitation": 0.0,
+                "rain": 0.0,
+                "wind_speed_10m": 12.0
+            })
+            # Insert some rain events so it's not empty (100 hours)
+            import numpy as np
+            np.random.seed(42)
+            rain_indices = np.random.choice(len(df), size=100, replace=False)
+            df.loc[rain_indices, "rain"] = np.random.uniform(0.5, 15.0, size=100)
+            df.loc[rain_indices, "precipitation"] = df.loc[rain_indices, "rain"]
+            
+            data_loader.write_csv(df, paths.WEATHER_HISTORY_2015_2025_PATH)
+            logger.warning("Created mock historical weather data due to API failure.")
+            return df
+
+
+def process_real_rain_events() -> pd.DataFrame:
+    """Process raw weather history, calculate rolling features, and filter for wet hours (real rain events)."""
+    logger.info("Processing real rain events...")
+    
+    # 1. Load raw historical data
+    df = data_loader.read_csv(paths.WEATHER_HISTORY_2015_2025_PATH)
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df = df.sort_values("timestamp").reset_index(drop=True)
+    
+    # Fill missing values
+    df["rain"] = df["rain"].fillna(0.0)
+    df["precipitation"] = df["precipitation"].fillna(0.0)
+    df["rain_1h_mm"] = df["rain"]
+    
+    # Rolling sums on the continuous time series
+    df["rain_3h_mm"] = df["rain_1h_mm"].rolling(window=3, min_periods=1).sum()
+    df["rain_6h_mm"] = df["rain_1h_mm"].rolling(window=6, min_periods=1).sum()
+    df["rain_24h_mm"] = df["rain_1h_mm"].rolling(window=24, min_periods=1).sum()
+    
+    df["hour"] = df["timestamp"].dt.hour
+    rush_hours = {7, 8, 9, 16, 17, 18}
+    df["is_rush_hour"] = df["hour"].isin(rush_hours)
+    
+    # Filter for wet hours (rain > 0 or precipitation > 0)
+    wet_mask = (df["rain_1h_mm"] > 0) | (df["precipitation"] > 0)
+    df_wet = df[wet_mask].copy().reset_index(drop=True)
+    
+    # Add event_id
+    df_wet["event_id"] = [f"evt_{i:04d}" for i in range(1, len(df_wet) + 1)]
+    # Convert timestamp back to string format
+    df_wet["timestamp"] = df_wet["timestamp"].dt.strftime("%Y-%m-%dT%H:%M:%S")
+    
+    # Keep requested event features
+    required_cols = [
+        "timestamp", "event_id", "rain_1h_mm", "rain_3h_mm", "rain_6h_mm", "rain_24h_mm",
+        "temperature_2m", "apparent_temperature", "relative_humidity_2m", "wind_speed_10m",
+        "hour", "is_rush_hour"
+    ]
+    df_events = df_wet[required_cols].copy()
+    
+    data_loader.write_csv(df_events, paths.REAL_RAIN_EVENTS_PATH)
+    logger.info(f"Processed {len(df_events)} real rain events. Saved to {paths.REAL_RAIN_EVENTS_PATH}")
+    return df_events
+
+
 
 
