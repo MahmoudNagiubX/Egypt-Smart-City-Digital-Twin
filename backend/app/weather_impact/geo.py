@@ -635,5 +635,132 @@ def create_spatial_foundation_map():
     return str(paths.SPATIAL_FOUNDATION_MAP_PATH)
 
 
+def calculate_road_density_features():
+    """Calculate road network density and type count features for each grid zone."""
+    paths.ensure_data_dirs()
+    logger.info("Calculating road density features per grid zone...")
+    
+    # 1. Load inputs
+    grid = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    roads_joined = data_loader.read_geojson(paths.ROADS_WITH_ZONE_IDS_PATH)
+    roads_orig = data_loader.read_geojson(paths.NASR_CITY_ROADS_PATH)
+    
+    # Ensure both are in EPSG:3857 for metric calculations
+    grid_metric = grid.to_crs("EPSG:3857")
+    
+    # Map original highway type to roads_joined
+    roads_orig["road_id"] = [f"NSR-ROAD-{i+1:05d}" for i in range(len(roads_orig))]
+    highway_map = dict(zip(roads_orig["road_id"], roads_orig["highway"]))
+    roads_joined["highway"] = roads_joined["road_id"].map(highway_map)
+    
+    # Try mapping u and v for intersection_proxy_count
+    if "u" in roads_orig.columns and "v" in roads_orig.columns:
+        u_map = dict(zip(roads_orig["road_id"], roads_orig["u"]))
+        v_map = dict(zip(roads_orig["road_id"], roads_orig["v"]))
+        roads_joined["u"] = roads_joined["road_id"].map(u_map)
+        roads_joined["v"] = roads_joined["road_id"].map(v_map)
+        has_nodes = True
+    else:
+        has_nodes = False
+
+    def get_road_class(hw):
+        if not isinstance(hw, str):
+            if isinstance(hw, list):
+                hw = hw[0]
+            else:
+                return "unknown"
+        hw = str(hw).lower()
+        if "primary" in hw:
+            return "primary"
+        elif "secondary" in hw:
+            return "secondary"
+        elif "tertiary" in hw:
+            return "tertiary"
+        elif "residential" in hw:
+            return "residential"
+        elif "service" in hw:
+            return "service"
+        else:
+            return "unknown"
+            
+    roads_joined["road_class"] = roads_joined["highway"].apply(get_road_class)
+    
+    # Group roads by zone_code
+    grouped = roads_joined.groupby("zone_code")
+    
+    road_counts = grouped.size().to_dict()
+    road_lengths = grouped["length_m"].sum().to_dict()
+    avg_speeds = grouped["base_speed_kph"].mean().to_dict()
+    avg_travel_times = grouped["base_travel_time_sec"].mean().to_dict()
+    
+    # Class counts
+    if not roads_joined.empty:
+        class_counts = grouped["road_class"].value_counts().unstack(fill_value=0)
+    else:
+        class_counts = pd.DataFrame(columns=["primary", "secondary", "tertiary", "residential", "service", "unknown"])
+        
+    for cls in ["primary", "secondary", "tertiary", "residential", "service", "unknown"]:
+        if cls not in class_counts.columns:
+            class_counts[cls] = 0
+            
+    # Calculate intersection proxy count
+    intersection_proxies = {}
+    if has_nodes and not roads_joined.empty:
+        for zc, group in grouped:
+            nodes = set(group["u"].dropna().tolist() + group["v"].dropna().tolist())
+            intersection_proxies[zc] = len(nodes)
+    else:
+        intersection_proxies = road_counts
+        
+    # Build feature rows for all grid cells
+    rows = []
+    for _, cell in grid_metric.iterrows():
+        zc = cell["zone_code"]
+        area_m2 = float(cell.geometry.area)
+        area_km2 = area_m2 / 1_000_000.0
+        
+        length = float(road_lengths.get(zc, 0.0))
+        density = length / area_km2 if area_km2 > 0 else 0.0
+        
+        p_count = int(class_counts.loc[zc, "primary"]) if zc in class_counts.index else 0
+        sec_count = int(class_counts.loc[zc, "secondary"]) if zc in class_counts.index else 0
+        tert_count = int(class_counts.loc[zc, "tertiary"]) if zc in class_counts.index else 0
+        res_count = int(class_counts.loc[zc, "residential"]) if zc in class_counts.index else 0
+        srv_count = int(class_counts.loc[zc, "service"]) if zc in class_counts.index else 0
+        unk_count = int(class_counts.loc[zc, "unknown"]) if zc in class_counts.index else 0
+        
+        speed = avg_speeds.get(zc, 50.0)
+        if pd.isna(speed):
+            speed = 50.0
+            
+        tt = avg_travel_times.get(zc, 0.0)
+        if pd.isna(tt):
+            tt = 0.0
+            
+        rows.append({
+            "zone_code": zc,
+            "zone_area_m2": area_m2,
+            "zone_area_km2": area_km2,
+            "road_count": int(road_counts.get(zc, 0)),
+            "road_length_m": length,
+            "road_density_m_per_km2": density,
+            "primary_road_count": p_count,
+            "secondary_road_count": sec_count,
+            "tertiary_road_count": tert_count,
+            "residential_road_count": res_count,
+            "service_road_count": srv_count,
+            "unknown_road_count": unk_count,
+            "avg_base_speed_kph": float(speed),
+            "avg_base_travel_time_sec": float(tt),
+            "intersection_proxy_count": int(intersection_proxies.get(zc, 0))
+        })
+        
+    features_df = pd.DataFrame(rows)
+    data_loader.write_csv(features_df, paths.GRID_ROAD_FEATURES_PATH)
+    logger.info(f"Saved road features to {paths.GRID_ROAD_FEATURES_PATH}")
+    return features_df
+
+
+
 
 

@@ -42,6 +42,14 @@ WEATHER_PROCESSED_PATH = NASR_CITY_PROCESSED / "weather_hourly_processed.csv"
 WEATHER_SCENARIOS_PATH = NASR_CITY_SAMPLES / "weather_scenarios.json"
 WEATHER_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "weather_validation_report.json"
 
+# Feature engineering output files
+GRID_ROAD_FEATURES_PATH = NASR_CITY_PROCESSED / "grid_road_features.csv"
+GRID_WEATHER_SCENARIO_FEATURES_PATH = NASR_CITY_PROCESSED / "grid_weather_scenario_features.csv"
+GRID_ELEVATION_FEATURES_PATH = NASR_CITY_PROCESSED / "grid_elevation_features.csv"
+ZONE_FEATURES_CSV_PATH = NASR_CITY_PROCESSED / "zone_features_ml_ready.csv"
+ZONE_FEATURES_GEOJSON_PATH = NASR_CITY_PROCESSED / "zone_features_ml_ready.geojson"
+FEATURE_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "feature_validation_report.json"
+
 
 def ensure_data_dirs():
     """Create all required data directories."""
@@ -86,4 +94,10 @@ def get_data_path_summary():
         "weather_processed": str(WEATHER_PROCESSED_PATH),
         "weather_scenarios": str(WEATHER_SCENARIOS_PATH),
         "weather_validation_report": str(WEATHER_VALIDATION_REPORT_PATH),
+        "grid_road_features": str(GRID_ROAD_FEATURES_PATH),
+        "grid_weather_scenario_features": str(GRID_WEATHER_SCENARIO_FEATURES_PATH),
+        "grid_elevation_features": str(GRID_ELEVATION_FEATURES_PATH),
+        "zone_features_ml_ready_csv": str(ZONE_FEATURES_CSV_PATH),
+        "zone_features_ml_ready_geojson": str(ZONE_FEATURES_GEOJSON_PATH),
+        "feature_validation_report": str(FEATURE_VALIDATION_REPORT_PATH),
     }
