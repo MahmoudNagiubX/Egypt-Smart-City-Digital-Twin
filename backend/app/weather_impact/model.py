@@ -148,3 +148,79 @@ def build_feature_matrix():
     logger.info(f"Saved {len(feature_cols)} feature columns to {paths.ML_FEATURE_COLUMNS_PATH}")
     
     return X, y, df["event_id"] if "event_id" in df.columns else None
+
+
+def train_models():
+    """Perform event-based train/test split, train RF and HGB models, and export artifacts."""
+    paths.ensure_data_dirs()
+    logger.info("Training models...")
+    
+    X, y, events = build_feature_matrix()
+    if events is None:
+        raise ValueError("event_id column is missing. Event-based split requires event_id.")
+        
+    from sklearn.model_selection import GroupShuffleSplit
+    import joblib
+    
+    gss = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+    train_idx, test_idx = next(gss.split(X, y, groups=events))
+    
+    X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
+    y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+    events_train, events_test = events.iloc[train_idx], events.iloc[test_idx]
+    
+    train_groups = set(events_train.unique())
+    test_groups = set(events_test.unique())
+    overlap = list(train_groups.intersection(test_groups))
+    
+    split_summary = {
+        "train_rows": int(len(X_train)),
+        "test_rows": int(len(X_test)),
+        "train_events": list(sorted(list(train_groups))),
+        "test_events": list(sorted(list(test_groups))),
+        "train_event_count": len(train_groups),
+        "test_event_count": len(test_groups),
+        "overlap_count": len(overlap),
+        "overlap_events": overlap,
+        "overlap_status": "none" if len(overlap) == 0 else "error"
+    }
+    
+    data_loader.save_json(split_summary, paths.TRAIN_TEST_SPLIT_SUMMARY_PATH)
+    logger.info(f"Saved train/test split summary to {paths.TRAIN_TEST_SPLIT_SUMMARY_PATH}")
+    
+    # Save the split datasets for subsequent evaluation/explain steps
+    joblib.dump({
+        "X_train": X_train, "X_test": X_test, 
+        "y_train": y_train, "y_test": y_test, 
+        "events_train": events_train, "events_test": events_test
+    }, paths.NASR_CITY_MODELS / "split_datasets.joblib")
+    
+    logger.info("Training RandomForestRegressor...")
+    from sklearn.ensemble import RandomForestRegressor
+    rf = RandomForestRegressor(
+        n_estimators=300,
+        random_state=42,
+        min_samples_leaf=2,
+        n_jobs=-1
+    )
+    rf.fit(X_train, y_train)
+    joblib.dump(rf, paths.RF_MODEL_PATH)
+    logger.info(f"Saved RF model to {paths.RF_MODEL_PATH}")
+    
+    logger.info("Training HistGradientBoostingRegressor...")
+    from sklearn.ensemble import HistGradientBoostingRegressor
+    hgb_success = False
+    try:
+        hgb = HistGradientBoostingRegressor(
+            random_state=42,
+            max_iter=300,
+            learning_rate=0.05
+        )
+        hgb.fit(X_train, y_train)
+        joblib.dump(hgb, paths.HGB_MODEL_PATH)
+        logger.info(f"Saved HGB model to {paths.HGB_MODEL_PATH}")
+        hgb_success = True
+    except Exception as e:
+        logger.warning(f"HistGradientBoostingRegressor training failed: {e}. Continuing without HGB.")
+        
+    return rf, (hgb if hgb_success else None), X_train, X_test, y_train, y_test

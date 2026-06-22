@@ -48,6 +48,21 @@ def run_features():
         return False
 
 
+def run_train():
+    """Execute Step 3: Train baseline and random forest models."""
+    logger.info("=" * 60)
+    logger.info("STEP 3: Train baseline and random forest models")
+    logger.info("=" * 60)
+    
+    try:
+        rf, hgb, X_train, X_test, y_train, y_test = model.train_models()
+        logger.info("✓ Models trained successfully.")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Model training failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -55,7 +70,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["inspect", "features"],
+        choices=["inspect", "features", "train"],
         required=True,
         help="Step to execute",
     )
@@ -69,6 +84,8 @@ def main():
         success = run_inspect()
     elif args.step == "features":
         success = run_features()
+    elif args.step == "train":
+        success = run_train()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False

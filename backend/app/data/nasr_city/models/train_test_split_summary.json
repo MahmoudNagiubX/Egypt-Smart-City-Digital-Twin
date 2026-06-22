@@ -1,0 +1,43 @@
+{
+  "train_rows": 9984,
+  "test_rows": 2496,
+  "train_events": [
+    "evt_0038",
+    "evt_0411",
+    "evt_0414",
+    "evt_0454",
+    "evt_0547",
+    "evt_0548",
+    "evt_0549",
+    "evt_0550",
+    "evt_0554",
+    "evt_0557",
+    "evt_0710",
+    "evt_0737",
+    "evt_0765",
+    "evt_0780",
+    "evt_0868",
+    "evt_0907",
+    "evt_dry_001",
+    "evt_dry_002",
+    "evt_dry_003",
+    "evt_dry_005",
+    "evt_dry_006",
+    "evt_dry_007",
+    "evt_dry_009",
+    "evt_dry_010"
+  ],
+  "test_events": [
+    "evt_0551",
+    "evt_0552",
+    "evt_0767",
+    "evt_0814",
+    "evt_dry_004",
+    "evt_dry_008"
+  ],
+  "train_event_count": 24,
+  "test_event_count": 6,
+  "overlap_count": 0,
+  "overlap_events": [],
+  "overlap_status": "none"
+}
