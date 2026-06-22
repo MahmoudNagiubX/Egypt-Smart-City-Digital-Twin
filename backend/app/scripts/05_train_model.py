@@ -93,6 +93,21 @@ def run_explain():
         return False
 
 
+def run_card():
+    """Execute Step 6: Add model card."""
+    logger.info("=" * 60)
+    logger.info("STEP 6: Add model card")
+    logger.info("=" * 60)
+    
+    try:
+        content = model.create_model_card()
+        logger.info("✓ Model card generated successfully.")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Model card failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -100,7 +115,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["inspect", "features", "train", "evaluate", "explain"],
+        choices=["inspect", "features", "train", "evaluate", "explain", "card"],
         required=True,
         help="Step to execute",
     )
@@ -120,6 +135,8 @@ def main():
         success = run_evaluate()
     elif args.step == "explain":
         success = run_explain()
+    elif args.step == "card":
+        success = run_card()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
