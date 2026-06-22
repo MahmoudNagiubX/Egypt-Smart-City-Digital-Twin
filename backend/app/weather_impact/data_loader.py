@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import geopandas as gpd
+import pandas as pd
 
 
 def read_geojson(path):
@@ -36,3 +37,18 @@ def load_json(path):
         raise FileNotFoundError(f"JSON file not found: {path}")
     with open(path, "r") as f:
         return json.load(f)
+
+
+def read_csv(path):
+    """Read a CSV file and return a pandas DataFrame."""
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"CSV file not found: {path}")
+    return pd.read_csv(path)
+
+
+def write_csv(df, path):
+    """Write a pandas DataFrame to a CSV file."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(path, index=False)

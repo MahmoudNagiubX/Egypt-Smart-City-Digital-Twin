@@ -1,0 +1,88 @@
+"""Orchestrate weather data pipeline for Nasr City."""
+
+import argparse
+import logging
+import sys
+from pathlib import Path
+
+# Add backend/app to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from weather_impact import weather, paths
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+
+def run_collect_step(start_date=None, end_date=None):
+    """Execute Step 3.1: Collect Open-Meteo weather."""
+    logger.info("=" * 60)
+    logger.info("STEP 3.1: Collect weather data from Open-Meteo")
+    logger.info("=" * 60)
+    
+    # Defaults
+    start = start_date or "2024-01-01"
+    end = end_date or "2024-12-31"
+    
+    try:
+        df = weather.collect_open_meteo_weather(start_date=start, end_date=end)
+        logger.info(f"✓ Weather data collected successfully. Rows: {len(df)}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Weather collection failed: {e}", exc_info=True)
+        return False
+
+
+def main():
+    """Main entry point."""
+    parser = argparse.ArgumentParser(
+        description="Run weather pipeline steps for Nasr City."
+    )
+    parser.add_argument(
+        "--step",
+        choices=["collect", "clean", "scenarios", "validate"],
+        required=True,
+        help="Step to execute",
+    )
+    parser.add_argument(
+        "--start-date",
+        help="Optional start date (YYYY-MM-DD)",
+    )
+    parser.add_argument(
+        "--end-date",
+        help="Optional end date (YYYY-MM-DD)",
+    )
+    
+    args = parser.parse_args()
+    
+    logger.info(f"Starting Phase 3 - Step: {args.step}")
+    
+    if args.step == "collect":
+        success = run_collect_step(args.start_date, args.end_date)
+    elif args.step == "clean":
+        logger.info("Clean step placeholder")
+        success = True
+    elif args.step == "scenarios":
+        logger.info("Scenarios step placeholder")
+        success = True
+    elif args.step == "validate":
+        logger.info("Validate step placeholder")
+        success = True
+    else:
+        logger.error(f"Unknown step: {args.step}")
+        success = False
+        
+    if success:
+        logger.info(f"✓ Step '{args.step}' completed successfully.")
+        sys.exit(0)
+    else:
+        logger.error(f"✗ Step '{args.step}' failed.")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

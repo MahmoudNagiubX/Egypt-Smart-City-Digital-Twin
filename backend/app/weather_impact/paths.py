@@ -23,6 +23,7 @@ NASR_CITY_RAW = NASR_CITY_DIR / "raw"
 NASR_CITY_PROCESSED = NASR_CITY_DIR / "processed"
 NASR_CITY_OUTPUTS = NASR_CITY_DIR / "outputs"
 NASR_CITY_MAPS = NASR_CITY_DIR / "maps"
+NASR_CITY_SAMPLES = NASR_CITY_DIR / "samples"
 
 # Nasr City output files
 NASR_CITY_BOUNDARY_PATH = NASR_CITY_PROCESSED / "nasr_city_boundary.geojson"
@@ -34,6 +35,12 @@ SPATIAL_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "spatial_validation_report.
 NASR_CITY_GRID_PATH = NASR_CITY_PROCESSED / "nasr_city_grid_500m.geojson"
 ROADS_WITH_ZONE_IDS_PATH = NASR_CITY_PROCESSED / "roads_with_zone_ids.geojson"
 SPATIAL_FOUNDATION_MAP_PATH = NASR_CITY_MAPS / "spatial_foundation_map.png"
+
+# Weather output files
+WEATHER_RAW_PATH = NASR_CITY_RAW / "weather_history_open_meteo.csv"
+WEATHER_PROCESSED_PATH = NASR_CITY_PROCESSED / "weather_hourly_processed.csv"
+WEATHER_SCENARIOS_PATH = NASR_CITY_SAMPLES / "weather_scenarios.json"
+WEATHER_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "weather_validation_report.json"
 
 
 def ensure_data_dirs():
@@ -51,6 +58,7 @@ def ensure_data_dirs():
         NASR_CITY_PROCESSED,
         NASR_CITY_OUTPUTS,
         NASR_CITY_MAPS,
+        NASR_CITY_SAMPLES,
     ]
     for directory in directories:
         directory.mkdir(parents=True, exist_ok=True)
@@ -74,4 +82,8 @@ def get_data_path_summary():
         "nasr_city_grid": str(NASR_CITY_GRID_PATH),
         "roads_with_zone_ids": str(ROADS_WITH_ZONE_IDS_PATH),
         "spatial_foundation_map": str(SPATIAL_FOUNDATION_MAP_PATH),
+        "weather_raw": str(WEATHER_RAW_PATH),
+        "weather_processed": str(WEATHER_PROCESSED_PATH),
+        "weather_scenarios": str(WEATHER_SCENARIOS_PATH),
+        "weather_validation_report": str(WEATHER_VALIDATION_REPORT_PATH),
     }
