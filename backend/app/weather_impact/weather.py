@@ -131,3 +131,88 @@ def clean_weather_data() -> pd.DataFrame:
     
     return df_processed
 
+
+def create_demo_weather_scenarios():
+    """Create deterministic weather scenarios for dashboard and risk scoring."""
+    logger.info("Creating demo weather scenarios...")
+    
+    scenarios = [
+        {
+            "scenario_id": "normal_day",
+            "name": "Normal Dry Day",
+            "rain_1h_mm": 0.0,
+            "rain_3h_mm": 0.0,
+            "rain_6h_mm": 0.0,
+            "rain_24h_mm": 0.0,
+            "temperature_2m": 30.0,
+            "apparent_temperature": 31.0,
+            "relative_humidity_2m": 45.0,
+            "wind_speed_10m": 12.0,
+            "hour": 12,
+            "is_rush_hour": False
+        },
+        {
+            "scenario_id": "light_rain",
+            "name": "Light Rain",
+            "rain_1h_mm": 2.0,
+            "rain_3h_mm": 4.0,
+            "rain_6h_mm": 5.0,
+            "rain_24h_mm": 7.0,
+            "temperature_2m": 25.0,
+            "apparent_temperature": 25.5,
+            "relative_humidity_2m": 65.0,
+            "wind_speed_10m": 15.0,
+            "hour": 9,
+            "is_rush_hour": True
+        },
+        {
+            "scenario_id": "heavy_rain_rush_hour",
+            "name": "Heavy Rain During Rush Hour",
+            "rain_1h_mm": 12.0,
+            "rain_3h_mm": 24.0,
+            "rain_6h_mm": 32.0,
+            "rain_24h_mm": 40.0,
+            "temperature_2m": 23.0,
+            "apparent_temperature": 23.5,
+            "relative_humidity_2m": 80.0,
+            "wind_speed_10m": 22.0,
+            "hour": 17,
+            "is_rush_hour": True
+        },
+        {
+            "scenario_id": "extreme_rain",
+            "name": "Extreme Rain Event",
+            "rain_1h_mm": 25.0,
+            "rain_3h_mm": 50.0,
+            "rain_6h_mm": 70.0,
+            "rain_24h_mm": 90.0,
+            "temperature_2m": 22.0,
+            "apparent_temperature": 22.5,
+            "relative_humidity_2m": 88.0,
+            "wind_speed_10m": 30.0,
+            "hour": 18,
+            "is_rush_hour": True
+        },
+        {
+            "scenario_id": "hot_day_optional",
+            "name": "Hot Urban Heat Day",
+            "rain_1h_mm": 0.0,
+            "rain_3h_mm": 0.0,
+            "rain_6h_mm": 0.0,
+            "rain_24h_mm": 0.0,
+            "temperature_2m": 40.0,
+            "apparent_temperature": 43.0,
+            "relative_humidity_2m": 35.0,
+            "wind_speed_10m": 10.0,
+            "hour": 14,
+            "is_rush_hour": False
+        }
+    ]
+    
+    # Save scenarios as JSON using paths.WEATHER_SCENARIOS_PATH
+    data_loader.save_json(scenarios, paths.WEATHER_SCENARIOS_PATH)
+    logger.info(f"Saved {len(scenarios)} demo weather scenarios to {paths.WEATHER_SCENARIOS_PATH}")
+    
+    return scenarios
+
+

@@ -52,6 +52,21 @@ def run_clean_step():
         return False
 
 
+def run_scenarios_step():
+    """Execute Step 3.3: Create weather scenarios."""
+    logger.info("=" * 60)
+    logger.info("STEP 3.3: Create weather scenarios")
+    logger.info("=" * 60)
+    
+    try:
+        scenarios = weather.create_demo_weather_scenarios()
+        logger.info(f"✓ Weather scenarios created. Count: {len(scenarios)}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Weather scenarios creation failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -81,8 +96,7 @@ def main():
     elif args.step == "clean":
         success = run_clean_step()
     elif args.step == "scenarios":
-        logger.info("Scenarios step placeholder")
-        success = True
+        success = run_scenarios_step()
     elif args.step == "validate":
         logger.info("Validate step placeholder")
         success = True
