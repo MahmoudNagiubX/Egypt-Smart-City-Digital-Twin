@@ -761,6 +761,153 @@ def calculate_road_density_features():
     return features_df
 
 
+def extract_elevation_features(project_id: str = "smart-city-digital-twin"):
+    """Extract SRTM elevation and slope features for each grid zone using Google Earth Engine.
+    
+    If Earth Engine is not available or fails, falls back to proxy features.
+    """
+    paths.ensure_data_dirs()
+    logger.info("Extracting elevation features...")
+    
+    # Load grid zones
+    grid = data_loader.read_geojson(paths.NASR_CITY_GRID_PATH)
+    
+    elevation_source = "srtm_earth_engine"
+    elevation_warning = ""
+    rows = []
+    
+    try:
+        import ee
+        import json
+        
+        logger.info(f"Initializing Earth Engine with project: {project_id}")
+        ee.Initialize(project=project_id)
+        
+        # Load SRTM and calculate slope
+        srtm = ee.Image("USGS/SRTMGL1_003")
+        slope = ee.Terrain.slope(srtm)
+        dem = srtm.select(["elevation"]).rename(["elevation"]).addBands(slope.select(["slope"]).rename(["slope"]))
+        
+        # Construct FeatureCollection
+        logger.info("Converting grid geometries to Earth Engine geometries...")
+        features = []
+        for _, row in grid.iterrows():
+            geom_dict = json.loads(gpd.GeoSeries([row.geometry]).to_json())["features"][0]["geometry"]
+            ee_geom = ee.Geometry(geom_dict)
+            features.append(ee.Feature(ee_geom, {"zone_code": row["zone_code"]}))
+            
+        fc = ee.FeatureCollection(features)
+        
+        # Define combined reducer
+        reducer = ee.Reducer.mean() \
+            .combine(ee.Reducer.min(), "", True) \
+            .combine(ee.Reducer.max(), "", True) \
+            .combine(ee.Reducer.stdDev(), "", True)
+            
+        logger.info("Reducing DEM bands over grid zones...")
+        reduced = dem.reduceRegions(
+            collection=fc,
+            reducer=reducer,
+            scale=30
+        )
+        
+        # Fetch results excluding geometries for fast transfer
+        properties_fc = reduced.select(
+            ["zone_code", "elevation_mean", "elevation_min", "elevation_max", "elevation_stdDev",
+             "slope_mean", "slope_min", "slope_max", "slope_stdDev"],
+            retainGeometry=False
+        )
+        
+        logger.info("Fetching results from Earth Engine server...")
+        results = properties_fc.getInfo()["features"]
+        
+        for feat in results:
+            props = feat["properties"]
+            zc = props.get("zone_code")
+            
+            e_mean = props.get("elevation_mean", 0.0)
+            e_min = props.get("elevation_min", 0.0)
+            e_max = props.get("elevation_max", 0.0)
+            
+            # stdDev variants
+            e_std = props.get("elevation_stdDev")
+            if e_std is None:
+                e_std = props.get("elevation_std_dev")
+            if e_std is None:
+                e_std = props.get("elevation_stddev", 0.0)
+                
+            s_mean = props.get("slope_mean", 0.0)
+            s_min = props.get("slope_min", 0.0)
+            s_max = props.get("slope_max", 0.0)
+            
+            rows.append({
+                "zone_code": zc,
+                "elevation_mean": float(e_mean),
+                "elevation_min": float(e_min),
+                "elevation_max": float(e_max),
+                "elevation_std": float(e_std),
+                "slope_mean": float(s_mean),
+                "slope_min": float(s_min),
+                "slope_max": float(s_max),
+            })
+            
+        logger.info(f"Successfully processed {len(rows)} cells with Earth Engine.")
+        
+    except Exception as e:
+        logger.warning(f"Earth Engine elevation extraction failed, using fallback proxy: {e}")
+        elevation_source = "fallback_proxy"
+        elevation_warning = str(e)
+        
+        # Create empty rows for fallback mapping
+        rows = []
+        for zc in grid["zone_code"]:
+            rows.append({
+                "zone_code": zc,
+                "elevation_mean": 0.0,
+                "elevation_min": 0.0,
+                "elevation_max": 0.0,
+                "elevation_std": 0.0,
+                "slope_mean": 0.0,
+                "slope_min": 0.0,
+                "slope_max": 0.0,
+            })
+            
+    df = pd.DataFrame(rows)
+    df["elevation_source"] = elevation_source
+    df["elevation_warning"] = elevation_warning
+    
+    # Calculate low_elevation_score and low_slope_score
+    if elevation_source == "srtm_earth_engine" and len(df) > 1:
+        # lower elevation = higher score
+        emin = df["elevation_mean"].min()
+        emax = df["elevation_mean"].max()
+        if emax > emin:
+            df["low_elevation_score"] = 1.0 - (df["elevation_mean"] - emin) / (emax - emin)
+        else:
+            df["low_elevation_score"] = 0.5
+            
+        # flatter slope = higher score
+        smin = df["slope_mean"].min()
+        smax = df["slope_mean"].max()
+        if smax > smin:
+            df["low_slope_score"] = 1.0 - (df["slope_mean"] - smin) / (smax - smin)
+        else:
+            df["low_slope_score"] = 0.5
+    else:
+        df["low_elevation_score"] = 0.5
+        df["low_slope_score"] = 0.5
+        
+    # Clip scores to [0.0, 1.0]
+    df["low_elevation_score"] = df["low_elevation_score"].clip(0.0, 1.0)
+    df["low_slope_score"] = df["low_slope_score"].clip(0.0, 1.0)
+    
+    # Save CSV
+    data_loader.write_csv(df, paths.GRID_ELEVATION_FEATURES_PATH)
+    logger.info(f"Saved elevation features to {paths.GRID_ELEVATION_FEATURES_PATH}")
+    return df
+
+
+
 
 
 

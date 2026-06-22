@@ -48,6 +48,21 @@ def run_weather_scenarios_step():
         return False
 
 
+def run_elevation_step():
+    """Execute Step 4.3: Extract elevation features with Earth Engine."""
+    logger.info("=" * 60)
+    logger.info("STEP 4.3: Extract elevation features with Earth Engine")
+    logger.info("=" * 60)
+    
+    try:
+        df = geo.extract_elevation_features()
+        logger.info(f"✓ Elevation features extracted. Rows: {len(df)}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Elevation features failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -70,8 +85,7 @@ def main():
     elif args.step == "weather-scenarios":
         success = run_weather_scenarios_step()
     elif args.step == "elevation":
-        logger.info("Elevation placeholder")
-        success = True
+        success = run_elevation_step()
     elif args.step == "final":
         logger.info("Final features placeholder")
         success = True
