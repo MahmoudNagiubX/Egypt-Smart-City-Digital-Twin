@@ -67,6 +67,22 @@ def run_scenarios_step():
         return False
 
 
+def run_validate_step():
+    """Execute Step 3.4: Add weather validation report."""
+    logger.info("=" * 60)
+    logger.info("STEP 3.4: Generate weather validation report")
+    logger.info("=" * 60)
+    
+    try:
+        report = weather.create_weather_validation_report()
+        logger.info(f"✓ Weather validation report generated. Status: {report['status']}")
+        logger.info(f"✓ Saved to: {paths.WEATHER_VALIDATION_REPORT_PATH}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Weather validation report failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -98,8 +114,7 @@ def main():
     elif args.step == "scenarios":
         success = run_scenarios_step()
     elif args.step == "validate":
-        logger.info("Validate step placeholder")
-        success = True
+        success = run_validate_step()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False

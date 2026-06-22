@@ -216,3 +216,111 @@ def create_demo_weather_scenarios():
     return scenarios
 
 
+def create_weather_validation_report():
+    """Create a validation report summarizing the weather dataset and scenarios."""
+    logger.info("Creating weather validation report...")
+    
+    report = {
+        "source": "Open-Meteo Historical Weather API",
+        "location": "Nasr City, Cairo, Egypt",
+        "latitude": 30.0561,
+        "longitude": 31.3300,
+        "raw_file_exists": False,
+        "processed_file_exists": False,
+        "scenarios_file_exists": False,
+        "raw_rows": 0,
+        "processed_rows": 0,
+        "scenario_count": 0,
+        "start_timestamp": "",
+        "end_timestamp": "",
+        "max_rain_1h_mm": 0.0,
+        "max_rain_3h_mm": 0.0,
+        "max_rain_6h_mm": 0.0,
+        "max_rain_24h_mm": 0.0,
+        "max_temperature_2m": 0.0,
+        "max_apparent_temperature": 0.0,
+        "missing_values": {},
+        "rainfall_class_counts": {},
+        "status": "pending",
+        "warnings": []
+    }
+    
+    # 1. Check raw file
+    if paths.WEATHER_RAW_PATH.exists():
+        try:
+            raw_df = data_loader.read_csv(paths.WEATHER_RAW_PATH)
+            report["raw_file_exists"] = True
+            report["raw_rows"] = len(raw_df)
+        except Exception as e:
+            report["warnings"].append(f"Failed to read raw weather file: {e}")
+            
+    # 2. Check scenarios file
+    if paths.WEATHER_SCENARIOS_PATH.exists():
+        try:
+            scenarios = data_loader.load_json(paths.WEATHER_SCENARIOS_PATH)
+            report["scenarios_file_exists"] = True
+            report["scenario_count"] = len(scenarios)
+        except Exception as e:
+            report["warnings"].append(f"Failed to read scenarios file: {e}")
+            
+    # 3. Check processed file
+    if paths.WEATHER_PROCESSED_PATH.exists():
+        try:
+            df = data_loader.read_csv(paths.WEATHER_PROCESSED_PATH)
+            report["processed_file_exists"] = True
+            report["processed_rows"] = len(df)
+            
+            if len(df) > 0:
+                report["start_timestamp"] = str(df["timestamp"].iloc[0])
+                report["end_timestamp"] = str(df["timestamp"].iloc[-1])
+                report["max_rain_1h_mm"] = float(df["rain_1h_mm"].max())
+                report["max_rain_3h_mm"] = float(df["rain_3h_mm"].max())
+                report["max_rain_6h_mm"] = float(df["rain_6h_mm"].max())
+                report["max_rain_24h_mm"] = float(df["rain_24h_mm"].max())
+                report["max_temperature_2m"] = float(df["temperature_2m"].max())
+                report["max_apparent_temperature"] = float(df["apparent_temperature"].max())
+                
+                # Check for missing values
+                for col in df.columns:
+                    missing_count = int(df[col].isna().sum())
+                    if missing_count > 0:
+                        report["missing_values"][col] = missing_count
+                        
+                # Rainfall class counts
+                class_counts = df["rainfall_class"].value_counts().to_dict()
+                report["rainfall_class_counts"] = {k: int(v) for k, v in class_counts.items()}
+                
+                # Add dry warning for Cairo if max rain is very low
+                if report["max_rain_1h_mm"] < 5.0:
+                    report["warnings"].append(
+                        "Historical weather data contains limited rainfall, "
+                        "demo storm scenarios are used for risk simulation."
+                    )
+        except Exception as e:
+            report["warnings"].append(f"Failed to analyze processed weather data: {e}")
+            
+    # Determine status
+    required_exist = (
+        report["raw_file_exists"] and
+        report["processed_file_exists"] and
+        report["scenarios_file_exists"]
+    )
+    
+    if required_exist and report["processed_rows"] > 0:
+        if len(report["warnings"]) > 0:
+            report["status"] = "ok_with_warnings"
+        else:
+            report["status"] = "ok"
+    else:
+        report["status"] = "failed"
+        if not required_exist:
+            report["warnings"].append("One or more required weather output files are missing.")
+            
+    # Save report
+    data_loader.save_json(report, paths.WEATHER_VALIDATION_REPORT_PATH)
+    logger.info(f"Saved weather validation report to {paths.WEATHER_VALIDATION_REPORT_PATH}")
+    
+    return report
+
+
+
