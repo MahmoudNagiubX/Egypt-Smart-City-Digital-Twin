@@ -85,6 +85,18 @@ ZONE_RISK_SUMMARY_CSV_PATH = NASR_CITY_OUTPUTS / "zone_risk_summary.csv"
 ZONE_RISK_SUMMARY_GEOJSON_PATH = NASR_CITY_OUTPUTS / "zone_risk_summary.geojson"
 PREDICTION_OUTPUT_REPORT_PATH = NASR_CITY_OUTPUTS / "prediction_output_report.json"
 
+# Routing paths
+ROAD_RISK_WEIGHTS_TOP_RAIN_PATH = NASR_CITY_OUTPUTS / "road_risk_weights_top_rain.geojson"
+ROAD_RISK_WEIGHTS_LATEST_PATH = NASR_CITY_OUTPUTS / "road_risk_weights_latest.geojson"
+DEMO_ROUTE_TOP_RAIN_NORMAL_PATH = NASR_CITY_OUTPUTS / "demo_route_top_rain_normal.geojson"
+DEMO_ROUTE_TOP_RAIN_SAFE_PATH = NASR_CITY_OUTPUTS / "demo_route_top_rain_safe.geojson"
+DEMO_ROUTE_LATEST_NORMAL_PATH = NASR_CITY_OUTPUTS / "demo_route_latest_normal.geojson"
+DEMO_ROUTE_LATEST_SAFE_PATH = NASR_CITY_OUTPUTS / "demo_route_latest_safe.geojson"
+ROUTE_COMPARISON_TOP_RAIN_PATH = NASR_CITY_OUTPUTS / "route_comparison_top_rain.json"
+ROUTE_COMPARISON_LATEST_PATH = NASR_CITY_OUTPUTS / "route_comparison_latest.json"
+ROUTING_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "routing_validation_report.json"
+
+
 
 
 def ensure_data_dirs():
