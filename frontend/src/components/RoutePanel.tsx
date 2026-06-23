@@ -7,6 +7,19 @@ import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Navigation, Clock, ShieldCheck, CornerUpRight, Info } from "lucide-react";
 
+function formatNumber(value: unknown, digits = 2, fallback = "—") {
+  const numberValue =
+    typeof value === "number"
+      ? value
+      : typeof value === "string"
+        ? Number(value)
+        : NaN;
+
+  return Number.isFinite(numberValue)
+    ? numberValue.toFixed(digits)
+    : fallback;
+}
+
 interface RoutePanelProps {
   comparison: RouteComparison | null;
   eventType: "top-rain" | "latest";
@@ -31,12 +44,13 @@ export const RoutePanel: React.FC<RoutePanelProps> = ({
   }
 
   const formatDistance = (m: number) => {
-    return `${(m / 1000).toFixed(2)} km`;
+    const val = formatNumber(m / 1000, 2);
+    return val === "—" ? "—" : `${val} km`;
   };
 
   const formatDuration = (sec: number) => {
     const mins = Math.round(sec / 60);
-    return `${mins} min`;
+    return Number.isFinite(mins) ? `${mins} min` : "—";
   };
 
   const isSafeAvailable = comparison.safe_route_available;
@@ -104,7 +118,7 @@ export const RoutePanel: React.FC<RoutePanelProps> = ({
               Risk Reduction
             </span>
             <span className={`text-base font-bold ${riskRed > 0 ? "text-cyan-400" : "text-slate-400"}`}>
-              {riskRed > 0 ? `-${riskRed.toFixed(1)}%` : "0.0%"}
+              {riskRed !== undefined && riskRed !== null && Number(riskRed) > 0 ? `-${formatNumber(riskRed, 1)}%` : "0.0%"}
             </span>
             <span className="text-[9px] text-slate-500 mt-0.5">
               Avoided Segs: {comparison.avoided_high_risk_segments}
@@ -117,7 +131,7 @@ export const RoutePanel: React.FC<RoutePanelProps> = ({
               ETA Tradeoff
             </span>
             <span className={`text-base font-bold ${etaTradeoff > 0 ? "text-amber-400" : "text-cyan-400"}`}>
-              {etaTradeoff > 0 ? `+${etaTradeoff.toFixed(1)}%` : "0.0%"}
+              {etaTradeoff !== undefined && etaTradeoff !== null && Number(etaTradeoff) > 0 ? `+${formatNumber(etaTradeoff, 1)}%` : "0.0%"}
             </span>
             <span className="text-[9px] text-slate-500 mt-0.5">
               Weather delay added
@@ -160,7 +174,7 @@ export const RoutePanel: React.FC<RoutePanelProps> = ({
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">Mean Risk Score:</span>
-              <span className="text-red-400 font-bold">{comparison.normal_mean_risk_score.toFixed(3)}</span>
+              <span className="text-red-400 font-bold">{formatNumber(comparison.normal_mean_risk_score, 3)}</span>
             </div>
           </div>
 
@@ -176,7 +190,7 @@ export const RoutePanel: React.FC<RoutePanelProps> = ({
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">Mean Risk Score:</span>
-              <span className="text-emerald-400 font-bold">{comparison.safe_mean_risk_score.toFixed(3)}</span>
+              <span className="text-emerald-400 font-bold">{formatNumber(comparison.safe_mean_risk_score, 3)}</span>
             </div>
           </div>
         </div>

@@ -233,3 +233,59 @@ test('API Client resolves base URL defaults correctly', async () => {
     (import.meta.env as any).VITE_API_BASE_URL = origEnv;
   }
 });
+
+test('EventSelector renders correctly when rain_sum_mm is missing/undefined', () => {
+  const mockEvents = [
+    { event_id: "evt_0557", timestamp: "2020-03-12T00:00", rain_sum_mm: undefined as any, predicted_risk_class_counts: { low: 10, medium: 200, high: 206 }, mean_predicted_risk: 0.45, max_predicted_risk: 0.98 }
+  ];
+
+  render(
+    <EventSelector 
+      events={mockEvents} 
+      selectedEventId="evt_0557" 
+      onSelectEvent={vi.fn()} 
+    />
+  );
+
+  expect(screen.getByText(/Simulated Event Selector/i)).toBeDefined();
+});
+
+test('RoutePanel renders correctly when optional numeric metrics are missing/undefined', () => {
+  const mockComp = {
+    event_type: "top-rain",
+    event_id: "evt_0557",
+    timestamp: "2020-03-12",
+    normal_distance_m: undefined as any,
+    safe_distance_m: undefined as any,
+    normal_base_eta_sec: undefined as any,
+    safe_base_eta_sec: undefined as any,
+    normal_weather_eta_sec: undefined as any,
+    safe_weather_eta_sec: undefined as any,
+    normal_mean_risk_score: undefined as any,
+    safe_mean_risk_score: undefined as any,
+    normal_high_risk_segment_count: undefined as any,
+    safe_high_risk_segment_count: undefined as any,
+    risk_reduction_percent: undefined as any,
+    eta_tradeoff_percent: undefined as any,
+    avoided_high_risk_segments: undefined as any,
+    safe_route_quality: "strong",
+    safe_route_available: true,
+    quality_guard_passed: true,
+    selected_origin_zone_code: "NSR-GRID-119",
+    selected_destination_facility_name: "Nasr City Hospital",
+    honesty_note: "Predictions are model-estimated... Routes are decision-support..."
+  };
+
+  render(
+    <RoutePanel 
+      comparison={mockComp} 
+      eventType="top-rain" 
+      onEventTypeChange={vi.fn()} 
+      routeVisibility="both" 
+      onRouteVisibilityChange={vi.fn()} 
+    />
+  );
+
+  // Expect default outputs or fallbacks
+  expect(screen.getAllByText(/0.0%/).length).toBeGreaterThan(0);
+});

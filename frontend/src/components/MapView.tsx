@@ -3,6 +3,19 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { FeatureCollection, LayerToggles } from "../types/api";
 
+function formatNumber(value: unknown, digits = 2, fallback = "—") {
+  const numberValue =
+    typeof value === "number"
+      ? value
+      : typeof value === "string"
+        ? Number(value)
+        : NaN;
+
+  return Number.isFinite(numberValue)
+    ? numberValue.toFixed(digits)
+    : fallback;
+}
+
 interface MapViewProps {
   layers: LayerToggles;
   routeVisibility: "normal" | "safe" | "both";
@@ -231,10 +244,10 @@ export const MapView: React.FC<MapViewProps> = ({
             </div>
           `;
         } else {
-          const score = props.y_pred !== undefined ? Number(props.y_pred).toFixed(4) : "N/A";
-          const rain = props.rain_24h_mm !== undefined ? `${Number(props.rain_24h_mm).toFixed(1)} mm` : "N/A";
-          const pop = props.population_sum !== undefined ? Number(props.population_sum).toLocaleString() : "N/A";
-          const built = props.built_surface_mean !== undefined ? Number(props.built_surface_mean).toFixed(2) : "N/A";
+          const score = formatNumber(props.y_pred, 4);
+          const rain = props.rain_24h_mm !== undefined && props.rain_24h_mm !== null ? `${formatNumber(props.rain_24h_mm, 1)} mm` : "—";
+          const pop = props.population_sum !== undefined && props.population_sum !== null ? Number(props.population_sum).toLocaleString() : "—";
+          const built = formatNumber(props.built_surface_mean, 2);
           
           html = `
             <div class="p-2 text-slate-100 bg-slate-950 border border-slate-800 rounded text-xs max-w-xs leading-normal font-sans space-y-1">

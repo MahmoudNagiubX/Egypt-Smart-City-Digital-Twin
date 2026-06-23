@@ -16,6 +16,19 @@ interface EventSelectorProps {
   onSelectEvent: (eventId: string) => void;
 }
 
+function formatNumber(value: unknown, digits = 2, fallback = "—") {
+  const numberValue =
+    typeof value === "number"
+      ? value
+      : typeof value === "string"
+        ? Number(value)
+        : NaN;
+
+  return Number.isFinite(numberValue)
+    ? numberValue.toFixed(digits)
+    : fallback;
+}
+
 export const EventSelector: React.FC<EventSelectorProps> = ({ 
   events, 
   selectedEventId, 
@@ -49,7 +62,7 @@ export const EventSelector: React.FC<EventSelectorProps> = ({
                 value={evt.event_id}
                 className="hover:bg-slate-800 focus:bg-slate-800 text-xs"
               >
-                {evt.event_id} ({evt.rain_sum_mm.toFixed(1)} mm) - {dateStr}
+                {evt.event_id} ({formatNumber(evt.rain_sum_mm, 1)} mm) - {dateStr}
               </SelectItem>
             );
           })}
