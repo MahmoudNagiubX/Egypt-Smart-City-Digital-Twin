@@ -79,11 +79,14 @@ def build_road_risk_weights(event_type: str):
     
     # 6. Weather weight logic:
     risk_score = np.clip(road_risk["y_pred"], 0.0, 1.0)
-    weather_penalty_factor = 1.0 + (2.5 * risk_score)
+    weather_penalty_factor = 1.0 + 4.0 * (risk_score ** 2)
     
-    # Apply extra penalty multiplier for high risk class
+    # Apply multipliers for medium and high risk classes
+    medium_risk_mask = (road_risk["predicted_risk_class"] == "medium")
     high_risk_mask = (road_risk["predicted_risk_class"] == "high")
-    weather_penalty_factor = np.where(high_risk_mask, weather_penalty_factor * 3.0, weather_penalty_factor)
+    
+    weather_penalty_factor = np.where(medium_risk_mask, weather_penalty_factor * 1.25, weather_penalty_factor)
+    weather_penalty_factor = np.where(high_risk_mask, weather_penalty_factor * 1.75, weather_penalty_factor)
     
     weather_travel_time_sec = normal_weight * weather_penalty_factor
     
