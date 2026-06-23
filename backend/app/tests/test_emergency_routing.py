@@ -79,7 +79,7 @@ def test_route_geojson_readable():
 
 
 def test_route_comparison_content():
-    """Verify route comparison content has expected keys."""
+    """Verify route comparison content has expected candidate search keys."""
     comparison_paths = [
         paths.ROUTE_COMPARISON_TOP_RAIN_PATH,
         paths.ROUTE_COMPARISON_LATEST_PATH
@@ -91,7 +91,15 @@ def test_route_comparison_content():
         assert "normal_weather_eta_sec" in data
         assert "safe_weather_eta_sec" in data
         assert "risk_reduction_percent" in data
+        assert "eta_tradeoff_percent" in data
         assert "honesty_note" in data
+        assert "candidate_search_used" in data
+        assert data["candidate_search_used"] is True
+        assert "candidate_pairs_tested" in data
+        assert data["candidate_pairs_tested"] > 0
+        assert "routes_identical" in data
+        
+        # Check standard disclaimer is correct
         assert "Routes are decision-support prototype outputs, not official emergency dispatch instructions." == data["honesty_note"]
 
 

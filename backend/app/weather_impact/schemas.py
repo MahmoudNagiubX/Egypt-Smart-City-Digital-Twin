@@ -67,10 +67,17 @@ class RouteComparisonResponse(BaseModel):
     risk_reduction_percent: float
     eta_tradeoff_percent: float
     origin_zone_code: str
-    destination_facility_name: str
+    destination_facility_name: Optional[str] = None
     destination_facility_type: str
     event_type: str
     event_id: str
     timestamp: str
     honesty_note: str
+    candidate_search_used: bool = False
+    candidate_pairs_tested: int = 0
+    selected_origin_zone_code: Optional[str] = None
+    selected_destination_facility_name: Optional[str] = None
+    selected_reason: Optional[str] = None
+    routes_identical: bool = False
+
 

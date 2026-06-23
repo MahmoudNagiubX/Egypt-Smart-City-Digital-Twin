@@ -20,7 +20,7 @@ client = TestClient(app)
 
 
 def test_api_routing_status():
-    """Verify routing status endpoint returns validation report with correct flags."""
+    """Verify routing status endpoint returns validation report with correct disclaimers."""
     response = client.get("/api/weather-impact/routing/status")
     assert response.status_code == 200
     
@@ -56,7 +56,7 @@ def test_api_demo_routes():
 
 
 def test_api_route_comparisons():
-    """Verify comparison endpoints return valid JSON metrics and disclaimers."""
+    """Verify comparison endpoints return valid JSON metrics, disclaimers, and candidate search fields."""
     endpoints = [
         "/api/weather-impact/routing/comparison/top-rain",
         "/api/weather-impact/routing/comparison/latest"
@@ -69,6 +69,12 @@ def test_api_route_comparisons():
         assert "normal_weather_eta_sec" in data
         assert "safe_weather_eta_sec" in data
         assert "risk_reduction_percent" in data
+        assert "eta_tradeoff_percent" in data
+        assert "candidate_search_used" in data
+        assert data["candidate_search_used"] is True
+        assert "candidate_pairs_tested" in data
+        assert data["candidate_pairs_tested"] > 0
+        assert "routes_identical" in data
         assert "honesty_note" in data
         assert "not official emergency dispatch instructions" in data["honesty_note"].lower()
 
