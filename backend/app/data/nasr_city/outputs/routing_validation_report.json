@@ -1,0 +1,16 @@
+{
+  "status": "ok_with_warnings",
+  "warnings": [
+    "Top-rain: normal and safe routes are identical, no safer alternative path found.",
+    "Latest: normal and safe routes are identical, no safer alternative path found."
+  ],
+  "graph_loaded": true,
+  "road_risk_weights_top_rain_exists": true,
+  "road_risk_weights_latest_exists": true,
+  "top_rain_routes_created": true,
+  "latest_routes_created": true,
+  "top_rain_comparison_exists": true,
+  "latest_comparison_exists": true,
+  "official_emergency_dispatch_claimed": false,
+  "official_flood_labels_claimed": false
+}

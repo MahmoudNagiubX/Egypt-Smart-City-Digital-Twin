@@ -89,6 +89,21 @@ def run_routes():
         return False
 
 
+def run_export():
+    """Execute Step 3: Export route geojson and comparison outputs."""
+    logger.info("=" * 60)
+    logger.info("STEP 3: Export route geojson and comparison outputs")
+    logger.info("=" * 60)
+    
+    try:
+        routing.export_demo_route_outputs()
+        logger.info("✓ Export completed successfully.")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Export step failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -96,7 +111,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["weights", "routes"],
+        choices=["weights", "routes", "export", "all"],
         required=True,
         help="Step to execute",
     )
@@ -110,6 +125,15 @@ def main():
         success = run_weights()
     elif args.step == "routes":
         success = run_routes()
+    elif args.step == "export":
+        success = run_export()
+    elif args.step == "all":
+        logger.info("Running complete Phase 7 routing pipeline sequentially...")
+        success = run_weights()
+        if success:
+            success = run_routes()
+        if success:
+            success = run_export()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
@@ -124,3 +148,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

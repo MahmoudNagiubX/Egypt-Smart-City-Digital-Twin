@@ -365,3 +365,143 @@ def build_demo_routes(event_type: str):
     
     return normal_route, safe_route, G, metrics
 
+
+def route_to_geojson(G, route_nodes, event_type, route_type, metrics, points_info):
+    """Convert a route node list to a GeoJSON FeatureCollection."""
+    from shapely.geometry import LineString
+    
+    if len(route_nodes) < 2:
+        # fallback to empty LineString if not enough nodes
+        line = LineString()
+    else:
+        coordinates = [(G.nodes[node]['x'], G.nodes[node]['y']) for node in route_nodes]
+        line = LineString(coordinates)
+        
+    is_safe = (route_type == "weather_safe")
+    prefix = "safe" if is_safe else "normal"
+    
+    properties = {
+        "route_type": route_type,
+        "event_type": event_type,
+        "event_id": metrics.get("event_id", "Unknown"),
+        "timestamp": metrics.get("timestamp", "Unknown"),
+        "distance_m": float(metrics.get(f"{prefix}_distance_m", 0.0)),
+        "base_eta_sec": float(metrics.get(f"{prefix}_base_eta_sec", 0.0)),
+        "weather_eta_sec": float(metrics.get(f"{prefix}_weather_eta_sec", 0.0)),
+        "mean_risk_score": float(metrics.get(f"{prefix}_mean_risk_score", 0.0)),
+        "high_risk_segment_count": int(metrics.get(f"{prefix}_high_risk_segment_count", 0)),
+        "origin_lon": float(points_info["origin_lon"]),
+        "origin_lat": float(points_info["origin_lat"]),
+        "destination_lon": float(points_info["dest_lon"]),
+        "destination_lat": float(points_info["dest_lat"]),
+        "destination_facility_name": points_info.get("destination_facility_name", "Unknown"),
+        "honesty_note": "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
+    }
+    
+    gdf = gpd.GeoDataFrame([properties], geometry=[line], crs="EPSG:4326")
+    return gdf
+
+
+def export_demo_route_outputs():
+    """Build, compare, and export all demo routes and comparisons."""
+    logger.info("Exporting all demo route outputs...")
+    warnings = []
+    
+    # 1. Top Rain
+    n_route_top, s_route_top, G_top, metrics_top = build_demo_routes("top-rain")
+    points_top = select_demo_route_points("top-rain")
+    
+    # Check if routes are identical
+    if n_route_top == s_route_top:
+        warnings.append("Top-rain: normal and safe routes are identical, no safer alternative path found.")
+        
+    gdf_top_normal = route_to_geojson(G_top, n_route_top, "top-rain", "normal", metrics_top, points_top)
+    gdf_top_safe = route_to_geojson(G_top, s_route_top, "top-rain", "weather_safe", metrics_top, points_top)
+    
+    gdf_top_normal.to_file(paths.DEMO_ROUTE_TOP_RAIN_NORMAL_PATH, driver="GeoJSON")
+    gdf_top_safe.to_file(paths.DEMO_ROUTE_TOP_RAIN_SAFE_PATH, driver="GeoJSON")
+    
+    with open(paths.ROUTE_COMPARISON_TOP_RAIN_PATH, "w", encoding="utf-8") as f:
+        json.dump(metrics_top, f, indent=2)
+        
+    # 2. Latest
+    n_route_lat, s_route_lat, G_lat, metrics_lat = build_demo_routes("latest")
+    points_lat = select_demo_route_points("latest")
+    
+    # Check if routes are identical
+    if n_route_lat == s_route_lat:
+        warnings.append("Latest: normal and safe routes are identical, no safer alternative path found.")
+        
+    gdf_lat_normal = route_to_geojson(G_lat, n_route_lat, "latest", "normal", metrics_lat, points_lat)
+    gdf_lat_safe = route_to_geojson(G_lat, s_route_lat, "latest", "weather_safe", metrics_lat, points_lat)
+    
+    gdf_lat_normal.to_file(paths.DEMO_ROUTE_LATEST_NORMAL_PATH, driver="GeoJSON")
+    gdf_lat_safe.to_file(paths.DEMO_ROUTE_LATEST_SAFE_PATH, driver="GeoJSON")
+    
+    with open(paths.ROUTE_COMPARISON_LATEST_PATH, "w", encoding="utf-8") as f:
+        json.dump(metrics_lat, f, indent=2)
+        
+    # Create validation report
+    create_routing_validation_report(warnings)
+    logger.info("All demo route outputs exported successfully.")
+
+
+def create_routing_validation_report(warnings=None):
+    """Generate and write routing_validation_report.json."""
+    if warnings is None:
+        warnings = []
+        
+    # Check if files exist
+    road_weights_top_rain_exists = paths.ROAD_RISK_WEIGHTS_TOP_RAIN_PATH.exists()
+    road_weights_latest_exists = paths.ROAD_RISK_WEIGHTS_LATEST_PATH.exists()
+    
+    top_rain_routes_created = (
+        paths.DEMO_ROUTE_TOP_RAIN_NORMAL_PATH.exists() and 
+        paths.DEMO_ROUTE_TOP_RAIN_SAFE_PATH.exists()
+    )
+    latest_routes_created = (
+        paths.DEMO_ROUTE_LATEST_NORMAL_PATH.exists() and 
+        paths.DEMO_ROUTE_LATEST_SAFE_PATH.exists()
+    )
+    
+    top_rain_comparison_exists = paths.ROUTE_COMPARISON_TOP_RAIN_PATH.exists()
+    latest_comparison_exists = paths.ROUTE_COMPARISON_LATEST_PATH.exists()
+    
+    graph_loaded = False
+    try:
+        G = load_routing_graph()
+        if len(G) > 0:
+            graph_loaded = True
+    except Exception as e:
+        warnings.append(f"Failed to load graph: {e}")
+        
+    # Check output folder exists
+    paths.ensure_data_dirs()
+    
+    status = "ok"
+    if warnings:
+        status = "ok_with_warnings"
+    if not (top_rain_routes_created and latest_routes_created and graph_loaded):
+        status = "failed"
+        
+    report = {
+        "status": status,
+        "warnings": warnings,
+        "graph_loaded": graph_loaded,
+        "road_risk_weights_top_rain_exists": road_weights_top_rain_exists,
+        "road_risk_weights_latest_exists": road_weights_latest_exists,
+        "top_rain_routes_created": top_rain_routes_created,
+        "latest_routes_created": latest_routes_created,
+        "top_rain_comparison_exists": top_rain_comparison_exists,
+        "latest_comparison_exists": latest_comparison_exists,
+        "official_emergency_dispatch_claimed": False,
+        "official_flood_labels_claimed": False
+    }
+    
+    with open(paths.ROUTING_VALIDATION_REPORT_PATH, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2)
+        
+    logger.info(f"Routing validation report written to {paths.ROUTING_VALIDATION_REPORT_PATH}")
+    return report
+
+

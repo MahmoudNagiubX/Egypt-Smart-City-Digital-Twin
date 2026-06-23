@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "demo_route_latest_safe",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "route_type": "weather_safe", "event_type": "latest", "event_id": "evt_dry_009", "timestamp": "2024-02-20T00:00", "distance_m": 1010.9589293289606, "base_eta_sec": 136.22090168507654, "weather_eta_sec": 306.62028073506406, "mean_risk_score": 0.49886778497179485, "high_risk_segment_count": 0, "origin_lon": 31.324501841051497, "origin_lat": 30.081886257513254, "destination_lon": 31.3317412, "destination_lat": 30.0815072, "destination_facility_name": "مستشفى الميرغنى", "honesty_note": "Routes are decision-support prototype outputs, not official emergency dispatch instructions." }, "geometry": { "type": "LineString", "coordinates": [ [ 31.3241613, 30.0817354 ], [ 31.3246269, 30.0813552 ], [ 31.325126, 30.0816531 ], [ 31.3257718, 30.0819621 ], [ 31.3266372, 30.0823534 ], [ 31.3270671, 30.0825478 ], [ 31.3271238, 30.0825136 ], [ 31.3277735, 30.0821629 ], [ 31.3274241, 30.0816861 ], [ 31.327814, 30.0817896 ], [ 31.3282708, 30.0824763 ], [ 31.3285042, 30.0824861 ], [ 31.3291084, 30.082169 ], [ 31.3294716, 30.0827153 ], [ 31.3302708, 30.0823454 ], [ 31.3309468, 30.0820241 ], [ 31.3316624, 30.0816638 ] ] } }
+]
+}
