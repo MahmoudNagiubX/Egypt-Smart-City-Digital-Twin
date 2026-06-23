@@ -76,6 +76,16 @@ PREDICTION_SAMPLE_PATH = NASR_CITY_MODELS / "prediction_sample.csv"
 MODEL_CARD_PATH = NASR_CITY_MODELS / "MODEL_CARD.md"
 ML_TRAINING_REPORT_PATH = NASR_CITY_OUTPUTS / "ml_training_report.json"
 
+# Prediction output paths
+REAL_OBSERVED_PREDICTIONS_CSV_PATH = NASR_CITY_OUTPUTS / "real_observed_predictions.csv"
+REAL_OBSERVED_PREDICTIONS_GEOJSON_PATH = NASR_CITY_OUTPUTS / "real_observed_predictions.geojson"
+LATEST_SELECTED_EVENT_RISK_GEOJSON_PATH = NASR_CITY_OUTPUTS / "latest_selected_event_risk.geojson"
+TOP_RAIN_EVENT_RISK_GEOJSON_PATH = NASR_CITY_OUTPUTS / "top_rain_event_risk.geojson"
+ZONE_RISK_SUMMARY_CSV_PATH = NASR_CITY_OUTPUTS / "zone_risk_summary.csv"
+ZONE_RISK_SUMMARY_GEOJSON_PATH = NASR_CITY_OUTPUTS / "zone_risk_summary.geojson"
+PREDICTION_OUTPUT_REPORT_PATH = NASR_CITY_OUTPUTS / "prediction_output_report.json"
+
+
 
 def ensure_data_dirs():
     """Create all required data directories."""

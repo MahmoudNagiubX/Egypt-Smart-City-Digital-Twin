@@ -512,3 +512,72 @@ An **event-based split** (`GroupShuffleSplit` on `event_id`) was used instead of
         
     logger.info(f"Saved MODEL_CARD.md to {paths.MODEL_CARD_PATH}")
     return content
+
+
+def load_prediction_model():
+    """Load the trained Random Forest model for inference."""
+    import joblib
+    if not paths.RF_MODEL_PATH.exists():
+        raise FileNotFoundError(f"Trained Random Forest model not found at: {paths.RF_MODEL_PATH}")
+    logger.info(f"Loading Random Forest model from {paths.RF_MODEL_PATH}")
+    return joblib.load(paths.RF_MODEL_PATH)
+
+
+def load_feature_columns():
+    """Load the list of feature columns required by the model."""
+    if not paths.ML_FEATURE_COLUMNS_PATH.exists():
+        raise FileNotFoundError(f"Feature columns file not found at: {paths.ML_FEATURE_COLUMNS_PATH}")
+    logger.info(f"Loading feature columns from {paths.ML_FEATURE_COLUMNS_PATH}")
+    return data_loader.load_json(paths.ML_FEATURE_COLUMNS_PATH)
+
+
+def score_to_risk_class(score):
+    """Map continuous weather-impact score to risk class."""
+    if score < 0.33:
+        return "low"
+    elif score < 0.66:
+        return "medium"
+    else:
+        return "high"
+
+
+def prepare_inference_matrix():
+    """Load real_observed_training_dataset.csv, extract features, and return X along with metadata.
+    
+    Returns:
+        X (pd.DataFrame): inference feature matrix
+        metadata (pd.DataFrame): metadata columns separately preserved
+    """
+    if not paths.REAL_OBSERVED_TRAINING_DATASET_PATH.exists():
+        raise FileNotFoundError(f"Real observed training dataset not found at: {paths.REAL_OBSERVED_TRAINING_DATASET_PATH}")
+        
+    df = pd.read_csv(paths.REAL_OBSERVED_TRAINING_DATASET_PATH)
+    features = load_feature_columns()
+    
+    # Check that all features exist or impute them
+    for col in features:
+        if col not in df.columns:
+            logger.warning(f"Expected feature '{col}' is missing from the dataset. Creating filled with 0.0.")
+            df[col] = 0.0
+            
+    X = df[features].copy()
+    
+    # Fill missing numeric values safely using median or 0.0
+    for col in X.columns:
+        if X[col].isna().sum() > 0:
+            median_val = X[col].median()
+            if pd.isna(median_val):
+                median_val = 0.0
+            X[col] = X[col].fillna(median_val)
+            
+    # Preserve metadata columns separately
+    meta_cols = ["zone_code", "event_id", "timestamp", "target_type"]
+    if "data_driven_weather_impact_score" in df.columns:
+        meta_cols.append("data_driven_weather_impact_score")
+        
+    # Only keep meta columns that actually exist in the dataframe
+    actual_meta_cols = [col for col in meta_cols if col in df.columns]
+    metadata = df[actual_meta_cols].copy()
+    
+    return X, metadata
+
