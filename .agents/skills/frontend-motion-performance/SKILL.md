@@ -46,34 +46,9 @@ Avoid:
 * Use simple derived state.
 * Keep tests independent from backend server.
 
-## Senior UI Interaction Rules
-
-Every interaction should answer a user need:
-
-* What layer am I seeing?
-* Which event is selected?
-* Which route is normal?
-* Which route is safer?
-* How much risk is reduced?
-* What tradeoff did the safe route add?
-* What does the system not claim?
-
 ## Accessibility
 
 * Maintain readable contrast.
 * Buttons and toggles should be keyboard-accessible where possible.
 * Use semantic labels.
 * Do not rely only on color; include labels/badges.
-
-## Final Checklist
-
-Before finishing:
-
-* npm run build passes
-* npm test passes
-* map does not flicker
-* panels do not jump
-* route/risk controls feel responsive
-* no heavy animation causes lag
-* no fake data
-* honesty note visible

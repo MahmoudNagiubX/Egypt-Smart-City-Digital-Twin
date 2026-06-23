@@ -30,21 +30,6 @@ Use:
 * CSS variables and Tailwind classes
 * shadcn/ui for controls and panels
 
-## Basemap Rules
-
-Use a token-free basemap if possible.
-
-Prefer a dark raster or open map tile source that does not need an API key.
-
-The overlay layers should carry the premium look:
-
-* boundary outline
-* grid cells
-* risk fills
-* emergency markers
-* normal route
-* weather-safe route
-
 ## Layer Styling
 
 Boundary:
@@ -98,45 +83,6 @@ Implement:
 * hover cursor feedback
 * smooth map flyTo when selecting major event/route if safe
 
-## Animation Rules
-
-Good animations:
-
-* subtle route pulse
-* panel fade/slide
-* hover glow
-* skeleton loading
-* small metric transitions
-
-Avoid:
-
-* excessive movement
-* distracting loops
-* heavy particles
-* large background animations
-* animations that hurt map performance
-
-## Popup Content
-
-For zones, show:
-
-* zone_code
-* event_id
-* timestamp
-* predicted risk class
-* predicted score
-* rain_24h_mm
-* population_sum
-* built_surface_mean
-
-For routes, show:
-
-* route type
-* risk reduction
-* ETA tradeoff
-* destination facility
-* safe route quality
-
 ## Performance Rules
 
 * Do not repeatedly recreate the map.
@@ -145,15 +91,3 @@ For routes, show:
 * Remove event listeners on cleanup.
 * Avoid duplicate source/layer errors.
 * Do not render thousands of DOM markers; prefer GeoJSON layers.
-
-## Visual Quality Checklist
-
-Before finishing map work:
-
-* map loads without token
-* all toggles work
-* risk colors are clear
-* route lines are visually distinct
-* popups are useful
-* dashboard still looks good if one API request fails
-* no fake data is used

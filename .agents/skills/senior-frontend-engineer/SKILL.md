@@ -38,30 +38,6 @@ The dashboard should feel like a smart-city control room:
 * no huge empty cards
 * no meaningless icons
 
-## Architecture Rules
-
-Use this structure:
-
-frontend/src/
-api/
-components/
-types/
-styles/
-
-Prefer these component names:
-
-Dashboard.tsx
-MapView.tsx
-SidePanel.tsx
-SummaryCards.tsx
-LayerToggle.tsx
-Legend.tsx
-RoutePanel.tsx
-EventSelector.tsx
-LoadingError.tsx
-
-Do not create too many files. Split components only when the split improves readability.
-
 ## Data Rules
 
 Use API responses from:
