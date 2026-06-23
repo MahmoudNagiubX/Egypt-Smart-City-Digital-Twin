@@ -104,6 +104,11 @@ export interface LayerToggles {
   boundary: boolean;
   grid: boolean;
   facilities: boolean;
+  roadsLabels: boolean;
+  hospitals: boolean;
+  mosques: boolean;
+  malls: boolean;
+  education: boolean;
   latestRisk: boolean;
   topRainRisk: boolean;
   riskSummary: boolean;
