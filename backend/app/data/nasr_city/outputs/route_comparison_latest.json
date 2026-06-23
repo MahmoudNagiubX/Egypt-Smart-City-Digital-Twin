@@ -17,5 +17,6 @@
   "destination_facility_type": "hospital",
   "event_type": "latest",
   "event_id": "evt_dry_009",
-  "timestamp": "2024-02-20T00:00"
+  "timestamp": "2024-02-20T00:00",
+  "honesty_note": "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
 }

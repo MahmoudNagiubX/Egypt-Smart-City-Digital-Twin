@@ -17,5 +17,6 @@
   "destination_facility_type": "hospital",
   "event_type": "top-rain",
   "event_id": "evt_0557",
-  "timestamp": "2020-03-13T01:00:00"
+  "timestamp": "2020-03-13T01:00:00",
+  "honesty_note": "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
 }

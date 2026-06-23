@@ -330,7 +330,8 @@ def compare_routes(normal_route, safe_route, G, event_type, points_info):
         "destination_facility_type": points_info["destination_facility_type"],
         "event_type": event_type,
         "event_id": event_id,
-        "timestamp": timestamp
+        "timestamp": timestamp,
+        "honesty_note": "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
     }
     
     return metrics
