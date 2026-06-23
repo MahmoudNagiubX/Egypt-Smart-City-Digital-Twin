@@ -60,21 +60,21 @@ vi.mock('maplibre-gl', () => {
 
 // Mock API Client calls
 vi.mock('../api/client', () => ({
-  getHealth: vi.fn().mockResolvedValue({ status: "ok", service: "backend", module: "weather_impact" }),
+  getHealth: vi.fn().mockResolvedValue({ status: "healthy", module_name: "Nasr City Weather-Impact Emergency Mobility Module", outputs_available: {}, official_flood_labels_claimed: false, demo_scenarios_used_for_training: false }),
   getSummary: vi.fn().mockResolvedValue({
-    grid_cells: 416,
-    road_segments: 17411,
-    emergency_facilities: 44,
-    real_training_rows: 12480,
-    prediction_rows: 12480,
-    events: 30,
+    zone_count: 416,
+    prediction_row_count: 12480,
+    event_count: 30,
     risk_class_counts: { low: 4502, medium: 6732, high: 1246 },
-    latest_selected_event: { event_id: "evt_dry_009", timestamp: "2024-02-20T00:00", rain_sum_mm: 0.0 },
-    top_rain_event: { event_id: "evt_0557", timestamp: "2020-03-12T00:00", rain_sum_mm: 55.7 },
-    routing_readiness: { top_rain_safe_route_available: true, latest_safe_route_available: true, routing_validation_status: "ok" }
+    highest_risk_zones: [],
+    latest_event_id: "evt_dry_009",
+    top_rain_event_id: "evt_0557",
+    model_name: "weather_impact_rf_model.joblib",
+    dataset_name: "real_observed_training_dataset.csv",
+    honesty_statement: "Model-estimated risk scores."
   }),
   getEvents: vi.fn().mockResolvedValue([
-    { event_id: "evt_0557", timestamp: "2020-03-12T00:00", rain_sum_mm: 55.7, predicted_risk_class_counts: { low: 10, medium: 200, high: 206 }, mean_predicted_risk: 0.45, max_predicted_risk: 0.98 }
+    { event_id: "evt_0557", timestamp: "2020-03-12T00:00", mean_rain_24h_mm: 55.7, max_rain_24h_mm: 70, mean_predicted_score: 0.45, high_risk_zone_count: 206 }
   ]),
   getBoundaryLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
   getGridLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
@@ -117,8 +117,8 @@ test('App renders dashboard title and disclaimers', async () => {
   });
   
   // Dashboard Title
-  const title = screen.getByText(/Nasr City Weather-Impact/i);
-  expect(title).toBeDefined();
+  const title = screen.getAllByText(/Nasr City Weather-Impact/i);
+  expect(title.length).toBeGreaterThan(0);
 
   // Disclaimer visibility
   const note = screen.getAllByText(/not official emergency dispatch instructions/i);
@@ -127,38 +127,38 @@ test('App renders dashboard title and disclaimers', async () => {
 
 test('SummaryCards renders mock summary statistics correctly', () => {
   const mockSummary = {
-    grid_cells: 416,
-    road_segments: 17411,
-    emergency_facilities: 44,
-    real_training_rows: 12480,
-    prediction_rows: 12480,
-    events: 30,
+    zone_count: 416,
+    prediction_row_count: 12480,
+    event_count: 30,
     risk_class_counts: { low: 4502, medium: 6732, high: 1246 },
-    latest_selected_event: { event_id: "evt_dry_009", timestamp: "2024-02-20T00:00", rain_sum_mm: 0.0 },
-    top_rain_event: { event_id: "evt_0557", timestamp: "2020-03-12T00:00", rain_sum_mm: 55.7 },
-    routing_readiness: { top_rain_safe_route_available: true, latest_safe_route_available: true, routing_validation_status: "ok" }
+    highest_risk_zones: [],
+    latest_event_id: "evt_dry_009",
+    top_rain_event_id: "evt_0557",
+    model_name: "weather_impact_rf_model.joblib",
+    dataset_name: "real_observed_training_dataset.csv",
+    honesty_statement: "Model-estimated risk scores."
   };
-  const mockHealth = { status: "ok", service: "backend", module: "weather_impact" };
+  const mockHealth = { status: "healthy", module_name: "Nasr City Weather-Impact Emergency Mobility Module", outputs_available: {}, official_flood_labels_claimed: false, demo_scenarios_used_for_training: false };
   
   render(<SummaryCards summary={mockSummary} health={mockHealth} />);
   
-  expect(screen.getByText(/416 Zones \| 17\D?411 Roads/i)).toBeDefined();
+  expect(screen.getByText(/416 Zones · 30 Events/i)).toBeDefined();
   expect(screen.getByText(/12\D?480 Predictions/i)).toBeDefined();
   expect(screen.getByText(/LOW: 4\D?502/i)).toBeDefined();
 });
 
 test('SummaryCards renders safely with partial or missing mock data', () => {
   const mockSummary = {
-    grid_cells: undefined as any,
-    road_segments: null as any,
-    emergency_facilities: undefined as any,
-    real_training_rows: undefined as any,
-    prediction_rows: undefined as any,
-    events: undefined as any,
+    zone_count: undefined as any,
+    prediction_row_count: undefined as any,
+    event_count: undefined as any,
     risk_class_counts: undefined as any,
-    latest_selected_event: null as any,
-    top_rain_event: null as any,
-    routing_readiness: null as any
+    highest_risk_zones: [] as any,
+    latest_event_id: undefined as any,
+    top_rain_event_id: undefined as any,
+    model_name: undefined as any,
+    dataset_name: undefined as any,
+    honesty_statement: undefined as any
   };
   const mockHealth = null;
 
@@ -232,12 +232,15 @@ test('LayerToggle renders spatial and risk toggle controls', () => {
   expect(screen.getByText(/Nasr City Boundary/i)).toBeDefined();
   expect(screen.getByText(/500m Elevation Grid/i)).toBeDefined();
   expect(screen.getByText(/Emergency Facilities/i)).toBeDefined();
-  expect(screen.getByText(/Latest Rainfall Event Risk/i)).toBeDefined();
+  expect(screen.getByText(/Latest event/i)).toBeDefined();
+  expect(screen.getByText(/Hospitals/i)).toBeDefined();
+  expect(screen.getByText(/Mosques/i)).toBeDefined();
+  expect(screen.getByText(/Malls/i)).toBeDefined();
 });
 
 test('EventSelector dropdown renders event options', () => {
   const mockEvents = [
-    { event_id: "evt_0557", timestamp: "2020-03-12T00:00", rain_sum_mm: 55.7, predicted_risk_class_counts: { low: 10, medium: 200, high: 206 }, mean_predicted_risk: 0.45, max_predicted_risk: 0.98 }
+    { event_id: "evt_0557", timestamp: "2020-03-12T00:00", mean_rain_24h_mm: 55.7, max_rain_24h_mm: 70, mean_predicted_score: 0.45, high_risk_zone_count: 206 }
   ];
 
   render(
@@ -248,8 +251,8 @@ test('EventSelector dropdown renders event options', () => {
     />
   );
 
-  // Selector shows standard label
-  expect(screen.getByText(/Simulated Event Selector/i)).toBeDefined();
+  expect(screen.getByRole('heading', { name: /Event/i })).toBeDefined();
+  expect(screen.getByRole('combobox', { name: /Observed weather event/i })).toBeDefined();
 });
 
 test('API Client resolves base URL defaults correctly', async () => {
@@ -267,9 +270,9 @@ test('API Client resolves base URL defaults correctly', async () => {
   }
 });
 
-test('EventSelector renders correctly when rain_sum_mm is missing/undefined', () => {
+test('EventSelector renders correctly when mean_rain_24h_mm is missing/undefined', () => {
   const mockEvents = [
-    { event_id: "evt_0557", timestamp: "2020-03-12T00:00", rain_sum_mm: undefined as any, predicted_risk_class_counts: { low: 10, medium: 200, high: 206 }, mean_predicted_risk: 0.45, max_predicted_risk: 0.98 }
+    { event_id: "evt_0557", timestamp: "2020-03-12T00:00", mean_rain_24h_mm: undefined as any, max_rain_24h_mm: 70, mean_predicted_score: 0.45, high_risk_zone_count: 206 }
   ];
 
   render(
@@ -280,7 +283,8 @@ test('EventSelector renders correctly when rain_sum_mm is missing/undefined', ()
     />
   );
 
-  expect(screen.getByText(/Simulated Event Selector/i)).toBeDefined();
+  expect(screen.getByRole('heading', { name: /Event/i })).toBeDefined();
+  expect(screen.getAllByText(/— mm/i).length).toBeGreaterThan(0);
 });
 
 test('RoutePanel renders correctly when optional numeric metrics are missing/undefined', () => {

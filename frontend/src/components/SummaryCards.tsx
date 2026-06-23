@@ -14,7 +14,7 @@ const metricCardClass = "summary-card border-0 bg-white/94 shadow-[0_8px_30px_rg
 const iconClass = "flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-primary";
 
 export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, health }) => {
-  const isHealthy = health?.status === "ok";
+  const isHealthy = health?.status === "healthy" || health?.status === "ok";
 
   return (
     <div className="grid grid-cols-2 gap-3 px-4 pb-4 xl:grid-cols-4">
@@ -37,10 +37,10 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, health }) =
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">City coverage</p>
             <p className="mt-0.5 truncate text-sm font-semibold">
-              {summary ? `${formatInteger(summary.grid_cells)} Zones | ${formatInteger(summary.road_segments)} Roads` : "Loading…"}
+              {summary ? `${formatInteger(summary.zone_count)} Zones · ${formatInteger(summary.event_count)} Events` : "Loading…"}
             </p>
             <p className="mt-1 truncate text-[10px] text-muted-foreground">
-              {summary ? `${formatInteger(summary.real_training_rows)} observations · ${formatInteger(summary.emergency_facilities)} facilities` : "API sync pending"}
+              {summary ? `Latest: ${summary.latest_event_id || "—"}` : "API sync pending"}
             </p>
           </div>
         </CardContent>
@@ -52,7 +52,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, health }) =
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Risk estimates</p>
             <p className="mt-0.5 truncate text-sm font-semibold">
-              {summary ? `${formatInteger(summary.prediction_rows)} Predictions` : "Loading…"}
+              {summary ? `${formatInteger(summary.prediction_row_count)} Predictions` : "Loading…"}
             </p>
             <div className="mt-1 flex flex-wrap items-center gap-1">
               <Badge className="border-emerald-200 bg-emerald-50 text-[9px] text-emerald-700">LOW: {summary ? formatInteger(summary.risk_class_counts?.low) : "—"}</Badge>
@@ -69,9 +69,9 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, health }) =
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Mobility routing</p>
             <p className="mt-0.5 truncate text-sm font-semibold">
-              {summary?.routing_readiness?.routing_validation_status === "ok" ? "Weather-aware routes ready" : "Routing warnings"}
+              {summary ? "Weather-aware comparison" : "Loading…"}
             </p>
-            <p className="mt-1 text-[10px] text-muted-foreground">{summary ? formatInteger(summary.events) : "—"} observed events</p>
+            <p className="mt-1 truncate text-[10px] text-muted-foreground">Top rain: {summary?.top_rain_event_id || "—"}</p>
           </div>
         </CardContent>
       </Card>

@@ -40,7 +40,7 @@ export const EventSelector: React.FC<EventSelectorProps> = ({ events, selectedEv
               const date = new Date(event.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
               return (
                 <SelectItem key={event.event_id} value={event.event_id}>
-                  {event.event_id} · {formatNumber(event.rain_sum_mm, 1)} mm · {date}
+                  {event.event_id} · {formatNumber(event.mean_rain_24h_mm, 1)} mm · {date}
                 </SelectItem>
               );
             })}
@@ -51,7 +51,7 @@ export const EventSelector: React.FC<EventSelectorProps> = ({ events, selectedEv
       {selectedEvent && (
         <div className="flex items-center justify-between rounded-xl border border-blue-100 bg-accent/45 px-3 py-2 text-[10px]">
           <span className="flex items-center gap-1.5 font-medium text-primary"><CloudRain /> Rain accumulation</span>
-          <strong>{formatNumber(selectedEvent.rain_sum_mm, 1)} mm</strong>
+          <strong>{formatNumber(selectedEvent.mean_rain_24h_mm, 1)} mm</strong>
         </div>
       )}
     </section>

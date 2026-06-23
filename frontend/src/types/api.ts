@@ -7,44 +7,32 @@ export interface FeatureCollection {
 
 export interface HealthResponse {
   status: string;
-  service: string;
-  module: string;
-  files?: {
-    required_files_checked: number;
-    missing_files: string[];
-  };
-  database?: string;
-  model_status?: string;
-  routing_status?: string;
+  module_name: string;
+  outputs_available: Record<string, boolean>;
+  prediction_report_status?: string;
+  official_flood_labels_claimed: boolean;
+  demo_scenarios_used_for_training: boolean;
 }
 
 export interface SummaryResponse {
-  grid_cells: number;
-  road_segments: number;
-  emergency_facilities: number;
-  real_training_rows: number;
-  prediction_rows: number;
-  events: number;
+  zone_count: number;
+  event_count: number;
+  prediction_row_count: number;
   risk_class_counts: {
     low: number;
     medium: number;
     high: number;
   };
-  latest_selected_event: {
-    event_id: string;
-    timestamp: string;
-    rain_sum_mm: number;
-  };
-  top_rain_event: {
-    event_id: string;
-    timestamp: string;
-    rain_sum_mm: number;
-  };
-  routing_readiness: {
-    top_rain_safe_route_available: boolean;
-    latest_safe_route_available: boolean;
-    routing_validation_status: string;
-  };
+  highest_risk_zones: Array<{
+    zone_code: string;
+    max_predicted_score: number;
+    dominant_risk_class: string;
+  }>;
+  top_rain_event_id: string;
+  latest_event_id: string;
+  model_name: string;
+  dataset_name: string;
+  honesty_statement: string;
 }
 
 export interface PredictionMetadata {
@@ -65,14 +53,10 @@ export interface PredictionMetadata {
 export interface EventSummary {
   event_id: string;
   timestamp: string;
-  rain_sum_mm: number;
-  predicted_risk_class_counts: {
-    low: number;
-    medium: number;
-    high: number;
-  };
-  mean_predicted_risk: number;
-  max_predicted_risk: number;
+  mean_rain_24h_mm: number;
+  max_rain_24h_mm: number;
+  mean_predicted_score: number;
+  high_risk_zone_count: number;
 }
 
 export interface RouteComparison {
