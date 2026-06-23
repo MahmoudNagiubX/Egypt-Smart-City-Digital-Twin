@@ -6,19 +6,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Navigation, Clock, ShieldCheck, CornerUpRight, Info } from "lucide-react";
+import { formatNumber, formatPercent } from "../utils/format";
 
-function formatNumber(value: unknown, digits = 2, fallback = "—") {
-  const numberValue =
-    typeof value === "number"
-      ? value
-      : typeof value === "string"
-        ? Number(value)
-        : NaN;
-
-  return Number.isFinite(numberValue)
-    ? numberValue.toFixed(digits)
-    : fallback;
-}
 
 interface RoutePanelProps {
   comparison: RouteComparison | null;
@@ -118,7 +107,7 @@ export const RoutePanel: React.FC<RoutePanelProps> = ({
               Risk Reduction
             </span>
             <span className={`text-base font-bold ${riskRed > 0 ? "text-cyan-400" : "text-slate-400"}`}>
-              {riskRed !== undefined && riskRed !== null && Number(riskRed) > 0 ? `-${formatNumber(riskRed, 1)}%` : "0.0%"}
+              {riskRed !== undefined && riskRed !== null && Number(riskRed) > 0 ? `-${formatPercent(riskRed, 1)}` : "0.0%"}
             </span>
             <span className="text-[9px] text-slate-500 mt-0.5">
               Avoided Segs: {comparison.avoided_high_risk_segments}
@@ -131,7 +120,7 @@ export const RoutePanel: React.FC<RoutePanelProps> = ({
               ETA Tradeoff
             </span>
             <span className={`text-base font-bold ${etaTradeoff > 0 ? "text-amber-400" : "text-cyan-400"}`}>
-              {etaTradeoff !== undefined && etaTradeoff !== null && Number(etaTradeoff) > 0 ? `+${formatNumber(etaTradeoff, 1)}%` : "0.0%"}
+              {etaTradeoff !== undefined && etaTradeoff !== null && Number(etaTradeoff) > 0 ? `+${formatPercent(etaTradeoff, 1)}` : "0.0%"}
             </span>
             <span className="text-[9px] text-slate-500 mt-0.5">
               Weather delay added

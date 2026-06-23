@@ -9,6 +9,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { EventSummary } from "../types/api";
 import { CalendarRange } from "lucide-react";
+import { formatNumber } from "../utils/format";
 
 interface EventSelectorProps {
   events: EventSummary[];
@@ -16,18 +17,6 @@ interface EventSelectorProps {
   onSelectEvent: (eventId: string) => void;
 }
 
-function formatNumber(value: unknown, digits = 2, fallback = "—") {
-  const numberValue =
-    typeof value === "number"
-      ? value
-      : typeof value === "string"
-        ? Number(value)
-        : NaN;
-
-  return Number.isFinite(numberValue)
-    ? numberValue.toFixed(digits)
-    : fallback;
-}
 
 export const EventSelector: React.FC<EventSelectorProps> = ({ 
   events, 

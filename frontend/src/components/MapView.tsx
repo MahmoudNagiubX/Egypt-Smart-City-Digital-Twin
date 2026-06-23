@@ -2,19 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { FeatureCollection, LayerToggles } from "../types/api";
+import { formatNumber, formatInteger } from "../utils/format";
 
-function formatNumber(value: unknown, digits = 2, fallback = "—") {
-  const numberValue =
-    typeof value === "number"
-      ? value
-      : typeof value === "string"
-        ? Number(value)
-        : NaN;
-
-  return Number.isFinite(numberValue)
-    ? numberValue.toFixed(digits)
-    : fallback;
-}
 
 interface MapViewProps {
   layers: LayerToggles;
@@ -246,7 +235,7 @@ export const MapView: React.FC<MapViewProps> = ({
         } else {
           const score = formatNumber(props.y_pred, 4);
           const rain = props.rain_24h_mm !== undefined && props.rain_24h_mm !== null ? `${formatNumber(props.rain_24h_mm, 1)} mm` : "—";
-          const pop = props.population_sum !== undefined && props.population_sum !== null ? Number(props.population_sum).toLocaleString() : "—";
+          const pop = formatInteger(props.population_sum);
           const built = formatNumber(props.built_surface_mean, 2);
           
           html = `

@@ -137,10 +137,33 @@ test('SummaryCards renders mock summary statistics correctly', () => {
   
   render(<SummaryCards summary={mockSummary} health={mockHealth} />);
   
-  expect(screen.getByText(/416 Zones | 17411 Roads/i)).toBeDefined();
-  expect(screen.getByText(/12,480 Predictions/i)).toBeDefined();
-  expect(screen.getByText(/LOW: 4502/i)).toBeDefined();
+  expect(screen.getByText(/416 Zones \| 17\D?411 Roads/i)).toBeDefined();
+  expect(screen.getByText(/12\D?480 Predictions/i)).toBeDefined();
+  expect(screen.getByText(/LOW: 4\D?502/i)).toBeDefined();
 });
+
+test('SummaryCards renders safely with partial or missing mock data', () => {
+  const mockSummary = {
+    grid_cells: undefined as any,
+    road_segments: null as any,
+    emergency_facilities: undefined as any,
+    real_training_rows: undefined as any,
+    prediction_rows: undefined as any,
+    events: undefined as any,
+    risk_class_counts: undefined as any,
+    latest_selected_event: null as any,
+    top_rain_event: null as any,
+    routing_readiness: null as any
+  };
+  const mockHealth = null;
+
+  render(<SummaryCards summary={mockSummary} health={mockHealth} />);
+
+  // Should display the fallback "—" instead of crashing
+  const elements = screen.getAllByText(/—/);
+  expect(elements.length).toBeGreaterThan(0);
+});
+
 
 test('RoutePanel renders risk reduction and ETA tradeoff metrics', () => {
   const mockComp = {
