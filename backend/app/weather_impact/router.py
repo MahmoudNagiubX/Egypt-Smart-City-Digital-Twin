@@ -160,3 +160,49 @@ def get_summary():
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/routing/status", response_model=schemas.RoutingStatusResponse)
+def get_routing_status():
+    """Get the routing validation report status."""
+    try:
+        return service.get_routing_status()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/routing/demo/{event_type}/{route_type}")
+def get_routing_demo(event_type: str, route_type: str):
+    """Get the GeoJSON FeatureCollection for a normal or safe demo route."""
+    if event_type not in ["top-rain", "latest"]:
+        raise HTTPException(status_code=400, detail=f"Invalid event_type: {event_type}")
+    if route_type not in ["normal", "safe", "weather_safe"]:
+        raise HTTPException(status_code=400, detail=f"Invalid route_type: {route_type}")
+        
+    try:
+        return service.get_demo_route(event_type, route_type)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/routing/comparison/{event_type}", response_model=schemas.RouteComparisonResponse)
+def get_routing_comparison(event_type: str):
+    """Get comparison metrics for normal vs safe route."""
+    if event_type not in ["top-rain", "latest"]:
+        raise HTTPException(status_code=400, detail=f"Invalid event_type: {event_type}")
+        
+    try:
+        return service.get_route_comparison(event_type)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+

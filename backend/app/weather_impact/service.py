@@ -448,5 +448,58 @@ def get_summary_stats():
     }
 
 
+def get_routing_status():
+    """Retrieve the routing validation report."""
+    if not paths.ROUTING_VALIDATION_REPORT_PATH.exists():
+        raise FileNotFoundError(f"Routing validation report not found at: {paths.ROUTING_VALIDATION_REPORT_PATH}")
+    report = load_json_file(paths.ROUTING_VALIDATION_REPORT_PATH)
+    # Ensure honesty note is present
+    report["honesty_note"] = "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
+    return report
+
+
+def get_demo_route(event_type: str, route_type: str):
+    """Retrieve GeoJSON for a computed demo route."""
+    if event_type not in ["top-rain", "latest"]:
+        raise ValueError(f"Unsupported event_type: {event_type}")
+    if route_type not in ["normal", "safe", "weather_safe"]:
+        raise ValueError(f"Unsupported route_type: {route_type}")
+        
+    if event_type == "top-rain":
+        if route_type == "normal":
+            path = paths.DEMO_ROUTE_TOP_RAIN_NORMAL_PATH
+        else:
+            path = paths.DEMO_ROUTE_TOP_RAIN_SAFE_PATH
+    else:
+        if route_type == "normal":
+            path = paths.DEMO_ROUTE_LATEST_NORMAL_PATH
+        else:
+            path = paths.DEMO_ROUTE_LATEST_SAFE_PATH
+            
+    if not path.exists():
+        raise FileNotFoundError(f"Demo route GeoJSON file not found at: {path}")
+        
+    return load_geojson_layer(path)
+
+
+def get_route_comparison(event_type: str):
+    """Retrieve route comparison metrics for an event type."""
+    if event_type not in ["top-rain", "latest"]:
+        raise ValueError(f"Unsupported event_type: {event_type}")
+        
+    if event_type == "top-rain":
+        path = paths.ROUTE_COMPARISON_TOP_RAIN_PATH
+    else:
+        path = paths.ROUTE_COMPARISON_LATEST_PATH
+        
+    if not path.exists():
+        raise FileNotFoundError(f"Route comparison JSON not found at: {path}")
+        
+    comparison = load_json_file(path)
+    comparison["honesty_note"] = "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
+    return comparison
+
+
+
 
 
