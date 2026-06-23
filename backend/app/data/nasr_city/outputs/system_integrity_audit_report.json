@@ -1,0 +1,42 @@
+{
+  "status": "ok",
+  "warnings": [],
+  "files": {
+    "required_files_checked": 27,
+    "missing_files": []
+  },
+  "reports": {
+    "real_data_validation_status": "ok_with_warnings",
+    "real_data_source_audit_status": "ok",
+    "prediction_output_status": "ok",
+    "routing_validation_status": "ok"
+  },
+  "data": {
+    "grid_cells": 416,
+    "road_segments": 17411,
+    "emergency_facilities": 44,
+    "real_training_rows": 12480,
+    "prediction_rows": 12480,
+    "events": 30
+  },
+  "api": {
+    "endpoints_checked": 18,
+    "failed_endpoints": [],
+    "invalid_event_returns_404": true
+  },
+  "routing": {
+    "top_rain_safe_route_available": true,
+    "latest_safe_route_available": true,
+    "top_rain_risk_reduction_percent": 4.2949344710139705,
+    "latest_risk_reduction_percent": 5.366386001666163,
+    "facility_reachability_rows": 44,
+    "facility_reachable_count": 44,
+    "high_risk_zones_audited": 50,
+    "best_facility_routes_found": 48
+  },
+  "honesty": {
+    "official_flood_labels_claimed": false,
+    "official_emergency_dispatch_claimed": false,
+    "demo_scenarios_used_for_training": false
+  }
+}
