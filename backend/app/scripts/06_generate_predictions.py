@@ -61,6 +61,26 @@ def run_load_check():
         return False
 
 
+def run_predict():
+    """Execute Step 2: Generate predictions for all real observed rows."""
+    logger.info("=" * 60)
+    logger.info("STEP 2: Generate real observed predictions")
+    logger.info("=" * 60)
+    
+    try:
+        results = model.generate_real_observed_predictions()
+        logger.info(f"✓ Real observed predictions generated. Shape: {results.shape}")
+        
+        # Check rows
+        if len(results) != 12480:
+            logger.warning(f"Expected 12,480 rows in predictions, got {len(results)}")
+            
+        return True
+    except Exception as e:
+        logger.error(f"✗ Prediction generation failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -68,7 +88,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["load-check"],
+        choices=["load-check", "predict"],
         required=True,
         help="Step to execute",
     )
@@ -80,6 +100,8 @@ def main():
     success = False
     if args.step == "load-check":
         success = run_load_check()
+    elif args.step == "predict":
+        success = run_predict()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False

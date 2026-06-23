@@ -581,3 +581,59 @@ def prepare_inference_matrix():
     
     return X, metadata
 
+
+def generate_real_observed_predictions():
+    """Generate predictions for all real observed rows and export predictions CSV."""
+    logger.info("Generating predictions for all real observed rows...")
+    
+    # 1. Load model, features, data
+    rf = load_prediction_model()
+    X, metadata = prepare_inference_matrix()
+    
+    # 2. Predict and clip
+    y_pred_raw = rf.predict(X)
+    y_pred = np.clip(y_pred_raw, 0.0, 1.0)
+    
+    # 3. Load full dataset to pull additional columns
+    df_orig = pd.read_csv(paths.REAL_OBSERVED_TRAINING_DATASET_PATH)
+    
+    # Prepare result columns
+    results = pd.DataFrame()
+    results["zone_code"] = metadata["zone_code"]
+    results["event_id"] = metadata["event_id"]
+    results["timestamp"] = metadata["timestamp"]
+    
+    y_true = metadata["data_driven_weather_impact_score"]
+    results["y_true"] = y_true
+    results["y_pred"] = y_pred
+    results["absolute_error"] = np.abs(y_true - y_pred)
+    
+    results["predicted_risk_class"] = results["y_pred"].apply(score_to_risk_class)
+    results["true_risk_class"] = results["y_true"].apply(score_to_risk_class)
+    
+    results["target_type"] = metadata["target_type"]
+    
+    # List of additional columns we need to copy over
+    cols_to_copy = [
+        "rain_1h_mm", "rain_3h_mm", "rain_6h_mm", "rain_24h_mm",
+        "gpm_precipitation_mean", "gpm_precipitation_max", "gpm_precipitation_sum",
+        "temperature_2m", "apparent_temperature", "road_density_m_per_km2",
+        "elevation_mean", "slope_mean", "built_surface_mean", "built_surface_sum",
+        "builtup_landcover_ratio", "tree_cover_ratio", "population_sum"
+    ]
+    
+    for col in cols_to_copy:
+        if col in df_orig.columns:
+            results[col] = df_orig[col].copy()
+        else:
+            logger.warning(f"Optional column '{col}' is missing from the original dataset.")
+            results[col] = np.nan
+            
+    # Write output to CSV
+    paths.ensure_data_dirs()
+    data_loader.write_csv(results, paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH)
+    logger.info(f"Saved real observed predictions to {paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH} (rows: {len(results)})")
+    
+    return results
+
+
