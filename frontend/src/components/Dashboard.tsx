@@ -249,7 +249,7 @@ export const Dashboard: React.FC = () => {
             />
 
             {/* Floating Glassy Route Panel in bottom right */}
-            <div className="absolute bottom-4 right-4 w-96 max-h-[calc(100%-2rem)] z-10 overflow-y-auto hidden sm:block">
+            <div className="absolute bottom-4 right-4 z-10 hidden w-[22rem] max-h-[calc(100%-2rem)] overflow-y-auto sm:block">
               <RoutePanel 
                 comparison={comparison}
                 eventType={routeEventType}
