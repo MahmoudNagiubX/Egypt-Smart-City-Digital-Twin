@@ -133,6 +133,29 @@ def run_report():
         return False
 
 
+def run_all():
+    """Execute all steps in sequence."""
+    logger.info("=" * 60)
+    logger.info("RUNNING FULL PREDICTION PIPELINE")
+    logger.info("=" * 60)
+    
+    steps = [
+        ("load-check", run_load_check),
+        ("predict", run_predict),
+        ("geojson", run_geojson),
+        ("summary", run_summary),
+        ("report", run_report)
+    ]
+    
+    for name, func in steps:
+        if not func():
+            logger.error(f"✗ Pipeline failed at step '{name}'")
+            return False
+            
+    logger.info("✓ Full prediction pipeline completed successfully.")
+    return True
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -140,7 +163,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["load-check", "predict", "geojson", "summary", "report"],
+        choices=["load-check", "predict", "geojson", "summary", "report", "all"],
         required=True,
         help="Step to execute",
     )
@@ -160,6 +183,8 @@ def main():
         success = run_summary()
     elif args.step == "report":
         success = run_report()
+    elif args.step == "all":
+        success = run_all()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
