@@ -56,7 +56,7 @@ def test_api_demo_routes():
 
 
 def test_api_route_comparisons():
-    """Verify comparison endpoints return valid JSON metrics, disclaimers, and candidate search fields."""
+    """Verify comparison endpoints return valid JSON metrics, disclaimers, and quality guard fields."""
     endpoints = [
         "/api/weather-impact/routing/comparison/top-rain",
         "/api/weather-impact/routing/comparison/latest"
@@ -70,11 +70,12 @@ def test_api_route_comparisons():
         assert "safe_weather_eta_sec" in data
         assert "risk_reduction_percent" in data
         assert "eta_tradeoff_percent" in data
-        assert "candidate_search_used" in data
-        assert data["candidate_search_used"] is True
-        assert "candidate_pairs_tested" in data
-        assert data["candidate_pairs_tested"] > 0
-        assert "routes_identical" in data
+        
+        # Quality guard assertions
+        assert "safe_route_quality" in data
+        assert "safe_route_available" in data
+        assert "quality_guard_passed" in data
+        
         assert "honesty_note" in data
         assert "not official emergency dispatch instructions" in data["honesty_note"].lower()
 

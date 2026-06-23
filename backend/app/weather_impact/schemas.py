@@ -79,5 +79,9 @@ class RouteComparisonResponse(BaseModel):
     selected_destination_facility_name: Optional[str] = None
     selected_reason: Optional[str] = None
     routes_identical: bool = False
+    safe_route_quality: str = "accepted"
+    safe_route_available: bool = True
+    quality_guard_passed: bool = True
+
 
 

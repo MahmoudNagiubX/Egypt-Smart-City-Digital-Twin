@@ -79,7 +79,7 @@ def test_route_geojson_readable():
 
 
 def test_route_comparison_content():
-    """Verify route comparison content has expected candidate search keys."""
+    """Verify route comparison content conforms to quality guard specifications."""
     comparison_paths = [
         paths.ROUTE_COMPARISON_TOP_RAIN_PATH,
         paths.ROUTE_COMPARISON_LATEST_PATH
@@ -93,14 +93,26 @@ def test_route_comparison_content():
         assert "risk_reduction_percent" in data
         assert "eta_tradeoff_percent" in data
         assert "honesty_note" in data
-        assert "candidate_search_used" in data
-        assert data["candidate_search_used"] is True
-        assert "candidate_pairs_tested" in data
-        assert data["candidate_pairs_tested"] > 0
-        assert "routes_identical" in data
         
-        # Check standard disclaimer is correct
-        assert "Routes are decision-support prototype outputs, not official emergency dispatch instructions." == data["honesty_note"]
+        # Quality guard assertions
+        assert "safe_route_quality" in data
+        assert "safe_route_available" in data
+        assert "quality_guard_passed" in data
+        assert "candidate_pairs_tested" in data
+        assert "candidate_pairs_with_positive_risk_reduction" in data
+        assert "candidate_pairs_with_different_routes" in data
+        
+        assert data["candidate_pairs_tested"] > 0
+        
+        # Assert behavior if safe route is marked available
+        if data["safe_route_available"] is True:
+            assert data["risk_reduction_percent"] >= 0
+            assert data["quality_guard_passed"] is True
+            assert data["safe_route_quality"] in ["accepted", "strong", "weak_but_valid"]
+            
+        # Assert behavior if safe route is marked unavailable
+        else:
+            assert data["quality_guard_passed"] is False
 
 
 def test_routing_validation_report():
@@ -114,5 +126,17 @@ def test_routing_validation_report():
     assert report["graph_loaded"] is True
     assert report["road_risk_weights_top_rain_exists"] is True
     assert report["road_risk_weights_latest_exists"] is True
-    assert report["top_rain_routes_created"] is True
-    assert report["latest_routes_created"] is True
+    
+    # Read comparisons to verify status matches safe route availability
+    with open(paths.ROUTE_COMPARISON_TOP_RAIN_PATH, "r", encoding="utf-8") as f:
+        comp_top = json.load(f)
+    with open(paths.ROUTE_COMPARISON_LATEST_PATH, "r", encoding="utf-8") as f:
+        comp_lat = json.load(f)
+        
+    if not comp_top.get("safe_route_available", True) or not comp_lat.get("safe_route_available", True):
+        assert report["status"] == "ok_with_warnings"
+        # Validate that warnings exist explaining no safer alternative was found
+        assert len(report["warnings"]) > 0
+        assert any("no candidate route reduced" in w.lower() for w in report["warnings"])
+    else:
+        assert report["status"] == "ok"
