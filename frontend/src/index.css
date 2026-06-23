@@ -100,3 +100,65 @@
     -webkit-tap-highlight-color: transparent;
   }
 }
+
+@layer components {
+  .maplibregl-map {
+    font-family: var(--font-sans);
+  }
+
+  .maplibregl-ctrl-group {
+    overflow: hidden;
+    border: 1px solid rgba(220, 229, 239, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(44, 94, 173, 0.12);
+  }
+
+  .maplibregl-popup-content {
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #dce5ef;
+    border-radius: 14px;
+    box-shadow: 0 14px 35px rgba(44, 94, 173, 0.18);
+  }
+
+  .maplibregl-popup-close-button {
+    top: 4px;
+    right: 5px;
+    color: #64748b;
+    font-size: 18px;
+  }
+
+  .map-popup-card {
+    min-width: 210px;
+    padding: 14px;
+    background: #ffffff;
+    color: #475569;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .map-popup-card h4 {
+    margin: 0 0 8px;
+    padding-right: 14px;
+    color: #2c5ead;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .map-popup-card p {
+    margin: 2px 0;
+  }
+
+  .map-popup-card strong {
+    color: #243247;
+  }
+
+  .map-popup-card [class^="risk-"] {
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .map-popup-card .risk-low { color: #059669; }
+  .map-popup-card .risk-medium { color: #d97706; }
+  .map-popup-card .risk-high { color: #dc2626; }
+}

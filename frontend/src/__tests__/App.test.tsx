@@ -19,6 +19,7 @@ vi.mock('maplibre-gl', () => {
     remove() {}
     addSource() {}
     addLayer() {}
+    getStyle() { return { layers: [] }; }
     getSource() {
       return {
         setData: () => {}
@@ -40,15 +41,18 @@ vi.mock('maplibre-gl', () => {
   }
 
   const NavigationControlMock = function() {};
+  const ScaleControlMock = function() {};
 
   return {
     default: {
       Map: MapMock,
       NavigationControl: NavigationControlMock,
+      ScaleControl: ScaleControlMock,
       Popup: PopupMock
     },
     Map: MapMock,
     NavigationControl: NavigationControlMock,
+    ScaleControl: ScaleControlMock,
     Popup: PopupMock
   };
 });
