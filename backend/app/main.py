@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.config import settings
+from backend.app.weather_impact.router import router as weather_impact_router
 
 app = FastAPI(
     title=settings.app_name,
     debug=settings.app_debug
 )
+
+app.include_router(weather_impact_router)
 
 # CORS middleware for development
 app.add_middleware(
