@@ -8,7 +8,7 @@ from pathlib import Path
 # Add backend/app to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from weather_impact import model, paths
+from weather_impact import model, paths, service
 
 # Configure logging
 logging.basicConfig(
@@ -81,6 +81,23 @@ def run_predict():
         return False
 
 
+def run_geojson():
+    """Execute Step 3: Export prediction GeoJSON layers."""
+    logger.info("=" * 60)
+    logger.info("STEP 3: Export prediction GeoJSON layers")
+    logger.info("=" * 60)
+    
+    try:
+        latest_event_id, top_event_id = service.export_prediction_geojson_layers()
+        logger.info(f"✓ GeoJSON layers exported successfully.")
+        logger.info(f"  - Latest event: {latest_event_id}")
+        logger.info(f"  - Top rain event: {top_event_id}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ GeoJSON export failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -88,7 +105,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["load-check", "predict"],
+        choices=["load-check", "predict", "geojson"],
         required=True,
         help="Step to execute",
     )
@@ -102,6 +119,8 @@ def main():
         success = run_load_check()
     elif args.step == "predict":
         success = run_predict()
+    elif args.step == "geojson":
+        success = run_geojson()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
