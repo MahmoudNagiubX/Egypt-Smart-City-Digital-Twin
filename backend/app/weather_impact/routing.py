@@ -409,28 +409,11 @@ def evaluate_candidate_route_pair(G, origin, destination, event_type):
     
     metrics = compare_routes(normal_route, safe_route, G, event_type, points_info)
     routes_identical = (normal_route == safe_route)
+    metrics["routes_identical"] = routes_identical
     
     dist_km = metrics["normal_distance_m"] / 1000.0
     
-    score = 0.0
-    if not routes_identical:
-        score += 100.0
-        if metrics["risk_reduction_percent"] > 5.0:
-            score += metrics["risk_reduction_percent"] * 2.0
-        if metrics["avoided_high_risk_segments"] > 0:
-            score += metrics["avoided_high_risk_segments"] * 10.0
-        if metrics["eta_tradeoff_percent"] > 50.0:
-            score -= (metrics["eta_tradeoff_percent"] - 50.0) * 0.5
-            
-    if 2.0 <= dist_km <= 8.0:
-        score += 50.0
-    elif dist_km < 1.0:
-        score -= 50.0
-    elif dist_km > 10.0:
-        score -= 20.0
-        
     return {
-        "score": score,
         "normal_route": normal_route,
         "safe_route": safe_route,
         "metrics": metrics,
@@ -440,9 +423,31 @@ def evaluate_candidate_route_pair(G, origin, destination, event_type):
     }
 
 
-def select_best_demo_route_pair(event_type: str):
-    """Search candidates and select the best demo route pair."""
-    logger.info(f"Selecting best demo route pair for event type: {event_type}...")
+def evaluate_safe_route_quality(comparison):
+    """Evaluate quality of the computed safe route compared to normal."""
+    routes_identical = comparison.get("routes_identical", False)
+    risk_red = comparison.get("risk_reduction_percent", 0.0)
+    normal_risk = comparison.get("normal_mean_risk_score", 0.0)
+    safe_risk = comparison.get("safe_mean_risk_score", 0.0)
+    avoided_segments = comparison.get("avoided_high_risk_segments", 0)
+    
+    if routes_identical:
+        return "rejected_identical_routes", False
+        
+    if risk_red < 0.0 or safe_risk > normal_risk:
+        return "rejected_negative_risk_reduction", False
+        
+    if risk_red >= 5.0 and avoided_segments > 0:
+        return "strong", True
+    elif 0.0 <= risk_red < 5.0:
+        return "weak_but_valid", True
+    else:
+        return "accepted", True
+
+
+def select_best_quality_route_pair(event_type: str):
+    """Search candidates and select the best demo route pair using the quality guard."""
+    logger.info(f"Selecting best quality demo route pair for event type: {event_type}...")
     
     risk_layer = load_event_risk_layer(event_type)
     if len(risk_layer) == 0:
@@ -466,38 +471,68 @@ def select_best_demo_route_pair(event_type: str):
     road_risk_df = gpd.read_file(weights_path)
     G = apply_risk_weights_to_graph(G, road_risk_df)
     
-    origins = find_candidate_origins(risk_layer, top_n=10)
+    origins = find_candidate_origins(risk_layer, top_n=15)
     candidates_evaluated = []
     
     for origin in origins:
         origin_geom = risk_layer[risk_layer["zone_code"] == origin["zone_code"]].iloc[0]["geometry"]
         origin_centroid = origin_geom.centroid
-        destinations = find_candidate_destinations(facilities, origin_centroid, top_n=5)
+        destinations = find_candidate_destinations(facilities, origin_centroid, top_n=15)
         
         for destination in destinations:
             res = evaluate_candidate_route_pair(G, origin, destination, event_type)
             if res is not None:
+                metrics = res["metrics"]
+                quality, available = evaluate_safe_route_quality(metrics)
+                
+                score = 0.0
+                if available:
+                    score += 1000.0
+                    score += metrics["risk_reduction_percent"] * 50.0
+                    if metrics["avoided_high_risk_segments"] > 0:
+                        score += metrics["avoided_high_risk_segments"] * 20.0
+                    score -= metrics["eta_tradeoff_percent"] * 1.5
+                else:
+                    score += metrics["risk_reduction_percent"] * 50.0
+                    score -= metrics["eta_tradeoff_percent"] * 1.5
+                    
+                dist_km = res["distance_km"]
+                if 2.0 <= dist_km <= 10.0:
+                    score += 200.0
+                elif dist_km < 1.0:
+                    score -= 500.0
+                elif dist_km > 12.0:
+                    score -= 100.0
+                    
+                res["score"] = score
+                res["safe_route_quality"] = quality
+                res["safe_route_available"] = available
+                res["quality_guard_passed"] = available
                 candidates_evaluated.append(res)
                 
     if not candidates_evaluated:
         raise ValueError(f"No candidate route pairs could be computed for event: {event_type}")
         
+    pos_risk_count = sum(1 for c in candidates_evaluated if c["safe_route_available"])
+    diff_routes_count = sum(1 for c in candidates_evaluated if not c["routes_identical"])
+    
     candidates_evaluated = sorted(candidates_evaluated, key=lambda x: x["score"], reverse=True)
     best_candidate = candidates_evaluated[0]
     
     logger.info(f"Best candidate selected with score: {best_candidate['score']:.2f}")
     logger.info(f"Origin: {best_candidate['points_info']['origin_zone_code']}, Destination: {best_candidate['points_info']['destination_facility_name']}")
-    logger.info(f"Distance: {best_candidate['distance_km']:.2f} km, Routes Identical: {best_candidate['routes_identical']}")
+    logger.info(f"Distance: {best_candidate['distance_km']:.2f} km, Quality: {best_candidate['safe_route_quality']}, Available: {best_candidate['safe_route_available']}")
     
     best_candidate["candidate_pairs_tested"] = len(candidates_evaluated)
-    best_candidate["candidate_search_used"] = True
+    best_candidate["candidate_pairs_with_positive_risk_reduction"] = pos_risk_count
+    best_candidate["candidate_pairs_with_different_routes"] = diff_routes_count
     
     return best_candidate
 
 
 def build_demo_routes(event_type: str):
-    """Build and compute normal vs weather-safe demo routes for an event type using candidate search."""
-    best_candidate = select_best_demo_route_pair(event_type)
+    """Build and compute normal vs weather-safe demo routes for an event type using quality-guarded candidate search."""
+    best_candidate = select_best_quality_route_pair(event_type)
     
     G = load_routing_graph()
     if event_type == "top-rain":
@@ -512,11 +547,29 @@ def build_demo_routes(event_type: str):
     metrics = best_candidate["metrics"]
     points_info = best_candidate["points_info"]
     
+    metrics["safe_route_quality"] = best_candidate["safe_route_quality"]
+    metrics["safe_route_available"] = best_candidate["safe_route_available"]
+    metrics["quality_guard_passed"] = best_candidate["quality_guard_passed"]
+    
     metrics["candidate_search_used"] = True
     metrics["candidate_pairs_tested"] = best_candidate["candidate_pairs_tested"]
+    metrics["candidate_pairs_with_positive_risk_reduction"] = best_candidate["candidate_pairs_with_positive_risk_reduction"]
+    metrics["candidate_pairs_with_different_routes"] = best_candidate["candidate_pairs_with_different_routes"]
+    
     metrics["selected_origin_zone_code"] = points_info["origin_zone_code"]
     metrics["selected_destination_facility_name"] = points_info["destination_facility_name"]
-    metrics["selected_reason"] = f"Best candidate among tested pairs. Score: {best_candidate['score']:.2f}. Distance: {best_candidate['distance_km']:.2f} km."
+    
+    if best_candidate["safe_route_available"]:
+        metrics["selected_reason"] = (
+            f"Best quality candidate found. Quality: {best_candidate['safe_route_quality']}. "
+            f"Risk reduction: {metrics['risk_reduction_percent']:.2f}%. Distance: {best_candidate['distance_km']:.2f} km."
+        )
+    else:
+        metrics["selected_reason"] = (
+            "Least bad candidate selected. Warning: No candidate route reduced model-estimated risk; "
+            f"safe route should not be presented as safer for this event. Distance: {best_candidate['distance_km']:.2f} km."
+        )
+        
     metrics["routes_identical"] = best_candidate["routes_identical"]
     
     metrics["origin_lon"] = points_info["origin_lon"]
@@ -565,13 +618,15 @@ def route_to_geojson(G, route_nodes, event_type, route_type, metrics, points_inf
 
 
 def export_demo_route_outputs():
-    """Build, compare, and export all demo routes and comparisons using candidate search."""
+    """Build, compare, and export all demo routes and comparisons using candidate search and quality guard."""
     logger.info("Exporting all demo route outputs...")
     warnings = []
     
     n_route_top, s_route_top, G_top, metrics_top = build_demo_routes("top-rain")
     
-    if metrics_top.get("routes_identical", n_route_top == s_route_top):
+    if not metrics_top.get("safe_route_available", True):
+        warnings.append("Top-rain: No candidate route reduced model-estimated risk; safe route should not be presented as safer for this event.")
+    elif metrics_top.get("routes_identical", n_route_top == s_route_top):
         warnings.append("Top-rain: normal and safe routes are identical, no safer alternative path found.")
         
     gdf_top_normal = route_to_geojson(G_top, n_route_top, "top-rain", "normal", metrics_top, metrics_top)
@@ -585,7 +640,9 @@ def export_demo_route_outputs():
         
     n_route_lat, s_route_lat, G_lat, metrics_lat = build_demo_routes("latest")
     
-    if metrics_lat.get("routes_identical", n_route_lat == s_route_lat):
+    if not metrics_lat.get("safe_route_available", True):
+        warnings.append("Latest: No candidate route reduced model-estimated risk; safe route should not be presented as safer for this event.")
+    elif metrics_lat.get("routes_identical", n_route_lat == s_route_lat):
         warnings.append("Latest: normal and safe routes are identical, no safer alternative path found.")
         
     gdf_lat_normal = route_to_geojson(G_lat, n_route_lat, "latest", "normal", metrics_lat, metrics_lat)
@@ -629,13 +686,33 @@ def create_routing_validation_report(warnings=None):
     except Exception as e:
         warnings.append(f"Failed to load graph: {e}")
         
+    safe_top_available = True
+    safe_lat_available = True
+    
+    if top_rain_comparison_exists:
+        try:
+            with open(paths.ROUTE_COMPARISON_TOP_RAIN_PATH, "r", encoding="utf-8") as f:
+                comp_top = json.load(f)
+                safe_top_available = comp_top.get("safe_route_available", True)
+        except Exception:
+            pass
+            
+    if latest_comparison_exists:
+        try:
+            with open(paths.ROUTE_COMPARISON_LATEST_PATH, "r", encoding="utf-8") as f:
+                comp_lat = json.load(f)
+                safe_lat_available = comp_lat.get("safe_route_available", True)
+        except Exception:
+            pass
+            
     paths.ensure_data_dirs()
     
-    status = "ok"
-    if warnings:
-        status = "ok_with_warnings"
     if not (top_rain_routes_created and latest_routes_created and graph_loaded):
         status = "failed"
+    elif not safe_top_available or not safe_lat_available:
+        status = "ok_with_warnings"
+    else:
+        status = "ok"
         
     report = {
         "status": status,
@@ -656,6 +733,7 @@ def create_routing_validation_report(warnings=None):
         
     logger.info(f"Routing validation report written to {paths.ROUTING_VALIDATION_REPORT_PATH}")
     return report
+
 
 
 
