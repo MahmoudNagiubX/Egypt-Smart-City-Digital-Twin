@@ -337,8 +337,117 @@ def compare_routes(normal_route, safe_route, G, event_type, points_info):
     return metrics
 
 
-def build_demo_routes(event_type: str):
-    """Build and compute normal vs weather-safe demo routes for an event type."""
+def find_candidate_origins(risk_layer, top_n=10):
+    """Find top N high-risk zone centroids as candidate origins."""
+    high_risk_zones = risk_layer[risk_layer["predicted_risk_class"] == "high"]
+    if len(high_risk_zones) == 0:
+        sorted_zones = risk_layer.sort_values("y_pred", ascending=False)
+    else:
+        sorted_zones = high_risk_zones.sort_values("y_pred", ascending=False)
+        
+    top_zones = sorted_zones.head(top_n)
+    candidates = []
+    for _, row in top_zones.iterrows():
+        centroid = row["geometry"].centroid
+        candidates.append({
+            "zone_code": str(row["zone_code"]),
+            "lon": float(centroid.x),
+            "lat": float(centroid.y),
+            "y_pred": float(row["y_pred"]),
+            "predicted_risk_class": str(row["predicted_risk_class"])
+        })
+    return candidates
+
+
+def find_candidate_destinations(facilities, origin_centroid, top_n=5):
+    """Find top N closest/medium distance emergency facilities for an origin centroid."""
+    dists = facilities.geometry.distance(origin_centroid)
+    sorted_facs = facilities.copy()
+    sorted_facs["distance"] = dists
+    sorted_facs = sorted_facs.sort_values("distance")
+    
+    candidates = []
+    for _, row in sorted_facs.head(top_n).iterrows():
+        centroid = row["geometry"].centroid
+        candidates.append({
+            "name": row.get("name", "Unknown Emergency Facility"),
+            "facility_type": row.get("facility_type", "hospital"),
+            "lon": float(centroid.x),
+            "lat": float(centroid.y)
+        })
+    return candidates
+
+
+def evaluate_candidate_route_pair(G, origin, destination, event_type):
+    """Compute and evaluate a single candidate route pair."""
+    origin_node = find_nearest_graph_node(G, origin["lon"], origin["lat"])
+    dest_node = find_nearest_graph_node(G, destination["lon"], destination["lat"])
+    
+    normal_route = compute_route(G, origin_node, dest_node, "base_travel_time_sec")
+    safe_route = compute_route(G, origin_node, dest_node, "weather_weight")
+    
+    if normal_route is None or safe_route is None:
+        return None
+        
+    points_info = {
+        "origin_lon": origin["lon"],
+        "origin_lat": origin["lat"],
+        "origin_zone_code": origin["zone_code"],
+        "dest_lon": destination["lon"],
+        "dest_lat": destination["lat"],
+        "destination_facility_name": destination["name"],
+        "destination_facility_type": destination["facility_type"]
+    }
+    
+    metrics = compare_routes(normal_route, safe_route, G, event_type, points_info)
+    routes_identical = (normal_route == safe_route)
+    
+    dist_km = metrics["normal_distance_m"] / 1000.0
+    
+    score = 0.0
+    if not routes_identical:
+        score += 100.0
+        if metrics["risk_reduction_percent"] > 5.0:
+            score += metrics["risk_reduction_percent"] * 2.0
+        if metrics["avoided_high_risk_segments"] > 0:
+            score += metrics["avoided_high_risk_segments"] * 10.0
+        if metrics["eta_tradeoff_percent"] > 50.0:
+            score -= (metrics["eta_tradeoff_percent"] - 50.0) * 0.5
+            
+    if 2.0 <= dist_km <= 8.0:
+        score += 50.0
+    elif dist_km < 1.0:
+        score -= 50.0
+    elif dist_km > 10.0:
+        score -= 20.0
+        
+    return {
+        "score": score,
+        "normal_route": normal_route,
+        "safe_route": safe_route,
+        "metrics": metrics,
+        "points_info": points_info,
+        "routes_identical": routes_identical,
+        "distance_km": dist_km
+    }
+
+
+def select_best_demo_route_pair(event_type: str):
+    """Search candidates and select the best demo route pair."""
+    logger.info(f"Selecting best demo route pair for event type: {event_type}...")
+    
+    risk_layer = load_event_risk_layer(event_type)
+    if len(risk_layer) == 0:
+        raise ValueError(f"Risk layer for {event_type} is empty.")
+        
+    if not paths.NASR_CITY_FACILITIES_PATH.exists():
+        raise FileNotFoundError(f"Emergency facilities GeoJSON not found at: {paths.NASR_CITY_FACILITIES_PATH}")
+    facilities = gpd.read_file(paths.NASR_CITY_FACILITIES_PATH)
+    if len(facilities) == 0:
+        raise ValueError("Emergency facilities GeoJSON is empty.")
+        
+    G = load_routing_graph()
+    
     if event_type == "top-rain":
         weights_path = paths.ROAD_RISK_WEIGHTS_TOP_RAIN_PATH
     else:
@@ -346,33 +455,75 @@ def build_demo_routes(event_type: str):
         
     if not weights_path.exists():
         build_road_risk_weights(event_type)
-        
     road_risk_df = gpd.read_file(weights_path)
-    G = load_routing_graph()
     G = apply_risk_weights_to_graph(G, road_risk_df)
     
-    points_info = select_demo_route_points(event_type)
+    origins = find_candidate_origins(risk_layer, top_n=10)
+    candidates_evaluated = []
     
-    origin_node = find_nearest_graph_node(G, points_info["origin_lon"], points_info["origin_lat"])
-    dest_node = find_nearest_graph_node(G, points_info["dest_lon"], points_info["dest_lat"])
-    
-    normal_route = compute_route(G, origin_node, dest_node, "base_travel_time_sec")
-    safe_route = compute_route(G, origin_node, dest_node, "weather_weight")
-    
-    if normal_route is None or safe_route is None:
-        raise ValueError(f"Could not compute routes for event type: {event_type}")
+    for origin in origins:
+        origin_geom = risk_layer[risk_layer["zone_code"] == origin["zone_code"]].iloc[0]["geometry"]
+        origin_centroid = origin_geom.centroid
+        destinations = find_candidate_destinations(facilities, origin_centroid, top_n=5)
         
-    metrics = compare_routes(normal_route, safe_route, G, event_type, points_info)
+        for destination in destinations:
+            res = evaluate_candidate_route_pair(G, origin, destination, event_type)
+            if res is not None:
+                candidates_evaluated.append(res)
+                
+    if not candidates_evaluated:
+        raise ValueError(f"No candidate route pairs could be computed for event: {event_type}")
+        
+    candidates_evaluated = sorted(candidates_evaluated, key=lambda x: x["score"], reverse=True)
+    best_candidate = candidates_evaluated[0]
+    
+    logger.info(f"Best candidate selected with score: {best_candidate['score']:.2f}")
+    logger.info(f"Origin: {best_candidate['points_info']['origin_zone_code']}, Destination: {best_candidate['points_info']['destination_facility_name']}")
+    logger.info(f"Distance: {best_candidate['distance_km']:.2f} km, Routes Identical: {best_candidate['routes_identical']}")
+    
+    best_candidate["candidate_pairs_tested"] = len(candidates_evaluated)
+    best_candidate["candidate_search_used"] = True
+    
+    return best_candidate
+
+
+def build_demo_routes(event_type: str):
+    """Build and compute normal vs weather-safe demo routes for an event type using candidate search."""
+    best_candidate = select_best_demo_route_pair(event_type)
+    
+    G = load_routing_graph()
+    if event_type == "top-rain":
+        weights_path = paths.ROAD_RISK_WEIGHTS_TOP_RAIN_PATH
+    else:
+        weights_path = paths.ROAD_RISK_WEIGHTS_LATEST_PATH
+    road_risk_df = gpd.read_file(weights_path)
+    G = apply_risk_weights_to_graph(G, road_risk_df)
+    
+    normal_route = best_candidate["normal_route"]
+    safe_route = best_candidate["safe_route"]
+    metrics = best_candidate["metrics"]
+    points_info = best_candidate["points_info"]
+    
+    metrics["candidate_search_used"] = True
+    metrics["candidate_pairs_tested"] = best_candidate["candidate_pairs_tested"]
+    metrics["selected_origin_zone_code"] = points_info["origin_zone_code"]
+    metrics["selected_destination_facility_name"] = points_info["destination_facility_name"]
+    metrics["selected_reason"] = f"Best candidate among tested pairs. Score: {best_candidate['score']:.2f}. Distance: {best_candidate['distance_km']:.2f} km."
+    metrics["routes_identical"] = best_candidate["routes_identical"]
+    
+    metrics["origin_lon"] = points_info["origin_lon"]
+    metrics["origin_lat"] = points_info["origin_lat"]
+    metrics["dest_lon"] = points_info["dest_lon"]
+    metrics["dest_lat"] = points_info["dest_lat"]
     
     return normal_route, safe_route, G, metrics
 
 
-def route_to_geojson(G, route_nodes, event_type, route_type, metrics, points_info):
+def route_to_geojson(G, route_nodes, event_type, route_type, metrics, points_info=None):
     """Convert a route node list to a GeoJSON FeatureCollection."""
     from shapely.geometry import LineString
     
     if len(route_nodes) < 2:
-        # fallback to empty LineString if not enough nodes
         line = LineString()
     else:
         coordinates = [(G.nodes[node]['x'], G.nodes[node]['y']) for node in route_nodes]
@@ -380,6 +531,8 @@ def route_to_geojson(G, route_nodes, event_type, route_type, metrics, points_inf
         
     is_safe = (route_type == "weather_safe")
     prefix = "safe" if is_safe else "normal"
+    
+    p_info = points_info if points_info is not None else metrics
     
     properties = {
         "route_type": route_type,
@@ -391,11 +544,11 @@ def route_to_geojson(G, route_nodes, event_type, route_type, metrics, points_inf
         "weather_eta_sec": float(metrics.get(f"{prefix}_weather_eta_sec", 0.0)),
         "mean_risk_score": float(metrics.get(f"{prefix}_mean_risk_score", 0.0)),
         "high_risk_segment_count": int(metrics.get(f"{prefix}_high_risk_segment_count", 0)),
-        "origin_lon": float(points_info["origin_lon"]),
-        "origin_lat": float(points_info["origin_lat"]),
-        "destination_lon": float(points_info["dest_lon"]),
-        "destination_lat": float(points_info["dest_lat"]),
-        "destination_facility_name": points_info.get("destination_facility_name", "Unknown"),
+        "origin_lon": float(p_info.get("origin_lon", 0.0)),
+        "origin_lat": float(p_info.get("origin_lat", 0.0)),
+        "destination_lon": float(p_info.get("dest_lon", p_info.get("destination_lon", 0.0))),
+        "destination_lat": float(p_info.get("dest_lat", p_info.get("destination_lat", 0.0))),
+        "destination_facility_name": p_info.get("destination_facility_name", "Unknown"),
         "honesty_note": "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
     }
     
@@ -404,20 +557,17 @@ def route_to_geojson(G, route_nodes, event_type, route_type, metrics, points_inf
 
 
 def export_demo_route_outputs():
-    """Build, compare, and export all demo routes and comparisons."""
+    """Build, compare, and export all demo routes and comparisons using candidate search."""
     logger.info("Exporting all demo route outputs...")
     warnings = []
     
-    # 1. Top Rain
     n_route_top, s_route_top, G_top, metrics_top = build_demo_routes("top-rain")
-    points_top = select_demo_route_points("top-rain")
     
-    # Check if routes are identical
-    if n_route_top == s_route_top:
+    if metrics_top.get("routes_identical", n_route_top == s_route_top):
         warnings.append("Top-rain: normal and safe routes are identical, no safer alternative path found.")
         
-    gdf_top_normal = route_to_geojson(G_top, n_route_top, "top-rain", "normal", metrics_top, points_top)
-    gdf_top_safe = route_to_geojson(G_top, s_route_top, "top-rain", "weather_safe", metrics_top, points_top)
+    gdf_top_normal = route_to_geojson(G_top, n_route_top, "top-rain", "normal", metrics_top, metrics_top)
+    gdf_top_safe = route_to_geojson(G_top, s_route_top, "top-rain", "weather_safe", metrics_top, metrics_top)
     
     gdf_top_normal.to_file(paths.DEMO_ROUTE_TOP_RAIN_NORMAL_PATH, driver="GeoJSON")
     gdf_top_safe.to_file(paths.DEMO_ROUTE_TOP_RAIN_SAFE_PATH, driver="GeoJSON")
@@ -425,16 +575,13 @@ def export_demo_route_outputs():
     with open(paths.ROUTE_COMPARISON_TOP_RAIN_PATH, "w", encoding="utf-8") as f:
         json.dump(metrics_top, f, indent=2)
         
-    # 2. Latest
     n_route_lat, s_route_lat, G_lat, metrics_lat = build_demo_routes("latest")
-    points_lat = select_demo_route_points("latest")
     
-    # Check if routes are identical
-    if n_route_lat == s_route_lat:
+    if metrics_lat.get("routes_identical", n_route_lat == s_route_lat):
         warnings.append("Latest: normal and safe routes are identical, no safer alternative path found.")
         
-    gdf_lat_normal = route_to_geojson(G_lat, n_route_lat, "latest", "normal", metrics_lat, points_lat)
-    gdf_lat_safe = route_to_geojson(G_lat, s_route_lat, "latest", "weather_safe", metrics_lat, points_lat)
+    gdf_lat_normal = route_to_geojson(G_lat, n_route_lat, "latest", "normal", metrics_lat, metrics_lat)
+    gdf_lat_safe = route_to_geojson(G_lat, s_route_lat, "latest", "weather_safe", metrics_lat, metrics_lat)
     
     gdf_lat_normal.to_file(paths.DEMO_ROUTE_LATEST_NORMAL_PATH, driver="GeoJSON")
     gdf_lat_safe.to_file(paths.DEMO_ROUTE_LATEST_SAFE_PATH, driver="GeoJSON")
@@ -442,7 +589,6 @@ def export_demo_route_outputs():
     with open(paths.ROUTE_COMPARISON_LATEST_PATH, "w", encoding="utf-8") as f:
         json.dump(metrics_lat, f, indent=2)
         
-    # Create validation report
     create_routing_validation_report(warnings)
     logger.info("All demo route outputs exported successfully.")
 
@@ -452,7 +598,6 @@ def create_routing_validation_report(warnings=None):
     if warnings is None:
         warnings = []
         
-    # Check if files exist
     road_weights_top_rain_exists = paths.ROAD_RISK_WEIGHTS_TOP_RAIN_PATH.exists()
     road_weights_latest_exists = paths.ROAD_RISK_WEIGHTS_LATEST_PATH.exists()
     
@@ -476,7 +621,6 @@ def create_routing_validation_report(warnings=None):
     except Exception as e:
         warnings.append(f"Failed to load graph: {e}")
         
-    # Check output folder exists
     paths.ensure_data_dirs()
     
     status = "ok"
@@ -504,5 +648,6 @@ def create_routing_validation_report(warnings=None):
         
     logger.info(f"Routing validation report written to {paths.ROUTING_VALIDATION_REPORT_PATH}")
     return report
+
 
 
