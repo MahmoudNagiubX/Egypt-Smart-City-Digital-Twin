@@ -62,6 +62,33 @@ def run_weights():
         return False
 
 
+def run_routes():
+    """Execute Step 2: Compute normal and safe demo routes."""
+    logger.info("=" * 60)
+    logger.info("STEP 2: Compute normal and safe demo routes")
+    logger.info("=" * 60)
+    
+    try:
+        # Build for top-rain
+        n_route_top, s_route_top, G_top, metrics_top = routing.build_demo_routes("top-rain")
+        logger.info("✓ Top rain routes computed successfully.")
+        logger.info(f"  - Normal route nodes: {len(n_route_top)}, Safe route nodes: {len(s_route_top)}")
+        logger.info(f"  - Risk reduction: {metrics_top['risk_reduction_percent']:.2f}%")
+        logger.info(f"  - ETA tradeoff: {metrics_top['eta_tradeoff_percent']:.2f}%")
+        
+        # Build for latest
+        n_route_lat, s_route_lat, G_lat, metrics_lat = routing.build_demo_routes("latest")
+        logger.info("✓ Latest event routes computed successfully.")
+        logger.info(f"  - Normal route nodes: {len(n_route_lat)}, Safe route nodes: {len(s_route_lat)}")
+        logger.info(f"  - Risk reduction: {metrics_lat['risk_reduction_percent']:.2f}%")
+        logger.info(f"  - ETA tradeoff: {metrics_lat['eta_tradeoff_percent']:.2f}%")
+        
+        return True
+    except Exception as e:
+        logger.error(f"✗ Route computation failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -69,7 +96,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["weights"],
+        choices=["weights", "routes"],
         required=True,
         help="Step to execute",
     )
@@ -81,6 +108,8 @@ def main():
     success = False
     if args.step == "weights":
         success = run_weights()
+    elif args.step == "routes":
+        success = run_routes()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
