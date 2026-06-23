@@ -3,7 +3,7 @@
 import logging
 import pandas as pd
 import geopandas as gpd
-from . import paths
+from . import paths, data_loader
 
 logger = logging.getLogger(__name__)
 
@@ -76,3 +76,93 @@ def export_prediction_geojson_layers():
     logger.info(f"Saved top_rain_event_risk.geojson to {paths.TOP_RAIN_EVENT_RISK_GEOJSON_PATH} (rows: {len(gdf_top)})")
     
     return latest_event_id, top_event_id
+
+
+def create_zone_risk_summary():
+    """Create zone-level aggregated summaries across selected real observed events and join with grid geometry.
+    
+    Returns:
+        df_summary (pd.DataFrame): aggregated zone risk summary
+    """
+    logger.info("Creating zone risk summaries...")
+    
+    if not paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH.exists():
+        raise FileNotFoundError(f"Predictions CSV not found at: {paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH}")
+        
+    df_pred = pd.read_csv(paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH)
+    
+    grouped = df_pred.groupby("zone_code")
+    
+    summary_rows = []
+    for zone_code, group in grouped:
+        event_count = len(group)
+        mean_pred = float(group["y_pred"].mean())
+        max_pred = float(group["y_pred"].max())
+        min_pred = float(group["y_pred"].min())
+        
+        high_cnt = int((group["predicted_risk_class"] == "high").sum())
+        med_cnt = int((group["predicted_risk_class"] == "medium").sum())
+        low_cnt = int((group["predicted_risk_class"] == "low").sum())
+        
+        high_ratio = high_cnt / event_count if event_count > 0 else 0.0
+        
+        mean_ae = float(group["absolute_error"].mean()) if "absolute_error" in group.columns else 0.0
+        mean_rain = float(group["rain_24h_mm"].mean()) if "rain_24h_mm" in group.columns else 0.0
+        max_rain = float(group["rain_24h_mm"].max()) if "rain_24h_mm" in group.columns else 0.0
+        mean_gpm = float(group["gpm_precipitation_sum"].mean()) if "gpm_precipitation_sum" in group.columns else 0.0
+        mean_built = float(group["built_surface_mean"].mean()) if "built_surface_mean" in group.columns else 0.0
+        mean_pop = float(group["population_sum"].mean()) if "population_sum" in group.columns else 0.0
+        
+        # dominant_risk_class rules:
+        # * high if high_risk_event_ratio >= 0.33
+        # * medium if mean_predicted_score >= 0.33
+        # * else low
+        if high_ratio >= 0.33:
+            dominant_class = "high"
+        elif mean_pred >= 0.33:
+            dominant_class = "medium"
+        else:
+            dominant_class = "low"
+            
+        summary_rows.append({
+            "zone_code": zone_code,
+            "event_count": event_count,
+            "mean_predicted_score": mean_pred,
+            "max_predicted_score": max_pred,
+            "min_predicted_score": min_pred,
+            "high_risk_event_count": high_cnt,
+            "medium_risk_event_count": med_cnt,
+            "low_risk_event_count": low_cnt,
+            "high_risk_event_ratio": high_ratio,
+            "mean_absolute_error": mean_ae,
+            "mean_rain_24h_mm": mean_rain,
+            "max_rain_24h_mm": max_rain,
+            "mean_gpm_precipitation_sum": mean_gpm,
+            "mean_built_surface_mean": mean_built,
+            "mean_population_sum": mean_pop,
+            "dominant_risk_class": dominant_class
+        })
+        
+    df_summary = pd.DataFrame(summary_rows)
+    
+    # Save CSV
+    paths.ensure_data_dirs()
+    data_loader.write_csv(df_summary, paths.ZONE_RISK_SUMMARY_CSV_PATH)
+    logger.info(f"Saved zone risk summary CSV to {paths.ZONE_RISK_SUMMARY_CSV_PATH} (rows: {len(df_summary)})")
+    
+    # Create GeoJSON by joining with grid
+    if not paths.NASR_CITY_GRID_PATH.exists():
+        raise FileNotFoundError(f"Grid GeoJSON not found at: {paths.NASR_CITY_GRID_PATH}")
+        
+    grid = gpd.read_file(paths.NASR_CITY_GRID_PATH)
+    if grid.crs is None or grid.crs.to_string() != "EPSG:4326":
+        grid = grid.to_crs("EPSG:4326")
+        
+    grid_slim = grid[["zone_code", "geometry"]].copy()
+    gdf_summary = grid_slim.merge(df_summary, on="zone_code", how="inner")
+    
+    gdf_summary.to_file(paths.ZONE_RISK_SUMMARY_GEOJSON_PATH, driver="GeoJSON")
+    logger.info(f"Saved zone risk summary GeoJSON to {paths.ZONE_RISK_SUMMARY_GEOJSON_PATH} (rows: {len(gdf_summary)})")
+    
+    return df_summary
+

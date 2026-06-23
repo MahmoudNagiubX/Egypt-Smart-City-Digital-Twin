@@ -98,6 +98,26 @@ def run_geojson():
         return False
 
 
+def run_summary():
+    """Execute Step 4: Create zone risk summaries."""
+    logger.info("=" * 60)
+    logger.info("STEP 4: Create zone risk summaries")
+    logger.info("=" * 60)
+    
+    try:
+        df_summary = service.create_zone_risk_summary()
+        logger.info(f"✓ Zone risk summary created successfully. Shape: {df_summary.shape}")
+        
+        # Verify row counts
+        if len(df_summary) != 416:
+            logger.warning(f"Expected 416 rows in summary, got {len(df_summary)}")
+            
+        return True
+    except Exception as e:
+        logger.error(f"✗ Zone risk summary failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -105,7 +125,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["load-check", "predict", "geojson"],
+        choices=["load-check", "predict", "geojson", "summary"],
         required=True,
         help="Step to execute",
     )
@@ -121,6 +141,8 @@ def main():
         success = run_predict()
     elif args.step == "geojson":
         success = run_geojson()
+    elif args.step == "summary":
+        success = run_summary()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False
