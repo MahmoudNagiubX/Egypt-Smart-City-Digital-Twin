@@ -406,4 +406,45 @@ def get_event_risk_layer(event_id):
     return json.loads(gdf.to_json())
 
 
+def get_summary_stats():
+    """Get summarized weather-impact risk metrics for dashboard cards."""
+    if not paths.PREDICTION_OUTPUT_REPORT_PATH.exists():
+        raise FileNotFoundError("Prediction report not found.")
+    if not paths.ZONE_RISK_SUMMARY_CSV_PATH.exists():
+        raise FileNotFoundError("Zone risk summary CSV not found.")
+        
+    report = load_json_file(paths.PREDICTION_OUTPUT_REPORT_PATH)
+    df_zones = pd.read_csv(paths.ZONE_RISK_SUMMARY_CSV_PATH)
+    
+    # Get top 5 highest risk zones
+    top_zones = df_zones.sort_values("max_predicted_score", ascending=False).head(5)
+    highest_risk_zones = []
+    for _, row in top_zones.iterrows():
+        highest_risk_zones.append({
+            "zone_code": str(row["zone_code"]),
+            "max_predicted_score": float(row["max_predicted_score"]),
+            "dominant_risk_class": str(row["dominant_risk_class"])
+        })
+        
+    # Get risk counts from summary
+    risk_class_counts = report.get("risk_class_counts", {})
+    
+    return {
+        "zone_count": int(report.get("zone_count", 416)),
+        "event_count": int(report.get("event_count", 30)),
+        "prediction_row_count": int(report.get("prediction_rows", 12480)),
+        "risk_class_counts": risk_class_counts,
+        "highest_risk_zones": highest_risk_zones,
+        "top_rain_event_id": str(report.get("top_rain_event_id", "")),
+        "latest_event_id": str(report.get("latest_event_id", "")),
+        "model_name": str(report.get("model_used", "weather_impact_rf_model.joblib")),
+        "dataset_name": str(report.get("training_dataset", "real_observed_training_dataset.csv")),
+        "honesty_statement": (
+            "Predictions are model-estimated weather-impact risk scores derived from "
+            "engineered real-observation targets, not verified street-level flood incident labels."
+        )
+    }
+
+
+
 

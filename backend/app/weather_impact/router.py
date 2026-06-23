@@ -124,3 +124,39 @@ def get_risk_summary():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@router.get("/events", response_model=list[schemas.EventSummary])
+def get_events():
+    """List unique events with summary metrics from predictions."""
+    try:
+        return service.list_prediction_events()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/events/{event_id}/risk-layer")
+def get_event_risk_layer(event_id: str):
+    """Get prediction risk layer GeoJSON for a specific event."""
+    try:
+        return service.get_event_risk_layer(event_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/summary")
+def get_summary():
+    """Get aggregated summary statistics for dashboard display."""
+    try:
+        return service.get_summary_stats()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
