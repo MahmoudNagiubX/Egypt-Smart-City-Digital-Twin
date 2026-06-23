@@ -68,3 +68,59 @@ def get_emergency_facilities():
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/predictions/metadata", response_model=schemas.PredictionMetadataResponse)
+def get_prediction_metadata():
+    """Get metadata about predictions (model used, row counts, events, etc.)."""
+    try:
+        return service.get_prediction_metadata()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/layers/predictions/all")
+def get_predictions_all():
+    """Get all prediction records joined with grid geometry GeoJSON."""
+    try:
+        return service.load_geojson_layer(paths.REAL_OBSERVED_PREDICTIONS_GEOJSON_PATH)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/layers/predictions/latest")
+def get_predictions_latest():
+    """Get latest selected event prediction layer GeoJSON."""
+    try:
+        return service.load_geojson_layer(paths.LATEST_SELECTED_EVENT_RISK_GEOJSON_PATH)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/layers/predictions/top-rain")
+def get_predictions_top_rain():
+    """Get top rain event prediction layer GeoJSON."""
+    try:
+        return service.load_geojson_layer(paths.TOP_RAIN_EVENT_RISK_GEOJSON_PATH)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/layers/risk-summary")
+def get_risk_summary():
+    """Get zone risk summary GeoJSON."""
+    try:
+        return service.load_geojson_layer(paths.ZONE_RISK_SUMMARY_GEOJSON_PATH)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
