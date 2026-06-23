@@ -29,7 +29,7 @@ import { EventSelector } from "./EventSelector";
 import { Legend } from "./Legend";
 import { RoutePanel } from "./RoutePanel";
 import { LoadingSpinner, ErrorDisplay } from "./LoadingError";
-import { ShieldCheck } from "lucide-react";
+import { CloudSun, ShieldCheck } from "lucide-react";
 
 export const Dashboard: React.FC = () => {
   const [health, setHealth] = useState<HealthResponse | null>(null);
@@ -165,7 +165,7 @@ export const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-screen bg-slate-950 flex flex-col items-center justify-center">
+      <div className="flex h-screen w-screen flex-col items-center justify-center bg-background">
         <LoadingSpinner message="Synchronizing geospatial layers, prediction models, and safe routes..." />
       </div>
     );
@@ -173,7 +173,7 @@ export const Dashboard: React.FC = () => {
 
   if (error) {
     return (
-      <div className="h-screen w-screen bg-slate-950 flex items-center justify-center p-6">
+      <div className="flex h-screen w-screen items-center justify-center bg-background p-6">
         <div className="max-w-lg w-full">
           <ErrorDisplay message={error} />
         </div>
@@ -182,16 +182,22 @@ export const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="h-screen w-screen bg-slate-950 flex flex-col overflow-hidden font-sans">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-sans text-foreground">
       {/* Top Header Bar */}
-      <header className="bg-slate-950 border-b border-slate-900/60 h-12 flex items-center justify-between px-4 shrink-0">
-        <div className="flex items-center space-x-2">
-          <ShieldCheck className="h-5 w-5 text-cyan-400" />
-          <h2 className="text-sm font-bold text-slate-100 uppercase tracking-wider">Egypt Smart City Digital Twin</h2>
+      <header className="flex h-14 shrink-0 items-center justify-between border-b bg-white px-4 shadow-[0_1px_10px_rgba(44,94,173,0.05)]">
+        <div className="flex items-center gap-3">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+            <CloudSun />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold tracking-tight text-primary">Egypt Smart City Digital Twin</h2>
+            <p className="text-[10px] font-medium text-muted-foreground">Nasr City weather-impact operations</p>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span className="text-[10px] text-slate-400 font-medium">Operations Center Local Link</span>
+        <div className="flex items-center gap-2 rounded-full border bg-white px-3 py-1.5 shadow-sm">
+          <ShieldCheck className="text-primary" />
+          <span className="size-2 rounded-full bg-emerald-500" />
+          <span className="text-[10px] font-semibold text-muted-foreground">Local link active</span>
         </div>
       </header>
 
@@ -214,7 +220,7 @@ export const Dashboard: React.FC = () => {
         {/* Right Dashboard Area (Map + Top Cards + Floating Route Comparison) */}
         <div className="flex-1 flex flex-col overflow-hidden relative">
           {/* Top Summary Cards */}
-          <div className="pt-4 shrink-0">
+          <div className="shrink-0 pt-4">
             <SummaryCards 
               summary={summary}
               health={health}
@@ -222,7 +228,7 @@ export const Dashboard: React.FC = () => {
           </div>
 
           {/* Large Map Area */}
-          <div className="flex-1 relative overflow-hidden border-t border-slate-900/60">
+          <div className="relative flex-1 overflow-hidden border-t">
             <MapView 
               layers={layers}
               routeVisibility={routeVisibility}
