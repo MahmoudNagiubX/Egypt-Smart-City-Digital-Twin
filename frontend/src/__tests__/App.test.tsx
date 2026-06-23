@@ -32,6 +32,7 @@ vi.mock('maplibre-gl', () => {
       return "visible";
     }
     setLayoutProperty() {}
+    setPaintProperty() {}
   }
   
   class PopupMock {

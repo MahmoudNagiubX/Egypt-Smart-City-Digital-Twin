@@ -189,7 +189,7 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-sans text-foreground">
       {/* Top Header Bar */}
-      <header className="flex h-14 shrink-0 items-center justify-between border-b bg-white px-4 shadow-[0_1px_10px_rgba(44,94,173,0.05)]">
+      <header className="dashboard-header flex h-14 shrink-0 items-center justify-between border-b bg-white px-4 shadow-[0_1px_10px_rgba(44,94,173,0.05)]">
         <div className="flex items-center gap-3">
           <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
             <CloudSun />

@@ -48,6 +48,7 @@ export const MapView: React.FC<MapViewProps> = ({
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
+    let routePulseTimer: ReturnType<typeof setInterval> | undefined;
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
@@ -272,6 +273,14 @@ export const MapView: React.FC<MapViewProps> = ({
         },
       });
 
+      let haloEmphasis = false;
+      routePulseTimer = setInterval(() => {
+        if (!map.getLayer("safe-route-halo-layer")) return;
+        haloEmphasis = !haloEmphasis;
+        map.setPaintProperty("safe-route-halo-layer", "line-opacity-transition", { duration: 900, delay: 0 });
+        map.setPaintProperty("safe-route-halo-layer", "line-opacity", haloEmphasis ? 0.28 : 0.16);
+      }, 1100);
+
       // Hover feedback cursor on layers
       const interactiveLayers = [
         "latest-risk-layer",
@@ -353,6 +362,7 @@ export const MapView: React.FC<MapViewProps> = ({
     });
 
     return () => {
+      if (routePulseTimer) clearInterval(routePulseTimer);
       map.remove();
     };
   }, []);

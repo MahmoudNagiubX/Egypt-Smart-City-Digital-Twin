@@ -8,7 +8,7 @@ interface SidePanelProps {
 
 export const SidePanel: React.FC<SidePanelProps> = ({ children }) => {
   return (
-    <aside className="flex h-full w-[19rem] shrink-0 flex-col border-r bg-white text-foreground shadow-[8px_0_30px_rgba(44,94,173,0.05)]">
+    <aside className="side-panel flex h-full w-[19rem] shrink-0 flex-col border-r bg-white text-foreground shadow-[8px_0_30px_rgba(44,94,173,0.05)]">
       <div className="flex items-center gap-3 border-b px-4 py-3">
         <div className="flex size-9 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
           <MapPinned />

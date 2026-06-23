@@ -10,7 +10,7 @@ interface SummaryCardsProps {
   health: HealthResponse | null;
 }
 
-const metricCardClass = "border-0 bg-white/94 shadow-[0_8px_30px_rgba(44,94,173,0.08)] ring-1 ring-slate-200/80";
+const metricCardClass = "summary-card border-0 bg-white/94 shadow-[0_8px_30px_rgba(44,94,173,0.08)] ring-1 ring-slate-200/80";
 const iconClass = "flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-primary";
 
 export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, health }) => {
