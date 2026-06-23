@@ -735,5 +735,312 @@ def create_routing_validation_report(warnings=None):
     return report
 
 
+def audit_emergency_facility_reachability(G=None):
+    """
+    Perform a reachability and snap distance audit for all emergency facilities.
+    """
+    import math
+    import networkx as nx
+    import pandas as pd
+    import geopandas as gpd
+    from . import paths
+    
+    logger.info("Running emergency facility reachability audit...")
+    
+    if G is None:
+        G = load_routing_graph()
+        
+    if not paths.NASR_CITY_FACILITIES_PATH.exists():
+        raise FileNotFoundError(f"Emergency facilities GeoJSON not found at: {paths.NASR_CITY_FACILITIES_PATH}")
+    facilities = gpd.read_file(paths.NASR_CITY_FACILITIES_PATH)
+    
+    # Snapping origin: NSR-GRID-119 centroid
+    origin_node = None
+    if paths.NASR_CITY_GRID_PATH.exists():
+        try:
+            grid_gdf = gpd.read_file(paths.NASR_CITY_GRID_PATH)
+            cell_119 = grid_gdf[grid_gdf["zone_code"] == "NSR-GRID-119"]
+            if len(cell_119) > 0:
+                c = cell_119.geometry.centroid.iloc[0]
+                origin_node = find_nearest_graph_node(G, c.x, c.y)
+                logger.info(f"Using NSR-GRID-119 centroid nearest node {origin_node} as reachability reference.")
+            else:
+                logger.warning("NSR-GRID-119 not found in grid GeoJSON. Falling back to first grid cell.")
+                c = grid_gdf.geometry.centroid.iloc[0]
+                origin_node = find_nearest_graph_node(G, c.x, c.y)
+        except Exception as e:
+            logger.warning(f"Error finding reference origin node: {e}")
+            
+    if origin_node is None:
+        # Fallback to any node in the graph
+        origin_node = list(G.nodes)[0]
+        logger.warning(f"Using fallback origin node {origin_node}")
+        
+    audit_rows = []
+    
+    for idx, row in facilities.iterrows():
+        # Get or generate ID
+        fac_id = row.get("id")
+        if pd.isna(fac_id) or fac_id is None:
+            fac_id = row.get("facility_id")
+        if pd.isna(fac_id) or fac_id is None:
+            fac_id = f"FAC-{idx+1:03d}"
+            
+        name = row.get("name")
+        if pd.isna(name) or name is None or str(name).strip() == "" or str(name).lower() == "nan":
+            fac_type = row.get("facility_type", "emergency_facility")
+            name = f"Nasr City Emergency {str(fac_type).capitalize()}"
+            
+        fac_type = row.get("facility_type")
+        if pd.isna(fac_type) or fac_type is None:
+            fac_type = row.get("amenity", "emergency_facility")
+            
+        geom = row["geometry"]
+        lon = float(geom.x)
+        lat = float(geom.y)
+        
+        # Snap to graph
+        nearest_node = find_nearest_graph_node(G, lon, lat)
+        
+        # Calculate snap distance using degrees to meters approximation
+        node_x = G.nodes[nearest_node]['x']
+        node_y = G.nodes[nearest_node]['y']
+        
+        avg_lat = math.radians((lat + node_y) / 2.0)
+        dy = (lat - node_y) * 111320.0
+        dx = (lon - node_x) * 111320.0 * math.cos(avg_lat)
+        snap_distance_m = float(math.sqrt(dx*dx + dy*dy))
+        
+        # Check reachability on graph
+        reachable = False
+        warning = ""
+        try:
+            reachable = nx.has_path(G, origin_node, nearest_node)
+        except Exception as e:
+            warning = f"Reachability check failed: {e}"
+            
+        if not reachable and not warning:
+            warning = f"No path from reference node {origin_node} to snapped node {nearest_node}"
+            
+        if snap_distance_m > 500.0:
+            if warning:
+                warning += "; "
+            warning += f"Large snapping distance: {snap_distance_m:.1f}m"
+            
+        audit_rows.append({
+            "facility_id": str(fac_id),
+            "facility_name": str(name),
+            "facility_type": str(fac_type),
+            "lon": lon,
+            "lat": lat,
+            "nearest_graph_node": int(nearest_node),
+            "snap_distance_m": snap_distance_m,
+            "reachable_on_graph": bool(reachable),
+            "warning": warning
+        })
+        
+    df = pd.DataFrame(audit_rows)
+    paths.ensure_data_dirs()
+    df.to_csv(paths.EMERGENCY_FACILITY_REACHABILITY_AUDIT_PATH, index=False, encoding="utf-8")
+    logger.info(f"Facility reachability audit written to {paths.EMERGENCY_FACILITY_REACHABILITY_AUDIT_PATH}")
+    return audit_rows
+
+
+def audit_high_risk_zone_best_facility_routes(G=None):
+    """
+    Audit high-risk zones to find the best emergency facility route under weather risk.
+    """
+    import pandas as pd
+    import geopandas as gpd
+    import networkx as nx
+    from . import paths
+    
+    logger.info("Running high-risk zone best facility routing audit...")
+    
+    if G is None:
+        G = load_routing_graph()
+        
+    # Load top-rain risk layer
+    if not paths.TOP_RAIN_EVENT_RISK_GEOJSON_PATH.exists():
+        raise FileNotFoundError(f"Top-rain risk layer GeoJSON not found at: {paths.TOP_RAIN_EVENT_RISK_GEOJSON_PATH}")
+    risk_layer = gpd.read_file(paths.TOP_RAIN_EVENT_RISK_GEOJSON_PATH)
+    
+    # Select high-risk zones
+    high_risk_zones = risk_layer[risk_layer["predicted_risk_class"] == "high"]
+    if len(high_risk_zones) > 50:
+        high_risk_zones = risk_layer.sort_values(by="y_pred", ascending=False).head(50)
+    elif len(high_risk_zones) < 10:
+        high_risk_zones = risk_layer.sort_values(by="y_pred", ascending=False).head(10)
+        
+    logger.info(f"Selected {len(high_risk_zones)} zones for best facility audit.")
+    
+    # Apply top-rain risk weights to graph
+    if not paths.ROAD_RISK_WEIGHTS_TOP_RAIN_PATH.exists():
+        logger.warning("Road risk weights top rain not found. Building them...")
+        build_road_risk_weights("top-rain")
+    road_risk_df = gpd.read_file(paths.ROAD_RISK_WEIGHTS_TOP_RAIN_PATH)
+    G = apply_risk_weights_to_graph(G, road_risk_df)
+    
+    # Load facilities
+    if not paths.NASR_CITY_FACILITIES_PATH.exists():
+        raise FileNotFoundError(f"Emergency facilities GeoJSON not found at: {paths.NASR_CITY_FACILITIES_PATH}")
+    facilities = gpd.read_file(paths.NASR_CITY_FACILITIES_PATH)
+    
+    # Identify hospitals
+    hospitals = facilities[
+        facilities["facility_type"].str.lower().str.contains("hospital|clinic|medical|health", na=False) |
+        facilities["amenity"].str.lower().str.contains("hospital|clinic|medical|health", na=False) |
+        facilities["name"].str.lower().str.contains("hospital|clinic|medical|health|مستشفى|عيادة", na=False)
+    ]
+    if len(hospitals) == 0:
+        logger.warning("No hospitals/clinics identified. Using all emergency facilities as candidates.")
+        hospitals = facilities
+        
+    best_routes_rows = []
+    
+    for _, zone_row in high_risk_zones.iterrows():
+        zone_code = zone_row["zone_code"]
+        zone_risk_score = zone_row["y_pred"]
+        zone_risk_class = zone_row["predicted_risk_class"]
+        
+        centroid = zone_row["geometry"].centroid
+        origin_lon = float(centroid.x)
+        origin_lat = float(centroid.y)
+        
+        origin_node = find_nearest_graph_node(G, origin_lon, origin_lat)
+        
+        candidate_results = []
+        for idx, fac_row in hospitals.iterrows():
+            fac_id = fac_row.get("id")
+            if pd.isna(fac_id) or fac_id is None:
+                fac_id = fac_row.get("facility_id")
+            if pd.isna(fac_id) or fac_id is None:
+                fac_id = f"FAC-{idx+1:03d}"
+                
+            fac_name = fac_row.get("name")
+            if pd.isna(fac_name) or fac_name is None or str(fac_name).strip() == "" or str(fac_name).lower() == "nan":
+                fac_type = fac_row.get("facility_type", "hospital")
+                fac_name = f"Nasr City Emergency {str(fac_type).capitalize()}"
+                
+            fac_type = fac_row.get("facility_type")
+            if pd.isna(fac_type) or fac_type is None:
+                fac_type = fac_row.get("amenity", "hospital")
+                
+            fac_geom = fac_row["geometry"]
+            fac_lon = float(fac_geom.x)
+            fac_lat = float(fac_geom.y)
+            
+            dest_node = find_nearest_graph_node(G, fac_lon, fac_lat)
+            
+            normal_route = compute_route(G, origin_node, dest_node, "base_travel_time_sec")
+            safe_route = compute_route(G, origin_node, dest_node, "weather_weight")
+            
+            if normal_route is None or safe_route is None:
+                continue
+                
+            points_info = {
+                "origin_lon": origin_lon,
+                "origin_lat": origin_lat,
+                "origin_zone_code": zone_code,
+                "dest_lon": fac_lon,
+                "dest_lat": fac_lat,
+                "destination_facility_name": fac_name,
+                "destination_facility_type": fac_type
+            }
+            
+            metrics = compare_routes(normal_route, safe_route, G, "top-rain", points_info)
+            quality, available = evaluate_safe_route_quality(metrics)
+            
+            candidate_results.append({
+                "facility_id": fac_id,
+                "facility_name": fac_name,
+                "facility_type": fac_type,
+                "fac_lon": fac_lon,
+                "fac_lat": fac_lat,
+                "metrics": metrics,
+                "safe_route_available": available,
+                "safe_route_quality": quality,
+                "route_found": True,
+                "warning": ""
+            })
+            
+        if not candidate_results:
+            # No routes found to any candidate hospitals
+            best_routes_rows.append({
+                "zone_code": str(zone_code),
+                "zone_risk_score": float(zone_risk_score),
+                "zone_risk_class": str(zone_risk_class),
+                "origin_lon": origin_lon,
+                "origin_lat": origin_lat,
+                "best_facility_id": "None",
+                "best_facility_name": "None",
+                "best_facility_type": "None",
+                "facility_lon": 0.0,
+                "facility_lat": 0.0,
+                "normal_distance_m": 0.0,
+                "safe_distance_m": 0.0,
+                "normal_weather_eta_sec": 0.0,
+                "safe_weather_eta_sec": 0.0,
+                "risk_reduction_percent": 0.0,
+                "eta_tradeoff_percent": 0.0,
+                "safe_route_available": False,
+                "safe_route_quality": "none",
+                "route_found": False,
+                "warning": "No route found to any candidate hospitals/clinics."
+            })
+        else:
+            # Sort candidates by:
+            # 1. safe_route_available (True first)
+            # 2. safe_weather_eta_sec (lowest first)
+            # 3. safe_mean_risk_score (lower first)
+            # 4. safe_distance_m (lowest first)
+            
+            def sort_key(item):
+                metrics = item["metrics"]
+                safe_eta = metrics.get("safe_weather_eta_sec", float('inf'))
+                safe_risk = metrics.get("safe_mean_risk_score", float('inf'))
+                safe_dist = metrics.get("safe_distance_m", float('inf'))
+                return (
+                    item["safe_route_available"],
+                    -safe_eta,
+                    -safe_risk,
+                    -safe_dist
+                )
+                
+            candidate_results.sort(key=sort_key, reverse=True)
+            best_item = candidate_results[0]
+            best_metrics = best_item["metrics"]
+            
+            best_routes_rows.append({
+                "zone_code": str(zone_code),
+                "zone_risk_score": float(zone_risk_score),
+                "zone_risk_class": str(zone_risk_class),
+                "origin_lon": origin_lon,
+                "origin_lat": origin_lat,
+                "best_facility_id": str(best_item["facility_id"]),
+                "best_facility_name": str(best_item["facility_name"]),
+                "best_facility_type": str(best_item["facility_type"]),
+                "facility_lon": float(best_item["fac_lon"]),
+                "facility_lat": float(best_item["fac_lat"]),
+                "normal_distance_m": float(best_metrics.get("normal_distance_m", 0.0)),
+                "safe_distance_m": float(best_metrics.get("safe_distance_m", 0.0)),
+                "normal_weather_eta_sec": float(best_metrics.get("normal_weather_eta_sec", 0.0)),
+                "safe_weather_eta_sec": float(best_metrics.get("safe_weather_eta_sec", 0.0)),
+                "risk_reduction_percent": float(best_metrics.get("risk_reduction_percent", 0.0)),
+                "eta_tradeoff_percent": float(best_metrics.get("eta_tradeoff_percent", 0.0)),
+                "safe_route_available": bool(best_item["safe_route_available"]),
+                "safe_route_quality": str(best_item["safe_route_quality"]),
+                "route_found": True,
+                "warning": best_item["warning"]
+            })
+            
+    df = pd.DataFrame(best_routes_rows)
+    paths.ensure_data_dirs()
+    df.to_csv(paths.HIGH_RISK_ZONE_BEST_FACILITY_ROUTES_PATH, index=False, encoding="utf-8")
+    logger.info(f"High-risk zone best facility routes written to {paths.HIGH_RISK_ZONE_BEST_FACILITY_ROUTES_PATH}")
+    return best_routes_rows
+
+
+
 
 

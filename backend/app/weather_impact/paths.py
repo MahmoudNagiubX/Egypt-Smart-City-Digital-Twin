@@ -96,6 +96,13 @@ ROUTE_COMPARISON_TOP_RAIN_PATH = NASR_CITY_OUTPUTS / "route_comparison_top_rain.
 ROUTE_COMPARISON_LATEST_PATH = NASR_CITY_OUTPUTS / "route_comparison_latest.json"
 ROUTING_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "routing_validation_report.json"
 
+# System integrity audit paths
+SYSTEM_INTEGRITY_AUDIT_REPORT_PATH = NASR_CITY_OUTPUTS / "system_integrity_audit_report.json"
+EMERGENCY_FACILITY_REACHABILITY_AUDIT_PATH = NASR_CITY_OUTPUTS / "emergency_facility_reachability_audit.csv"
+HIGH_RISK_ZONE_BEST_FACILITY_ROUTES_PATH = NASR_CITY_OUTPUTS / "high_risk_zone_best_facility_routes.csv"
+BACKEND_READINESS_SUMMARY_PATH = NASR_CITY_OUTPUTS / "backend_readiness_summary.json"
+
+
 
 
 

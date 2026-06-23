@@ -500,6 +500,237 @@ def get_route_comparison(event_type: str):
     return comparison
 
 
+def check_required_files():
+    """Verify that all expected spatial, dataset, ML, prediction, and routing files exist."""
+    required = [
+        # Spatial
+        ("nasr_city_boundary", paths.NASR_CITY_BOUNDARY_PATH),
+        ("nasr_city_grid_500m", paths.NASR_CITY_GRID_PATH),
+        ("nasr_city_roads", paths.NASR_CITY_ROADS_PATH),
+        ("roads_with_zone_ids", paths.ROADS_WITH_ZONE_IDS_PATH),
+        ("nasr_city_emergency_facilities", paths.NASR_CITY_FACILITIES_PATH),
+        ("nasr_city_graph", paths.NASR_CITY_GRAPH_PATH),
+        # Real data
+        ("real_observed_training_dataset", paths.REAL_OBSERVED_TRAINING_DATASET_PATH),
+        ("real_data_validation_report", paths.REAL_DATA_VALIDATION_REPORT_PATH),
+        # ML
+        ("weather_impact_rf_model", paths.RF_MODEL_PATH),
+        ("ml_feature_columns", paths.ML_FEATURE_COLUMNS_PATH),
+        ("model_comparison", paths.MODEL_COMPARISON_PATH),
+        ("model_card", paths.MODEL_CARD_PATH),
+        # Prediction
+        ("real_observed_predictions", paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH),
+        ("latest_selected_event_risk", paths.LATEST_SELECTED_EVENT_RISK_GEOJSON_PATH),
+        ("top_rain_event_risk", paths.TOP_RAIN_EVENT_RISK_GEOJSON_PATH),
+        ("zone_risk_summary_geojson", paths.ZONE_RISK_SUMMARY_GEOJSON_PATH),
+        ("prediction_output_report", paths.PREDICTION_OUTPUT_REPORT_PATH),
+        # Routing
+        ("road_risk_weights_top_rain", paths.ROAD_RISK_WEIGHTS_TOP_RAIN_PATH),
+        ("road_risk_weights_latest", paths.ROAD_RISK_WEIGHTS_LATEST_PATH),
+        ("demo_route_top_rain_normal", paths.DEMO_ROUTE_TOP_RAIN_NORMAL_PATH),
+        ("demo_route_top_rain_safe", paths.DEMO_ROUTE_TOP_RAIN_SAFE_PATH),
+        ("demo_route_latest_normal", paths.DEMO_ROUTE_LATEST_NORMAL_PATH),
+        ("demo_route_latest_safe", paths.DEMO_ROUTE_LATEST_SAFE_PATH),
+        ("route_comparison_top_rain", paths.ROUTE_COMPARISON_TOP_RAIN_PATH),
+        ("route_comparison_latest", paths.ROUTE_COMPARISON_LATEST_PATH),
+        ("routing_validation_report", paths.ROUTING_VALIDATION_REPORT_PATH)
+    ]
+    
+    source_audit_path = paths.NASR_CITY_OUTPUTS / "real_data_source_audit_report.json"
+    required.append(("real_data_source_audit_report", source_audit_path))
+    
+    missing = []
+    checked_count = 0
+    for name, path in required:
+        checked_count += 1
+        if not path.exists():
+            missing.append(name)
+            
+    return {
+        "required_files_checked": checked_count,
+        "missing_files": missing
+    }
+
+
+def check_report_statuses():
+    """Verify statuses of validation and validation reports."""
+    statuses = {
+        "real_data_validation_status": "missing",
+        "real_data_source_audit_status": "missing",
+        "prediction_output_status": "missing",
+        "routing_validation_status": "missing"
+    }
+    
+    if paths.REAL_DATA_VALIDATION_REPORT_PATH.exists():
+        try:
+            report = load_json_file(paths.REAL_DATA_VALIDATION_REPORT_PATH)
+            statuses["real_data_validation_status"] = report.get("status", "unknown")
+        except Exception:
+            statuses["real_data_validation_status"] = "error"
+            
+    source_audit_path = paths.NASR_CITY_OUTPUTS / "real_data_source_audit_report.json"
+    if source_audit_path.exists():
+        try:
+            report = load_json_file(source_audit_path)
+            statuses["real_data_source_audit_status"] = report.get("status", "unknown")
+        except Exception:
+            statuses["real_data_source_audit_status"] = "error"
+            
+    if paths.PREDICTION_OUTPUT_REPORT_PATH.exists():
+        try:
+            report = load_json_file(paths.PREDICTION_OUTPUT_REPORT_PATH)
+            statuses["prediction_output_status"] = report.get("status", "unknown")
+        except Exception:
+            statuses["prediction_output_status"] = "error"
+            
+    if paths.ROUTING_VALIDATION_REPORT_PATH.exists():
+        try:
+            report = load_json_file(paths.ROUTING_VALIDATION_REPORT_PATH)
+            statuses["routing_validation_status"] = report.get("status", "unknown")
+        except Exception:
+            statuses["routing_validation_status"] = "error"
+            
+    return statuses
+
+
+def check_geojson_validity():
+    """Check that GeoJSON files are readable by GeoPandas and structurally valid."""
+    geojson_files = [
+        ("nasr_city_boundary", paths.NASR_CITY_BOUNDARY_PATH),
+        ("nasr_city_grid_500m", paths.NASR_CITY_GRID_PATH),
+        ("nasr_city_roads", paths.NASR_CITY_ROADS_PATH),
+        ("nasr_city_emergency_facilities", paths.NASR_CITY_FACILITIES_PATH),
+        ("latest_selected_event_risk", paths.LATEST_SELECTED_EVENT_RISK_GEOJSON_PATH),
+        ("top_rain_event_risk", paths.TOP_RAIN_EVENT_RISK_GEOJSON_PATH),
+        ("zone_risk_summary_geojson", paths.ZONE_RISK_SUMMARY_GEOJSON_PATH),
+        ("demo_route_top_rain_normal", paths.DEMO_ROUTE_TOP_RAIN_NORMAL_PATH),
+        ("demo_route_top_rain_safe", paths.DEMO_ROUTE_TOP_RAIN_SAFE_PATH),
+        ("demo_route_latest_normal", paths.DEMO_ROUTE_LATEST_NORMAL_PATH),
+        ("demo_route_latest_safe", paths.DEMO_ROUTE_LATEST_SAFE_PATH)
+    ]
+    
+    invalid = []
+    for name, path in geojson_files:
+        if path.exists():
+            try:
+                gdf = gpd.read_file(path)
+                if len(gdf) == 0 and "demo_route" not in name:
+                    invalid.append(f"{name} (empty)")
+            except Exception as e:
+                invalid.append(f"{name} ({str(e)})")
+        else:
+            invalid.append(f"{name} (not found)")
+            
+    return {
+        "valid_geojson_count": len(geojson_files) - len(invalid),
+        "invalid_geojson_files": invalid
+    }
+
+
+def check_csv_row_counts():
+    """Verify row counts for key CSV files."""
+    csv_files = [
+        ("real_observed_training_dataset", paths.REAL_OBSERVED_TRAINING_DATASET_PATH),
+        ("real_observed_predictions", paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH),
+        ("zone_risk_summary_csv", paths.ZONE_RISK_SUMMARY_CSV_PATH)
+    ]
+    
+    counts = {}
+    for name, path in csv_files:
+        if path.exists():
+            try:
+                df = pd.read_csv(path)
+                counts[name] = len(df)
+            except Exception:
+                counts[name] = -1
+        else:
+            counts[name] = 0
+            
+    return counts
+
+
+def check_model_artifacts():
+    """Verify ML model artifacts existence and basic features list."""
+    status = "ok"
+    reasons = []
+    
+    if not paths.RF_MODEL_PATH.exists():
+        status = "failed"
+        reasons.append("Model joblib file missing")
+    if not paths.ML_FEATURE_COLUMNS_PATH.exists():
+        status = "failed"
+        reasons.append("Feature columns JSON missing")
+    if not paths.MODEL_CARD_PATH.exists():
+        status = "failed"
+        reasons.append("Model Card markdown missing")
+        
+    return {
+        "status": status,
+        "reasons": reasons
+    }
+
+
+def check_prediction_outputs():
+    """Verify that predictions exist and have correct event types."""
+    status = "ok"
+    warnings = []
+    
+    if paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH.exists():
+        try:
+            df = pd.read_csv(paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH)
+            events = df["event_id"].unique()
+            if len(events) < 30:
+                warnings.append(f"Expected at least 30 events, found {len(events)}")
+        except Exception as e:
+            status = "failed"
+            warnings.append(f"Failed to read predictions: {e}")
+    else:
+        status = "failed"
+        warnings.append("Predictions CSV missing")
+        
+    return {
+        "status": status,
+        "warnings": warnings
+    }
+
+
+def check_routing_outputs():
+    """Verify weights and route artifacts exist and safe route is valid."""
+    status = "ok"
+    warnings = []
+    
+    safe_top_available = True
+    safe_lat_available = True
+    
+    if paths.ROUTE_COMPARISON_TOP_RAIN_PATH.exists():
+        try:
+            with open(paths.ROUTE_COMPARISON_TOP_RAIN_PATH, "r", encoding="utf-8") as f:
+                comp = json.load(f)
+                safe_top_available = comp.get("safe_route_available", True)
+                if comp.get("risk_reduction_percent", 0.0) < 0.0:
+                    warnings.append("Top-rain comparison reports negative risk reduction")
+        except Exception as e:
+            warnings.append(f"Failed to parse top-rain comparison: {e}")
+            
+    if paths.ROUTE_COMPARISON_LATEST_PATH.exists():
+        try:
+            with open(paths.ROUTE_COMPARISON_LATEST_PATH, "r", encoding="utf-8") as f:
+                comp = json.load(f)
+                safe_lat_available = comp.get("safe_route_available", True)
+                if comp.get("risk_reduction_percent", 0.0) < 0.0:
+                    warnings.append("Latest comparison reports negative risk reduction")
+        except Exception as e:
+            warnings.append(f"Failed to parse latest comparison: {e}")
+            
+    return {
+        "status": "ok" if (safe_top_available and safe_lat_available) else "ok_with_warnings",
+        "top_rain_safe_route_available": safe_top_available,
+        "latest_safe_route_available": safe_lat_available,
+        "warnings": warnings
+    }
+
+
+
 
 
 
