@@ -369,9 +369,14 @@ def find_candidate_destinations(facilities, origin_centroid, top_n=5):
     candidates = []
     for _, row in sorted_facs.head(top_n).iterrows():
         centroid = row["geometry"].centroid
+        name = row.get("name")
+        if pd.isna(name) or name is None or str(name).strip() == "" or str(name).lower() == "nan":
+            # Fallback to facility type if name is missing
+            fac_type = row.get("facility_type", "emergency_facility")
+            name = f"Nasr City Emergency {str(fac_type).capitalize()}"
         candidates.append({
-            "name": row.get("name", "Unknown Emergency Facility"),
-            "facility_type": row.get("facility_type", "hospital"),
+            "name": str(name),
+            "facility_type": str(row.get("facility_type", "hospital")),
             "lon": float(centroid.x),
             "lat": float(centroid.y)
         })
