@@ -166,3 +166,81 @@ def create_zone_risk_summary():
     
     return df_summary
 
+
+def generate_prediction_output_report():
+    """Analyze predictions and export prediction_output_report.json.
+    
+    Returns:
+        report (dict): analyzed prediction report
+    """
+    logger.info("Generating prediction output report...")
+    
+    if not paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH.exists():
+        raise FileNotFoundError(f"Predictions CSV not found at: {paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH}")
+        
+    df_pred = pd.read_csv(paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH)
+    
+    # 1. Row/event counts
+    prediction_rows = len(df_pred)
+    zone_count = int(df_pred["zone_code"].nunique())
+    event_count = int(df_pred["event_id"].nunique())
+    
+    # 2. Risk class counts
+    counts = df_pred["predicted_risk_class"].value_counts().to_dict()
+    risk_class_counts = {
+        "low": int(counts.get("low", 0)),
+        "medium": int(counts.get("medium", 0)),
+        "high": int(counts.get("high", 0))
+    }
+    
+    # 3. Identify latest and top rain events
+    latest_row = df_pred.sort_values("timestamp", ascending=False).iloc[0]
+    latest_event_id = latest_row["event_id"]
+    
+    event_rain = df_pred.groupby("event_id")["rain_24h_mm"].mean().reset_index()
+    top_event_row = event_rain.sort_values("rain_24h_mm", ascending=False).iloc[0]
+    top_event_id = top_event_row["event_id"]
+    
+    # 4. Check outputs existence
+    outputs_status = {
+        "real_observed_predictions_csv": paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH.exists(),
+        "real_observed_predictions_geojson": paths.REAL_OBSERVED_PREDICTIONS_GEOJSON_PATH.exists(),
+        "latest_selected_event_risk_geojson": paths.LATEST_SELECTED_EVENT_RISK_GEOJSON_PATH.exists(),
+        "top_rain_event_risk_geojson": paths.TOP_RAIN_EVENT_RISK_GEOJSON_PATH.exists(),
+        "zone_risk_summary_csv": paths.ZONE_RISK_SUMMARY_CSV_PATH.exists(),
+        "zone_risk_summary_geojson": paths.ZONE_RISK_SUMMARY_GEOJSON_PATH.exists()
+    }
+    
+    warnings = []
+    # If any output is missing, add warning
+    for out, exists in outputs_status.items():
+        if not exists:
+            warnings.append(f"Missing output file: {out}")
+            
+    report = {
+        "training_dataset": "real_observed_training_dataset.csv",
+        "model_used": "weather_impact_rf_model.joblib",
+        "target_predicted": "data_driven_weather_impact_score",
+        "official_flood_labels_claimed": False,
+        "demo_scenarios_used_for_training": False,
+        "prediction_rows": prediction_rows,
+        "zone_count": zone_count,
+        "event_count": event_count,
+        "risk_class_counts": risk_class_counts,
+        "latest_event_id": latest_event_id,
+        "top_rain_event_id": top_event_id,
+        "outputs": outputs_status,
+        "honesty_note": (
+            "Predictions represent model-estimated weather-impact risk scores derived from engineered real-observation targets. "
+            "They are not verified street-level flood incident predictions."
+        ),
+        "status": "ok" if len(warnings) == 0 else "ok_with_warnings",
+        "warnings": warnings
+    }
+    
+    paths.ensure_data_dirs()
+    data_loader.save_json(report, paths.PREDICTION_OUTPUT_REPORT_PATH)
+    logger.info(f"Saved prediction output report to {paths.PREDICTION_OUTPUT_REPORT_PATH}")
+    return report
+
+

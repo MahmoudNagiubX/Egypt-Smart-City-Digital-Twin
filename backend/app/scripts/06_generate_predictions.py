@@ -118,6 +118,21 @@ def run_summary():
         return False
 
 
+def run_report():
+    """Execute Step 5: Add prediction report."""
+    logger.info("=" * 60)
+    logger.info("STEP 5: Add prediction report")
+    logger.info("=" * 60)
+    
+    try:
+        report = service.generate_prediction_output_report()
+        logger.info(f"✓ Prediction output report generated successfully. Status: {report['status']}")
+        return True
+    except Exception as e:
+        logger.error(f"✗ Prediction output report failed: {e}", exc_info=True)
+        return False
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -125,7 +140,7 @@ def main():
     )
     parser.add_argument(
         "--step",
-        choices=["load-check", "predict", "geojson", "summary"],
+        choices=["load-check", "predict", "geojson", "summary", "report"],
         required=True,
         help="Step to execute",
     )
@@ -143,6 +158,8 @@ def main():
         success = run_geojson()
     elif args.step == "summary":
         success = run_summary()
+    elif args.step == "report":
+        success = run_report()
     else:
         logger.error(f"Unknown step: {args.step}")
         success = False

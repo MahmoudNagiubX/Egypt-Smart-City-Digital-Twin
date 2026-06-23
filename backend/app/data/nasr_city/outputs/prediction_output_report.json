@@ -1,0 +1,28 @@
+{
+  "training_dataset": "real_observed_training_dataset.csv",
+  "model_used": "weather_impact_rf_model.joblib",
+  "target_predicted": "data_driven_weather_impact_score",
+  "official_flood_labels_claimed": false,
+  "demo_scenarios_used_for_training": false,
+  "prediction_rows": 12480,
+  "zone_count": 416,
+  "event_count": 30,
+  "risk_class_counts": {
+    "low": 4502,
+    "medium": 6732,
+    "high": 1246
+  },
+  "latest_event_id": "evt_dry_009",
+  "top_rain_event_id": "evt_0557",
+  "outputs": {
+    "real_observed_predictions_csv": true,
+    "real_observed_predictions_geojson": true,
+    "latest_selected_event_risk_geojson": true,
+    "top_rain_event_risk_geojson": true,
+    "zone_risk_summary_csv": true,
+    "zone_risk_summary_geojson": true
+  },
+  "honesty_note": "Predictions represent model-estimated weather-impact risk scores derived from engineered real-observation targets. They are not verified street-level flood incident predictions.",
+  "status": "ok",
+  "warnings": []
+}
