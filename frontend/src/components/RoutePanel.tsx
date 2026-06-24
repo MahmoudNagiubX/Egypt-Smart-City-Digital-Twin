@@ -141,83 +141,43 @@ export const RoutePanel = ({
       size="sm"
       className="route-panel border-0 bg-card/95 shadow-[0_18px_50px_rgba(44,94,173,0.18)] ring-1 ring-border backdrop-blur-xl"
     >
-      <CardHeader className="border-b">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <CardTitle className="flex items-center gap-2 text-sm font-bold text-primary">
-              <Navigation aria-hidden="true" /> {customRoute ? (isLive ? "Live Custom Route" : "Custom Route") : "Demo Route"}
-            </CardTitle>
-            <CardDescription className="mt-1 flex items-center gap-1 text-[10px]">
-              <MapPin aria-hidden="true" /> {customRoute ? "Custom path selection" : `${formatZoneLabel(comparison.selected_origin_zone_code)} to ${destination}`}
-            </CardDescription>
+      <CardHeader className="border-b bg-slate-50/50 p-4">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between gap-2">
+            <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <Navigation className="size-3.5 text-primary" aria-hidden="true" />
+              {customRoute ? "Live Route" : "Scenario Route"}
+            </span>
+            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold border ${
+              rec === "weather_safe_route_recommended"
+                ? "bg-red-50 text-red-700 border-red-200"
+                : rec === "no_distinct_safer_alternative"
+                  ? "bg-slate-50 text-slate-600 border-slate-200"
+                  : "bg-emerald-50 text-emerald-700 border-emerald-200"
+            }`}>
+              {recTitle}
+            </span>
           </div>
-          <Badge variant={comparison.safe_route_available ? "secondary" : "outline"}>
-            {isLive ? recommendationLabel : (comparison.safe_route_available ? "Safer Route Available" : "Normal Route Recommended")}
-          </Badge>
+          <h2 className="mt-2 text-sm font-bold text-foreground">
+            {recTitle}
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            {recSubtitle}
+          </p>
         </div>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-3">
-        {!isLive && (
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-              Event Mode
-            </span>
-            <Tabs
-              value={eventType}
-              onValueChange={(value) => onEventTypeChange(value as "top-rain" | "latest")}
-            >
-              <TabsList className="grid w-full grid-cols-2 bg-muted">
-                <TabsTrigger value="top-rain">Historic Rain</TabsTrigger>
-                <TabsTrigger value="latest">Latest Observed</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between gap-3 rounded-lg bg-secondary/70 px-3 py-2">
-          <span className="flex items-center gap-1.5 text-[10px] font-semibold text-secondary-foreground">
-            <ShieldCheck aria-hidden="true" /> Route Quality
-          </span>
-          <strong className="text-xs text-secondary-foreground">{quality}</strong>
-        </div>
-
+      <CardContent className="flex flex-col gap-3 pt-3">
         <dl className="grid grid-cols-2 gap-2">
-          {isLive && (
-            <Metric 
-              label="Route Recommendation" 
-              value={recommendationLabel} 
-            />
-          )}
-          {isLive && (
-            <Metric 
-              label="Rain Risk Status" 
-              value={(comparison as any).rain_risk_expected ? "Rain Risk Expected" : "No Meaningful Rain Risk"} 
-            />
-          )}
-          <Metric label="Risk Reduction" value={formatPercent(comparison.risk_reduction_percent, 1)} />
+          <Metric label="Risk Reduction" value={riskReductionText} />
           <Metric label="ETA Tradeoff" value={signedPercent(comparison.eta_tradeoff_percent)} />
-          <Metric
-            label="High-Risk Segments Avoided"
-            value={formatInteger(comparison.avoided_high_risk_segments)}
-          />
+          <Metric label="24h Rainfall" value={rain24} />
+          <Metric label="Rain Probability" value={rainProb} />
           <Metric label="Normal Distance" value={formatDistance(comparison.normal_distance_m)} />
           <Metric label="Safe Route Distance" value={formatDistance(comparison.safe_distance_m)} />
           <Metric label="Normal ETA" value={formatDuration(comparison.normal_weather_eta_sec)} />
           <Metric label="Safe Route ETA" value={formatDuration(comparison.safe_weather_eta_sec)} />
-          {isLive && (comparison as any).live_weather_summary && (
-            <>
-              <Metric 
-                label="24h Rainfall" 
-                value={`${((comparison as any).live_weather_summary.forecast_window?.rain_24h_mm ?? (comparison as any).live_weather_summary.rain_24h_mm ?? 0).toFixed(1)} mm`} 
-              />
-              <Metric 
-                label="Rain Probability" 
-                value={`${Math.round((comparison as any).live_weather_summary.forecast_window?.max_precipitation_probability ?? (comparison as any).live_weather_summary.max_precipitation_probability ?? 0)}%`} 
-              />
-            </>
-          )}
-          {!isLive && <Metric label="Destination" value={destination} />}
+          <Metric label="High-Risk Segments Avoided" value={formatInteger(comparison.avoided_high_risk_segments)} />
         </dl>
 
         <Separator />
