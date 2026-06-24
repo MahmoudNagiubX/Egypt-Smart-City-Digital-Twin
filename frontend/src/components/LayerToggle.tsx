@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { LayerToggles, EventSummary } from "../types/api";
+import { LayerToggles, EventSummary, FeatureCollection, PlaceProperties } from "../types/api";
 import {
   Select,
   SelectContent,
@@ -51,6 +51,7 @@ interface LayerToggleProps {
   onSelectEvent: (eventId: string) => void;
   riskDisplayMode: "focus" | "all";
   setRiskDisplayMode: (mode: "focus" | "all") => void;
+  placesData?: FeatureCollection<PlaceProperties> | null;
 }
 
 const ToggleRow = ({
@@ -72,6 +73,67 @@ const ToggleRow = ({
       <span className="min-w-0 text-xs font-semibold text-foreground/80">{label}</span>
     </Label>
     <Switch id={id} checked={checked} onCheckedChange={onChange} size="sm" />
+  </div>
+);
+
+const PoiToggleRow = ({
+  id,
+  label,
+  checked,
+  onChange,
+  icon: Icon,
+  count,
+}: {
+  id: string;
+  label: string;
+  checked: boolean;
+  onChange: () => void;
+  icon?: React.ElementType;
+  count?: number;
+}) => (
+  <div
+    className={cn(
+      "flex items-center justify-between gap-3 rounded-lg px-2.5 py-1.5 transition-all duration-200 border border-transparent",
+      checked 
+        ? "bg-[#C4E2F5]/20 border-[#C6CBEF]/40 shadow-sm" 
+        : "opacity-60 hover:opacity-100 hover:bg-slate-100/50"
+    )}
+  >
+    <Label htmlFor={id} className="flex min-w-0 cursor-pointer items-center gap-2 w-full justify-between">
+      <div className="flex min-w-0 items-center gap-2">
+        {Icon && (
+          <Icon 
+            className={cn(
+              "size-4 shrink-0 transition-colors",
+              checked ? "text-[#2C5EAD]" : "text-muted-foreground"
+            )} 
+          />
+        )}
+        <span 
+          className={cn(
+            "min-w-0 text-xs font-semibold transition-colors truncate",
+            checked ? "text-[#101A3A]" : "text-slate-500"
+          )}
+        >
+          {label}
+        </span>
+      </div>
+      {typeof count === "number" && (
+        <span className={cn(
+          "ml-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold font-mono shrink-0 transition-colors",
+          checked ? "bg-[#2C5EAD]/15 text-[#2C5EAD]" : "bg-slate-100 text-slate-400"
+        )}>
+          {count}
+        </span>
+      )}
+    </Label>
+    <Switch 
+      id={id} 
+      checked={checked} 
+      onCheckedChange={onChange} 
+      size="sm"
+      className="data-[state=checked]:bg-[#2C5EAD]"
+    />
   </div>
 );
 
@@ -110,8 +172,23 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
   onSelectEvent,
   riskDisplayMode,
   setRiskDisplayMode,
+  placesData,
 }) => {
   const [isHistoryExpanded, setIsHistoryExpanded] = React.useState(false);
+
+  const poiCounts = React.useMemo(() => {
+    if (!placesData || !placesData.features) return null;
+    const counts: Record<string, number> = {};
+    placesData.features.forEach((f) => {
+      let cat = f.properties?.category?.toLowerCase();
+      if (cat === "doctors") cat = "clinic";
+      if (cat === "place_of_worship") cat = "mosque";
+      if (cat) {
+        counts[cat] = (counts[cat] || 0) + 1;
+      }
+    });
+    return counts;
+  }, [placesData]);
 
   React.useEffect(() => {
     if (mapMode === "history") {
@@ -291,68 +368,77 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
         <SectionTitle icon={Landmark} title="Places" detail="Points of interest" />
         <div className="flex flex-col gap-0.5 mt-1.5 max-h-56 overflow-y-auto pr-1">
-          <ToggleRow
+          <PoiToggleRow
             id="hospitals-toggle"
             label="Hospitals"
             checked={layers.hospitals}
             onChange={() => onToggle("hospitals")}
             icon={Hospital}
+            count={poiCounts?.hospital}
           />
-          <ToggleRow
+          <PoiToggleRow
             id="clinics-toggle"
             label="Clinics"
             checked={layers.clinics}
             onChange={() => onToggle("clinics")}
             icon={Stethoscope}
+            count={poiCounts?.clinic}
           />
-          <ToggleRow
+          <PoiToggleRow
             id="mosques-toggle"
             label="Mosques"
             checked={layers.mosques}
             onChange={() => onToggle("mosques")}
             icon={Landmark}
+            count={poiCounts?.mosque}
           />
-          <ToggleRow
+          <PoiToggleRow
             id="malls-toggle"
             label="Malls"
             checked={layers.malls}
             onChange={() => onToggle("malls")}
             icon={ShoppingBag}
+            count={poiCounts?.mall}
           />
-          <ToggleRow
+          <PoiToggleRow
             id="schools-toggle"
             label="Schools"
             checked={layers.schools}
             onChange={() => onToggle("schools")}
             icon={School}
+            count={poiCounts?.school}
           />
-          <ToggleRow
+          <PoiToggleRow
             id="universities-toggle"
             label="Universities"
             checked={layers.universities}
             onChange={() => onToggle("universities")}
             icon={GraduationCap}
+            count={poiCounts?.university}
           />
-          <ToggleRow
+          <PoiToggleRow
             id="police-toggle"
             label="Police"
             checked={layers.police}
             onChange={() => onToggle("police")}
             icon={Shield}
+            count={poiCounts?.police}
           />
-          <ToggleRow
+          <PoiToggleRow
             id="fire-stations-toggle"
             label="Fire Stations"
             checked={layers.fireStations}
             onChange={() => onToggle("fireStations")}
             icon={Flame}
+            count={poiCounts?.fire_station}
           />
-          <ToggleRow
+          <PoiToggleRow
             id="emergency-toggle"
             label="Emergency Facilities"
             checked={layers.emergency}
             onChange={() => onToggle("emergency")}
             icon={Ambulance}
+            count={poiCounts?.emergency}
           />
         </div>
       </section>

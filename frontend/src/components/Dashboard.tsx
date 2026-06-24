@@ -430,6 +430,7 @@ export const Dashboard = () => {
             onSelectEvent={setSelectedEventId}
             riskDisplayMode={riskDisplayMode}
             setRiskDisplayMode={setRiskDisplayMode}
+            placesData={placesData}
           />
           <Legend />
         </SidePanel>
