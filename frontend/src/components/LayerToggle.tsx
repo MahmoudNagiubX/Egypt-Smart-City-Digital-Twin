@@ -49,6 +49,8 @@ interface LayerToggleProps {
   events: EventSummary[];
   selectedEventId: string | null;
   onSelectEvent: (eventId: string) => void;
+  riskDisplayMode: "focus" | "all";
+  setRiskDisplayMode: (mode: "focus" | "all") => void;
 }
 
 const ToggleRow = ({
@@ -106,6 +108,8 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
   events,
   selectedEventId,
   onSelectEvent,
+  riskDisplayMode,
+  setRiskDisplayMode,
 }) => {
   const [isHistoryExpanded, setIsHistoryExpanded] = React.useState(false);
 
@@ -148,44 +152,53 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </div>
       </section>
 
-      {/* 2. Route Setup Instructions */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
-        <SectionTitle icon={Route} title="Route Setup" detail="Interactive weather-aware routing" />
-        <div className="mt-1.5 flex flex-col gap-2 px-1">
-          <div className="rounded-lg bg-slate-50/70 p-2.5 border border-slate-100 text-[11px] leading-relaxed text-slate-700">
-            <span className="font-semibold text-[#2C5EAD] block mb-0.5">Instruction:</span>
-            {selectionState === "idle" && "Click the map to choose your starting point"}
-            {selectionState === "selecting-destination" && "Now choose your destination"}
-            {selectionState === "ready" && "Route ready • click the map again to clear"}
-            {selectionState === "loading" && "Calculating weather-aware route..."}
-            {routingError && <span className="text-red-500 font-medium block mt-1">{routingError}</span>}
-          </div>
-          {(selectionState !== "idle" || routingError) && (
-            <button
-              type="button"
-              onClick={onResetRoute}
-              className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 active:bg-slate-100"
-            >
-              <RotateCcw className="size-3.5" />
-              Reset Route
-            </button>
-          )}
-        </div>
-      </section>
-
-      {/* 3. Live Risk Layers (Only in Today Mode) */}
+      {/* 2. Today's Rain Risk (Show Live weather controls first in Today Mode) */}
       {mapMode === "today" && (
         <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
-          <SectionTitle icon={Layers3} title="Live Risk Layers" detail="Real-time predictive overlays" />
+          <SectionTitle icon={Layers3} title="Today’s Rain Risk" detail="Real-time predictive overlays" />
           <div className="flex flex-col gap-0.5 mt-1.5">
             <ToggleRow
               id="live-risk-toggle"
-              label="Live Weather Risk"
+              label="Today’s Rain Risk"
               checked={layers.liveRisk}
               onChange={() => onToggle("liveRisk")}
               icon={Activity}
             />
           </div>
+          
+          {/* Risk Display Mode Option */}
+          <div className="mt-2 flex flex-col gap-1">
+            <label className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+              Risk Display Mode
+            </label>
+            <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-100/80 p-0.5">
+              <button
+                type="button"
+                onClick={() => setRiskDisplayMode("focus")}
+                className={cn(
+                  "rounded-md py-1 text-[10px] font-bold transition-all",
+                  riskDisplayMode === "focus"
+                    ? "bg-white text-primary shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                )}
+              >
+                Focus Risk Areas
+              </button>
+              <button
+                type="button"
+                onClick={() => setRiskDisplayMode("all")}
+                className={cn(
+                  "rounded-md py-1 text-[10px] font-bold transition-all",
+                  riskDisplayMode === "all"
+                    ? "bg-white text-primary shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                )}
+              >
+                Show All Risk Zones
+              </button>
+            </div>
+          </div>
+
           <div className="mt-2.5 flex flex-col gap-2.5 border-t pt-2.5">
             <div className="flex flex-col gap-1">
               <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -220,6 +233,31 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
           </div>
         </section>
       )}
+
+      {/* 3. Route Setup Instructions */}
+      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
+        <SectionTitle icon={Route} title="Route Setup" detail="Interactive weather-aware routing" />
+        <div className="mt-1.5 flex flex-col gap-2 px-1">
+          <div className="rounded-lg bg-slate-50/70 p-2.5 border border-slate-100 text-[11px] leading-relaxed text-slate-700">
+            <span className="font-semibold text-[#2C5EAD] block mb-0.5">Instruction:</span>
+            {selectionState === "idle" && "Click the map to choose your starting point"}
+            {selectionState === "selecting-destination" && "Now choose your destination"}
+            {selectionState === "ready" && "Route ready • click the map again to clear"}
+            {selectionState === "loading" && "Calculating weather-aware route..."}
+            {routingError && <span className="text-red-500 font-medium block mt-1">{routingError}</span>}
+          </div>
+          {(selectionState !== "idle" || routingError) && (
+            <button
+              type="button"
+              onClick={onResetRoute}
+              className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 active:bg-slate-100"
+            >
+              <RotateCcw className="size-3.5" />
+              Reset Route
+            </button>
+          )}
+        </div>
+      </section>
 
       {/* 4. Map Reference Layers */}
       <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
@@ -319,82 +357,84 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </div>
       </section>
 
-      {/* 6. Collapsible Historical Analysis Section */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
-        <button
-          type="button"
-          onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
-          className="flex w-full items-center justify-between gap-2 text-left focus:outline-none"
-        >
-          <SectionTitle icon={CalendarRange} title="Historical Analysis" detail="Explore past weather scenarios" />
-          <span className="text-slate-400">
-            {isHistoryExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
-          </span>
-        </button>
+      {/* 6. Collapsible Historical Analysis Section (Only visible in History mode) */}
+      {mapMode === "history" && (
+        <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
+          <button
+            type="button"
+            onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
+            className="flex w-full items-center justify-between gap-2 text-left focus:outline-none"
+          >
+            <SectionTitle icon={CalendarRange} title="Historical Analysis" detail="Explore past weather scenarios" />
+            <span className="text-slate-400">
+              {isHistoryExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+            </span>
+          </button>
 
-        {isHistoryExpanded && (
-          <div className="mt-2.5 flex flex-col gap-3 border-t pt-2.5">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                Choose Historical Event
-              </label>
-              <Select value={selectedEventId || ""} onValueChange={onSelectEvent}>
-                <SelectTrigger className="h-9 w-full bg-white shadow-sm text-xs" aria-label="Observed weather event">
-                  <SelectValue placeholder="Select an event…" />
-                </SelectTrigger>
-                <SelectContent className="max-h-72">
-                  <SelectGroup>
-                    {events.map((event) => (
-                      <SelectItem key={event.event_id} value={event.event_id} className="text-xs">
-                        {event.event_id === "evt_0557"
-                          ? "Historic Rain Event"
-                          : event.event_id === "evt_dry_009"
-                            ? "Dry Weather Event"
-                            : "Weather Event"}{" "}
-                        · {event.mean_rain_24h_mm.toFixed(1)} mm
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+          {isHistoryExpanded && (
+            <div className="mt-2.5 flex flex-col gap-3 border-t pt-2.5">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                  Choose Historical Event
+                </label>
+                <Select value={selectedEventId || ""} onValueChange={onSelectEvent}>
+                  <SelectTrigger className="h-9 w-full bg-white shadow-sm text-xs" aria-label="Observed weather event">
+                    <SelectValue placeholder="Select an event…" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-72">
+                    <SelectGroup>
+                      {events.map((event) => (
+                        <SelectItem key={event.event_id} value={event.event_id} className="text-xs">
+                          {event.event_id === "evt_0557"
+                            ? "Historic Rain Event"
+                            : event.event_id === "evt_dry_009"
+                              ? "Dry Weather Event"
+                              : "Weather Event"}{" "}
+                          · {event.mean_rain_24h_mm.toFixed(1)} mm
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div className="flex flex-col gap-1 border-t pt-2">
-              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                Historical Risk Layers
-              </span>
-              <ToggleRow
-                id="selected-toggle"
-                label="Selected Event Risk"
-                checked={layers.selectedRisk}
-                onChange={() => onToggle("selectedRisk")}
-                icon={Layers3}
-              />
-              <ToggleRow
-                id="latest-toggle"
-                label="Latest Event Risk"
-                checked={layers.latestRisk}
-                onChange={() => onToggle("latestRisk")}
-                icon={Layers3}
-              />
-              <ToggleRow
-                id="top-rain-toggle"
-                label="Highest-Rain Event"
-                checked={layers.topRainRisk}
-                onChange={() => onToggle("topRainRisk")}
-                icon={Layers3}
-              />
-              <ToggleRow
-                id="risk-summary-toggle"
-                label="Historic Summary"
-                checked={layers.riskSummary}
-                onChange={() => onToggle("riskSummary")}
-                icon={Layers3}
-              />
+              <div className="flex flex-col gap-1 border-t pt-2">
+                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                  Historical Risk Layers
+                </span>
+                <ToggleRow
+                  id="selected-toggle"
+                  label="Selected Event"
+                  checked={layers.selectedRisk}
+                  onChange={() => onToggle("selectedRisk")}
+                  icon={Layers3}
+                />
+                <ToggleRow
+                  id="latest-toggle"
+                  label="Latest Event Risk"
+                  checked={layers.latestRisk}
+                  onChange={() => onToggle("latestRisk")}
+                  icon={Layers3}
+                />
+                <ToggleRow
+                  id="top-rain-toggle"
+                  label="Top-Rain Event"
+                  checked={layers.topRainRisk}
+                  onChange={() => onToggle("topRainRisk")}
+                  icon={Layers3}
+                />
+                <ToggleRow
+                  id="risk-summary-toggle"
+                  label="Historic Summary"
+                  checked={layers.riskSummary}
+                  onChange={() => onToggle("riskSummary")}
+                  icon={Layers3}
+                />
+              </div>
             </div>
-          </div>
-        )}
-      </section>
+          )}
+        </section>
+      )}
 
       {/* 7. About This Prototype (Disclaimer) */}
       <section className="flex flex-col gap-1 border border-slate-200/50 bg-white/40 rounded-xl p-2.5">
@@ -406,3 +446,4 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
     </div>
   );
 };
+

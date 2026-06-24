@@ -85,6 +85,7 @@ export const Dashboard = () => {
   const [liveRoutingStatus, setLiveRoutingStatus] = useState<LiveRoutingStatusResponse | null>(null);
   const [liveRiskData, setLiveRiskData] = useState<FeatureCollection | null>(null);
   const [liveWeatherError, setLiveWeatherError] = useState<string | null>(null);
+  const [riskDisplayMode, setRiskDisplayMode] = useState<"focus" | "all">("focus");
 
   const [layers, setLayers] = useState<LayerToggles>({
     boundary: true,
@@ -427,6 +428,8 @@ export const Dashboard = () => {
             events={events}
             selectedEventId={selectedEventId}
             onSelectEvent={setSelectedEventId}
+            riskDisplayMode={riskDisplayMode}
+            setRiskDisplayMode={setRiskDisplayMode}
           />
           <Legend />
         </SidePanel>
@@ -469,6 +472,7 @@ export const Dashboard = () => {
               onResetRoute={resetCustomRoute}
               riskFillOpacity={riskFillOpacity}
               gridLineOpacity={gridLineOpacity}
+              riskDisplayMode={riskDisplayMode}
             />
 
             <AnimatePresence mode="wait">
