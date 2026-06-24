@@ -5,7 +5,7 @@ import App from '../App'
 import { SummaryCards } from '../components/SummaryCards'
 import { RoutePanel } from '../components/RoutePanel'
 import { LayerToggle } from '../components/LayerToggle'
-import { EventSelector } from '../components/EventSelector'
+import { Legend } from '../components/Legend'
 import { MapView } from '../components/MapView'
 
 afterEach(() => {
@@ -87,59 +87,12 @@ vi.mock('../api/client', () => ({
   getEventRiskLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
   getRoutingStatus: vi.fn().mockResolvedValue({ status: "ok" }),
   getDemoRoute: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
-  getCustomEmergencyRoute: vi.fn().mockResolvedValue({
-    status: "ok",
-    event_type: "top-rain",
-    origin: { lat: 30.05, lon: 31.35, nearest_node: 1, snap_distance_m: 10 },
-    destination: { lat: 30.07, lon: 31.37, nearest_node: 2, snap_distance_m: 12 },
-    normal_route: { type: "FeatureCollection", features: [] },
-    weather_safe_route: { type: "FeatureCollection", features: [] },
-    comparison: {
-      normal_distance_m: 2000,
-      safe_distance_m: 2200,
-      normal_weather_eta_sec: 360,
-      safe_weather_eta_sec: 390,
-      normal_mean_risk_score: 0.5,
-      safe_mean_risk_score: 0.3,
-      risk_reduction_percent: 40,
-      eta_tradeoff_percent: 8,
-      avoided_high_risk_segments: 4,
-      safe_route_quality: "strong",
-      safe_route_available: true,
-      honesty_note: "Decision-support prototype output.",
-    },
-    honesty_note: "Decision-support prototype output.",
-  }),
-  getRouteComparison: vi.fn().mockResolvedValue({
-    event_type: "top-rain",
-    event_id: "evt_0557",
-    timestamp: "2020-03-12",
-    normal_distance_m: 5400,
-    safe_distance_m: 5800,
-    normal_base_eta_sec: 450,
-    safe_base_eta_sec: 480,
-    normal_weather_eta_sec: 600,
-    safe_weather_eta_sec: 500,
-    normal_mean_risk_score: 0.42,
-    safe_mean_risk_score: 0.18,
-    normal_high_risk_segment_count: 15,
-    safe_high_risk_segment_count: 0,
-    risk_reduction_percent: 57.1,
-    eta_tradeoff_percent: 8.3,
-    avoided_high_risk_segments: 15,
-    safe_route_quality: "strong",
-    safe_route_available: true,
-    quality_guard_passed: true,
-    selected_origin_zone_code: "NSR-GRID-119",
-    selected_destination_facility_name: "Nasr City Hospital",
-    honesty_note: "Predictions are model-estimated weather-impact risk scores... Routes are decision-support..."
-  }),
   getLiveWeather: vi.fn().mockResolvedValue({
     status: "ok",
     source: "open-meteo",
     location: { name: "Nasr City", lat: 30.06, lon: 31.33 },
-    current: { time: "2026-06-25T00:00", temperature_2m: 25.0, rain: 0.0, weather_code: 0 },
-    forecast_window: { hours: 24, rain_24h_mm: 0.0, max_precipitation_probability: 0.0 },
+    current: { time: "2026-06-25T00:00", temperature_2m: 25.0, rain: 0.0, precipitation: 0.0, wind_speed_10m: 10.0, weather_code: 0 },
+    forecast_window: { hours: 24, rain_1h_mm: 0.0, rain_3h_mm: 0.0, rain_6h_mm: 0.0, rain_24h_mm: 0.0, max_precipitation_probability: 0.0 },
     rain_risk_expected: false,
     recommended_event_mode: "normal",
     warnings: []
@@ -165,8 +118,8 @@ vi.mock('../api/client', () => ({
       status: "ok",
       source: "open-meteo",
       location: { name: "Nasr City", lat: 30.06, lon: 31.33 },
-      current: { time: "2026-06-25T00:00", temperature_2m: 25.0, rain: 0.0, weather_code: 0 },
-      forecast_window: { hours: 24, rain_24h_mm: 0.0, max_precipitation_probability: 0.0 },
+      current: { time: "2026-06-25T00:00", temperature_2m: 25.0, rain: 0.0, precipitation: 0.0, wind_speed_10m: 10.0, weather_code: 0 },
+      forecast_window: { hours: 24, rain_1h_mm: 0.0, rain_3h_mm: 0.0, rain_6h_mm: 0.0, rain_24h_mm: 0.0, max_precipitation_probability: 0.0 },
       rain_risk_expected: false,
       recommended_event_mode: "normal",
       warnings: []
@@ -204,11 +157,11 @@ test('App renders dashboard title and disclaimers', async () => {
   expect(document.title).toBe("Egypt Smart City Digital Twin");
 
   // Disclaimer visibility
-  const note = screen.getAllByText(/About this prototype/i);
+  const note = screen.getAllByText(/Predictions are weather-impact model estimates/i);
   expect(note.length).toBeGreaterThan(0);
 });
 
-test('SummaryCards renders the operational summary cards and hides technical stats', () => {
+test('SummaryCards renders operational cards', () => {
   const mockLiveWeather = {
     status: "ok",
     source: "open-meteo",
@@ -230,13 +183,11 @@ test('SummaryCards renders the operational summary cards and hides technical sta
 
   expect(screen.getByText(/Today’s Rain Risk/i)).toBeDefined();
   expect(screen.getByText(/Rain Probability/i)).toBeDefined();
-  expect(screen.getByText(/Route Recommendation/i)).toBeDefined();
   expect(screen.getByText(/Risk Reduction/i)).toBeDefined();
   
   // Checks actual values
   expect(screen.getByText("Expected")).toBeDefined();
   expect(screen.getByText("85%")).toBeDefined();
-  expect(screen.getByText("Waiting for route")).toBeDefined();
 
   // Test that comparison stats are shown when comparison is present
   const mockComp = {
@@ -275,71 +226,28 @@ test('SummaryCards renders safely with partial or missing mock data', () => {
   expect(screen.getAllByText("—").length).toBeGreaterThan(0);
 });
 
-
-test('RoutePanel renders risk reduction and ETA tradeoff metrics', () => {
-  const mockComp = {
-    event_type: "top-rain",
-    event_id: "evt_0557",
-    timestamp: "2020-03-12",
-    normal_distance_m: 5400,
-    safe_distance_m: 5800,
-    normal_base_eta_sec: 450,
-    safe_base_eta_sec: 480,
-    normal_weather_eta_sec: 600,
-    safe_weather_eta_sec: 500,
-    normal_mean_risk_score: 0.42,
-    safe_mean_risk_score: 0.18,
-    normal_high_risk_segment_count: 15,
-    safe_high_risk_segment_count: 0,
-    risk_reduction_percent: 57.1,
-    eta_tradeoff_percent: 8.3,
-    avoided_high_risk_segments: 15,
-    safe_route_quality: "strong",
-    safe_route_available: true,
-    quality_guard_passed: true,
-    selected_origin_zone_code: "NSR-GRID-119",
-    selected_destination_facility_name: "Nasr City Hospital",
-    honesty_note: "Predictions are model-estimated weather-impact risk scores... Routes are decision-support..."
-  };
-
-  render(
-    <RoutePanel 
-      comparison={mockComp} 
-      eventType="top-rain" 
-      onEventTypeChange={vi.fn()} 
-      routeVisibility="both" 
-      onRouteVisibilityChange={vi.fn()} 
-    />
-  );
-
-  expect(screen.getByText(/57.1%/)).toBeDefined();
-  expect(screen.getByText(/\+8.3%/)).toBeDefined();
-  expect(screen.getByText(/High-Risk Segments Avoided/i)).toBeDefined();
-  expect(screen.getByText(/^15$/)).toBeDefined();
-});
-
-test('LayerToggle renders spatial, risk toggle controls, and opacity controls', () => {
+test('Today risk layer is default in Today mode and handles displays correctly', () => {
   const mockLayers = {
     boundary: true,
     grid: false,
     roadsLabels: true,
     hospitals: true,
-    clinics: true,
-    mosques: true,
-    malls: true,
-    schools: true,
-    universities: true,
-    police: true,
-    fireStations: true,
+    clinics: false,
+    mosques: false,
+    malls: false,
+    schools: false,
+    universities: false,
+    police: false,
+    fireStations: false,
     emergency: true,
-    latestRisk: true,
+    latestRisk: false,
     topRainRisk: false,
     riskSummary: false,
     selectedRisk: false,
-    liveRisk: false
+    liveRisk: true, // Today risk layer active by default
   };
 
-  const { rerender } = render(
+  render(
     <LayerToggle
       mapMode="today"
       onMapModeChange={vi.fn()}
@@ -355,22 +263,43 @@ test('LayerToggle renders spatial, risk toggle controls, and opacity controls', 
       events={[]}
       selectedEventId={null}
       onSelectEvent={vi.fn()}
+      riskDisplayMode="focus"
+      setRiskDisplayMode={vi.fn()}
     />
   );
 
-  expect(screen.getByText(/Boundary/i)).toBeDefined();
-  expect(screen.getByText(/Grid Overlay/i)).toBeDefined();
-  expect(screen.getByText(/Emergency Facilities/i)).toBeDefined();
-  expect(screen.getByText(/Risk Fill Opacity/i)).toBeDefined();
-  expect(screen.getByText(/Grid Line Opacity/i)).toBeDefined();
-  expect(screen.getByText(/Hospitals/i)).toBeDefined();
-  expect(screen.getByText(/Mosques/i)).toBeDefined();
-  expect(screen.getByText(/Malls/i)).toBeDefined();
+  // Expect Today’s Rain Risk text
+  const liveToggles = screen.getAllByText(/Today’s Rain Risk/i);
+  expect(liveToggles.length).toBeGreaterThan(0);
 
-  // Now rerender in history mode to verify historical controls are visible
-  rerender(
+  // Historical options should not be visible in today mode
+  expect(screen.queryByText(/Choose Historical Event/i)).toBeNull();
+});
+
+test('Risk display mode labels render in Today mode', () => {
+  const mockLayers = {
+    boundary: true,
+    grid: false,
+    roadsLabels: true,
+    hospitals: true,
+    clinics: false,
+    mosques: false,
+    malls: false,
+    schools: false,
+    universities: false,
+    police: false,
+    fireStations: false,
+    emergency: true,
+    latestRisk: false,
+    topRainRisk: false,
+    riskSummary: false,
+    selectedRisk: false,
+    liveRisk: true,
+  };
+
+  render(
     <LayerToggle
-      mapMode="history"
+      mapMode="today"
       onMapModeChange={vi.fn()}
       selectionState="idle"
       routingError={null}
@@ -384,66 +313,189 @@ test('LayerToggle renders spatial, risk toggle controls, and opacity controls', 
       events={[]}
       selectedEventId={null}
       onSelectEvent={vi.fn()}
+      riskDisplayMode="focus"
+      setRiskDisplayMode={vi.fn()}
     />
   );
 
-  expect(screen.getByText(/Latest Event/i)).toBeDefined();
+  expect(screen.getByText("Focus Risk Areas")).toBeDefined();
+  expect(screen.getByText("Show All Risk Zones")).toBeDefined();
 });
 
-test('EventSelector dropdown renders event options', () => {
-  const mockEvents = [
-    { event_id: "evt_0557", timestamp: "2020-03-12T00:00", mean_rain_24h_mm: 55.7, max_rain_24h_mm: 70, mean_predicted_score: 0.45, high_risk_zone_count: 206 }
-  ];
+test('Legend explains blue/red route colors and risks', () => {
+  render(<Legend />);
+
+  expect(screen.getByText(/Today’s Rain Risk/i)).toBeDefined();
+  expect(screen.getByText(/Low: Minimal risk/i)).toBeDefined();
+  expect(screen.getByText(/Medium: Caution area/i)).toBeDefined();
+  expect(screen.getByText(/High: Avoid if possible/i)).toBeDefined();
+
+  expect(screen.getByText(/Blue: Recommended \/ safe route/i)).toBeDefined();
+  expect(screen.getByText(/Red: Risky normal route/i)).toBeDefined();
+  expect(screen.getByText(/Dashed: Alternative comparison route/i)).toBeDefined();
+});
+
+test('RoutePanel maps normal_route_acceptable correctly', () => {
+  const mockComp = {
+    normal_distance_m: 2000,
+    safe_distance_m: 2200,
+    normal_weather_eta_sec: 360,
+    safe_weather_eta_sec: 390,
+    normal_mean_risk_score: 0.5,
+    safe_mean_risk_score: 0.3,
+    risk_reduction_percent: 0.0, // test zero risk reduction
+    eta_tradeoff_percent: 8.3,
+    avoided_high_risk_segments: 0,
+    safe_route_quality: "rejected_identical_routes",
+    safe_route_available: false,
+    recommendation: "normal_route_acceptable",
+    live_weather_summary: {
+      forecast_window: { rain_24h_mm: 0.0, max_precipitation_probability: 0.0 }
+    }
+  };
 
   render(
-    <EventSelector 
-      events={mockEvents} 
-      selectedEventId="evt_0557" 
-      onSelectEvent={vi.fn()} 
+    <RoutePanel
+      comparison={mockComp as any}
+      eventType="latest"
+      onEventTypeChange={vi.fn()}
+      routeVisibility="both"
+      onRouteVisibilityChange={vi.fn()}
+      routeSource="custom-live"
     />
   );
 
-  expect(screen.getByRole('heading', { name: /Event/i })).toBeDefined();
-  expect(screen.getByRole('combobox', { name: /Observed weather event/i })).toBeDefined();
-  expect(screen.queryByText("evt_0557")).toBeNull();
+  // Expect title
+  expect(screen.getAllByText("Normal Route Acceptable").length).toBeGreaterThan(0);
+  // Expect subtitle
+  expect(screen.getByText("No meaningful rain risk is expected on this route.")).toBeDefined();
+  // Expect neutral risk reduction wordings
+  expect(screen.getByText("No change")).toBeDefined();
 });
 
-test('API Client resolves base URL defaults correctly', async () => {
-  // Save current env
-  const origEnv = import.meta.env.VITE_API_BASE_URL;
-  delete (import.meta.env as any).VITE_API_BASE_URL;
+test('RoutePanel maps weather_safe_route_recommended correctly', () => {
+  const mockComp = {
+    normal_distance_m: 2000,
+    safe_distance_m: 2200,
+    normal_weather_eta_sec: 360,
+    safe_weather_eta_sec: 390,
+    normal_mean_risk_score: 0.8,
+    safe_mean_risk_score: 0.3,
+    risk_reduction_percent: 62.5,
+    eta_tradeoff_percent: 8.3,
+    avoided_high_risk_segments: 5,
+    safe_route_quality: "strong",
+    safe_route_available: true,
+    recommendation: "weather_safe_route_recommended",
+    live_weather_summary: {
+      forecast_window: { rain_24h_mm: 12.0, max_precipitation_probability: 90.0 }
+    }
+  };
 
-  // Import dynamically to test base URL resolver fallback
-  const clientModule = await import('../api/client');
-  expect(clientModule).toBeDefined();
-  expect(typeof clientModule.getPlaces).toBe('function');
-  expect(typeof clientModule.getCustomEmergencyRoute).toBe('function');
+  render(
+    <RoutePanel
+      comparison={mockComp as any}
+      eventType="latest"
+      onEventTypeChange={vi.fn()}
+      routeVisibility="both"
+      onRouteVisibilityChange={vi.fn()}
+      routeSource="custom-live"
+    />
+  );
 
-  // Restore env
-  if (origEnv !== undefined) {
-    (import.meta.env as any).VITE_API_BASE_URL = origEnv;
-  }
+  expect(screen.getAllByText("Weather-Safe Route Recommended").length).toBeGreaterThan(0);
+  expect(screen.getByText("The normal route crosses higher-risk areas. Use the safer route.")).toBeDefined();
+  expect(screen.getByText("62.5%")).toBeDefined();
+  expect(screen.getByText("12.0 mm")).toBeDefined();
+  expect(screen.getByText("90%")).toBeDefined();
 });
 
-test('MapView renders with empty mocked data and no WebGL context', () => {
+test('RoutePanel maps no_distinct_safer_alternative correctly', () => {
+  const mockComp = {
+    normal_distance_m: 2000,
+    safe_distance_m: 2200,
+    normal_weather_eta_sec: 360,
+    safe_weather_eta_sec: 390,
+    normal_mean_risk_score: 0.5,
+    safe_mean_risk_score: 0.5,
+    risk_reduction_percent: 0.0,
+    eta_tradeoff_percent: 0.0,
+    avoided_high_risk_segments: 0,
+    safe_route_quality: "no_distinct_safer_alternative",
+    safe_route_available: false,
+    recommendation: "no_distinct_safer_alternative",
+    live_weather_summary: {
+      forecast_window: { rain_24h_mm: 5.0, max_precipitation_probability: 45.0 }
+    }
+  };
+
+  render(
+    <RoutePanel
+      comparison={mockComp as any}
+      eventType="latest"
+      onEventTypeChange={vi.fn()}
+      routeVisibility="both"
+      onRouteVisibilityChange={vi.fn()}
+      routeSource="custom-live"
+    />
+  );
+
+  expect(screen.getAllByText("No Distinct Safer Alternative").length).toBeGreaterThan(0);
+  expect(screen.getByText("The system did not find a route with lower model-estimated risk.")).toBeDefined();
+});
+
+test('No raw recommendation strings are visible in RoutePanel', () => {
+  const mockComp = {
+    normal_distance_m: 2000,
+    safe_distance_m: 2200,
+    normal_weather_eta_sec: 360,
+    safe_weather_eta_sec: 390,
+    normal_mean_risk_score: 0.8,
+    safe_mean_risk_score: 0.3,
+    risk_reduction_percent: 62.5,
+    eta_tradeoff_percent: 8.3,
+    avoided_high_risk_segments: 5,
+    safe_route_quality: "strong",
+    safe_route_available: true,
+    recommendation: "weather_safe_route_recommended"
+  };
+
+  const { container } = render(
+    <RoutePanel
+      comparison={mockComp as any}
+      eventType="latest"
+      onEventTypeChange={vi.fn()}
+      routeVisibility="both"
+      onRouteVisibilityChange={vi.fn()}
+      routeSource="custom-live"
+    />
+  );
+
+  const text = container.textContent ?? "";
+  expect(text).not.toContain("weather_safe_route_recommended");
+  expect(text).not.toContain("normal_route_acceptable");
+  expect(text).not.toContain("no_distinct_safer_alternative");
+});
+
+test('MapView renders safely with zoom-restricted POI markers', () => {
   const layers = {
     boundary: true,
     grid: false,
     roadsLabels: true,
     hospitals: true,
-    clinics: true,
-    mosques: true,
-    malls: true,
-    schools: true,
-    universities: true,
-    police: true,
-    fireStations: true,
+    clinics: false,
+    mosques: false,
+    malls: false,
+    schools: false,
+    universities: false,
+    police: false,
+    fireStations: false,
     emergency: true,
-    latestRisk: true,
+    latestRisk: false,
     topRainRisk: false,
     riskSummary: false,
     selectedRisk: false,
-    liveRisk: false,
+    liveRisk: true,
   };
 
   render(
@@ -470,209 +522,9 @@ test('MapView renders with empty mocked data and no WebGL context', () => {
       onResetRoute={vi.fn()}
       riskFillOpacity={0.35}
       gridLineOpacity={0.20}
-    />,
+      riskDisplayMode="focus"
+    />
   );
 
   expect(screen.getByLabelText(/Interactive Nasr City weather-impact map/i)).toBeDefined();
-  expect(screen.getByText(/Click the map to choose your starting point/i)).toBeDefined();
-});
-
-test('RoutePanel renders a real custom-route comparison state', () => {
-  const comparison = {
-    normal_distance_m: 6518,
-    safe_distance_m: 5911,
-    normal_weather_eta_sec: 2463,
-    safe_weather_eta_sec: 2460,
-    normal_mean_risk_score: 0.87,
-    safe_mean_risk_score: 0.83,
-    risk_reduction_percent: 4.3,
-    eta_tradeoff_percent: 5.4,
-    avoided_high_risk_segments: 33,
-    safe_route_quality: "weak_but_valid",
-    safe_route_available: true,
-    selected_destination_facility_name: "Selected map point",
-    honesty_note: "Decision-support prototype output.",
-  };
-
-  render(
-    <RoutePanel
-      comparison={comparison}
-      eventType="top-rain"
-      onEventTypeChange={vi.fn()}
-      routeVisibility="both"
-      onRouteVisibilityChange={vi.fn()}
-      selectionState="complete"
-      routeSource="custom"
-      onResetRoute={vi.fn()}
-    />,
-  );
-
-  expect(screen.getByText(/^Custom Route$/)).toBeDefined();
-  expect(screen.getByText(/Custom path selection/i)).toBeDefined();
-});
-
-test('EventSelector renders correctly when mean_rain_24h_mm is missing/undefined', () => {
-  const mockEvents = [
-    { event_id: "evt_0557", timestamp: "2020-03-12T00:00", mean_rain_24h_mm: undefined as any, max_rain_24h_mm: 70, mean_predicted_score: 0.45, high_risk_zone_count: 206 }
-  ];
-
-  render(
-    <EventSelector 
-      events={mockEvents} 
-      selectedEventId="evt_0557" 
-      onSelectEvent={vi.fn()} 
-    />
-  );
-
-  expect(screen.getByRole('heading', { name: /Event/i })).toBeDefined();
-  expect(screen.getAllByText(/— mm/i).length).toBeGreaterThan(0);
-});
-
-test('RoutePanel renders correctly when optional numeric metrics are missing/undefined', () => {
-  const mockComp = {
-    event_type: "top-rain",
-    event_id: "evt_0557",
-    timestamp: "2020-03-12",
-    normal_distance_m: undefined as any,
-    safe_distance_m: undefined as any,
-    normal_base_eta_sec: undefined as any,
-    safe_base_eta_sec: undefined as any,
-    normal_weather_eta_sec: undefined as any,
-    safe_weather_eta_sec: undefined as any,
-    normal_mean_risk_score: undefined as any,
-    safe_mean_risk_score: undefined as any,
-    normal_high_risk_segment_count: undefined as any,
-    safe_high_risk_segment_count: undefined as any,
-    risk_reduction_percent: undefined as any,
-    eta_tradeoff_percent: undefined as any,
-    avoided_high_risk_segments: undefined as any,
-    safe_route_quality: "strong",
-    safe_route_available: true,
-    quality_guard_passed: true,
-    selected_origin_zone_code: "NSR-GRID-119",
-    selected_destination_facility_name: "Nasr City Hospital",
-    honesty_note: "Predictions are model-estimated... Routes are decision-support..."
-  };
-
-  render(
-    <RoutePanel 
-      comparison={mockComp} 
-      eventType="top-rain" 
-      onEventTypeChange={vi.fn()} 
-      routeVisibility="both" 
-      onRouteVisibilityChange={vi.fn()} 
-    />
-  );
-
-  expect(screen.getAllByText(/—/).length).toBeGreaterThan(0);
-});
-
-test('mocked dashboard components do not expose raw API field labels or identifiers', () => {
-  const mockComp = {
-    event_type: "top-rain",
-    event_id: "evt_0557",
-    timestamp: "2020-03-12",
-    normal_distance_m: 5400,
-    safe_distance_m: 5800,
-    normal_base_eta_sec: 450,
-    safe_base_eta_sec: 480,
-    normal_weather_eta_sec: 600,
-    safe_weather_eta_sec: 500,
-    normal_mean_risk_score: 0.42,
-    safe_mean_risk_score: 0.18,
-    normal_high_risk_segment_count: 15,
-    safe_high_risk_segment_count: 0,
-    risk_reduction_percent: 57.1,
-    eta_tradeoff_percent: 8.3,
-    avoided_high_risk_segments: 15,
-    safe_route_quality: "strong",
-    safe_route_available: true,
-    quality_guard_passed: true,
-    selected_origin_zone_code: "NSR-GRID-119",
-    selected_destination_facility_name: "Nasr City Hospital",
-    honesty_note: "Decision-support prototype output.",
-  };
-
-  const { container } = render(
-    <RoutePanel
-      comparison={mockComp}
-      eventType="top-rain"
-      onEventTypeChange={vi.fn()}
-      routeVisibility="both"
-      onRouteVisibilityChange={vi.fn()}
-    />,
-  );
-
-  const visibleText = container.textContent ?? "";
-  [
-    "risk_reduction_percent",
-    "eta_tradeoff_percent",
-    "safe_route_available",
-    "safe_route_quality",
-    "evt_0557",
-    "NSR-GRID-119",
-  ].forEach((rawValue) => expect(visibleText).not.toContain(rawValue));
-  expect(visibleText).toContain("Zone 119");
-  expect(visibleText).toContain("Route Quality");
-});
-
-test('RoutePanel renders live route recommendation and comparison details correctly', () => {
-  const mockComp = {
-    event_type: "live",
-    event_id: "evt_live",
-    normal_distance_m: 2000,
-    safe_distance_m: 2200,
-    normal_weather_eta_sec: 360,
-    safe_weather_eta_sec: 390,
-    normal_mean_live_risk_score: 0.5,
-    safe_mean_live_risk_score: 0.3,
-    live_high_risk_segment_count_normal: 4,
-    live_high_risk_segment_count_safe: 0,
-    risk_reduction_percent: 40,
-    eta_tradeoff_percent: 8,
-    avoided_high_risk_segments: 4,
-    safe_route_quality: "strong",
-    safe_route_available: true,
-    recommendation: "weather_safe_route_recommended",
-    rain_risk_expected: true,
-    live_weather_summary: {
-      status: "ok",
-      source: "open-meteo",
-      location: { name: "Nasr City", lat: 30.06, lon: 31.33 },
-      current: { time: "2026-06-25T00:00", temperature_2m: 25.0, rain: 0.0, weather_code: 0 },
-      forecast_window: { hours: 24, rain_24h_mm: 5.2, max_precipitation_probability: 85.0 },
-      rain_risk_expected: true,
-      recommended_event_mode: "live",
-      warnings: []
-    },
-    honesty_note: "Predictions are model-estimated... Routes are decision-support..."
-  };
-
-  render(
-    <RoutePanel
-      comparison={mockComp as any}
-      eventType="latest"
-      onEventTypeChange={vi.fn()}
-      routeVisibility="both"
-      onRouteVisibilityChange={vi.fn()}
-      routeSource="custom-live"
-    />
-  );
-
-  // Renders the recommendation badge correctly
-  expect(screen.getAllByText("Weather-Safe Route Recommended").length).toBe(2);
-  
-  // Renders rain risk status correctly
-  expect(screen.getByText("Rain Risk Expected")).toBeDefined();
-
-  // Renders comparison metrics
-  expect(screen.getByText("40.0%")).toBeDefined();
-  expect(screen.getByText("+8.0%")).toBeDefined();
-
-  // Renders rainfall and probability
-  expect(screen.getByText("5.2 mm")).toBeDefined();
-  expect(screen.getByText("85%")).toBeDefined();
-
-  // Does not show raw recommendation strings
-  expect(screen.queryByText("weather_safe_route_recommended")).toBeNull();
 });

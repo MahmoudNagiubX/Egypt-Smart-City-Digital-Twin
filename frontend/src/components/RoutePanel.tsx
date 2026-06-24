@@ -1,7 +1,6 @@
-import { Info, MapPin, Navigation, RotateCcw, Route, ShieldCheck } from "lucide-react";
+import { Info, MapPin, Navigation, RotateCcw, Route } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +12,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { RouteComparison } from "../types/api";
 import {
@@ -24,7 +22,6 @@ import {
   formatPercent,
   toFiniteNumber,
 } from "../utils/format";
-import { getRouteQualityLabel, formatZoneLabel, getRecommendationLabel } from "../utils/labels";
 
 interface RoutePanelProps {
   comparison: RouteComparison | null;
@@ -58,8 +55,6 @@ const Metric = ({ label, value }: { label: string; value: string }) => (
 
 export const RoutePanel = ({
   comparison,
-  eventType,
-  onEventTypeChange,
   routeVisibility,
   onRouteVisibilityChange,
   selectionState = "idle",
@@ -117,24 +112,36 @@ export const RoutePanel = ({
     );
   }
 
-  const containsArabic = (text?: string | null): boolean => {
-    if (!text) return false;
-    return /[\u0600-\u06FF]/.test(text);
-  };
-
-  const getCleanDestination = (name?: string | null) => {
-    if (!name) return "Selected Destination";
-    if (containsArabic(name)) return "Selected Destination";
-    return name;
-  };
-
   const isLive = (comparison as any).recommendation !== undefined;
-  const recommendationLabel = isLive ? getRecommendationLabel((comparison as any).recommendation) : "";
-  const quality = comparison.safe_route_available
-    ? getRouteQualityLabel(comparison.safe_route_quality)
-    : "No Distinct Safer Alternative";
-  const destination = getCleanDestination(comparison.selected_destination_facility_name);
   const customRoute = routeSource === "custom" || routeSource === "custom-live";
+
+  const rec = (comparison as any).recommendation || 
+    (comparison.safe_route_available ? "weather_safe_route_recommended" : "normal_route_acceptable");
+
+  let recTitle = "Normal Route Acceptable";
+  let recSubtitle = "No meaningful rain risk is expected on this route.";
+
+  if (rec === "weather_safe_route_recommended") {
+    recTitle = "Weather-Safe Route Recommended";
+    recSubtitle = "The normal route crosses higher-risk areas. Use the safer route.";
+  } else if (rec === "no_distinct_safer_alternative") {
+    recTitle = "No Distinct Safer Alternative";
+    recSubtitle = "The system did not find a route with lower model-estimated risk.";
+  }
+
+  // Calculate metrics cleanly
+  const riskRedVal = toFiniteNumber(comparison.risk_reduction_percent);
+  const riskReductionText = riskRedVal !== null && riskRedVal <= 0
+    ? "No change"
+    : formatPercent(comparison.risk_reduction_percent, 1);
+
+  const rain24 = isLive
+    ? `${((comparison as any).live_weather_summary?.forecast_window?.rain_24h_mm ?? (comparison as any).live_weather_summary?.rain_24h_mm ?? 0).toFixed(1)} mm`
+    : (comparison as any).rain_24h_mm != null ? `${(comparison as any).rain_24h_mm.toFixed(1)} mm` : EMPTY_VALUE;
+
+  const rainProb = isLive
+    ? `${Math.round((comparison as any).live_weather_summary?.forecast_window?.max_precipitation_probability ?? (comparison as any).live_weather_summary?.max_precipitation_probability ?? 0)}%`
+    : EMPTY_VALUE;
 
   return (
     <Card

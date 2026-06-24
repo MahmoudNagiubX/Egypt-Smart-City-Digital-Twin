@@ -585,7 +585,7 @@ export const MapView = ({
     const map = mapRef.current;
     
     // Check recommendation
-    const recommendation = routeComparison?.recommendation;
+    const recommendation = (routeComparison as any)?.recommendation;
     
     // Default fallback values (e.g. before calculation or for historical)
     let normalColor = "#8186D5";
