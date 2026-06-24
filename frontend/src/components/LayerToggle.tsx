@@ -108,6 +108,12 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       <SectionTitle icon={Layers3} title="Risk Layers" detail="Impact surfaces" />
       <div className="flex flex-col gap-0.5 mt-1.5">
         <ToggleRow
+          id="live-risk-toggle"
+          label="Live Weather Risk"
+          checked={layers.liveRisk}
+          onChange={() => onToggle("liveRisk")}
+        />
+        <ToggleRow
           id="selected-toggle"
           label="Selected Event"
           checked={layers.selectedRisk}
