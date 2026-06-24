@@ -1117,5 +1117,87 @@ def generate_live_weather_risk_layer(cache_expiry_hours: float = 3.0) -> dict:
         return report
 
 
+def get_live_routing_status() -> dict:
+    """Retrieve live weather routing readiness, summary, and status."""
+    warnings = []
+    
+    live_weather_available = paths.LIVE_WEATHER_SUMMARY_PATH.exists()
+    live_risk_layer_available = paths.LIVE_WEATHER_RISK_GEOJSON_PATH.exists()
+    live_road_weights_available = paths.LIVE_ROAD_RISK_WEIGHTS_GEOJSON_PATH.exists()
+    
+    # Read weather summary
+    rain_risk_expected = False
+    if live_weather_available:
+        try:
+            summary = load_json_file(paths.LIVE_WEATHER_SUMMARY_PATH)
+            rain_risk_expected = bool(summary.get("rain_risk_expected", False))
+            if summary.get("warnings"):
+                warnings.extend(summary["warnings"])
+        except Exception as e:
+            warnings.append(f"Failed to read live weather summary: {e}")
+            live_weather_available = False
+            
+    # Read risk report
+    risk_class_counts = {"low": 0, "medium": 0, "high": 0}
+    live_report_status = "failed"
+    if paths.LIVE_WEATHER_RISK_REPORT_PATH.exists():
+        try:
+            report = load_json_file(paths.LIVE_WEATHER_RISK_REPORT_PATH)
+            live_report_status = report.get("status", "unknown")
+            counts = report.get("risk_class_counts", {})
+            for key in risk_class_counts:
+                risk_class_counts[key] = int(counts.get(key, 0))
+            if report.get("warnings"):
+                warnings.extend(report["warnings"])
+        except Exception as e:
+            warnings.append(f"Failed to read live risk report: {e}")
+    else:
+        warnings.append("Live weather risk report does not exist.")
+        
+    # Recommended mode
+    if rain_risk_expected:
+        recommended_mode = "weather_safe_routing_available"
+    else:
+        recommended_mode = "normal_route_acceptable"
+        
+    # Global status calculation
+    status = "ok"
+    if not (live_weather_available and live_risk_layer_available):
+        status = "failed"
+    elif not rain_risk_expected or len(warnings) > 0:
+        status = "ok_with_warnings"
+        
+    validation_report = {
+        "status": status,
+        "live_weather_available": bool(live_weather_available),
+        "live_risk_layer_available": bool(live_risk_layer_available),
+        "live_road_weights_available": bool(live_road_weights_available),
+        "rain_risk_expected": bool(rain_risk_expected),
+        "official_flood_labels_claimed": False,
+        "official_emergency_dispatch_claimed": False,
+        "warnings": warnings
+    }
+    
+    try:
+        paths.ensure_data_dirs()
+        data_loader.save_json(validation_report, paths.LIVE_ROUTE_VALIDATION_REPORT_PATH)
+        logger.info(f"Saved live route validation report to {paths.LIVE_ROUTE_VALIDATION_REPORT_PATH}")
+    except Exception as e:
+        logger.error(f"Failed to save live route validation report: {e}")
+        
+    return {
+        "status": status,
+        "live_weather_available": bool(live_weather_available),
+        "live_risk_layer_available": bool(live_risk_layer_available),
+        "live_report_status": live_report_status,
+        "rain_risk_expected": bool(rain_risk_expected),
+        "risk_class_counts": risk_class_counts,
+        "recommended_mode": recommended_mode,
+        "warnings": list(set(warnings)),
+        "honesty_note": "Live route recommendations are decision-support prototype outputs, not official emergency dispatch instructions."
+    }
+
+
+
 
 

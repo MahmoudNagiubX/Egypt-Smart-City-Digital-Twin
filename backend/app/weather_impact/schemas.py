@@ -1,6 +1,6 @@
 """Pydantic schemas for request/response validation."""
 
-from typing import Dict, List, Literal, Optional
+from typing import Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -95,5 +95,71 @@ class CustomEmergencyRouteRequest(BaseModel):
     destination: RouteCoordinate
     event_type: str = "top-rain"
     route_preference: Literal["both", "normal", "weather-safe"] = "both"
+
+
+class LiveRoutingStatusResponse(BaseModel):
+    status: str
+    live_weather_available: bool
+    live_risk_layer_available: bool
+    live_report_status: str
+    rain_risk_expected: bool
+    risk_class_counts: Dict[str, int]
+    recommended_mode: str
+    warnings: List[str]
+    honesty_note: str
+
+
+class LiveEmergencyRouteRequest(BaseModel):
+    origin: RouteCoordinate
+    destination: RouteCoordinate
+    route_preference: Literal["both", "normal", "weather-safe"] = "both"
+    refresh_live_weather: bool = False
+
+
+class LiveRouteSnappedPoint(BaseModel):
+    lat: float
+    lon: float
+    nearest_node: Union[str, int]
+    snap_distance_m: float
+
+
+class LiveRouteComparison(BaseModel):
+    safe_route_available: bool
+    safe_route_quality: str
+    risk_reduction_percent: float
+    eta_tradeoff_percent: float
+    avoided_high_risk_segments: int
+    normal_distance_m: float
+    safe_distance_m: float
+    normal_weather_eta_sec: float
+    safe_weather_eta_sec: float
+    normal_mean_live_risk_score: float
+    safe_mean_live_risk_score: float
+    live_high_risk_segment_count_normal: int
+    live_high_risk_segment_count_safe: int
+    honesty_note: str
+
+
+class LiveWeatherForecastSummary(BaseModel):
+    rain_1h_mm: float
+    rain_3h_mm: float
+    rain_6h_mm: float
+    rain_24h_mm: float
+    max_precipitation_probability: float
+
+
+class LiveEmergencyRouteResponse(BaseModel):
+    status: str
+    mode: str = "live_weather"
+    rain_risk_expected: bool
+    recommendation: str
+    origin: LiveRouteSnappedPoint
+    destination: LiveRouteSnappedPoint
+    normal_route: Dict
+    weather_safe_route: Dict
+    comparison: LiveRouteComparison
+    live_weather_summary: LiveWeatherForecastSummary
+    honesty_note: str
+
 
 

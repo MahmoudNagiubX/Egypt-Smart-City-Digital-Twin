@@ -1,7 +1,7 @@
 """FastAPI API endpoints for weather-impact assessment."""
 
 from fastapi import APIRouter, HTTPException, Query
-from . import service, paths, schemas, weather
+from . import service, paths, schemas, weather, routing
 
 router = APIRouter(prefix="/api/weather-impact", tags=["weather-impact"])
 
@@ -284,5 +284,37 @@ def get_live_report():
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/routing/live/status", response_model=schemas.LiveRoutingStatusResponse)
+def get_live_routing_status():
+    """Get status and readiness metadata for live weather-aware routing."""
+    try:
+        return service.get_live_routing_status()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/routing/live/emergency-route", response_model=schemas.LiveEmergencyRouteResponse)
+def post_live_emergency_route(request: schemas.LiveEmergencyRouteRequest):
+    """Compute custom live weather-aware routes and return comparison and GeoJSON overlays."""
+    try:
+        origin = {"lat": request.origin.lat, "lon": request.origin.lon}
+        destination = {"lat": request.destination.lat, "lon": request.destination.lon}
+        
+        result = routing.compute_live_custom_route(
+            origin,
+            destination,
+            route_preference=request.route_preference,
+            refresh_live_weather=request.refresh_live_weather
+        )
+        return result
+    except routing.RoutingPointOutsideGraphError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 

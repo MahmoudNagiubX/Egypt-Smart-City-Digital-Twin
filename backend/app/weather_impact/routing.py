@@ -1183,4 +1183,337 @@ def audit_high_risk_zone_best_facility_routes(G=None):
     return best_routes_rows
 
 
+def load_live_weather_risk_layer():
+    """Load the live weather risk layer GeoJSON, generating it if it doesn't exist."""
+    path = paths.LIVE_WEATHER_RISK_GEOJSON_PATH
+    if not path.exists():
+        logger.info("Live weather risk layer not found. Generating it now...")
+        from . import service
+        service.generate_live_weather_risk_layer()
+        
+    if not path.exists():
+        raise FileNotFoundError(f"Live weather risk layer GeoJSON not found at: {path}")
+        
+    logger.info(f"Loading live weather risk layer from {path}")
+    return gpd.read_file(path)
+
+
+def build_live_road_risk_weights():
+    """Apply live weather zone-level risk predictions to road segments and calculate routing weights."""
+    logger.info("Building live road risk weights...")
+    
+    if not paths.NASR_CITY_ROADS_PATH.exists():
+        raise FileNotFoundError(f"Nasr City roads GeoJSON not found at: {paths.NASR_CITY_ROADS_PATH}")
+        
+    # 1. Load road segments, roads mapping, and live risk layer
+    roads_gdf = gpd.read_file(paths.NASR_CITY_ROADS_PATH)
+    roads_gdf["road_id"] = [f"NSR-ROAD-{i+1:05d}" for i in range(len(roads_gdf))]
+    
+    roads_zones = load_road_segments()
+    risk_layer = load_live_weather_risk_layer()
+    
+    # 2. Merge road segments with their zone assignments
+    merged = roads_gdf.merge(roads_zones[["road_id", "zone_code"]], on="road_id", how="left")
+    
+    # 3. Merge with zone-level live risk predictions
+    road_risk = merged.merge(
+        risk_layer[[
+            "zone_code", "live_predicted_score", "live_risk_class", 
+            "rain_24h_mm", "max_precipitation_probability"
+        ]], 
+        on="zone_code", 
+        how="left"
+    )
+    
+    # Load live weather summary to check rain_risk_expected
+    rain_risk_expected = False
+    if paths.LIVE_WEATHER_SUMMARY_PATH.exists():
+        try:
+            with open(paths.LIVE_WEATHER_SUMMARY_PATH, "r", encoding="utf-8") as f:
+                summary = json.load(f)
+                rain_risk_expected = bool(summary.get("rain_risk_expected", False))
+        except Exception as e:
+            logger.warning(f"Failed to read live weather summary: {e}")
+            
+    # 4. Fill missing values safely
+    road_risk["live_predicted_score"] = road_risk["live_predicted_score"].fillna(0.0).astype(float)
+    road_risk["live_risk_class"] = road_risk["live_risk_class"].fillna("low")
+    
+    # If live_weather_risk did not have rain_24h_mm, fill with fallback from summary
+    if "rain_24h_mm" in road_risk.columns:
+        road_risk["rain_24h_mm"] = road_risk["rain_24h_mm"].fillna(0.0).astype(float)
+    else:
+        road_risk["rain_24h_mm"] = 0.0
+        
+    if "max_precipitation_probability" in road_risk.columns:
+        road_risk["max_precipitation_probability"] = road_risk["max_precipitation_probability"].fillna(0.0).astype(float)
+    else:
+        road_risk["max_precipitation_probability"] = 0.0
+        
+    # 5. Normal weight calculation
+    normal_weight = road_risk["travel_time"].copy()
+    speed_denom = road_risk["speed_kph"].fillna(50.0).replace(0, 50.0)
+    fallback_time = road_risk["length"] / (speed_denom / 3.6)
+    normal_weight = normal_weight.fillna(fallback_time)
+    
+    # 6. Penalty Logic
+    risk_score = np.clip(road_risk["live_predicted_score"], 0.0, 1.0)
+    
+    if rain_risk_expected:
+        weather_penalty_factor = 1.0 + 4.0 * (risk_score ** 2)
+        medium_risk_mask = (road_risk["live_risk_class"] == "medium")
+        high_risk_mask = (road_risk["live_risk_class"] == "high")
+        weather_penalty_factor = np.where(medium_risk_mask, weather_penalty_factor * 1.20, weather_penalty_factor)
+        weather_penalty_factor = np.where(high_risk_mask, weather_penalty_factor * 1.75, weather_penalty_factor)
+    else:
+        weather_penalty_factor = 1.0 + 1.25 * (risk_score ** 2)
+        
+    live_weather_weight = normal_weight * weather_penalty_factor
+    
+    # Add columns
+    road_risk["base_travel_time_sec"] = normal_weight
+    road_risk["live_weather_penalty_factor"] = weather_penalty_factor
+    road_risk["live_weather_weight"] = live_weather_weight
+    
+    # Select columns to keep
+    keep_cols = [
+        "u", "v", "key", "zone_code", "length", 
+        "base_travel_time_sec", "live_predicted_score", 
+        "live_risk_class", "live_weather_penalty_factor", 
+        "live_weather_weight", "rain_24h_mm", "max_precipitation_probability", "geometry"
+    ]
+    actual_cols = [c for c in keep_cols if c in road_risk.columns]
+    
+    result_gdf = gpd.GeoDataFrame(road_risk[actual_cols], geometry="geometry", crs="EPSG:4326")
+    
+    # Export
+    out_path = paths.LIVE_ROAD_RISK_WEIGHTS_GEOJSON_PATH
+    result_gdf.to_file(out_path, driver="GeoJSON")
+    logger.info(f"Saved live road risk weights to {out_path} (rows: {len(result_gdf)})")
+    
+    return result_gdf
+
+
+def apply_live_risk_weights_to_graph(G, road_risk_df):
+    """Update Graph G edge attributes with weights from road_risk_df for live weather routing."""
+    logger.info("Applying live risk weights to graph edges...")
+    
+    weights_dict = {}
+    for idx, row in road_risk_df.iterrows():
+        edge_key = (int(row["u"]), int(row["v"]), int(row["key"]))
+        weights_dict[edge_key] = {
+            "base_travel_time_sec": float(row["base_travel_time_sec"]),
+            "live_weather_weight": float(row["live_weather_weight"]),
+            "live_risk_class": str(row["live_risk_class"]),
+            "live_predicted_score": float(row["live_predicted_score"]),
+            "length": float(row["length"])
+        }
+        
+    for u, v, k, data in G.edges(keys=True, data=True):
+        edge_key = (u, v, k)
+        if edge_key in weights_dict:
+            data.update(weights_dict[edge_key])
+        else:
+            length = float(data.get("length", 10.0))
+            speed = float(data.get("speed_kph", 50.0))
+            travel_time = float(data.get("travel_time", length / (speed / 3.6)))
+            data["base_travel_time_sec"] = travel_time
+            data["live_weather_weight"] = travel_time
+            data["live_risk_class"] = "low"
+            data["live_predicted_score"] = 0.0
+            
+    return G
+
+
+def compare_live_routes(normal_route, safe_route, G):
+    """Compare normal vs live weather-safe route metrics using live risk scores."""
+    logger.info("Comparing live normal and weather-safe routes...")
+    
+    normal_edges = get_route_edge_data(G, normal_route, "base_travel_time_sec")
+    safe_edges = get_route_edge_data(G, safe_route, "live_weather_weight")
+    
+    normal_dist = sum_route_metric(normal_edges, "length")
+    safe_dist = sum_route_metric(safe_edges, "length")
+    
+    normal_base_eta = sum_route_metric(normal_edges, "base_travel_time_sec")
+    safe_base_eta = sum_route_metric(safe_edges, "base_travel_time_sec")
+    
+    normal_weather_eta = sum_route_metric(normal_edges, "live_weather_weight")
+    safe_weather_eta = sum_route_metric(safe_edges, "live_weather_weight")
+    
+    normal_high_risk = sum(1 for data in normal_edges if data.get("live_risk_class") == "high")
+    safe_high_risk = sum(1 for data in safe_edges if data.get("live_risk_class") == "high")
+    avoided_high_risk = normal_high_risk - safe_high_risk
+    
+    normal_mean_risk = sum(float(data.get("live_predicted_score", 0.0)) for data in normal_edges) / len(normal_edges) if normal_edges else 0.0
+    safe_mean_risk = sum(float(data.get("live_predicted_score", 0.0)) for data in safe_edges) / len(safe_edges) if safe_edges else 0.0
+    
+    risk_red = 0.0
+    if normal_mean_risk > 0.0:
+        risk_red = ((normal_mean_risk - safe_mean_risk) / normal_mean_risk) * 100.0
+        
+    eta_tradeoff = 0.0
+    if normal_base_eta > 0.0:
+        eta_tradeoff = ((safe_base_eta - normal_base_eta) / normal_base_eta) * 100.0
+        
+    routes_identical = (normal_route == safe_route)
+    
+    safe_route_available = (
+        (not routes_identical) and 
+        (safe_mean_risk <= normal_mean_risk) and 
+        (risk_red >= 0.0)
+    )
+    
+    if routes_identical or risk_red <= 0.0:
+        safe_route_quality = "no_distinct_safer_alternative"
+    elif risk_red >= 5.0:
+        safe_route_quality = "strong"
+    else:
+        safe_route_quality = "weak_but_valid"
+        
+    metrics = {
+        "normal_distance_m": float(normal_dist),
+        "safe_distance_m": float(safe_dist),
+        "normal_weather_eta_sec": float(normal_weather_eta),
+        "safe_weather_eta_sec": float(safe_weather_eta),
+        "normal_mean_live_risk_score": float(normal_mean_risk),
+        "safe_mean_live_risk_score": float(safe_mean_risk),
+        "live_high_risk_segment_count_normal": int(normal_high_risk),
+        "live_high_risk_segment_count_safe": int(safe_high_risk),
+        "avoided_high_risk_segments": int(avoided_high_risk),
+        "risk_reduction_percent": float(risk_red),
+        "eta_tradeoff_percent": float(eta_tradeoff),
+        "routes_identical": bool(routes_identical),
+        "safe_route_available": bool(safe_route_available),
+        "safe_route_quality": safe_route_quality,
+        "honesty_note": "Routes are decision-support prototype outputs based on model-estimated live weather-impact risk, not official emergency dispatch instructions."
+    }
+    
+    return metrics
+
+
+def live_route_to_geojson(G, route_nodes, route_type, metrics, points_info):
+    """Convert a live route node list to a GeoJSON FeatureCollection."""
+    from shapely.geometry import LineString
+    
+    if len(route_nodes) < 2:
+        line = LineString()
+    else:
+        coordinates = [(G.nodes[node]['x'], G.nodes[node]['y']) for node in route_nodes]
+        line = LineString(coordinates)
+        
+    is_safe = (route_type == "weather_safe")
+    prefix = "safe" if is_safe else "normal"
+    
+    properties = {
+        "route_type": route_type,
+        "mode": "live_weather",
+        "distance_m": float(metrics.get(f"{prefix}_distance_m", 0.0)),
+        "base_eta_sec": float(metrics.get(f"{prefix}_weather_eta_sec", 0.0)),
+        "weather_eta_sec": float(metrics.get(f"{prefix}_weather_eta_sec", 0.0)),
+        "mean_risk_score": float(metrics.get(f"{prefix}_mean_live_risk_score", 0.0)),
+        "high_risk_segment_count": int(metrics.get(f"live_high_risk_segment_count_{prefix}", 0)),
+        "origin_lon": float(points_info["origin"]["lon"]),
+        "origin_lat": float(points_info["origin"]["lat"]),
+        "destination_lon": float(points_info["destination"]["lon"]),
+        "destination_lat": float(points_info["destination"]["lat"]),
+        "honesty_note": "Live predictions are model-estimated weather-impact risk scores, not verified flood incident labels."
+    }
+    
+    gdf = gpd.GeoDataFrame([properties], geometry=[line], crs="EPSG:4326")
+    return gdf
+
+
+def compute_live_custom_route(origin, destination, route_preference="both", refresh_live_weather=False):
+    """Compute live weather-aware routes and return comparison metrics and GeoJSON overlays."""
+    if refresh_live_weather:
+        logger.info("Refreshing live weather risk layer as requested...")
+        from . import service
+        service.generate_live_weather_risk_layer()
+        
+    G = load_routing_graph()
+    
+    weights_path = paths.LIVE_ROAD_RISK_WEIGHTS_GEOJSON_PATH
+    if not weights_path.exists():
+        build_live_road_risk_weights()
+    road_risk_df = gpd.read_file(weights_path)
+    G = apply_live_risk_weights_to_graph(G, road_risk_df)
+    
+    origin_node, origin_snap_m = snap_coordinate_to_graph(G, origin["lon"], origin["lat"])
+    destination_node, destination_snap_m = snap_coordinate_to_graph(G, destination["lon"], destination["lat"])
+    
+    if origin_node == destination_node:
+        raise ValueError("Origin and destination snap to the same routing node.")
+        
+    normal_route = compute_route(G, origin_node, destination_node, "base_travel_time_sec")
+    safe_route = compute_route(G, origin_node, destination_node, "live_weather_weight")
+    
+    if normal_route is None or safe_route is None:
+        raise ValueError("No traversable route is available between the requested coordinates.")
+        
+    rain_risk_expected = False
+    live_weather_summary = {
+        "rain_1h_mm": 0.0,
+        "rain_3h_mm": 0.0,
+        "rain_6h_mm": 0.0,
+        "rain_24h_mm": 0.0,
+        "max_precipitation_probability": 0.0
+    }
+    if paths.LIVE_WEATHER_SUMMARY_PATH.exists():
+        try:
+            with open(paths.LIVE_WEATHER_SUMMARY_PATH, "r", encoding="utf-8") as f:
+                summary = json.load(f)
+                rain_risk_expected = bool(summary.get("rain_risk_expected", False))
+                forecast = summary.get("forecast_window", {})
+                for key in live_weather_summary:
+                    live_weather_summary[key] = float(forecast.get(key, 0.0))
+        except Exception as e:
+            logger.warning(f"Failed to read live weather summary: {e}")
+            
+    metrics = compare_live_routes(normal_route, safe_route, G)
+    
+    if not rain_risk_expected and metrics["risk_reduction_percent"] < 5.0:
+        metrics["safe_route_quality"] = "normal_route_preferred"
+        
+    if not rain_risk_expected:
+        recommendation = "normal_route_acceptable"
+        metrics["honesty_note"] = (
+            "Live route recommendations are decision-support prototype outputs. "
+            "No meaningful rain risk is expected, so the normal route is acceptable."
+        )
+    elif metrics["safe_route_available"]:
+        recommendation = "weather_safe_route_recommended"
+    else:
+        recommendation = "no_distinct_safer_alternative"
+        
+    points_info = {"origin": origin, "destination": destination}
+    normal_geojson = json.loads(live_route_to_geojson(G, normal_route, "normal", metrics, points_info).to_json())
+    safe_geojson = json.loads(live_route_to_geojson(G, safe_route, "weather_safe", metrics, points_info).to_json())
+    
+    return {
+        "status": "ok" if not (metrics["safe_route_quality"] in ["no_distinct_safer_alternative", "normal_route_preferred"]) else "ok_with_warnings",
+        "mode": "live_weather",
+        "rain_risk_expected": rain_risk_expected,
+        "recommendation": recommendation,
+        "origin": {
+            "lat": float(origin["lat"]),
+            "lon": float(origin["lon"]),
+            "nearest_node": origin_node,
+            "snap_distance_m": float(origin_snap_m),
+        },
+        "destination": {
+            "lat": float(destination["lat"]),
+            "lon": float(destination["lon"]),
+            "nearest_node": destination_node,
+            "snap_distance_m": float(destination_snap_m),
+        },
+        "normal_route": normal_geojson,
+        "weather_safe_route": safe_geojson,
+        "comparison": metrics,
+        "live_weather_summary": live_weather_summary,
+        "honesty_note": "Routes are decision-support prototype outputs based on model-estimated live weather-impact risk, not official emergency dispatch instructions."
+    }
+
+
+
 

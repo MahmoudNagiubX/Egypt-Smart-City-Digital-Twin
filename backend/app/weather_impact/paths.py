@@ -105,6 +105,9 @@ LIVE_WEATHER_RISK_PREDICTIONS_CSV_PATH = NASR_CITY_OUTPUTS / "live_weather_risk_
 LIVE_WEATHER_RISK_REPORT_PATH = NASR_CITY_OUTPUTS / "live_weather_risk_report.json"
 LIVE_WEATHER_CACHE_DIR = NASR_CITY_DIR / "cache"
 LIVE_WEATHER_FORECAST_CACHE_PATH = LIVE_WEATHER_CACHE_DIR / "live_open_meteo_forecast.json"
+LIVE_ROAD_RISK_WEIGHTS_GEOJSON_PATH = NASR_CITY_OUTPUTS / "live_road_risk_weights.geojson"
+LIVE_ROUTE_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "live_route_validation_report.json"
+
 
 # System integrity audit paths
 SYSTEM_INTEGRITY_AUDIT_REPORT_PATH = NASR_CITY_OUTPUTS / "system_integrity_audit_report.json"
