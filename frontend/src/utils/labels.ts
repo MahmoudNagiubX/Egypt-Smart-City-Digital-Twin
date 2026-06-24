@@ -106,7 +106,9 @@ export function getPlaceIcon(category: unknown): string {
   const icons: Record<string, string> = {
     hospital: "🏥",
     clinic: "⚕️",
+    doctors: "⚕️",
     mosque: "🕌",
+    place_of_worship: "🕌",
     mall: "🛍️",
     school: "🏫",
     university: "🎓",

@@ -63,11 +63,26 @@ const safePlaceName = (properties: PlaceProperties) => {
 };
 
 const categoryVisible = (
-  category: PlaceProperties["category"],
+  rawCategory: PlaceProperties["category"],
   placeId: string,
   layers: LayerToggles,
   emergencyPlaceIds: Set<string>,
 ) => {
+  let category = rawCategory?.toLowerCase();
+  if (category === "doctors") category = "clinic";
+  if (category === "place_of_worship") category = "mosque";
+
+  // If a category has its own toggle, that toggle must be true for it to be visible.
+  if (category === "hospital" && !layers.hospitals) return false;
+  if (category === "clinic" && !layers.clinics) return false;
+  if (category === "mosque" && !layers.mosques) return false;
+  if (category === "mall" && !layers.malls) return false;
+  if (category === "school" && !layers.schools) return false;
+  if (category === "university" && !layers.universities) return false;
+  if (category === "police" && !layers.police) return false;
+  if (category === "fire_station" && !layers.fireStations) return false;
+  if (category === "emergency" && !layers.emergency) return false;
+
   const visibleByCategory: Record<string, boolean> = {
     hospital: layers.hospitals,
     clinic: layers.clinics,
@@ -80,7 +95,8 @@ const categoryVisible = (
     emergency: layers.emergency,
     landmark: false,
   };
-  return visibleByCategory[category] || (layers.emergency && emergencyPlaceIds.has(placeId));
+
+  return !!visibleByCategory[category] || (layers.emergency && emergencyPlaceIds.has(placeId));
 };
 
 interface MapViewProps {
@@ -454,7 +470,10 @@ export const MapView = ({
 
     return () => {
       if (routePulseTimer) clearInterval(routePulseTimer);
-      placeMarkersRef.current.forEach((marker) => marker.remove());
+      placeMarkersRef.current.forEach((marker) => {
+        marker.getPopup()?.remove();
+        marker.remove();
+      });
       routeMarkersRef.current.forEach((marker) => marker.remove());
       map.remove();
     };
@@ -492,7 +511,10 @@ export const MapView = ({
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return;
     const map = mapRef.current;
-    placeMarkersRef.current.forEach((marker) => marker.remove());
+    placeMarkersRef.current.forEach((marker) => {
+      marker.getPopup()?.remove();
+      marker.remove();
+    });
     placeMarkersRef.current = [];
     for (const feature of placesData?.features ?? []) {
       const properties = feature.properties;
@@ -533,7 +555,10 @@ export const MapView = ({
       placeMarkersRef.current.push(marker);
     }
     return () => {
-      placeMarkersRef.current.forEach((marker) => marker.remove());
+      placeMarkersRef.current.forEach((marker) => {
+        marker.getPopup()?.remove();
+        marker.remove();
+      });
       placeMarkersRef.current = [];
     };
   }, [emergencyPlaceIds, layers, mapLoaded, placesData, zoom]);
