@@ -2,12 +2,51 @@
 
 import json
 import logging
+import re
 from pathlib import Path
 import pandas as pd
 import geopandas as gpd
 from . import paths, data_loader
 
 logger = logging.getLogger(__name__)
+
+PLACE_CATEGORIES = (
+    "hospital",
+    "clinic",
+    "mosque",
+    "mall",
+    "school",
+    "university",
+    "police",
+    "fire_station",
+    "emergency",
+    "landmark",
+)
+PLACE_LABELS = {
+    "hospital": "Hospital",
+    "clinic": "Clinic",
+    "mosque": "Mosque",
+    "mall": "Mall",
+    "school": "School",
+    "university": "University",
+    "police": "Police Station",
+    "fire_station": "Fire Station",
+    "emergency": "Emergency Facility",
+    "landmark": "Landmark",
+}
+PLACE_ICONS = {
+    "hospital": "hospital",
+    "clinic": "medical",
+    "mosque": "mosque",
+    "mall": "shopping",
+    "school": "school",
+    "university": "university",
+    "police": "police",
+    "fire_station": "fire_station",
+    "emergency": "emergency",
+    "landmark": "landmark",
+}
+_RAW_OSM_ID = re.compile(r"^(?:osm[:_ -]?)?(?:node|way|relation)?[:_ -]?\d+$", re.I)
 
 
 def export_prediction_geojson_layers():
@@ -269,6 +308,181 @@ def load_csv_records(path, limit=None):
     if limit is not None:
         df = df.head(limit)
     return df.to_dict(orient="records")
+
+
+def _normalise_place_category(properties):
+    """Map source-specific OSM fields to the public category vocabulary."""
+    category = str(
+        properties.get("category")
+        or properties.get("facility_type")
+        or properties.get("amenity")
+        or ""
+    ).strip().lower()
+    aliases = {
+        "place_of_worship": "mosque",
+        "fire station": "fire_station",
+        "doctors": "clinic",
+        "medical": "clinic",
+        "attraction": "landmark",
+        "museum": "landmark",
+        "monument": "landmark",
+    }
+    category = aliases.get(category, category)
+    if category not in PLACE_CATEGORIES:
+        category = "emergency" if properties.get("facility_type") else "landmark"
+    return category
+
+
+def _clean_display_name(properties, category):
+    """Prefer an English/Latin name and otherwise return a human-readable label."""
+    for key in ("name:en", "name_en", "display_name", "name"):
+        value = properties.get(key)
+        if value is None:
+            continue
+        value = str(value).strip()
+        if not value or value.lower() == "nan" or _RAW_OSM_ID.match(value):
+            continue
+        if re.search(r"[\u0600-\u06ff]", value) or any(
+            marker in value for marker in ("Ø", "Ù", "Ã", "Â", "�")
+        ):
+            continue
+        if re.search(r"[A-Za-z]", value):
+            return value
+    return PLACE_LABELS[category]
+
+
+def _point_coordinates(geometry):
+    """Return point coordinates for point or polygonal source geometry."""
+    if not geometry:
+        return None
+    if geometry.get("type") == "Point":
+        coordinates = geometry.get("coordinates", [])
+        if len(coordinates) >= 2:
+            return float(coordinates[0]), float(coordinates[1])
+    try:
+        from shapely.geometry import shape
+
+        point = shape(geometry).representative_point()
+        return float(point.x), float(point.y)
+    except Exception:
+        return None
+
+
+def _load_normalised_places():
+    sources = []
+    warnings = []
+    if paths.NASR_CITY_POIS_PATH.exists():
+        sources.append((paths.NASR_CITY_POIS_PATH, False))
+    else:
+        warnings.append(
+            "Broader OpenStreetMap POIs are unavailable; serving existing emergency facilities only."
+        )
+    if paths.NASR_CITY_FACILITIES_PATH.exists():
+        sources.append((paths.NASR_CITY_FACILITIES_PATH, True))
+    else:
+        warnings.append("Existing emergency facilities GeoJSON is unavailable.")
+
+    features = []
+    seen = {}
+    for source_path, is_emergency_source in sources:
+        source_data = load_geojson_layer(source_path)
+        for index, feature in enumerate(source_data.get("features", []), start=1):
+            properties = feature.get("properties") or {}
+            coordinates = _point_coordinates(feature.get("geometry"))
+            if coordinates is None:
+                continue
+            lon, lat = coordinates
+            category = _normalise_place_category(properties)
+            dedupe_key = (category, round(lon, 5), round(lat, 5))
+            if dedupe_key in seen:
+                if is_emergency_source:
+                    seen[dedupe_key]["properties"]["is_emergency_facility"] = True
+                continue
+            source_id = (
+                properties.get("place_id")
+                or properties.get("osmid")
+                or properties.get("osm_id")
+                or f"{source_path.stem}-{index}"
+            )
+            place_id = str(source_id)
+            original_name = properties.get("name") or properties.get("name:en")
+            if original_name is not None and str(original_name).lower() == "nan":
+                original_name = None
+            normalised_feature = {
+                "type": "Feature",
+                "properties": {
+                    "place_id": place_id,
+                    "name": original_name,
+                    "display_name": _clean_display_name(properties, category),
+                    "category": category,
+                    "category_label": PLACE_LABELS[category],
+                    "icon_type": PLACE_ICONS[category],
+                    "source": str(properties.get("source") or "OpenStreetMap"),
+                    "lon": lon,
+                    "lat": lat,
+                    "is_emergency_facility": is_emergency_source,
+                },
+                "geometry": {"type": "Point", "coordinates": [lon, lat]},
+            }
+            features.append(normalised_feature)
+            seen[dedupe_key] = normalised_feature
+    return features, warnings
+
+
+def get_places(category="all", limit=None):
+    """Return normalised map places as a GeoJSON FeatureCollection."""
+    if category not in ("all", *PLACE_CATEGORIES):
+        raise ValueError(f"Unsupported place category: {category}")
+    if limit is not None and limit < 1:
+        raise ValueError("limit must be at least 1")
+
+    features, _ = _load_normalised_places()
+    if category == "emergency":
+        features = [
+            feature
+            for feature in features
+            if feature["properties"].get("is_emergency_facility")
+        ]
+    elif category != "all":
+        features = [
+            feature
+            for feature in features
+            if feature["properties"]["category"] == category
+        ]
+    if limit is not None:
+        features = features[:limit]
+    for feature in features:
+        feature["properties"].pop("is_emergency_facility", None)
+    return {"type": "FeatureCollection", "features": features}
+
+
+def get_places_summary():
+    """Return source availability and category counts for public places."""
+    features, warnings = _load_normalised_places()
+    categories = {category: 0 for category in PLACE_CATEGORIES}
+    emergency_count = 0
+    for feature in features:
+        properties = feature["properties"]
+        categories[properties["category"]] += 1
+        if properties.get("is_emergency_facility"):
+            emergency_count += 1
+    categories["emergency"] = emergency_count
+    return {
+        "total_places": len(features),
+        "categories": categories,
+        "source": "OpenStreetMap / existing processed data",
+        "status": "ok" if not warnings else "ok_with_warnings",
+        "warnings": warnings,
+    }
+
+
+def get_custom_emergency_route(origin, destination, event_type, route_preference):
+    """Route between user-selected coordinates using the existing routing engine."""
+    from . import routing
+
+    result = routing.build_custom_routes(origin, destination, event_type)
+    result["route_preference"] = route_preference
+    return result
 
 
 def get_module_status():
@@ -728,9 +942,6 @@ def check_routing_outputs():
         "latest_safe_route_available": safe_lat_available,
         "warnings": warnings
     }
-
-
-
 
 
 

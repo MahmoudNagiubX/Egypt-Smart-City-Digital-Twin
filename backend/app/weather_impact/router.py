@@ -1,6 +1,6 @@
 """FastAPI API endpoints for weather-impact assessment."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from . import service, paths, schemas
 
 router = APIRouter(prefix="/api/weather-impact", tags=["weather-impact"])
@@ -66,6 +66,28 @@ def get_emergency_facilities():
         return service.load_geojson_layer(paths.NASR_CITY_FACILITIES_PATH)
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/places")
+def get_places(category: str = "all", limit: int | None = Query(default=None, ge=1)):
+    """Get real processed places and POIs as a frontend-ready FeatureCollection."""
+    try:
+        return service.get_places(category=category, limit=limit)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/places/summary")
+def get_places_summary():
+    """Get place category counts and source warnings."""
+    try:
+        return service.get_places_summary()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -204,5 +226,26 @@ def get_routing_comparison(event_type: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@router.post("/routing/custom/emergency-route")
+def post_custom_emergency_route(request: schemas.CustomEmergencyRouteRequest):
+    """Compute normal and weather-safe routes between clicked map coordinates."""
+    if request.event_type not in ["top-rain", "latest"]:
+        raise HTTPException(
+            status_code=400, detail=f"Invalid event_type: {request.event_type}"
+        )
+    try:
+        return service.get_custom_emergency_route(
+            request.origin.model_dump(),
+            request.destination.model_dump(),
+            request.event_type,
+            request.route_preference,
+        )
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 

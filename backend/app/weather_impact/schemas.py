@@ -1,7 +1,8 @@
 """Pydantic schemas for request/response validation."""
 
-from pydantic import BaseModel
-from typing import Dict, List, Optional
+from typing import Dict, List, Literal, Optional
+
+from pydantic import BaseModel, Field
 
 
 class ModuleStatusResponse(BaseModel):
@@ -83,5 +84,16 @@ class RouteComparisonResponse(BaseModel):
     safe_route_available: bool = True
     quality_guard_passed: bool = True
 
+
+class RouteCoordinate(BaseModel):
+    lat: float = Field(ge=-90.0, le=90.0)
+    lon: float = Field(ge=-180.0, le=180.0)
+
+
+class CustomEmergencyRouteRequest(BaseModel):
+    origin: RouteCoordinate
+    destination: RouteCoordinate
+    event_type: str = "top-rain"
+    route_preference: Literal["both", "normal", "weather-safe"] = "both"
 
 

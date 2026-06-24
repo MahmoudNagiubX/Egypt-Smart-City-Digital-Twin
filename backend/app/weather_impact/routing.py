@@ -11,6 +11,15 @@ from . import paths, data_loader
 
 logger = logging.getLogger(__name__)
 
+ROUTE_HONESTY_NOTE = (
+    "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
+)
+MAX_ROUTE_SNAP_DISTANCE_M = 1500.0
+
+
+class RoutingPointOutsideGraphError(ValueError):
+    """Raised when a requested coordinate is too far from the routing graph."""
+
 
 def load_routing_graph():
     """Load the OSMnx routing graph for Nasr City."""
@@ -259,6 +268,139 @@ def mean_route_risk(edges_data):
     return sum(float(data.get("y_pred", 0.0)) for data in edges_data) / len(edges_data)
 
 
+def _haversine_distance_m(lon1, lat1, lon2, lat2):
+    """Return the great-circle distance between two WGS84 points in metres."""
+    from math import asin, cos, radians, sin, sqrt
+
+    lon1_rad, lat1_rad, lon2_rad, lat2_rad = map(
+        radians, (lon1, lat1, lon2, lat2)
+    )
+    dlon = lon2_rad - lon1_rad
+    dlat = lat2_rad - lat1_rad
+    a = sin(dlat / 2) ** 2 + cos(lat1_rad) * cos(lat2_rad) * sin(dlon / 2) ** 2
+    return 6371008.8 * 2 * asin(sqrt(a))
+
+
+def snap_coordinate_to_graph(G, lon, lat, max_distance_m=MAX_ROUTE_SNAP_DISTANCE_M):
+    """Snap a coordinate to the graph and reject points outside the service area."""
+    node = find_nearest_graph_node(G, lon, lat)
+    node_lon = float(G.nodes[node]["x"])
+    node_lat = float(G.nodes[node]["y"])
+    distance_m = _haversine_distance_m(lon, lat, node_lon, node_lat)
+    if distance_m > max_distance_m:
+        raise RoutingPointOutsideGraphError(
+            f"Coordinate ({lat:.6f}, {lon:.6f}) is outside the Nasr City routing graph "
+            f"(nearest road node is {distance_m:.0f} m away)."
+        )
+    return node, distance_m
+
+
+def build_custom_routes(origin, destination, event_type):
+    """Compute normal and weather-weighted routes for arbitrary map coordinates."""
+    if event_type not in ["top-rain", "latest"]:
+        raise ValueError(f"Unsupported event_type: {event_type}")
+
+    G = load_routing_graph()
+    weights_path = (
+        paths.ROAD_RISK_WEIGHTS_TOP_RAIN_PATH
+        if event_type == "top-rain"
+        else paths.ROAD_RISK_WEIGHTS_LATEST_PATH
+    )
+    if not weights_path.exists():
+        build_road_risk_weights(event_type)
+    G = apply_risk_weights_to_graph(G, gpd.read_file(weights_path))
+
+    origin_node, origin_snap_m = snap_coordinate_to_graph(
+        G, origin["lon"], origin["lat"]
+    )
+    destination_node, destination_snap_m = snap_coordinate_to_graph(
+        G, destination["lon"], destination["lat"]
+    )
+    if origin_node == destination_node:
+        raise ValueError("Origin and destination snap to the same routing node.")
+
+    normal_route = compute_route(
+        G, origin_node, destination_node, "base_travel_time_sec"
+    )
+    safe_route = compute_route(G, origin_node, destination_node, "weather_weight")
+    if normal_route is None or safe_route is None:
+        raise ValueError(
+            "No traversable route is available between the requested coordinates."
+        )
+
+    points_info = {
+        "origin_lon": float(origin["lon"]),
+        "origin_lat": float(origin["lat"]),
+        "origin_zone_code": "custom",
+        "dest_lon": float(destination["lon"]),
+        "dest_lat": float(destination["lat"]),
+        "destination_facility_name": "Custom destination",
+        "destination_facility_type": "custom",
+    }
+    metrics = compare_routes(normal_route, safe_route, G, event_type, points_info)
+    metrics["routes_identical"] = normal_route == safe_route
+    quality, available = evaluate_safe_route_quality(metrics)
+    metrics["safe_route_quality"] = quality
+    metrics["safe_route_available"] = available
+    metrics["quality_guard_passed"] = available
+
+    normal_geojson = json.loads(
+        route_to_geojson(
+            G, normal_route, event_type, "normal", metrics, points_info
+        ).to_json()
+    )
+    safe_geojson = json.loads(
+        route_to_geojson(
+            G, safe_route, event_type, "weather_safe", metrics, points_info
+        ).to_json()
+    )
+
+    warnings = []
+    if not available:
+        warnings.append(
+            "No distinct lower-risk alternative was found; the weather-safe route must not be "
+            "presented as safer than the normal route."
+        )
+
+    comparison_keys = [
+        "safe_route_available",
+        "safe_route_quality",
+        "risk_reduction_percent",
+        "eta_tradeoff_percent",
+        "avoided_high_risk_segments",
+        "normal_distance_m",
+        "safe_distance_m",
+        "normal_weather_eta_sec",
+        "safe_weather_eta_sec",
+        "normal_mean_risk_score",
+        "safe_mean_risk_score",
+    ]
+    comparison = {key: metrics[key] for key in comparison_keys}
+    comparison["honesty_note"] = ROUTE_HONESTY_NOTE
+
+    return {
+        "status": "ok" if not warnings else "ok_with_warnings",
+        "event_type": event_type,
+        "origin": {
+            "lat": float(origin["lat"]),
+            "lon": float(origin["lon"]),
+            "nearest_node": origin_node,
+            "snap_distance_m": float(origin_snap_m),
+        },
+        "destination": {
+            "lat": float(destination["lat"]),
+            "lon": float(destination["lon"]),
+            "nearest_node": destination_node,
+            "snap_distance_m": float(destination_snap_m),
+        },
+        "normal_route": normal_geojson,
+        "weather_safe_route": safe_geojson,
+        "comparison": comparison,
+        "warnings": warnings,
+        "honesty_note": ROUTE_HONESTY_NOTE,
+    }
+
+
 def compare_routes(normal_route, safe_route, G, event_type, points_info):
     """Compare normal vs weather-safe route metrics."""
     logger.info(f"Comparing normal and safe routes for event: {event_type}...")
@@ -334,7 +476,7 @@ def compare_routes(normal_route, safe_route, G, event_type, points_info):
         "event_type": event_type,
         "event_id": event_id,
         "timestamp": timestamp,
-        "honesty_note": "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
+        "honesty_note": ROUTE_HONESTY_NOTE
     }
     
     return metrics
@@ -610,7 +752,7 @@ def route_to_geojson(G, route_nodes, event_type, route_type, metrics, points_inf
         "destination_lon": float(p_info.get("dest_lon", p_info.get("destination_lon", 0.0))),
         "destination_lat": float(p_info.get("dest_lat", p_info.get("destination_lat", 0.0))),
         "destination_facility_name": p_info.get("destination_facility_name", "Unknown"),
-        "honesty_note": "Routes are decision-support prototype outputs, not official emergency dispatch instructions."
+        "honesty_note": ROUTE_HONESTY_NOTE
     }
     
     gdf = gpd.GeoDataFrame([properties], geometry=[line], crs="EPSG:4326")
@@ -1039,8 +1181,6 @@ def audit_high_risk_zone_best_facility_routes(G=None):
     df.to_csv(paths.HIGH_RISK_ZONE_BEST_FACILITY_ROUTES_PATH, index=False, encoding="utf-8")
     logger.info(f"High-risk zone best facility routes written to {paths.HIGH_RISK_ZONE_BEST_FACILITY_ROUTES_PATH}")
     return best_routes_rows
-
-
 
 
 
