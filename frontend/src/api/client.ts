@@ -10,6 +10,10 @@ import {
   PlaceProperties,
   CustomRouteRequest,
   CustomRouteResponse,
+  LiveWeatherSummary,
+  LiveRoutingStatusResponse,
+  LiveEmergencyRouteRequest,
+  LiveEmergencyRouteResponse,
 } from "../types/api";
 
 const BASE_URL = import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
@@ -118,3 +122,34 @@ export const getCustomEmergencyRoute = async (
   );
   return response.data;
 };
+
+export const getLiveWeather = async (): Promise<LiveWeatherSummary> => {
+  const response = await api.get<LiveWeatherSummary>(`${API_PREFIX}/weather/live`);
+  return response.data;
+};
+
+export const getLiveWeatherRiskLayer = async (): Promise<FeatureCollection> => {
+  const response = await api.get<FeatureCollection>(`${API_PREFIX}/layers/predictions/live`);
+  return response.data;
+};
+
+export const getLiveWeatherReport = async (): Promise<Record<string, unknown>> => {
+  const response = await api.get<Record<string, unknown>>(`${API_PREFIX}/weather/live/report`);
+  return response.data;
+};
+
+export const getLiveRoutingStatus = async (): Promise<LiveRoutingStatusResponse> => {
+  const response = await api.get<LiveRoutingStatusResponse>(`${API_PREFIX}/routing/live/status`);
+  return response.data;
+};
+
+export const requestLiveEmergencyRoute = async (
+  request: LiveEmergencyRouteRequest,
+): Promise<LiveEmergencyRouteResponse> => {
+  const response = await api.post<LiveEmergencyRouteResponse>(
+    `${API_PREFIX}/routing/live/emergency-route`,
+    request,
+  );
+  return response.data;
+};
+

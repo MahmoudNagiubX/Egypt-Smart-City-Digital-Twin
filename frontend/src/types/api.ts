@@ -159,4 +159,103 @@ export interface LayerToggles {
   topRainRisk: boolean;
   riskSummary: boolean;
   selectedRisk: boolean;
+  liveRisk: boolean;
 }
+
+export interface LiveWeatherSummary {
+  status: string;
+  source: string;
+  location: {
+    name: string;
+    lat: number;
+    lon: number;
+  };
+  current: {
+    time: string;
+    temperature_2m: number;
+    apparent_temperature?: number;
+    relative_humidity_2m?: number;
+    rain: number;
+    precipitation: number;
+    wind_speed_10m: number;
+    weather_code: number;
+  };
+  forecast_window: {
+    hours: number;
+    rain_1h_mm: number;
+    rain_3h_mm: number;
+    rain_6h_mm: number;
+    rain_24h_mm: number;
+    max_precipitation_probability: number;
+    mean_temperature_2m?: number;
+    mean_relative_humidity_2m?: number;
+    mean_apparent_temperature?: number;
+    mean_wind_speed_10m?: number;
+  };
+  rain_risk_expected: boolean;
+  recommended_event_mode: "live" | "normal";
+  warnings: string[];
+}
+
+export interface LiveRoutingStatusResponse {
+  status: "ok" | "ok_with_warnings" | "failed";
+  live_weather_available: boolean;
+  live_risk_layer_available: boolean;
+  live_report_status: string;
+  rain_risk_expected: boolean;
+  risk_class_counts: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+  recommended_mode: "normal_route_acceptable" | "weather_safe_routing_available";
+  warnings: string[];
+  honesty_note: string;
+}
+
+export interface LiveEmergencyRouteRequest {
+  origin: RouteCoordinate;
+  destination: RouteCoordinate;
+  route_preference: "both";
+  refresh_live_weather?: boolean;
+}
+
+export interface LiveRouteComparison {
+  safe_route_available: boolean;
+  safe_route_quality: string;
+  risk_reduction_percent: number;
+  eta_tradeoff_percent: number;
+  avoided_high_risk_segments: number;
+  normal_distance_m: number;
+  safe_distance_m: number;
+  normal_weather_eta_sec: number;
+  safe_weather_eta_sec: number;
+  normal_mean_live_risk_score: number;
+  safe_mean_live_risk_score: number;
+  live_high_risk_segment_count_normal: number;
+  live_high_risk_segment_count_safe: number;
+  honesty_note: string;
+}
+
+export interface LiveEmergencyRouteResponse {
+  status: "ok" | "ok_with_warnings";
+  mode: "live_weather";
+  rain_risk_expected: boolean;
+  recommendation: "normal_route_acceptable" | "weather_safe_route_recommended" | "no_distinct_safer_alternative";
+  origin: RouteCoordinate & { nearest_node: string | number; snap_distance_m: number };
+  destination: RouteCoordinate & { nearest_node: string | number; snap_distance_m: number };
+  normal_route: FeatureCollection;
+  weather_safe_route: FeatureCollection;
+  comparison: LiveRouteComparison;
+  live_weather_summary: {
+    rain_1h_mm: number;
+    rain_3h_mm: number;
+    rain_6h_mm: number;
+    rain_24h_mm: number;
+    max_precipitation_probability: number;
+  };
+  honesty_note: string;
+}
+
+export type RouteMode = "demo" | "custom-live";
+
