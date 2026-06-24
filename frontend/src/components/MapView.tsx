@@ -140,6 +140,17 @@ export const MapView = ({
   const routingLoadingRef = useRef(routingLoading);
   const routeComparisonRef = useRef(routeComparison);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [zoom, setZoom] = useState(12.2);
+
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+    const updateZoom = () => setZoom(map.getZoom());
+    map.on("zoom", updateZoom);
+    return () => {
+      map.off("zoom", updateZoom);
+    };
+  }, [mapLoaded]);
 
   useEffect(() => {
     onMapPointClickRef.current = onMapPointClick;
@@ -429,6 +440,11 @@ export const MapView = ({
       const coordinates = pointCoordinates(feature.geometry.coordinates);
       if (!coordinates) continue;
 
+      const isImportant = properties.category === "hospital" || properties.category === "emergency" || emergencyPlaceIds.has(properties.place_id);
+      if (zoom < 13.0 && !isImportant) {
+        continue;
+      }
+
       const element = document.createElement("button");
       element.type = "button";
       element.className = "place-marker";
@@ -459,7 +475,7 @@ export const MapView = ({
       placeMarkersRef.current.forEach((marker) => marker.remove());
       placeMarkersRef.current = [];
     };
-  }, [emergencyPlaceIds, layers, mapLoaded, placesData]);
+  }, [emergencyPlaceIds, layers, mapLoaded, placesData, zoom]);
 
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return;
