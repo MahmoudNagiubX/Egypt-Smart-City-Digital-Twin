@@ -106,6 +106,7 @@ interface MapViewProps {
   onResetRoute: () => void;
   riskFillOpacity: number;
   gridLineOpacity: number;
+  riskDisplayMode: "focus" | "all";
 }
 
 export const MapView = ({
@@ -131,6 +132,7 @@ export const MapView = ({
   onResetRoute,
   riskFillOpacity,
   gridLineOpacity,
+  riskDisplayMode,
 }: MapViewProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -246,7 +248,6 @@ export const MapView = ({
         ["latest-risk-layer", "latest-risk"],
         ["top-rain-risk-layer", "top-rain-risk"],
         ["selected-risk-layer", "selected-risk"],
-        ["live-risk-layer", "live-risk"],
       ].forEach(([id, source]) => {
         map.addLayer({
           id: id as string,
@@ -260,6 +261,67 @@ export const MapView = ({
           },
         }, firstSymbolLayer);
       });
+
+      // Special live risk zone styling
+      const liveRiskFillColor = [
+        "match",
+        ["coalesce", ["get", "live_risk_class"], "low"],
+        "high", "#ef4444",
+        "medium", "#f59e0b",
+        "low", "#34d399",
+        "#64748b"
+      ] as maplibregl.ExpressionSpecification;
+
+      map.addLayer({
+        id: "live-risk-layer",
+        type: "fill",
+        source: "live-risk",
+        paint: {
+          "fill-color": liveRiskFillColor,
+          "fill-opacity": riskFillOpacity,
+          "fill-outline-color": "rgba(255,255,255,0.3)",
+          "fill-opacity-transition": { duration: 220, delay: 0 },
+        },
+      }, firstSymbolLayer);
+
+      // Glow layer for high risk (thick blurred line)
+      map.addLayer({
+        id: "live-risk-glow-layer",
+        type: "line",
+        source: "live-risk",
+        paint: {
+          "line-color": "#ef4444",
+          "line-width": 8,
+          "line-opacity": 0.4,
+          "line-blur": 4,
+        },
+        filter: ["==", ["coalesce", ["get", "live_risk_class"], "low"], "high"]
+      }, firstSymbolLayer);
+
+      // Outline layer for medium and high risk
+      map.addLayer({
+        id: "live-risk-outline-layer",
+        type: "line",
+        source: "live-risk",
+        paint: {
+          "line-color": [
+            "match",
+            ["coalesce", ["get", "live_risk_class"], "low"],
+            "high", "#dc2626",
+            "medium", "#d97706",
+            "low", "rgba(0,0,0,0)",
+            "rgba(0,0,0,0)"
+          ],
+          "line-width": [
+            "match",
+            ["coalesce", ["get", "live_risk_class"], "low"],
+            "high", 2.5,
+            "medium", 1.5,
+            0
+          ],
+          "line-opacity": 0.8
+        }
+      }, firstSymbolLayer);
 
       map.addLayer({
         id: "normal-route-layer",
@@ -512,6 +574,8 @@ export const MapView = ({
     setLayerVisibility("risk-summary-layer", layers.riskSummary);
     setLayerVisibility("selected-risk-layer", layers.selectedRisk);
     setLayerVisibility("live-risk-layer", layers.liveRisk);
+    setLayerVisibility("live-risk-glow-layer", layers.liveRisk);
+    setLayerVisibility("live-risk-outline-layer", layers.liveRisk);
     map.getStyle().layers
       .filter((layer) => /^(road_|bridge_|tunnel_|highway-|label_)/.test(layer.id))
       .forEach((layer) => setLayerVisibility(layer.id, layers.roadsLabels));
@@ -546,17 +610,35 @@ export const MapView = ({
         "latest-risk-layer",
         "top-rain-risk-layer",
         "selected-risk-layer",
-        "live-risk-layer",
       ];
       riskLayers.forEach((layerId) => {
         if (map.getLayer(layerId)) {
           map.setPaintProperty(layerId, "fill-opacity", riskFillOpacity);
         }
       });
+
+      if (map.getLayer("live-risk-layer")) {
+        map.setPaintProperty("live-risk-layer", "fill-opacity", [
+          "match",
+          ["coalesce", ["get", "live_risk_class"], "low"],
+          "high", riskFillOpacity,
+          "medium", riskFillOpacity,
+          "low", riskDisplayMode === "focus" ? 0.02 : riskFillOpacity * 0.4,
+          0
+        ]);
+      }
+
+      if (map.getLayer("live-risk-glow-layer")) {
+        map.setPaintProperty("live-risk-glow-layer", "line-opacity", riskFillOpacity * 0.8);
+      }
+
+      if (map.getLayer("live-risk-outline-layer")) {
+        map.setPaintProperty("live-risk-outline-layer", "line-opacity", riskFillOpacity * 0.9);
+      }
     } catch (err) {
       console.warn("Failed to update fill opacity:", err);
     }
-  }, [riskFillOpacity, mapLoaded]);
+  }, [riskFillOpacity, riskDisplayMode, mapLoaded]);
 
   const routeHint = routingLoading
     ? "Calculating weather-aware route..."
