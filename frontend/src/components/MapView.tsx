@@ -94,6 +94,7 @@ interface MapViewProps {
   topRainRiskData: FeatureCollection | null;
   riskSummaryData: FeatureCollection | null;
   selectedEventRiskData: FeatureCollection | null;
+  liveRiskData: FeatureCollection | null;
   normalRouteData: FeatureCollection | null;
   safeRouteData: FeatureCollection | null;
   routeComparison: RouteComparison | null;
@@ -118,6 +119,7 @@ export const MapView = ({
   topRainRiskData,
   riskSummaryData,
   selectedEventRiskData,
+  liveRiskData,
   normalRouteData,
   safeRouteData,
   routeComparison,
@@ -177,6 +179,7 @@ export const MapView = ({
         "top-rain-risk",
         "risk-summary",
         "selected-risk",
+        "live-risk",
         "normal-route",
         "safe-route",
       ].forEach(addGeoJSONSource);
@@ -221,7 +224,7 @@ export const MapView = ({
 
       const riskFillColor = [
         "match",
-        ["get", "predicted_risk_class"],
+        ["coalesce", ["get", "live_risk_class"], ["get", "predicted_risk_class"], "low"],
         "high", "#ef4444",
         "medium", "#f59e0b",
         "low", "#10b981",
@@ -232,6 +235,7 @@ export const MapView = ({
         ["latest-risk-layer", "latest-risk"],
         ["top-rain-risk-layer", "top-rain-risk"],
         ["selected-risk-layer", "selected-risk"],
+        ["live-risk-layer", "live-risk"],
       ].forEach(([id, source]) => {
         map.addLayer({
           id: id as string,
@@ -297,6 +301,7 @@ export const MapView = ({
         "top-rain-risk-layer",
         "risk-summary-layer",
         "selected-risk-layer",
+        "live-risk-layer",
       ];
       const routeLayers = ["normal-route-layer", "safe-route-layer"];
       [...riskLayers, ...routeLayers].forEach((layerId) => {
@@ -332,6 +337,21 @@ export const MapView = ({
                 <p><strong>Destination:</strong> ${escapeHtml(cleanDest)}</p>
                 <p><strong>Route Quality:</strong> ${escapeHtml(quality)}</p>
               </div>`;
+          } else if (properties.live_risk_class !== undefined) {
+            const rain = properties.rain_24h_mm == null
+              ? EMPTY_VALUE
+              : `${formatNumber(properties.rain_24h_mm, 1)} mm`;
+            const prob = properties.max_precipitation_probability == null
+              ? EMPTY_VALUE
+              : `${formatPercent(properties.max_precipitation_probability, 0)}`;
+            html = `
+              <div class="map-popup-card">
+                <h4>${escapeHtml(getZoneLabel(properties.zone_code))}</h4>
+                <p><strong>Live Risk Level:</strong> <span class="risk-${escapeHtml(properties.live_risk_class || "medium")}">${escapeHtml(getRiskLevelLabel(properties.live_risk_class))}</span></p>
+                <p><strong>Live Predicted Risk:</strong> ${formatNumber(properties.live_predicted_score, 4)}</p>
+                <p><strong>24h Rainfall:</strong> ${rain}</p>
+                <p><strong>Rain Probability:</strong> ${prob}</p>
+              </div>`;
           } else {
             const rain = properties.rain_24h_mm == null
               ? EMPTY_VALUE
@@ -339,12 +359,12 @@ export const MapView = ({
             html = `
               <div class="map-popup-card">
                 <h4>${escapeHtml(getZoneLabel(properties.zone_code))}</h4>
-                <p><strong>${getFieldLabel("predicted_risk_class")}:</strong> <span class="risk-${escapeHtml(properties.predicted_risk_class || "medium")}">${escapeHtml(getRiskLevelLabel(properties.predicted_risk_class))}</span></p>
-                <p><strong>${getFieldLabel("y_pred")}:</strong> ${formatNumber(properties.y_pred, 4)}</p>
-                ${properties.event_id ? `<p><strong>${getFieldLabel("event_id")}:</strong> ${escapeHtml(getEventLabel(properties.event_id))}</p>` : ""}
-                <p><strong>${getFieldLabel("rain_24h_mm")}:</strong> ${rain}</p>
-                <p><strong>${getFieldLabel("population_sum")}:</strong> ${formatInteger(properties.population_sum)}</p>
-                <p><strong>${getFieldLabel("built_surface_mean")}:</strong> ${formatNumber(properties.built_surface_mean, 2)}</p>
+                <p><strong>${escapeHtml(getFieldLabel("predicted_risk_class"))}:</strong> <span class="risk-${escapeHtml(properties.predicted_risk_class || "medium")}">${escapeHtml(getRiskLevelLabel(properties.predicted_risk_class))}</span></p>
+                <p><strong>${escapeHtml(getFieldLabel("y_pred"))}:</strong> ${formatNumber(properties.y_pred, 4)}</p>
+                ${properties.event_id ? `<p><strong>${escapeHtml(getFieldLabel("event_id"))}:</strong> ${escapeHtml(getEventLabel(properties.event_id))}</p>` : ""}
+                <p><strong>${escapeHtml(getFieldLabel("rain_24h_mm"))}:</strong> ${rain}</p>
+                <p><strong>${escapeHtml(getFieldLabel("population_sum"))}:</strong> ${formatInteger(properties.population_sum)}</p>
+                <p><strong>${escapeHtml(getFieldLabel("built_surface_mean"))}:</strong> ${formatNumber(properties.built_surface_mean, 2)}</p>
               </div>`;
           }
           new maplibregl.Popup({ className: "light-map-popup", closeButton: true, maxWidth: "280px" })
@@ -380,12 +400,14 @@ export const MapView = ({
     updateSource("top-rain-risk", topRainRiskData);
     updateSource("risk-summary", riskSummaryData);
     updateSource("selected-risk", selectedEventRiskData);
+    updateSource("live-risk", liveRiskData);
     updateSource("normal-route", normalRouteData);
     updateSource("safe-route", safeRouteData);
   }, [
     boundaryData,
     gridData,
     latestRiskData,
+    liveRiskData,
     mapLoaded,
     normalRouteData,
     riskSummaryData,
@@ -473,6 +495,7 @@ export const MapView = ({
     setLayerVisibility("top-rain-risk-layer", layers.topRainRisk);
     setLayerVisibility("risk-summary-layer", layers.riskSummary);
     setLayerVisibility("selected-risk-layer", layers.selectedRisk);
+    setLayerVisibility("live-risk-layer", layers.liveRisk);
     map.getStyle().layers
       .filter((layer) => /^(road_|bridge_|tunnel_|highway-|label_)/.test(layer.id))
       .forEach((layer) => setLayerVisibility(layer.id, layers.roadsLabels));
@@ -507,6 +530,7 @@ export const MapView = ({
         "latest-risk-layer",
         "top-rain-risk-layer",
         "selected-risk-layer",
+        "live-risk-layer",
       ];
       riskLayers.forEach((layerId) => {
         if (map.getLayer(layerId)) {
@@ -519,14 +543,14 @@ export const MapView = ({
   }, [riskFillOpacity, mapLoaded]);
 
   const routeHint = routingLoading
-    ? "Calculating weather-aware routes..."
+    ? "Calculating weather-aware route..."
     : routingError
       ? "Choose different points or reset the route"
       : routeDestination
         ? "Route ready • click the map again to clear"
         : routeOrigin
-          ? "Select destination"
-          : "Click the map to set origin";
+          ? "Now choose your destination"
+          : "Click the map to choose your starting point";
 
   return (
     <div className="relative size-full bg-[#e9eef4]">

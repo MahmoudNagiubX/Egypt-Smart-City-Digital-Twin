@@ -3,7 +3,6 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { CloudSun } from "lucide-react";
 import {
   getBoundaryLayer,
-  getCustomEmergencyRoute,
   getDemoRoute,
   getEventRiskLayer,
   getEvents,
@@ -15,6 +14,10 @@ import {
   getRouteComparison,
   getSummary,
   getTopRainRiskLayer,
+  getLiveWeather,
+  getLiveWeatherRiskLayer,
+  getLiveRoutingStatus,
+  requestLiveEmergencyRoute,
 } from "../api/client";
 import type {
   EventSummary,
@@ -24,6 +27,8 @@ import type {
   RouteComparison,
   RouteCoordinate,
   SummaryResponse,
+  LiveWeatherSummary,
+  LiveRoutingStatusResponse,
 } from "../types/api";
 import { EventSelector } from "./EventSelector";
 import { LayerToggle } from "./LayerToggle";
@@ -61,7 +66,11 @@ export const Dashboard = () => {
   const [routeSelection, setRouteSelection] = useState<RouteSelection>(emptySelection);
   const [routingLoading, setRoutingLoading] = useState(false);
   const [routingError, setRoutingError] = useState<string | null>(null);
-  const [routeSource, setRouteSource] = useState<"demo" | "custom">("demo");
+  const [routeSource, setRouteSource] = useState<"demo" | "custom" | "custom-live">("demo");
+  const [liveWeather, setLiveWeather] = useState<LiveWeatherSummary | null>(null);
+  const [liveRoutingStatus, setLiveRoutingStatus] = useState<LiveRoutingStatusResponse | null>(null);
+  const [liveRiskData, setLiveRiskData] = useState<FeatureCollection | null>(null);
+  const [liveWeatherError, setLiveWeatherError] = useState<string | null>(null);
 
   const [layers, setLayers] = useState<LayerToggles>({
     boundary: true,
@@ -76,10 +85,11 @@ export const Dashboard = () => {
     police: true,
     fireStations: true,
     emergency: true,
-    latestRisk: true,
+    latestRisk: false,
     topRainRisk: false,
     riskSummary: false,
     selectedRisk: false,
+    liveRisk: true,
   });
 
   const [boundaryData, setBoundaryData] = useState<FeatureCollection | null>(null);
@@ -139,6 +149,23 @@ export const Dashboard = () => {
         if (eventsResponse.length > 0) {
           setSelectedEventId(eventsResponse[0].event_id);
         }
+
+        // Fetch live weather data separately without blocking dashboard if it fails
+        try {
+          const [liveWeatherRes, liveRoutingStatusRes, liveRiskRes] = await Promise.all([
+            getLiveWeather(),
+            getLiveRoutingStatus(),
+            getLiveWeatherRiskLayer(),
+          ]);
+          setLiveWeather(liveWeatherRes);
+          setLiveRoutingStatus(liveRoutingStatusRes);
+          setLiveRiskData(liveRiskRes);
+          setLiveWeatherError(null);
+        } catch (liveWeatherError) {
+          console.warn("Failed to load live weather/routing info:", liveWeatherError);
+          setLiveWeatherError("Unable to fetch live weather details. Showing offline/historical layers.");
+        }
+
       } catch (initialError) {
         setError(
           getErrorMessage(
@@ -209,16 +236,16 @@ export const Dashboard = () => {
     const fetchCustomRoute = async () => {
       setRoutingLoading(true);
       setRoutingError(null);
-      setRouteSource("custom");
+      setRouteSource("custom-live");
       setComparison(null);
       setNormalRouteData(null);
       setSafeRouteData(null);
       try {
-        const response = await getCustomEmergencyRoute({
+        const response = await requestLiveEmergencyRoute({
           origin,
           destination,
-          event_type: routeEventType,
           route_preference: "both",
+          refresh_live_weather: false,
         });
         if (cancelled) return;
 
@@ -229,10 +256,13 @@ export const Dashboard = () => {
         setSafeRouteData(null);
         setComparison({
           ...response.comparison,
-          event_type: response.event_type,
+          recommendation: response.recommendation,
+          rain_risk_expected: response.rain_risk_expected,
+          live_weather_summary: response.live_weather_summary,
+          event_type: "live",
           selected_destination_facility_name: "Selected map point",
           honesty_note: response.honesty_note,
-        });
+        } as any);
         setRouteVisibility("both");
 
         safeRouteTimerRef.current = setTimeout(
@@ -333,6 +363,12 @@ export const Dashboard = () => {
             <p className="text-[10px] font-medium text-muted-foreground">Nasr City Weather-Impact Emergency Mobility Module</p>
           </div>
         </div>
+        {liveRoutingStatus && (
+          <div className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-[10px] font-medium text-slate-600">
+            <span className={`h-1.5 w-1.5 rounded-full ${liveRoutingStatus.status === "ok" ? "bg-emerald-500" : "bg-amber-500 animate-pulse"}`} />
+            Live Routing: {liveRoutingStatus.status === "ok" ? "Ready" : "Degraded"}
+          </div>
+        )}
       </header>
 
       <div className="flex flex-1 overflow-hidden">
@@ -350,12 +386,19 @@ export const Dashboard = () => {
         </SidePanel>
 
         <main className="relative flex flex-1 flex-col overflow-hidden">
+          {liveWeatherError && (
+            <div className="mx-3 mt-2 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-semibold text-amber-800">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+              {liveWeatherError}
+            </div>
+          )}
           <div className="shrink-0 pt-2">
             <SummaryCards
               summary={summary}
               selectedEventId={selectedEventId}
               events={events}
               comparison={comparison}
+              liveWeather={liveWeather}
             />
           </div>
           <div className="relative flex-1 overflow-hidden border-t">
@@ -370,6 +413,7 @@ export const Dashboard = () => {
               topRainRiskData={topRainRiskData}
               riskSummaryData={riskSummaryData}
               selectedEventRiskData={selectedEventRiskData}
+              liveRiskData={liveRiskData}
               normalRouteData={normalRouteData}
               safeRouteData={safeRouteData}
               routeComparison={comparison}
