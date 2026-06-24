@@ -3,6 +3,13 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { FeatureCollection, LayerToggles } from "../types/api";
 import { formatNumber, formatInteger } from "../utils/format";
+import {
+  getCategoryLabel,
+  getEventLabel,
+  getFieldLabel,
+  getRiskLevelLabel,
+  getZoneLabel,
+} from "../utils/labels";
 
 const BASEMAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
 
@@ -273,13 +280,15 @@ export const MapView: React.FC<MapViewProps> = ({
         },
       });
 
-      let haloEmphasis = false;
-      routePulseTimer = setInterval(() => {
-        if (!map.getLayer("safe-route-halo-layer")) return;
-        haloEmphasis = !haloEmphasis;
-        map.setPaintProperty("safe-route-halo-layer", "line-opacity-transition", { duration: 900, delay: 0 });
-        map.setPaintProperty("safe-route-halo-layer", "line-opacity", haloEmphasis ? 0.28 : 0.16);
-      }, 1100);
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        let haloEmphasis = false;
+        routePulseTimer = setInterval(() => {
+          if (!map.getLayer("safe-route-halo-layer")) return;
+          haloEmphasis = !haloEmphasis;
+          map.setPaintProperty("safe-route-halo-layer", "line-opacity-transition", { duration: 900, delay: 0 });
+          map.setPaintProperty("safe-route-halo-layer", "line-opacity", haloEmphasis ? 0.28 : 0.16);
+        }, 1100);
+      }
 
       // Hover feedback cursor on layers
       const interactiveLayers = [
@@ -323,15 +332,15 @@ export const MapView: React.FC<MapViewProps> = ({
           html = `
             <div class="map-popup-card">
               <h4>${escapeHtml(props.name || "Emergency Facility")}</h4>
-              <p><strong>Type:</strong> ${escapeHtml(props.facility_type || props.amenity || "emergency facility")}</p>
+              <p><strong>Category:</strong> ${escapeHtml(getCategoryLabel(props.facility_type || props.amenity))}</p>
               <p><strong>Source:</strong> ${escapeHtml(props.source || "OpenStreetMap")}</p>
             </div>
           `;
         } else if (feature.layer.id.startsWith("poi-")) {
           html = `
             <div class="map-popup-card">
-              <h4>${escapeHtml(props.name || props.name_en || "Map place")}</h4>
-              <p><strong>Category:</strong> ${escapeHtml(props.subclass || props.class || "point of interest")}</p>
+              <h4>${escapeHtml(props.name || props.name_en || getCategoryLabel(props.subclass || props.class))}</h4>
+              <p><strong>Category:</strong> ${escapeHtml(getCategoryLabel(props.subclass || props.class))}</p>
               <p><strong>Source:</strong> OpenStreetMap basemap</p>
             </div>
           `;
@@ -343,13 +352,13 @@ export const MapView: React.FC<MapViewProps> = ({
           
           html = `
             <div class="map-popup-card">
-              <h4>Zone: ${escapeHtml(props.zone_code || "Unknown")}</h4>
-              <p><strong>Predicted risk:</strong> <span class="risk-${escapeHtml(props.predicted_risk_class || "medium")}">${escapeHtml(props.predicted_risk_class || "medium")}</span></p>
-              <p><strong class="text-slate-400">Risk Score:</strong> ${score}</p>
-              ${props.event_id ? `<p><strong>Event:</strong> ${escapeHtml(props.event_id)}</p>` : ""}
-              <p><strong>Rain (24h):</strong> ${rain}</p>
-              <p><strong>Population:</strong> ${pop}</p>
-              <p><strong>Built surface mean:</strong> ${built}</p>
+              <h4>${escapeHtml(getZoneLabel(props.zone_code))}</h4>
+              <p><strong>${getFieldLabel("predicted_risk_class")}:</strong> <span class="risk-${escapeHtml(props.predicted_risk_class || "medium")}">${escapeHtml(getRiskLevelLabel(props.predicted_risk_class))}</span></p>
+              <p><strong>${getFieldLabel("y_pred")}:</strong> ${score}</p>
+              ${props.event_id ? `<p><strong>${getFieldLabel("event_id")}:</strong> ${escapeHtml(getEventLabel(props.event_id))}</p>` : ""}
+              <p><strong>${getFieldLabel("rain_24h_mm")}:</strong> ${rain}</p>
+              <p><strong>${getFieldLabel("population_sum")}:</strong> ${pop}</p>
+              <p><strong>${getFieldLabel("built_surface_mean")}:</strong> ${built}</p>
             </div>
           `;
         }
@@ -446,7 +455,7 @@ export const MapView: React.FC<MapViewProps> = ({
     <div className="relative size-full bg-[#e9eef4]">
       <div ref={mapContainerRef} className="size-full" aria-label="Interactive Nasr City weather-impact map" />
       <div className="pointer-events-none absolute left-4 top-4 rounded-full border border-white/80 bg-white/90 px-3 py-1.5 text-[10px] font-semibold text-primary shadow-md backdrop-blur">
-        Light city map · OpenStreetMap context
+        Light city map • OpenStreetMap context
       </div>
     </div>
   );

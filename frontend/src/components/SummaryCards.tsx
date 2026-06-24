@@ -1,80 +1,125 @@
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import type { ElementType } from "react";
+import {
+  Activity,
+  CalendarDays,
+  CheckCircle2,
+  CircleAlert,
+  CircleGauge,
+  Database,
+  MapPinned,
+  Navigation,
+} from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
-import { SummaryResponse, HealthResponse } from "../types/api";
-import { Database, ShieldAlert, HeartPulse, Navigation } from "lucide-react";
-import { formatInteger } from "../utils/format";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import type { HealthResponse, SummaryResponse } from "../types/api";
+import { EMPTY_VALUE, formatInteger } from "../utils/format";
 
 interface SummaryCardsProps {
   summary: SummaryResponse | null;
   health: HealthResponse | null;
 }
 
-const metricCardClass = "summary-card border-0 bg-white/94 shadow-[0_8px_30px_rgba(44,94,173,0.08)] ring-1 ring-slate-200/80";
-const iconClass = "flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-primary";
+interface MetricCardProps {
+  label: string;
+  value: string;
+  icon: ElementType;
+  tone?: "blue" | "purple" | "low" | "medium" | "high";
+  badge?: string;
+}
 
-export const SummaryCards: React.FC<SummaryCardsProps> = ({ summary, health }) => {
+const toneClasses = {
+  blue: "bg-accent text-primary",
+  purple: "bg-secondary text-secondary-foreground",
+  low: "bg-emerald-50 text-emerald-700",
+  medium: "bg-amber-50 text-amber-700",
+  high: "bg-red-50 text-red-700",
+};
+
+const MetricCard = ({
+  label,
+  value,
+  icon: Icon,
+  tone = "blue",
+  badge,
+}: MetricCardProps) => (
+  <Card
+    size="sm"
+    className="summary-card min-w-32 border-0 bg-card shadow-[0_8px_24px_rgba(44,94,173,0.08)] ring-1 ring-border"
+  >
+    <CardHeader className="flex flex-row items-center justify-between gap-2 pb-0">
+      <CardTitle className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        {label}
+      </CardTitle>
+      <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-lg", toneClasses[tone])}>
+        <Icon aria-hidden="true" />
+      </span>
+    </CardHeader>
+    <CardContent className="flex items-end justify-between gap-2">
+      <strong className="text-lg font-semibold leading-none tracking-tight text-foreground">
+        {value}
+      </strong>
+      {badge ? <Badge variant="secondary">{badge}</Badge> : null}
+    </CardContent>
+  </Card>
+);
+
+export const SummaryCards = ({ summary, health }: SummaryCardsProps) => {
   const isHealthy = health?.status === "healthy" || health?.status === "ok";
+  const routingReady = isHealthy || Boolean(health?.outputs_available?.emergency_facilities);
 
   return (
-    <div className="grid grid-cols-2 gap-3 px-4 pb-4 xl:grid-cols-4">
-      <Card size="sm" className={metricCardClass}>
-        <CardContent className="flex items-center gap-3">
-          <div className={iconClass}><HeartPulse /></div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">System health</p>
-            <p className="mt-0.5 truncate text-sm font-semibold">FastAPI backend</p>
-            <Badge variant={isHealthy ? "secondary" : "destructive"} className="mt-1 text-[9px]">
-              {isHealthy ? "Online" : "Offline"}
-            </Badge>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card size="sm" className={metricCardClass}>
-        <CardContent className="flex items-center gap-3">
-          <div className={iconClass}><Database /></div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">City coverage</p>
-            <p className="mt-0.5 truncate text-sm font-semibold">
-              {summary ? `${formatInteger(summary.zone_count)} Zones · ${formatInteger(summary.event_count)} Events` : "Loading…"}
-            </p>
-            <p className="mt-1 truncate text-[10px] text-muted-foreground">
-              {summary ? `Latest: ${summary.latest_event_id || "—"}` : "API sync pending"}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card size="sm" className={metricCardClass}>
-        <CardContent className="flex items-center gap-3">
-          <div className={iconClass}><ShieldAlert /></div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Risk estimates</p>
-            <p className="mt-0.5 truncate text-sm font-semibold">
-              {summary ? `${formatInteger(summary.prediction_row_count)} Predictions` : "Loading…"}
-            </p>
-            <div className="mt-1 flex flex-wrap items-center gap-1">
-              <Badge className="border-emerald-200 bg-emerald-50 text-[9px] text-emerald-700">LOW: {summary ? formatInteger(summary.risk_class_counts?.low) : "—"}</Badge>
-              <Badge className="border-amber-200 bg-amber-50 text-[9px] text-amber-700">MED: {summary ? formatInteger(summary.risk_class_counts?.medium) : "—"}</Badge>
-              <Badge className="border-red-200 bg-red-50 text-[9px] text-red-700">HIGH: {summary ? formatInteger(summary.risk_class_counts?.high) : "—"}</Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card size="sm" className={metricCardClass}>
-        <CardContent className="flex items-center gap-3">
-          <div className={iconClass}><Navigation /></div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Mobility routing</p>
-            <p className="mt-0.5 truncate text-sm font-semibold">
-              {summary ? "Weather-aware comparison" : "Loading…"}
-            </p>
-            <p className="mt-1 truncate text-[10px] text-muted-foreground">Top rain: {summary?.top_rain_event_id || "—"}</p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <section
+      className="grid grid-cols-2 gap-2 px-3 py-3 sm:grid-cols-4 2xl:grid-cols-8"
+      aria-label="Operational summary"
+    >
+      <MetricCard
+        label="System Status"
+        value={isHealthy ? "Online" : health ? "Attention" : EMPTY_VALUE}
+        icon={isHealthy ? CheckCircle2 : CircleAlert}
+        badge="Backend"
+      />
+      <MetricCard
+        label="Zones Analyzed"
+        value={formatInteger(summary?.zone_count)}
+        icon={MapPinned}
+      />
+      <MetricCard
+        label="Events"
+        value={formatInteger(summary?.event_count)}
+        icon={CalendarDays}
+        tone="purple"
+      />
+      <MetricCard
+        label="Prediction Rows"
+        value={formatInteger(summary?.prediction_row_count)}
+        icon={Database}
+        tone="purple"
+      />
+      <MetricCard
+        label="Low Risk"
+        value={formatInteger(summary?.risk_class_counts?.low)}
+        icon={Activity}
+        tone="low"
+      />
+      <MetricCard
+        label="Medium Risk"
+        value={formatInteger(summary?.risk_class_counts?.medium)}
+        icon={CircleGauge}
+        tone="medium"
+      />
+      <MetricCard
+        label="High Risk"
+        value={formatInteger(summary?.risk_class_counts?.high)}
+        icon={CircleAlert}
+        tone="high"
+      />
+      <MetricCard
+        label="Routing Ready"
+        value={routingReady ? "Ready" : health ? "Unavailable" : EMPTY_VALUE}
+        icon={Navigation}
+      />
+    </section>
   );
 };

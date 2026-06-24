@@ -96,6 +96,13 @@
     margin: 0;
     min-width: 320px;
   }
+  #root {
+    min-height: 100vh;
+  }
+  ::selection {
+    background: #c4e2f5;
+    color: #2c5ead;
+  }
   button, [role="button"] {
     -webkit-tap-highlight-color: transparent;
   }
@@ -123,6 +130,10 @@
   .summary-card:nth-child(2) { animation-delay: 45ms; }
   .summary-card:nth-child(3) { animation-delay: 90ms; }
   .summary-card:nth-child(4) { animation-delay: 135ms; }
+  .summary-card:nth-child(5) { animation-delay: 180ms; }
+  .summary-card:nth-child(6) { animation-delay: 225ms; }
+  .summary-card:nth-child(7) { animation-delay: 270ms; }
+  .summary-card:nth-child(8) { animation-delay: 315ms; }
 
   .route-panel {
     animation: dashboard-fade-left 500ms 160ms ease-out both;

@@ -43,17 +43,17 @@ const SectionTitle = ({ icon: Icon, title, detail }: { icon: React.ElementType; 
 export const LayerToggle: React.FC<LayerToggleProps> = ({ layers, onToggle }) => (
   <div className="flex flex-col gap-5">
     <section className="flex flex-col gap-2">
-      <SectionTitle icon={Map} title="Base layers" detail="Map structure and reference data" />
+      <SectionTitle icon={Map} title="Map Layers" detail="City structure and reference data" />
       <div className="rounded-xl border bg-slate-50/70 p-2">
         <ToggleRow id="boundary-toggle" label="Nasr City boundary" checked={layers.boundary} onChange={() => onToggle("boundary")} icon={MapPin} />
-        <ToggleRow id="grid-toggle" label="500m elevation grid" checked={layers.grid} onChange={() => onToggle("grid")} icon={Layers3} />
+        <ToggleRow id="grid-toggle" label="Analysis grid" description="500-meter model zones" checked={layers.grid} onChange={() => onToggle("grid")} icon={Layers3} />
         <ToggleRow id="roads-labels-toggle" label="Roads & labels" description="Basemap streets and place names" checked={layers.roadsLabels} onChange={() => onToggle("roadsLabels")} icon={Route} />
         <ToggleRow id="facilities-toggle" label="Emergency facilities" description="Real API facility records" checked={layers.facilities} onChange={() => onToggle("facilities")} icon={Building2} />
       </div>
     </section>
 
     <section className="flex flex-col gap-2">
-      <SectionTitle icon={Layers3} title="Risk layers" detail="Model-estimated impact surfaces" />
+      <SectionTitle icon={Layers3} title="Risk Layers" detail="Model-estimated impact surfaces" />
       <div className="rounded-xl border bg-slate-50/70 p-2">
         <ToggleRow id="selected-toggle" label="Selected event" checked={layers.selectedRisk} onChange={() => onToggle("selectedRisk")} />
         <ToggleRow id="latest-toggle" label="Latest event" checked={layers.latestRisk} onChange={() => onToggle("latestRisk")} />
@@ -65,7 +65,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({ layers, onToggle }) =>
     <Separator />
 
     <section className="flex flex-col gap-2">
-      <SectionTitle icon={Landmark} title="POIs" detail="OpenStreetMap places from the basemap" />
+      <SectionTitle icon={Landmark} title="Places" detail="OpenStreetMap points of interest" />
       <div className="rounded-xl border bg-slate-50/70 p-2">
         <ToggleRow id="hospitals-toggle" label="Hospitals" checked={layers.hospitals} onChange={() => onToggle("hospitals")} icon={Hospital} />
         <ToggleRow id="mosques-toggle" label="Mosques" checked={layers.mosques} onChange={() => onToggle("mosques")} icon={Landmark} />

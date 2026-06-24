@@ -119,13 +119,14 @@ test('App renders dashboard title and disclaimers', async () => {
   // Dashboard Title
   const title = screen.getAllByText(/Nasr City Weather-Impact/i);
   expect(title.length).toBeGreaterThan(0);
+  expect(document.title).toBe("Egypt Smart City Digital Twin");
 
   // Disclaimer visibility
   const note = screen.getAllByText(/not official emergency dispatch instructions/i);
   expect(note.length).toBeGreaterThan(0);
 });
 
-test('SummaryCards renders mock summary statistics correctly', () => {
+test('SummaryCards renders the eight operational summary cards', () => {
   const mockSummary = {
     zone_count: 416,
     prediction_row_count: 12480,
@@ -142,9 +143,12 @@ test('SummaryCards renders mock summary statistics correctly', () => {
   
   render(<SummaryCards summary={mockSummary} health={mockHealth} />);
   
-  expect(screen.getByText(/416 Zones · 30 Events/i)).toBeDefined();
-  expect(screen.getByText(/12\D?480 Predictions/i)).toBeDefined();
-  expect(screen.getByText(/LOW: 4\D?502/i)).toBeDefined();
+  expect(screen.getByText(/Zones Analyzed/i)).toBeDefined();
+  expect(screen.getByText(/Prediction Rows/i)).toBeDefined();
+  expect(screen.getByText(/Low Risk/i)).toBeDefined();
+  expect(screen.getByText(/Routing Ready/i)).toBeDefined();
+  expect(screen.getByText(/12\D?480/i)).toBeDefined();
+  expect(screen.queryByText(/evt_dry_009|evt_0557/)).toBeNull();
 });
 
 test('SummaryCards renders safely with partial or missing mock data', () => {
@@ -206,9 +210,10 @@ test('RoutePanel renders risk reduction and ETA tradeoff metrics', () => {
     />
   );
 
-  expect(screen.getByText(/-57.1%/)).toBeDefined();
+  expect(screen.getByText(/57.1%/)).toBeDefined();
   expect(screen.getByText(/\+8.3%/)).toBeDefined();
-  expect(screen.getByText(/Avoided Segs: 15/i)).toBeDefined();
+  expect(screen.getByText(/High-Risk Segments Avoided/i)).toBeDefined();
+  expect(screen.getByText(/^15$/)).toBeDefined();
 });
 
 test('LayerToggle renders spatial and risk toggle controls', () => {
@@ -230,7 +235,7 @@ test('LayerToggle renders spatial and risk toggle controls', () => {
   render(<LayerToggle layers={mockLayers} onToggle={vi.fn()} />);
 
   expect(screen.getByText(/Nasr City Boundary/i)).toBeDefined();
-  expect(screen.getByText(/500m Elevation Grid/i)).toBeDefined();
+  expect(screen.getByText(/Analysis Grid/i)).toBeDefined();
   expect(screen.getByText(/Emergency Facilities/i)).toBeDefined();
   expect(screen.getByText(/Latest event/i)).toBeDefined();
   expect(screen.getByText(/Hospitals/i)).toBeDefined();
@@ -253,6 +258,7 @@ test('EventSelector dropdown renders event options', () => {
 
   expect(screen.getByRole('heading', { name: /Event/i })).toBeDefined();
   expect(screen.getByRole('combobox', { name: /Observed weather event/i })).toBeDefined();
+  expect(screen.queryByText("evt_0557")).toBeNull();
 });
 
 test('API Client resolves base URL defaults correctly', async () => {
@@ -323,6 +329,54 @@ test('RoutePanel renders correctly when optional numeric metrics are missing/und
     />
   );
 
-  // Expect default outputs or fallbacks
-  expect(screen.getAllByText(/0.0%/).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/—/).length).toBeGreaterThan(0);
+});
+
+test('mocked dashboard components do not expose raw API field labels or identifiers', () => {
+  const mockComp = {
+    event_type: "top-rain",
+    event_id: "evt_0557",
+    timestamp: "2020-03-12",
+    normal_distance_m: 5400,
+    safe_distance_m: 5800,
+    normal_base_eta_sec: 450,
+    safe_base_eta_sec: 480,
+    normal_weather_eta_sec: 600,
+    safe_weather_eta_sec: 500,
+    normal_mean_risk_score: 0.42,
+    safe_mean_risk_score: 0.18,
+    normal_high_risk_segment_count: 15,
+    safe_high_risk_segment_count: 0,
+    risk_reduction_percent: 57.1,
+    eta_tradeoff_percent: 8.3,
+    avoided_high_risk_segments: 15,
+    safe_route_quality: "strong",
+    safe_route_available: true,
+    quality_guard_passed: true,
+    selected_origin_zone_code: "NSR-GRID-119",
+    selected_destination_facility_name: "Nasr City Hospital",
+    honesty_note: "Decision-support prototype output.",
+  };
+
+  const { container } = render(
+    <RoutePanel
+      comparison={mockComp}
+      eventType="top-rain"
+      onEventTypeChange={vi.fn()}
+      routeVisibility="both"
+      onRouteVisibilityChange={vi.fn()}
+    />,
+  );
+
+  const visibleText = container.textContent ?? "";
+  [
+    "risk_reduction_percent",
+    "eta_tradeoff_percent",
+    "safe_route_available",
+    "safe_route_quality",
+    "evt_0557",
+    "NSR-GRID-119",
+  ].forEach((rawValue) => expect(visibleText).not.toContain(rawValue));
+  expect(visibleText).toContain("Zone 119");
+  expect(visibleText).toContain("Route Quality");
 });

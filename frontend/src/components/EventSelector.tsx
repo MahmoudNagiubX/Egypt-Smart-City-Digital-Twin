@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/select";
 import { EventSummary } from "../types/api";
 import { CalendarRange, CloudRain } from "lucide-react";
-import { formatNumber } from "../utils/format";
+import { formatDate, formatNumber } from "../utils/format";
+import { getEventLabel } from "../utils/labels";
 
 interface EventSelectorProps {
   events: EventSummary[];
@@ -37,10 +38,9 @@ export const EventSelector: React.FC<EventSelectorProps> = ({ events, selectedEv
         <SelectContent className="max-h-72">
           <SelectGroup>
             {events.map((event) => {
-              const date = new Date(event.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
               return (
                 <SelectItem key={event.event_id} value={event.event_id}>
-                  {event.event_id} · {formatNumber(event.mean_rain_24h_mm, 1)} mm · {date}
+                  {getEventLabel(event.event_id)} · {formatNumber(event.mean_rain_24h_mm, 1)} mm · {formatDate(event.timestamp)}
                 </SelectItem>
               );
             })}
@@ -50,7 +50,7 @@ export const EventSelector: React.FC<EventSelectorProps> = ({ events, selectedEv
 
       {selectedEvent && (
         <div className="flex items-center justify-between rounded-xl border border-blue-100 bg-accent/45 px-3 py-2 text-[10px]">
-          <span className="flex items-center gap-1.5 font-medium text-primary"><CloudRain /> Rain accumulation</span>
+          <span className="flex items-center gap-1.5 font-medium text-primary"><CloudRain /> 24h Rainfall</span>
           <strong>{formatNumber(selectedEvent.mean_rain_24h_mm, 1)} mm</strong>
         </div>
       )}

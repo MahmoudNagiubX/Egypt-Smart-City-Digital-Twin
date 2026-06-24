@@ -1,123 +1,161 @@
-import React from "react";
-import { RouteComparison } from "../types/api";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Info, MapPin, Navigation, Route, ShieldCheck } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Clock3, Info, Navigation, Route, ShieldCheck } from "lucide-react";
-import { formatNumber, formatPercent } from "../utils/format";
+import type { RouteComparison } from "../types/api";
+import {
+  EMPTY_VALUE,
+  formatDistance,
+  formatDuration,
+  formatInteger,
+  formatPercent,
+  toFiniteNumber,
+} from "../utils/format";
+import { getRouteQualityLabel, getZoneLabel } from "../utils/labels";
 
 interface RoutePanelProps {
   comparison: RouteComparison | null;
   eventType: "top-rain" | "latest";
   onEventTypeChange: (type: "top-rain" | "latest") => void;
   routeVisibility: "normal" | "safe" | "both";
-  onRouteVisibilityChange: (vis: "normal" | "safe" | "both") => void;
+  onRouteVisibilityChange: (visibility: "normal" | "safe" | "both") => void;
 }
 
-const formatDistance = (meters: number) => {
-  const value = formatNumber(meters / 1000, 2);
-  return value === "—" ? "—" : `${value} km`;
+const signedPercent = (value: unknown) => {
+  const number = toFiniteNumber(value);
+  if (number === null) {
+    return EMPTY_VALUE;
+  }
+  const prefix = number > 0 ? "+" : "";
+  return `${prefix}${formatPercent(number, 1)}`;
 };
 
-const formatDuration = (seconds: number) => Number.isFinite(Number(seconds)) ? `${Math.round(Number(seconds) / 60)} min` : "—";
-
-const RouteRow = ({ safe, distance, eta, risk }: { safe?: boolean; distance: number; eta: number; risk: number }) => (
-  <div className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 rounded-xl border bg-white p-3">
-    <div className="flex items-center gap-2">
-      <span className={safe ? "h-0.5 w-8 bg-[#1591DC] shadow-[0_0_7px_rgba(21,145,220,0.55)]" : "w-8 border-t-2 border-dashed border-[#8186D5]"} />
-      <span className={safe ? "text-xs font-semibold text-primary" : "text-xs font-semibold text-secondary-foreground"}>
-        {safe ? "Weather-safe" : "Normal"}
-      </span>
-    </div>
-    <strong className="text-xs">{formatDistance(distance)}</strong>
-    <span className="flex items-center gap-1 text-[10px] text-muted-foreground"><Clock3 /> {formatDuration(eta)}</span>
-    <span className="text-[10px] text-muted-foreground">Mean risk <strong className="text-foreground">{formatNumber(risk, 3)}</strong></span>
+const Metric = ({ label, value }: { label: string; value: string }) => (
+  <div className="rounded-lg bg-muted/70 px-2.5 py-2">
+    <dt className="text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+      {label}
+    </dt>
+    <dd className="mt-1 break-words text-xs font-semibold text-foreground">{value}</dd>
   </div>
 );
 
-export const RoutePanel: React.FC<RoutePanelProps> = ({
+export const RoutePanel = ({
   comparison,
   eventType,
   onEventTypeChange,
   routeVisibility,
   onRouteVisibilityChange,
-}) => {
+}: RoutePanelProps) => {
   if (!comparison) {
     return (
-      <Card size="sm" className="border-0 bg-white/95 shadow-xl ring-1 ring-slate-200/80 backdrop-blur">
-        <CardContent className="text-xs text-muted-foreground">Loading route comparison…</CardContent>
+      <Card size="sm" className="border-0 bg-card/95 shadow-xl ring-1 ring-border">
+        <CardHeader>
+          <CardTitle>Route Comparison</CardTitle>
+          <CardDescription>Preparing route metrics</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2">
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-24 w-full" />
+        </CardContent>
       </Card>
     );
   }
 
-  const riskReduction = Number(comparison.risk_reduction_percent);
-  const etaTradeoff = Number(comparison.eta_tradeoff_percent);
-  const quality = comparison.safe_route_quality || "pending";
+  const quality = getRouteQualityLabel(comparison.safe_route_quality);
+  const destination = comparison.selected_destination_facility_name || "Destination not available";
 
   return (
-    <Card size="sm" className="route-panel border-0 bg-white/94 shadow-[0_18px_50px_rgba(44,94,173,0.2)] ring-1 ring-slate-200/90 backdrop-blur-xl">
+    <Card
+      size="sm"
+      className="route-panel border-0 bg-card/95 shadow-[0_18px_50px_rgba(44,94,173,0.18)] ring-1 ring-border backdrop-blur-xl"
+    >
       <CardHeader className="border-b">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <CardTitle className="flex items-center gap-2 text-sm font-bold text-primary"><Navigation /> Safer route</CardTitle>
-            <CardDescription className="mt-1 truncate text-[10px]">
-              {comparison.selected_origin_zone_code || "Origin zone"} → {comparison.selected_destination_facility_name || "Nearest facility"}
+            <CardTitle className="flex items-center gap-2 text-sm font-bold text-primary">
+              <Navigation aria-hidden="true" /> Route Comparison
+            </CardTitle>
+            <CardDescription className="mt-1 flex items-center gap-1 text-[10px]">
+              <MapPin aria-hidden="true" /> {getZoneLabel(comparison.selected_origin_zone_code)} to {destination}
             </CardDescription>
           </div>
-          <Badge variant={comparison.safe_route_available ? "secondary" : "destructive"} className="shrink-0 text-[9px]">
-            {comparison.safe_route_available ? quality.replaceAll("_", " ") : "normal only"}
+          <Badge variant={comparison.safe_route_available ? "secondary" : "outline"}>
+            {comparison.safe_route_available ? "Safer Route Available" : "Normal Route Recommended"}
           </Badge>
         </div>
       </CardHeader>
 
       <CardContent className="flex flex-col gap-3">
-        <Tabs value={eventType} onValueChange={(value) => onEventTypeChange(value as "top-rain" | "latest")}>
-          <TabsList className="grid w-full grid-cols-2 bg-muted">
-            <TabsTrigger value="top-rain" className="text-[10px]">Highest rain</TabsTrigger>
-            <TabsTrigger value="latest" className="text-[10px]">Latest event</TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        <div className="grid grid-cols-2 gap-2">
-          <div className="rounded-xl border border-blue-100 bg-accent/45 p-3">
-            <span className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wider text-primary"><ShieldCheck /> Risk reduction</span>
-            <strong className="mt-1 block text-xl text-primary">{Number.isFinite(riskReduction) && riskReduction > 0 ? `-${formatPercent(riskReduction, 1)}` : "0.0%"}</strong>
-            <span className="text-[9px] text-muted-foreground">Avoided Segs: {formatNumber(comparison.avoided_high_risk_segments, 0)}</span>
-          </div>
-          <div className="rounded-xl border border-purple-100 bg-secondary/65 p-3">
-            <span className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wider text-secondary-foreground"><Clock3 /> ETA tradeoff</span>
-            <strong className="mt-1 block text-xl text-secondary-foreground">{Number.isFinite(etaTradeoff) && etaTradeoff > 0 ? `+${formatPercent(etaTradeoff, 1)}` : "0.0%"}</strong>
-            <span className="text-[9px] text-muted-foreground">Weather delay added</span>
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Event Mode
+          </span>
+          <Tabs
+            value={eventType}
+            onValueChange={(value) => onEventTypeChange(value as "top-rain" | "latest")}
+          >
+            <TabsList className="grid w-full grid-cols-2 bg-muted">
+              <TabsTrigger value="top-rain">Historic Rain</TabsTrigger>
+              <TabsTrigger value="latest">Latest Observed</TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <RouteRow distance={comparison.normal_distance_m} eta={comparison.normal_weather_eta_sec} risk={comparison.normal_mean_risk_score} />
-          <RouteRow safe distance={comparison.safe_distance_m} eta={comparison.safe_weather_eta_sec} risk={comparison.safe_mean_risk_score} />
+        <div className="flex items-center justify-between gap-3 rounded-lg bg-secondary/70 px-3 py-2">
+          <span className="flex items-center gap-1.5 text-[10px] font-semibold text-secondary-foreground">
+            <ShieldCheck aria-hidden="true" /> Route Quality
+          </span>
+          <strong className="text-xs text-secondary-foreground">{quality}</strong>
         </div>
+
+        <dl className="grid grid-cols-2 gap-2">
+          <Metric label="Risk Reduction" value={formatPercent(comparison.risk_reduction_percent, 1)} />
+          <Metric label="ETA Tradeoff" value={signedPercent(comparison.eta_tradeoff_percent)} />
+          <Metric
+            label="High-Risk Segments Avoided"
+            value={formatInteger(comparison.avoided_high_risk_segments)}
+          />
+          <Metric label="Normal Distance" value={formatDistance(comparison.normal_distance_m)} />
+          <Metric label="Safe Route Distance" value={formatDistance(comparison.safe_distance_m)} />
+          <Metric label="Normal ETA" value={formatDuration(comparison.normal_weather_eta_sec)} />
+          <Metric label="Safe Route ETA" value={formatDuration(comparison.safe_weather_eta_sec)} />
+          <Metric label="Destination" value={destination} />
+        </dl>
 
         <Separator />
 
         <div className="flex items-center justify-between gap-3">
-          <span className="flex items-center gap-1.5 text-[10px] font-semibold"><Route /> Show routes</span>
+          <span className="flex items-center gap-1.5 text-[10px] font-semibold">
+            <Route aria-hidden="true" /> Visible Routes
+          </span>
           <ToggleGroup
             type="single"
             variant="outline"
             size="sm"
             spacing={0}
             value={routeVisibility}
-            onValueChange={(value) => value && onRouteVisibilityChange(value as "normal" | "safe" | "both")}
+            onValueChange={(value) =>
+              value && onRouteVisibilityChange(value as "normal" | "safe" | "both")
+            }
           >
-            <ToggleGroupItem value="normal" aria-label="Show normal route" className="text-[9px]">Normal</ToggleGroupItem>
-            <ToggleGroupItem value="safe" aria-label="Show weather-safe route" className="text-[9px]">Safe</ToggleGroupItem>
-            <ToggleGroupItem value="both" aria-label="Show both routes" className="text-[9px]">Both</ToggleGroupItem>
+            <ToggleGroupItem value="normal" aria-label="Show normal route">Normal</ToggleGroupItem>
+            <ToggleGroupItem value="safe" aria-label="Show weather-safe route">Safe</ToggleGroupItem>
+            <ToggleGroupItem value="both" aria-label="Show both routes">Both</ToggleGroupItem>
           </ToggleGroup>
         </div>
 
-        <p className="flex items-start gap-1.5 rounded-lg bg-slate-50 p-2 text-[8px] leading-relaxed text-muted-foreground">
-          <Info className="mt-0.5 shrink-0" />
+        <p className="flex items-start gap-1.5 rounded-lg bg-muted/70 p-2 text-[9px] leading-relaxed text-muted-foreground">
+          <Info className="mt-0.5 shrink-0" aria-hidden="true" />
           Routes are decision-support prototype outputs, not official emergency dispatch instructions.
         </p>
       </CardContent>

@@ -30,6 +30,7 @@ import { Legend } from "./Legend";
 import { RoutePanel } from "./RoutePanel";
 import { LoadingSpinner, ErrorDisplay } from "./LoadingError";
 import { CloudSun, ShieldCheck } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export const Dashboard: React.FC = () => {
   const [health, setHealth] = useState<HealthResponse | null>(null);
@@ -168,6 +169,8 @@ export const Dashboard: React.FC = () => {
     }));
   };
 
+  const backendOnline = health?.status === "healthy" || health?.status === "ok";
+
   if (loading) {
     return (
       <div className="flex h-screen w-screen flex-col items-center justify-center bg-background">
@@ -189,21 +192,20 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-sans text-foreground">
       {/* Top Header Bar */}
-      <header className="dashboard-header flex h-14 shrink-0 items-center justify-between border-b bg-white px-4 shadow-[0_1px_10px_rgba(44,94,173,0.05)]">
+      <header className="dashboard-header flex h-16 shrink-0 items-center justify-between border-b bg-card px-4 shadow-[0_1px_10px_rgba(44,94,173,0.05)]">
         <div className="flex items-center gap-3">
           <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
             <CloudSun />
           </div>
           <div>
-            <h2 className="text-sm font-bold tracking-tight text-primary">Egypt Smart City Digital Twin</h2>
-            <p className="text-[10px] font-medium text-muted-foreground">Nasr City weather-impact operations</p>
+            <h1 className="text-sm font-bold tracking-tight text-primary">Egypt Smart City Digital Twin</h1>
+            <p className="text-[10px] font-medium text-muted-foreground">Nasr City Weather-Impact Emergency Mobility Module</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-full border bg-white px-3 py-1.5 shadow-sm">
-          <ShieldCheck className="text-primary" />
-          <span className="size-2 rounded-full bg-emerald-500" />
-          <span className="text-[10px] font-semibold text-muted-foreground">Local link active</span>
-        </div>
+        <Badge variant={backendOnline ? "secondary" : "outline"} className="gap-1.5 px-3 py-1.5">
+          <ShieldCheck aria-hidden="true" />
+          {backendOnline ? "Backend Online" : "Backend Unavailable"}
+        </Badge>
       </header>
 
       {/* Main Layout Workspace */}

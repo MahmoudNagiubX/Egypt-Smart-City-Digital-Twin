@@ -5,9 +5,15 @@ import { ShieldAlert } from "lucide-react";
 
 export const LoadingSpinner: React.FC<{ message?: string }> = ({ message = "Loading dashboard data..." }) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 p-8">
-      <div className="size-8 animate-spin rounded-full border-2 border-accent border-b-primary" />
-      <p className="text-sm font-medium text-muted-foreground">{message}</p>
+    <div className="flex w-full max-w-sm flex-col gap-4 rounded-xl border bg-card p-5 shadow-lg">
+      <div className="flex items-center gap-3">
+        <Skeleton className="size-10 rounded-xl" />
+        <div className="flex flex-1 flex-col gap-2">
+          <Skeleton className="h-3 w-32" />
+          <Skeleton className="h-2.5 w-48" />
+        </div>
+      </div>
+      <p className="text-xs font-medium text-muted-foreground">{message}</p>
     </div>
   );
 };

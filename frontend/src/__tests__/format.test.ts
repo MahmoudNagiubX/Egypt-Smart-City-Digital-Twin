@@ -1,5 +1,13 @@
 import { expect, test, describe } from 'vitest'
-import { toFiniteNumber, formatNumber, formatInteger, formatPercent } from '../utils/format'
+import {
+  formatDate,
+  formatDistance,
+  formatDuration,
+  formatInteger,
+  formatNumber,
+  formatPercent,
+  toFiniteNumber,
+} from '../utils/format'
 
 describe('Formatting Helper Utilities', () => {
   test('toFiniteNumber works correctly for numbers, numeric strings, and invalid inputs', () => {
@@ -44,5 +52,15 @@ describe('Formatting Helper Utilities', () => {
     expect(formatPercent(NaN)).toBe("—")
     expect(formatPercent(57.123, 1)).toBe("57.1%")
     expect(formatPercent(0, 2)).toBe("0.00%")
+  })
+
+  test('distance, duration, and date formatters are safe for missing values', () => {
+    expect(formatDistance(undefined)).toBe("—")
+    expect(formatDistance("5800")).toBe("5.80 km")
+    expect(formatDuration(NaN)).toBe("—")
+    expect(formatDuration("600")).toBe("10 min")
+    expect(formatDate(undefined)).toBe("—")
+    expect(formatDate("not-a-date")).toBe("—")
+    expect(formatDate("2020-03-12T00:00:00")).toContain("2020")
   })
 })
