@@ -11,7 +11,7 @@ vi.mock("axios", () => ({
   },
 }));
 
-import { getCustomEmergencyRoute, getPlaces } from "../api/client";
+import { getCustomEmergencyRoute, getPlaces, getLiveWeather, getLiveWeatherRiskLayer, requestLiveEmergencyRoute } from "../api/client";
 
 describe("weather-impact API client", () => {
   beforeEach(() => {
@@ -38,6 +38,33 @@ describe("weather-impact API client", () => {
     await getCustomEmergencyRoute(request);
     expect(requestMocks.post).toHaveBeenCalledWith(
       "/api/weather-impact/routing/custom/emergency-route",
+      request,
+    );
+  });
+
+  test("gets live weather", async () => {
+    requestMocks.get.mockResolvedValue({ data: { status: "ok", rain_risk_expected: true } });
+    await getLiveWeather();
+    expect(requestMocks.get).toHaveBeenCalledWith("/api/weather-impact/weather/live");
+  });
+
+  test("gets live weather risk layer", async () => {
+    requestMocks.get.mockResolvedValue({ data: { type: "FeatureCollection", features: [] } });
+    await getLiveWeatherRiskLayer();
+    expect(requestMocks.get).toHaveBeenCalledWith("/api/weather-impact/layers/predictions/live");
+  });
+
+  test("posts selected coordinates to request live emergency route", async () => {
+    const request = {
+      origin: { lat: 30.05, lon: 31.35 },
+      destination: { lat: 30.07, lon: 31.37 },
+      route_preference: "both" as const,
+      refresh_live_weather: false,
+    };
+    requestMocks.post.mockResolvedValue({ data: { normal_route: {}, weather_safe_route: {} } });
+    await requestLiveEmergencyRoute(request);
+    expect(requestMocks.post).toHaveBeenCalledWith(
+      "/api/weather-impact/routing/live/emergency-route",
       request,
     );
   });

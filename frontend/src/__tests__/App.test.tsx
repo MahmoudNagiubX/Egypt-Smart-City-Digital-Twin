@@ -133,6 +133,63 @@ vi.mock('../api/client', () => ({
     selected_origin_zone_code: "NSR-GRID-119",
     selected_destination_facility_name: "Nasr City Hospital",
     honesty_note: "Predictions are model-estimated weather-impact risk scores... Routes are decision-support..."
+  }),
+  getLiveWeather: vi.fn().mockResolvedValue({
+    status: "ok",
+    source: "open-meteo",
+    location: { name: "Nasr City", lat: 30.06, lon: 31.33 },
+    current: { time: "2026-06-25T00:00", temperature_2m: 25.0, rain: 0.0, weather_code: 0 },
+    forecast_window: { hours: 24, rain_24h_mm: 0.0, max_precipitation_probability: 0.0 },
+    rain_risk_expected: false,
+    recommended_event_mode: "normal",
+    warnings: []
+  }),
+  getLiveWeatherRiskLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
+  getLiveWeatherReport: vi.fn().mockResolvedValue({ status: "ok" }),
+  getLiveRoutingStatus: vi.fn().mockResolvedValue({
+    status: "ok",
+    live_weather_available: true,
+    live_risk_layer_available: true,
+    live_report_status: "ok",
+    rain_risk_expected: false,
+    risk_class_counts: { low: 221, medium: 195, high: 0 },
+    recommended_mode: "normal_route_acceptable",
+    warnings: [],
+    honesty_note: "Model-estimated risk scores."
+  }),
+  requestLiveEmergencyRoute: vi.fn().mockResolvedValue({
+    status: "ok",
+    recommendation: "normal_route_acceptable",
+    rain_risk_expected: false,
+    live_weather_summary: {
+      status: "ok",
+      source: "open-meteo",
+      location: { name: "Nasr City", lat: 30.06, lon: 31.33 },
+      current: { time: "2026-06-25T00:00", temperature_2m: 25.0, rain: 0.0, weather_code: 0 },
+      forecast_window: { hours: 24, rain_24h_mm: 0.0, max_precipitation_probability: 0.0 },
+      rain_risk_expected: false,
+      recommended_event_mode: "normal",
+      warnings: []
+    },
+    normal_route: { type: "FeatureCollection", features: [] },
+    weather_safe_route: { type: "FeatureCollection", features: [] },
+    comparison: {
+      normal_distance_m: 2000,
+      safe_distance_m: 2200,
+      normal_weather_eta_sec: 360,
+      safe_weather_eta_sec: 390,
+      normal_mean_live_risk_score: 0.5,
+      safe_mean_live_risk_score: 0.3,
+      live_high_risk_segment_count_normal: 4,
+      live_high_risk_segment_count_safe: 0,
+      risk_reduction_percent: 40,
+      eta_tradeoff_percent: 8,
+      avoided_high_risk_segments: 4,
+      safe_route_quality: "strong",
+      safe_route_available: true,
+      honesty_note: "Decision-support prototype output."
+    },
+    honesty_note: "Decision-support prototype output."
   })
 }));
 
@@ -301,7 +358,8 @@ test('LayerToggle renders spatial, risk toggle controls, and opacity controls', 
     latestRisk: true,
     topRainRisk: false,
     riskSummary: false,
-    selectedRisk: false
+    selectedRisk: false,
+    liveRisk: false
   };
 
   render(
@@ -379,6 +437,7 @@ test('MapView renders with empty mocked data and no WebGL context', () => {
     topRainRisk: false,
     riskSummary: false,
     selectedRisk: false,
+    liveRisk: false,
   };
 
   render(
@@ -393,6 +452,7 @@ test('MapView renders with empty mocked data and no WebGL context', () => {
       topRainRiskData={null}
       riskSummaryData={null}
       selectedEventRiskData={null}
+      liveRiskData={null}
       normalRouteData={null}
       safeRouteData={null}
       routeComparison={null}
@@ -408,7 +468,7 @@ test('MapView renders with empty mocked data and no WebGL context', () => {
   );
 
   expect(screen.getByLabelText(/Interactive Nasr City weather-impact map/i)).toBeDefined();
-  expect(screen.getByText(/Click the map to set origin/i)).toBeDefined();
+  expect(screen.getByText(/Click the map to choose your starting point/i)).toBeDefined();
 });
 
 test('RoutePanel renders a real custom-route comparison state', () => {
@@ -548,4 +608,65 @@ test('mocked dashboard components do not expose raw API field labels or identifi
   ].forEach((rawValue) => expect(visibleText).not.toContain(rawValue));
   expect(visibleText).toContain("Zone 119");
   expect(visibleText).toContain("Route Quality");
+});
+
+test('RoutePanel renders live route recommendation and comparison details correctly', () => {
+  const mockComp = {
+    event_type: "live",
+    event_id: "evt_live",
+    normal_distance_m: 2000,
+    safe_distance_m: 2200,
+    normal_weather_eta_sec: 360,
+    safe_weather_eta_sec: 390,
+    normal_mean_live_risk_score: 0.5,
+    safe_mean_live_risk_score: 0.3,
+    live_high_risk_segment_count_normal: 4,
+    live_high_risk_segment_count_safe: 0,
+    risk_reduction_percent: 40,
+    eta_tradeoff_percent: 8,
+    avoided_high_risk_segments: 4,
+    safe_route_quality: "strong",
+    safe_route_available: true,
+    recommendation: "weather_safe_route_recommended",
+    rain_risk_expected: true,
+    live_weather_summary: {
+      status: "ok",
+      source: "open-meteo",
+      location: { name: "Nasr City", lat: 30.06, lon: 31.33 },
+      current: { time: "2026-06-25T00:00", temperature_2m: 25.0, rain: 0.0, weather_code: 0 },
+      forecast_window: { hours: 24, rain_24h_mm: 5.2, max_precipitation_probability: 85.0 },
+      rain_risk_expected: true,
+      recommended_event_mode: "live",
+      warnings: []
+    },
+    honesty_note: "Predictions are model-estimated... Routes are decision-support..."
+  };
+
+  render(
+    <RoutePanel
+      comparison={mockComp as any}
+      eventType="latest"
+      onEventTypeChange={vi.fn()}
+      routeVisibility="both"
+      onRouteVisibilityChange={vi.fn()}
+      routeSource="custom-live"
+    />
+  );
+
+  // Renders the recommendation badge correctly
+  expect(screen.getAllByText("Weather-Safe Route Recommended").length).toBe(2);
+  
+  // Renders rain risk status correctly
+  expect(screen.getByText("Rain Risk Expected")).toBeDefined();
+
+  // Renders comparison metrics
+  expect(screen.getByText("40.0%")).toBeDefined();
+  expect(screen.getByText("+8.0%")).toBeDefined();
+
+  // Renders rainfall and probability
+  expect(screen.getByText("5.2 mm")).toBeDefined();
+  expect(screen.getByText("85%")).toBeDefined();
+
+  // Does not show raw recommendation strings
+  expect(screen.queryByText("weather_safe_route_recommended")).toBeNull();
 });

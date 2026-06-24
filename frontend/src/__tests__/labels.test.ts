@@ -12,6 +12,7 @@ import {
   formatEventLabel,
   formatRiskClass,
   formatRouteQuality,
+  getRecommendationLabel,
 } from "../utils/labels";
 
 describe("human-readable label utilities", () => {
@@ -65,5 +66,12 @@ describe("human-readable label utilities", () => {
     // 5. formatRouteQuality formats quality codes
     expect(formatRouteQuality("strong")).toBe("Strong improvement");
     expect(formatRouteQuality("rejected_identical_routes")).toBe("No distinct alternative");
+  });
+
+  test("getRecommendationLabel maps recommendation values to badges", () => {
+    expect(getRecommendationLabel("normal_route_acceptable")).toBe("Normal Route Acceptable");
+    expect(getRecommendationLabel("weather_safe_route_recommended")).toBe("Weather-Safe Route Recommended");
+    expect(getRecommendationLabel("no_distinct_safer_alternative")).toBe("No Distinct Safer Alternative");
+    expect(getRecommendationLabel("unknown")).toBe("Normal Route Acceptable");
   });
 });
