@@ -85,6 +85,31 @@ export function getCategoryLabel(category: unknown): string {
     university: "University",
     police: "Police Station",
     fire_station: "Fire Station",
+    emergency: "Emergency Facility",
   };
   return labels[category.toLowerCase()] ?? "Point of Interest";
+}
+
+export function getPlaceIcon(category: unknown): string {
+  if (typeof category !== "string") {
+    return "📍";
+  }
+  const icons: Record<string, string> = {
+    hospital: "🏥",
+    clinic: "⚕️",
+    mosque: "🕌",
+    mall: "🛍️",
+    school: "🏫",
+    university: "🎓",
+    police: "🚓",
+    fire_station: "🚒",
+    emergency: "🚑",
+  };
+  return icons[category.toLowerCase()] ?? "📍";
+}
+
+export function getRouteTypeLabel(routeType: unknown): string {
+  return routeType === "weather_safe" || routeType === "safe"
+    ? "Weather-Safe Route"
+    : "Normal Route";
 }

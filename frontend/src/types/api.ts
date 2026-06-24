@@ -1,8 +1,47 @@
 // API types for the Nasr City Weather Impact Dashboard
 
-export interface FeatureCollection {
+export interface GeoJsonFeature<Properties = Record<string, unknown>> {
+  type: "Feature";
+  properties: Properties;
+  geometry: {
+    type: string;
+    coordinates: unknown;
+  };
+}
+
+export interface FeatureCollection<Properties = Record<string, unknown>> {
   type: "FeatureCollection";
-  features: any[];
+  features: Array<GeoJsonFeature<Properties>>;
+}
+
+export type PlaceCategory =
+  | "all"
+  | "hospital"
+  | "clinic"
+  | "mosque"
+  | "mall"
+  | "school"
+  | "university"
+  | "police"
+  | "fire_station"
+  | "emergency"
+  | "landmark";
+
+export interface PlaceProperties {
+  place_id: string;
+  name?: string | null;
+  display_name: string;
+  category: Exclude<PlaceCategory, "all">;
+  category_label: string;
+  icon_type: string;
+  source: string;
+  lon: number;
+  lat: number;
+}
+
+export interface RouteCoordinate {
+  lat: number;
+  lon: number;
 }
 
 export interface HealthResponse {
@@ -60,39 +99,62 @@ export interface EventSummary {
 }
 
 export interface RouteComparison {
-  event_type: string;
-  event_id: string;
-  timestamp: string;
+  event_type?: string;
+  event_id?: string;
+  timestamp?: string;
   normal_distance_m: number;
   safe_distance_m: number;
-  normal_base_eta_sec: number;
-  safe_base_eta_sec: number;
+  normal_base_eta_sec?: number;
+  safe_base_eta_sec?: number;
   normal_weather_eta_sec: number;
   safe_weather_eta_sec: number;
   normal_mean_risk_score: number;
   safe_mean_risk_score: number;
-  normal_high_risk_segment_count: number;
-  safe_high_risk_segment_count: number;
+  normal_high_risk_segment_count?: number;
+  safe_high_risk_segment_count?: number;
   risk_reduction_percent: number;
   eta_tradeoff_percent: number;
   avoided_high_risk_segments: number;
   safe_route_quality: string;
   safe_route_available: boolean;
-  quality_guard_passed: boolean;
+  quality_guard_passed?: boolean;
   selected_origin_zone_code?: string;
   selected_destination_facility_name?: string;
+  honesty_note: string;
+}
+
+export interface CustomRouteRequest {
+  origin: RouteCoordinate;
+  destination: RouteCoordinate;
+  event_type: "top-rain" | "latest";
+  route_preference: "both";
+}
+
+export interface CustomRouteResponse {
+  status: "ok" | "ok_with_warnings";
+  event_type: "top-rain" | "latest";
+  origin: RouteCoordinate & { nearest_node: string | number; snap_distance_m: number };
+  destination: RouteCoordinate & { nearest_node: string | number; snap_distance_m: number };
+  normal_route: FeatureCollection;
+  weather_safe_route: FeatureCollection;
+  comparison: RouteComparison;
+  warnings?: string[];
   honesty_note: string;
 }
 
 export interface LayerToggles {
   boundary: boolean;
   grid: boolean;
-  facilities: boolean;
   roadsLabels: boolean;
   hospitals: boolean;
+  clinics: boolean;
   mosques: boolean;
   malls: boolean;
-  education: boolean;
+  schools: boolean;
+  universities: boolean;
+  police: boolean;
+  fireStations: boolean;
+  emergency: boolean;
   latestRisk: boolean;
   topRainRisk: boolean;
   riskSummary: boolean;

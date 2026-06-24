@@ -3,7 +3,21 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { LayerToggles } from "../types/api";
-import { Building2, GraduationCap, Hospital, Landmark, Layers3, Map, MapPin, Route, ShoppingBag } from "lucide-react";
+import {
+  Ambulance,
+  Flame,
+  GraduationCap,
+  Hospital,
+  Landmark,
+  Layers3,
+  Map,
+  MapPin,
+  Route,
+  School,
+  Shield,
+  ShoppingBag,
+  Stethoscope,
+} from "lucide-react";
 
 interface LayerToggleProps {
   layers: LayerToggles;
@@ -48,7 +62,6 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({ layers, onToggle }) =>
         <ToggleRow id="boundary-toggle" label="Nasr City boundary" checked={layers.boundary} onChange={() => onToggle("boundary")} icon={MapPin} />
         <ToggleRow id="grid-toggle" label="Analysis grid" description="500-meter model zones" checked={layers.grid} onChange={() => onToggle("grid")} icon={Layers3} />
         <ToggleRow id="roads-labels-toggle" label="Roads & labels" description="Basemap streets and place names" checked={layers.roadsLabels} onChange={() => onToggle("roadsLabels")} icon={Route} />
-        <ToggleRow id="facilities-toggle" label="Emergency facilities" description="Real API facility records" checked={layers.facilities} onChange={() => onToggle("facilities")} icon={Building2} />
       </div>
     </section>
 
@@ -68,16 +81,21 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({ layers, onToggle }) =>
       <SectionTitle icon={Landmark} title="Places" detail="OpenStreetMap points of interest" />
       <div className="rounded-xl border bg-slate-50/70 p-2">
         <ToggleRow id="hospitals-toggle" label="Hospitals" checked={layers.hospitals} onChange={() => onToggle("hospitals")} icon={Hospital} />
+        <ToggleRow id="clinics-toggle" label="Clinics" checked={layers.clinics} onChange={() => onToggle("clinics")} icon={Stethoscope} />
         <ToggleRow id="mosques-toggle" label="Mosques" checked={layers.mosques} onChange={() => onToggle("mosques")} icon={Landmark} />
         <ToggleRow id="malls-toggle" label="Malls" checked={layers.malls} onChange={() => onToggle("malls")} icon={ShoppingBag} />
-        <ToggleRow id="education-toggle" label="Schools & universities" checked={layers.education} onChange={() => onToggle("education")} icon={GraduationCap} />
+        <ToggleRow id="schools-toggle" label="Schools" checked={layers.schools} onChange={() => onToggle("schools")} icon={School} />
+        <ToggleRow id="universities-toggle" label="Universities" checked={layers.universities} onChange={() => onToggle("universities")} icon={GraduationCap} />
+        <ToggleRow id="police-toggle" label="Police" checked={layers.police} onChange={() => onToggle("police")} icon={Shield} />
+        <ToggleRow id="fire-stations-toggle" label="Fire stations" checked={layers.fireStations} onChange={() => onToggle("fireStations")} icon={Flame} />
+        <ToggleRow id="emergency-toggle" label="Emergency facilities" description="Medical, safety, and fire response network" checked={layers.emergency} onChange={() => onToggle("emergency")} icon={Ambulance} />
       </div>
     </section>
 
     <section className="flex flex-col gap-2">
       <SectionTitle icon={Route} title="Routing" detail="Compare normal and weather-safe paths" />
       <p className="rounded-xl border border-purple-100 bg-secondary/60 px-3 py-2 text-[10px] leading-relaxed text-secondary-foreground">
-        Route visibility and event basis are controlled in the floating comparison panel.
+        Click the map once for origin and again for destination. Route visibility and event mode stay in the floating panel.
       </p>
     </section>
   </div>

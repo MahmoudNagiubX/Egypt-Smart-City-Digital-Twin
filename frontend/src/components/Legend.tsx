@@ -26,6 +26,9 @@ export const Legend: React.FC = () => (
         <span className="flex items-center gap-2"><span className="w-5 border-t-2 border-dashed border-[#8186D5]" />Normal Route</span>
         <span className="flex items-center gap-2 font-medium text-primary"><span className="h-0.5 w-5 bg-[#1591DC] shadow-[0_0_6px_rgba(21,145,220,0.5)]" />Weather-Safe Route</span>
         <span className="col-span-2 flex items-center gap-2"><span className="size-3 rounded-full border-2 border-white bg-[#494CA2] shadow-sm" />Emergency facility</span>
+        <span className="flex items-center gap-2"><span className="flex size-5 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">A</span>Origin</span>
+        <span className="flex items-center gap-2"><span className="flex size-5 items-center justify-center rounded-full bg-secondary text-[9px] font-bold text-secondary-foreground">B</span>Destination</span>
+        <span className="col-span-2 flex items-center gap-2"><span aria-hidden="true">🏥 🕌 🎓</span>Places use category icons</span>
       </div>
     </div>
   </section>

@@ -1,6 +1,8 @@
-import { Info, MapPin, Navigation, Route, ShieldCheck } from "lucide-react";
+import { Info, MapPin, Navigation, RotateCcw, Route, ShieldCheck } from "lucide-react";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { RouteComparison } from "../types/api";
@@ -29,6 +32,10 @@ interface RoutePanelProps {
   onEventTypeChange: (type: "top-rain" | "latest") => void;
   routeVisibility: "normal" | "safe" | "both";
   onRouteVisibilityChange: (visibility: "normal" | "safe" | "both") => void;
+  selectionState?: "idle" | "origin-set" | "routing" | "complete" | "error";
+  routeSource?: "demo" | "custom";
+  routingError?: string | null;
+  onResetRoute?: () => void;
 }
 
 const signedPercent = (value: unknown) => {
@@ -55,8 +62,47 @@ export const RoutePanel = ({
   onEventTypeChange,
   routeVisibility,
   onRouteVisibilityChange,
+  selectionState = "idle",
+  routeSource = "demo",
+  routingError,
+  onResetRoute,
 }: RoutePanelProps) => {
   if (!comparison) {
+    if (routeSource === "custom") {
+      return (
+        <Card size="sm" className="route-panel border-0 bg-card/95 shadow-xl ring-1 ring-border">
+          <CardHeader className="border-b">
+            <CardTitle className="flex items-center gap-2 text-primary">
+              <MapPin aria-hidden="true" /> Custom Route
+            </CardTitle>
+            <CardDescription>
+              {selectionState === "origin-set"
+                ? "Origin selected. Choose a destination on the map."
+                : selectionState === "routing"
+                  ? "Comparing normal and weather-safe paths."
+                  : "The selected points could not be routed."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3">
+            {selectionState === "routing" ? (
+              <Progress value={68} className="route-progress" aria-label="Calculating custom route" />
+            ) : null}
+            {routingError ? (
+              <Alert variant="destructive">
+                <Info aria-hidden="true" />
+                <AlertTitle>Route unavailable</AlertTitle>
+                <AlertDescription>{routingError}</AlertDescription>
+              </Alert>
+            ) : null}
+            {onResetRoute ? (
+              <Button type="button" variant="outline" size="sm" onClick={onResetRoute}>
+                <RotateCcw data-icon="inline-start" /> Reset Route
+              </Button>
+            ) : null}
+          </CardContent>
+        </Card>
+      );
+    }
     return (
       <Card size="sm" className="border-0 bg-card/95 shadow-xl ring-1 ring-border">
         <CardHeader>
@@ -73,6 +119,7 @@ export const RoutePanel = ({
 
   const quality = getRouteQualityLabel(comparison.safe_route_quality);
   const destination = comparison.selected_destination_facility_name || "Destination not available";
+  const customRoute = routeSource === "custom";
 
   return (
     <Card
@@ -83,10 +130,10 @@ export const RoutePanel = ({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <CardTitle className="flex items-center gap-2 text-sm font-bold text-primary">
-              <Navigation aria-hidden="true" /> Route Comparison
+              <Navigation aria-hidden="true" /> {customRoute ? "Custom Route Comparison" : "Route Comparison"}
             </CardTitle>
             <CardDescription className="mt-1 flex items-center gap-1 text-[10px]">
-              <MapPin aria-hidden="true" /> {getZoneLabel(comparison.selected_origin_zone_code)} to {destination}
+              <MapPin aria-hidden="true" /> {customRoute ? "Selected origin" : getZoneLabel(comparison.selected_origin_zone_code)} to {destination}
             </CardDescription>
           </div>
           <Badge variant={comparison.safe_route_available ? "secondary" : "outline"}>
@@ -153,6 +200,12 @@ export const RoutePanel = ({
             <ToggleGroupItem value="both" aria-label="Show both routes">Both</ToggleGroupItem>
           </ToggleGroup>
         </div>
+
+        {customRoute && onResetRoute ? (
+          <Button type="button" variant="outline" size="sm" onClick={onResetRoute}>
+            <RotateCcw data-icon="inline-start" /> Reset Custom Route
+          </Button>
+        ) : null}
 
         <p className="flex items-start gap-1.5 rounded-lg bg-muted/70 p-2 text-[9px] leading-relaxed text-muted-foreground">
           <Info className="mt-0.5 shrink-0" aria-hidden="true" />

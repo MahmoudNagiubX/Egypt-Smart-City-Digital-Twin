@@ -4,6 +4,8 @@ import {
   getEventLabel,
   getFieldLabel,
   getRouteQualityLabel,
+  getPlaceIcon,
+  getRouteTypeLabel,
   getZoneLabel,
 } from "../utils/labels";
 
@@ -27,5 +29,13 @@ describe("human-readable label utilities", () => {
   test("maps route quality codes without exposing underscores", () => {
     expect(getRouteQualityLabel("weak_but_valid")).toBe("Limited improvement");
     expect(getRouteQualityLabel("rejected_identical_routes")).toBe("No distinct alternative");
+    expect(getRouteTypeLabel("weather_safe")).toBe("Weather-Safe Route");
+  });
+
+  test("maps place categories to stable map icons", () => {
+    expect(getPlaceIcon("hospital")).toBe("🏥");
+    expect(getPlaceIcon("mosque")).toBe("🕌");
+    expect(getPlaceIcon("fire_station")).toBe("🚒");
+    expect(getPlaceIcon("unknown")).toBe("📍");
   });
 });

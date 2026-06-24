@@ -6,6 +6,7 @@ import { SummaryCards } from '../components/SummaryCards'
 import { RoutePanel } from '../components/RoutePanel'
 import { LayerToggle } from '../components/LayerToggle'
 import { EventSelector } from '../components/EventSelector'
+import { MapView } from '../components/MapView'
 
 afterEach(() => {
   cleanup();
@@ -79,12 +80,36 @@ vi.mock('../api/client', () => ({
   getBoundaryLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
   getGridLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
   getEmergencyFacilities: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
+  getPlaces: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
   getLatestRiskLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
   getTopRainRiskLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
   getRiskSummaryLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
   getEventRiskLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
   getRoutingStatus: vi.fn().mockResolvedValue({ status: "ok" }),
   getDemoRoute: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
+  getCustomEmergencyRoute: vi.fn().mockResolvedValue({
+    status: "ok",
+    event_type: "top-rain",
+    origin: { lat: 30.05, lon: 31.35, nearest_node: 1, snap_distance_m: 10 },
+    destination: { lat: 30.07, lon: 31.37, nearest_node: 2, snap_distance_m: 12 },
+    normal_route: { type: "FeatureCollection", features: [] },
+    weather_safe_route: { type: "FeatureCollection", features: [] },
+    comparison: {
+      normal_distance_m: 2000,
+      safe_distance_m: 2200,
+      normal_weather_eta_sec: 360,
+      safe_weather_eta_sec: 390,
+      normal_mean_risk_score: 0.5,
+      safe_mean_risk_score: 0.3,
+      risk_reduction_percent: 40,
+      eta_tradeoff_percent: 8,
+      avoided_high_risk_segments: 4,
+      safe_route_quality: "strong",
+      safe_route_available: true,
+      honesty_note: "Decision-support prototype output.",
+    },
+    honesty_note: "Decision-support prototype output.",
+  }),
   getRouteComparison: vi.fn().mockResolvedValue({
     event_type: "top-rain",
     event_id: "evt_0557",
@@ -220,12 +245,16 @@ test('LayerToggle renders spatial and risk toggle controls', () => {
   const mockLayers = {
     boundary: true,
     grid: false,
-    facilities: true,
     roadsLabels: true,
     hospitals: true,
+    clinics: true,
     mosques: true,
     malls: true,
-    education: true,
+    schools: true,
+    universities: true,
+    police: true,
+    fireStations: true,
+    emergency: true,
     latestRisk: true,
     topRainRisk: false,
     riskSummary: false,
@@ -269,11 +298,97 @@ test('API Client resolves base URL defaults correctly', async () => {
   // Import dynamically to test base URL resolver fallback
   const clientModule = await import('../api/client');
   expect(clientModule).toBeDefined();
+  expect(typeof clientModule.getPlaces).toBe('function');
+  expect(typeof clientModule.getCustomEmergencyRoute).toBe('function');
 
   // Restore env
   if (origEnv !== undefined) {
     (import.meta.env as any).VITE_API_BASE_URL = origEnv;
   }
+});
+
+test('MapView renders with empty mocked data and no WebGL context', () => {
+  const empty = { type: "FeatureCollection" as const, features: [] };
+  const layers = {
+    boundary: true,
+    grid: false,
+    roadsLabels: true,
+    hospitals: true,
+    clinics: true,
+    mosques: true,
+    malls: true,
+    schools: true,
+    universities: true,
+    police: true,
+    fireStations: true,
+    emergency: true,
+    latestRisk: true,
+    topRainRisk: false,
+    riskSummary: false,
+    selectedRisk: false,
+  };
+
+  render(
+    <MapView
+      layers={layers}
+      routeVisibility="both"
+      boundaryData={empty}
+      gridData={empty}
+      placesData={empty}
+      emergencyPlaceIds={new Set()}
+      latestRiskData={empty}
+      topRainRiskData={empty}
+      riskSummaryData={empty}
+      selectedEventRiskData={empty}
+      normalRouteData={empty}
+      safeRouteData={empty}
+      routeComparison={null}
+      routeOrigin={null}
+      routeDestination={null}
+      routingLoading={false}
+      routingError={null}
+      onMapPointClick={vi.fn()}
+      onResetRoute={vi.fn()}
+    />,
+  );
+
+  expect(screen.getByLabelText(/Interactive Nasr City weather-impact map/i)).toBeDefined();
+  expect(screen.getByText(/Click the map to set origin/i)).toBeDefined();
+});
+
+test('RoutePanel renders a real custom-route comparison state', () => {
+  const comparison = {
+    normal_distance_m: 6518,
+    safe_distance_m: 5911,
+    normal_weather_eta_sec: 2463,
+    safe_weather_eta_sec: 2460,
+    normal_mean_risk_score: 0.87,
+    safe_mean_risk_score: 0.83,
+    risk_reduction_percent: 4.3,
+    eta_tradeoff_percent: 5.4,
+    avoided_high_risk_segments: 33,
+    safe_route_quality: "weak_but_valid",
+    safe_route_available: true,
+    selected_destination_facility_name: "Selected map point",
+    honesty_note: "Decision-support prototype output.",
+  };
+
+  render(
+    <RoutePanel
+      comparison={comparison}
+      eventType="top-rain"
+      onEventTypeChange={vi.fn()}
+      routeVisibility="both"
+      onRouteVisibilityChange={vi.fn()}
+      selectionState="complete"
+      routeSource="custom"
+      onResetRoute={vi.fn()}
+    />,
+  );
+
+  expect(screen.getByText(/Custom Route Comparison/i)).toBeDefined();
+  expect(screen.getByText(/Selected origin/i)).toBeDefined();
+  expect(screen.getByRole('button', { name: /Reset Custom Route/i })).toBeDefined();
 });
 
 test('EventSelector renders correctly when mean_rain_24h_mm is missing/undefined', () => {
