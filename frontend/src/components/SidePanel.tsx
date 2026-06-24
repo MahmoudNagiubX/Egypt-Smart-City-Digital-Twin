@@ -147,9 +147,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({ children }) => {
       {/* Header */}
       <div className="flex h-16 items-center justify-between border-b border-slate-200/50 px-4 py-3">
         <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#2C5EAD] to-[#8186D5] text-white shadow-sm">
-            <MapPinned className="size-4" />
-          </div>
+          <MapPinned className="size-5 text-[#2C5EAD] shrink-0" aria-hidden="true" />
           <div>
             <h2 className="text-xs font-bold tracking-tight text-foreground">Map & Route Controls</h2>
             <p className="mt-0.5 text-[9px] font-bold uppercase tracking-[0.16em] text-[#2C5EAD]">Nasr City Operations</p>

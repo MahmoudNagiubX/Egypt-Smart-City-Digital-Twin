@@ -205,18 +205,60 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     padding: 0;
     border: 1px solid #c6cbef;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 5px 14px rgba(44, 94, 173, 0.2);
-    font-size: 16px;
+    box-shadow: 0 3px 10px rgba(44, 94, 173, 0.15);
+    font-size: 13px;
     line-height: 1;
     cursor: pointer;
     transition: transform 160ms ease, box-shadow 160ms ease;
     will-change: transform;
+  }
+
+  .place-marker[data-category="hospital"] {
+    border: 2px solid #e63946;
+    color: #e63946;
+    background: #fff5f5;
+  }
+  .place-marker[data-category="emergency"] {
+    border: 2px solid #2c5ead;
+    color: #2c5ead;
+    background: #f0f7ff;
+  }
+  .place-marker[data-category="police"] {
+    border: 2px solid #494ca2;
+    color: #494ca2;
+    background: #f5f5ff;
+  }
+  .place-marker[data-category="fire_station"] {
+    border: 2px solid #e63946;
+    color: #e63946;
+    background: #fff5f5;
+  }
+  .place-marker[data-category="clinic"] {
+    border: 2px solid #1591dc;
+    color: #1591dc;
+    background: #f0faff;
+  }
+  .place-marker[data-category="mosque"] {
+    border: 1px solid #8186d5;
+    color: #8186d5;
+    background: #fafaff;
+  }
+  .place-marker[data-category="mall"] {
+    border: 1px solid #8186d5;
+    color: #8186d5;
+    background: #fafaff;
+  }
+  .place-marker[data-category="school"],
+  .place-marker[data-category="university"] {
+    border: 1px solid #494ca2;
+    color: #494ca2;
+    background: #f5f5ff;
   }
 
   .place-marker:hover,
