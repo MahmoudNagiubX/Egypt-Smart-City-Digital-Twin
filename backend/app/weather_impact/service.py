@@ -944,4 +944,178 @@ def check_routing_outputs():
     }
 
 
+def generate_live_weather_risk_layer(cache_expiry_hours: float = 3.0) -> dict:
+    """Generate live risk predictions using forecast weather and export outputs."""
+    import numpy as np
+    from . import weather, model
+    
+    logger.info("Generating live weather risk layer...")
+    paths.ensure_data_dirs()
+    
+    warnings = []
+    status = "ok"
+    
+    # 1. Fetch and process live forecast
+    try:
+        forecast_data, fetch_warnings = weather.fetch_live_weather_forecast(cache_expiry_hours)
+        warnings.extend(fetch_warnings)
+        
+        live_weather_summary = weather.summarize_live_weather_forecast(forecast_data, warnings=fetch_warnings)
+        
+    except Exception as e:
+        logger.error(f"Live weather risk generation failed during weather collection: {e}")
+        # Build a failed report
+        report = {
+            "status": "failed",
+            "source": "Open-Meteo Forecast API",
+            "model_used": "weather_impact_rf_model.joblib",
+            "feature_columns_used": False,
+            "prediction_rows": 0,
+            "rain_risk_expected": False,
+            "risk_class_counts": {"low": 0, "medium": 0, "high": 0},
+            "forecast_window_hours": 24,
+            "max_rain_24h_mm": 0.0,
+            "max_precipitation_probability": 0.0,
+            "uses_forecast_precipitation_proxy_for_satellite_features": False,
+            "official_flood_labels_claimed": False,
+            "official_emergency_dispatch_claimed": False,
+            "honesty_note": "Live predictions are model-estimated weather-impact risk scores, not verified flood incident labels.",
+            "warnings": [f"Live weather data fetch failed: {e}"]
+        }
+        paths.LIVE_WEATHER_RISK_REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
+        data_loader.save_json(report, paths.LIVE_WEATHER_RISK_REPORT_PATH)
+        return report
+
+    # 2. Build live feature matrix
+    try:
+        X, metadata, uses_gpm_proxy = model.build_live_weather_feature_matrix(live_weather_summary)
+        
+        # 3. Load model and predict
+        rf = model.load_prediction_model()
+        y_pred_raw = rf.predict(X)
+        y_pred = np.clip(y_pred_raw, 0.0, 1.0)
+        
+        # 4. Construct predictions DataFrame
+        df_predictions = pd.DataFrame()
+        df_predictions["zone_code"] = metadata["zone_code"]
+        df_predictions["live_predicted_score"] = y_pred
+        df_predictions["live_risk_class"] = df_predictions["live_predicted_score"].apply(model.score_to_risk_class)
+        
+        # Add required columns
+        forecast_window = live_weather_summary["forecast_window"]
+        current = live_weather_summary["current"]
+        
+        df_predictions["rain_1h_mm"] = forecast_window["rain_1h_mm"]
+        df_predictions["rain_3h_mm"] = forecast_window["rain_3h_mm"]
+        df_predictions["rain_6h_mm"] = forecast_window["rain_6h_mm"]
+        df_predictions["rain_24h_mm"] = forecast_window["rain_24h_mm"]
+        df_predictions["max_precipitation_probability"] = forecast_window["max_precipitation_probability"]
+        
+        df_predictions["temperature_2m"] = current["temperature_2m"]
+        df_predictions["apparent_temperature"] = current["apparent_temperature"]
+        df_predictions["relative_humidity_2m"] = forecast_window.get("mean_relative_humidity_2m", 50.0)
+        df_predictions["wind_speed_10m"] = current["wind_speed_10m"]
+        
+        # Rush hour check
+        import datetime
+        time_str = current.get("time")
+        try:
+            dt = datetime.datetime.fromisoformat(time_str)
+            current_hour = dt.hour
+        except Exception:
+            current_hour = datetime.datetime.now().hour
+        is_rush_hour = current_hour in {7, 8, 9, 16, 17, 18}
+        
+        df_predictions["is_rush_hour"] = is_rush_hour
+        df_predictions["source"] = "Open-Meteo Forecast API"
+        df_predictions["target_description"] = "model-estimated live weather-impact risk"
+        
+        # Save CSV
+        data_loader.write_csv(df_predictions, paths.LIVE_WEATHER_RISK_PREDICTIONS_CSV_PATH)
+        logger.info(f"Saved live weather risk predictions CSV to {paths.LIVE_WEATHER_RISK_PREDICTIONS_CSV_PATH}")
+        
+        # 5. Join to grid geometry and save live_weather_risk.geojson
+        grid = gpd.read_file(paths.NASR_CITY_GRID_PATH)
+        
+        # check CRS
+        if grid.crs is None or grid.crs.to_string() != "EPSG:4326":
+            grid = grid.to_crs("EPSG:4326")
+            
+        grid_slim = grid[["zone_code", "geometry"]].copy()
+        gdf_live = grid_slim.merge(df_predictions, on="zone_code", how="inner")
+        
+        # Keep GeoJSON columns clean
+        geojson_cols = [
+            "zone_code", "live_predicted_score", "live_risk_class",
+            "rain_1h_mm", "rain_3h_mm", "rain_6h_mm", "rain_24h_mm",
+            "max_precipitation_probability", "source", "geometry"
+        ]
+        
+        actual_cols = [c for c in geojson_cols if c in gdf_live.columns]
+        gdf_live = gdf_live[actual_cols].copy()
+        
+        # Add honesty note
+        gdf_live["honesty_note"] = "Live predictions are model-estimated weather-impact risk scores, not verified flood incident labels."
+        
+        gdf_live.to_file(paths.LIVE_WEATHER_RISK_GEOJSON_PATH, driver="GeoJSON")
+        logger.info(f"Saved live weather risk GeoJSON layer to {paths.LIVE_WEATHER_RISK_GEOJSON_PATH} (rows: {len(gdf_live)})")
+        
+        # 6. Build risk class counts for report
+        class_counts = df_predictions["live_risk_class"].value_counts().to_dict()
+        risk_class_counts = {
+            "low": int(class_counts.get("low", 0)),
+            "medium": int(class_counts.get("medium", 0)),
+            "high": int(class_counts.get("high", 0))
+        }
+        
+        # 7. Generate live_weather_risk_report.json
+        if len(warnings) > 0 or uses_gpm_proxy:
+            status = "ok_with_warnings"
+            
+        report = {
+            "status": status,
+            "source": "Open-Meteo Forecast API",
+            "model_used": "weather_impact_rf_model.joblib",
+            "feature_columns_used": True,
+            "prediction_rows": len(df_predictions),
+            "rain_risk_expected": bool(live_weather_summary["rain_risk_expected"]),
+            "risk_class_counts": risk_class_counts,
+            "forecast_window_hours": 24,
+            "max_rain_24h_mm": float(forecast_window.get("rain_24h_mm", 0.0)),
+            "max_precipitation_probability": float(forecast_window.get("max_precipitation_probability", 0.0)),
+            "uses_forecast_precipitation_proxy_for_satellite_features": bool(uses_gpm_proxy),
+            "official_flood_labels_claimed": False,
+            "official_emergency_dispatch_claimed": False,
+            "honesty_note": "Live predictions are model-estimated weather-impact risk scores, not verified flood incident labels.",
+            "warnings": warnings
+        }
+        
+        data_loader.save_json(report, paths.LIVE_WEATHER_RISK_REPORT_PATH)
+        logger.info(f"Saved live weather risk report to {paths.LIVE_WEATHER_RISK_REPORT_PATH}")
+        return report
+        
+    except Exception as e:
+        logger.error(f"Live weather risk generation prediction stage failed: {e}")
+        report = {
+            "status": "failed",
+            "source": "Open-Meteo Forecast API",
+            "model_used": "weather_impact_rf_model.joblib",
+            "feature_columns_used": False,
+            "prediction_rows": 0,
+            "rain_risk_expected": False,
+            "risk_class_counts": {"low": 0, "medium": 0, "high": 0},
+            "forecast_window_hours": 24,
+            "max_rain_24h_mm": 0.0,
+            "max_precipitation_probability": 0.0,
+            "uses_forecast_precipitation_proxy_for_satellite_features": False,
+            "official_flood_labels_claimed": False,
+            "official_emergency_dispatch_claimed": False,
+            "honesty_note": "Live predictions are model-estimated weather-impact risk scores, not verified flood incident labels.",
+            "warnings": [f"Prediction stage failed: {e}"]
+        }
+        data_loader.save_json(report, paths.LIVE_WEATHER_RISK_REPORT_PATH)
+        return report
+
+
+
 

@@ -1,7 +1,7 @@
 """FastAPI API endpoints for weather-impact assessment."""
 
 from fastapi import APIRouter, HTTPException, Query
-from . import service, paths, schemas
+from . import service, paths, schemas, weather
 
 router = APIRouter(prefix="/api/weather-impact", tags=["weather-impact"])
 
@@ -244,6 +244,43 @@ def post_custom_emergency_route(request: schemas.CustomEmergencyRouteRequest):
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/weather/live")
+def get_live_weather():
+    """Get the current live weather forecast summary for Nasr City."""
+    try:
+        forecast_data, warnings = weather.fetch_live_weather_forecast()
+        summary = weather.summarize_live_weather_forecast(forecast_data, warnings=warnings)
+        return summary
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch live weather: {e}")
+
+
+@router.get("/layers/predictions/live")
+def get_live_predictions():
+    """Get live weather risk layer GeoJSON."""
+    try:
+        if not paths.LIVE_WEATHER_RISK_GEOJSON_PATH.exists():
+            service.generate_live_weather_risk_layer()
+        return service.load_geojson_layer(paths.LIVE_WEATHER_RISK_GEOJSON_PATH)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/weather/live/report")
+def get_live_report():
+    """Get live weather risk report JSON."""
+    try:
+        if not paths.LIVE_WEATHER_RISK_REPORT_PATH.exists():
+            service.generate_live_weather_risk_layer()
+        return service.load_json_file(paths.LIVE_WEATHER_RISK_REPORT_PATH)
+    except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

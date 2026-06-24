@@ -629,11 +629,83 @@ def generate_real_observed_predictions():
             logger.warning(f"Optional column '{col}' is missing from the original dataset.")
             results[col] = np.nan
             
-    # Write output to CSV
-    paths.ensure_data_dirs()
     data_loader.write_csv(results, paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH)
     logger.info(f"Saved real observed predictions to {paths.REAL_OBSERVED_PREDICTIONS_CSV_PATH} (rows: {len(results)})")
     
     return results
+
+
+def build_live_weather_feature_matrix(live_weather_summary: dict) -> tuple[pd.DataFrame, pd.DataFrame, bool]:
+    """Build per-zone feature matrix X using static geospatial features and live weather forecast.
+    
+    Returns:
+        X (pd.DataFrame): inference feature matrix with model columns
+        metadata (pd.DataFrame): metadata containing zone_code
+        uses_gpm_proxy (bool): True if forecast proxy values were mapped for satellite features
+    """
+    import datetime
+    if not paths.REAL_OBSERVED_TRAINING_DATASET_PATH.exists():
+        raise FileNotFoundError(f"Real observed training dataset not found at: {paths.REAL_OBSERVED_TRAINING_DATASET_PATH}")
+        
+    df_real = pd.read_csv(paths.REAL_OBSERVED_TRAINING_DATASET_PATH)
+    features = load_feature_columns()
+    
+    # 1. Extract one static row per zone_code to get stable geospatial features
+    df_static = df_real.drop_duplicates(subset=["zone_code"]).copy()
+    
+    # 2. Inject live weather conditions into weather columns
+    forecast_window = live_weather_summary.get("forecast_window", {})
+    current = live_weather_summary.get("current", {})
+    
+    df_static["rain_1h_mm"] = float(forecast_window.get("rain_1h_mm", 0.0))
+    df_static["rain_3h_mm"] = float(forecast_window.get("rain_3h_mm", 0.0))
+    df_static["rain_6h_mm"] = float(forecast_window.get("rain_6h_mm", 0.0))
+    df_static["rain_24h_mm"] = float(forecast_window.get("rain_24h_mm", 0.0))
+    
+    df_static["temperature_2m"] = float(current.get("temperature_2m", 0.0))
+    df_static["apparent_temperature"] = float(current.get("apparent_temperature", 0.0))
+    df_static["relative_humidity_2m"] = float(current.get("relative_humidity_2m", 0.0))
+    df_static["wind_speed_10m"] = float(current.get("wind_speed_10m", 0.0))
+    
+    # Parse hour from current time
+    time_str = current.get("time")
+    try:
+        dt = datetime.datetime.fromisoformat(time_str)
+        current_hour = dt.hour
+    except Exception:
+        current_hour = datetime.datetime.now().hour
+    df_static["hour"] = current_hour
+    
+    # 3. Handle GPM satellite proxies
+    uses_gpm_proxy = False
+    gpm_cols = ["gpm_precipitation_mean", "gpm_precipitation_max", "gpm_precipitation_sum"]
+    if any(col in features for col in gpm_cols):
+        uses_gpm_proxy = True
+        df_static["gpm_precipitation_sum"] = df_static["rain_24h_mm"]
+        df_static["gpm_precipitation_mean"] = df_static["rain_24h_mm"] / 24.0
+        df_static["gpm_precipitation_max"] = df_static["rain_1h_mm"]
+        
+    # Check that all features exist or impute them
+    for col in features:
+        if col not in df_static.columns:
+            logger.warning(f"Expected feature '{col}' is missing from the dataset. Creating filled with 0.0.")
+            df_static[col] = 0.0
+            
+    # Extract only features required by the model
+    X = df_static[features].copy()
+    
+    # Fill missing numeric values safely using median or 0.0
+    for col in X.columns:
+        if X[col].isna().sum() > 0:
+            median_val = df_real[col].median() if col in df_real.columns else 0.0
+            if pd.isna(median_val):
+                median_val = 0.0
+            X[col] = X[col].fillna(median_val)
+            
+    # Keep metadata
+    metadata = df_static[["zone_code"]].copy()
+    
+    return X, metadata, uses_gpm_proxy
+
 
 

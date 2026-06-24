@@ -470,5 +470,185 @@ def process_real_rain_events() -> pd.DataFrame:
     return df_events
 
 
+def fetch_live_weather_forecast(cache_expiry_hours: float = 3.0) -> tuple[dict, list[str]]:
+    """Fetch current and near-term weather forecast for Nasr City from Open-Meteo API, with cache fallback."""
+    import os
+    import time
+    import json
+    
+    warnings = []
+    paths.ensure_data_dirs()
+    
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": 30.0561,
+        "longitude": 31.3300,
+        "current": "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m,wind_gusts_10m",
+        "hourly": "precipitation,rain,precipitation_probability,temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m",
+        "timezone": "Africa/Cairo",
+        "forecast_days": 2,
+    }
+    
+    cache_path = paths.LIVE_WEATHER_FORECAST_CACHE_PATH
+    
+    try:
+        logger.info("Requesting live weather forecast from Open-Meteo API...")
+        response = requests.get(url, params=params, timeout=15)
+        response.raise_for_status()
+        data = response.json()
+        
+        # Save to cache
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(cache_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        logger.info(f"Saved fresh weather forecast to cache at {cache_path}")
+        return data, warnings
+        
+    except Exception as e:
+        err_msg = str(e)
+        logger.warning(f"Failed to fetch weather forecast from API: {err_msg}")
+        warnings.append(f"API fetch failed: {err_msg}")
+        
+        # Try loading from cache
+        if cache_path.exists():
+            try:
+                mtime = os.path.getmtime(cache_path)
+                age_hours = (time.time() - mtime) / 3600.0
+                
+                with open(cache_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                
+                if age_hours > cache_expiry_hours:
+                    warnings.append(f"Using cached forecast which is stale ({age_hours:.1f} hours old, max allowed {cache_expiry_hours} hours).")
+                else:
+                    warnings.append(f"Using cached forecast ({age_hours:.1f} hours old).")
+                
+                logger.info(f"Loaded weather forecast from cache ({age_hours:.1f} hours old)")
+                return data, warnings
+            except Exception as cache_err:
+                logger.error(f"Failed to load cached weather forecast: {cache_err}")
+                warnings.append(f"Failed to load cached weather: {cache_err}")
+                
+        raise RuntimeError(f"Live weather forecast unavailable: Open-Meteo API failed and no cached forecast exists. Error: {err_msg}") from e
+
+
+def summarize_live_weather_forecast(forecast_data: dict, warnings: list[str] = None) -> dict:
+    """Process raw forecast JSON into rolling sums, mean weather conditions, and risk flags."""
+    import datetime
+    import json
+    
+    if warnings is None:
+        warnings = []
+        
+    current = forecast_data.get("current", {})
+    hourly = forecast_data.get("hourly", {})
+    
+    current_time_str = current.get("time")
+    if current_time_str:
+        try:
+            current_time = datetime.datetime.fromisoformat(current_time_str)
+        except Exception:
+            current_time = datetime.datetime.now()
+    else:
+        current_time = datetime.datetime.now()
+        
+    times = hourly.get("time", [])
+    precip = hourly.get("precipitation", [])
+    rain = hourly.get("rain", [])
+    prob = hourly.get("precipitation_probability", [])
+    temps = hourly.get("temperature_2m", [])
+    humidities = hourly.get("relative_humidity_2m", [])
+    apparent_temps = hourly.get("apparent_temperature", [])
+    wind_speeds = hourly.get("wind_speed_10m", [])
+    
+    # Align to current hour index
+    start_idx = 0
+    for i, t_str in enumerate(times):
+        try:
+            t = datetime.datetime.fromisoformat(t_str)
+            if t >= current_time:
+                start_idx = i
+                break
+        except Exception:
+            continue
+            
+    end_idx = min(start_idx + 24, len(times))
+    
+    window_precip = precip[start_idx:end_idx]
+    window_rain = rain[start_idx:end_idx]
+    window_prob = prob[start_idx:end_idx]
+    window_temps = temps[start_idx:end_idx]
+    window_humidities = humidities[start_idx:end_idx]
+    window_apparent_temps = apparent_temps[start_idx:end_idx]
+    window_wind_speeds = wind_speeds[start_idx:end_idx]
+    
+    # Safely compute aggregates
+    rain_1h = float(window_rain[0]) if len(window_rain) > 0 else 0.0
+    rain_3h = float(sum(window_rain[:3])) if len(window_rain) >= 3 else float(sum(window_rain))
+    rain_6h = float(sum(window_rain[:6])) if len(window_rain) >= 6 else float(sum(window_rain))
+    rain_24h = float(sum(window_rain[:24])) if len(window_rain) >= 24 else float(sum(window_rain))
+    
+    # Fallback to precipitation if rain is all 0 but precipitation exists
+    if rain_24h == 0.0 and len(window_precip) > 0 and sum(window_precip) > 0.0:
+        rain_1h = float(window_precip[0]) if len(window_precip) > 0 else 0.0
+        rain_3h = float(sum(window_precip[:3])) if len(window_precip) >= 3 else float(sum(window_precip))
+        rain_6h = float(sum(window_precip[:6])) if len(window_precip) >= 6 else float(sum(window_precip))
+        rain_24h = float(sum(window_precip[:24])) if len(window_precip) >= 24 else float(sum(window_precip))
+        warnings.append("Live mode uses forecast precipitation as an operational proxy for unavailable real-time satellite rainfall features.")
+        
+    max_prob = float(max(window_prob)) if len(window_prob) > 0 else 0.0
+    mean_temp = float(sum(window_temps) / len(window_temps)) if len(window_temps) > 0 else 0.0
+    mean_humidity = float(sum(window_humidities) / len(window_humidities)) if len(window_humidities) > 0 else 0.0
+    mean_apparent = float(sum(window_apparent_temps) / len(window_apparent_temps)) if len(window_apparent_temps) > 0 else 0.0
+    mean_wind = float(sum(window_wind_speeds) / len(window_wind_speeds)) if len(window_wind_speeds) > 0 else 0.0
+    
+    rain_risk_expected = rain_24h > 0.1
+    recommended_mode = "live" if rain_risk_expected else "normal"
+    
+    summary = {
+        "status": "ok" if not warnings else "ok_with_warnings",
+        "source": "Open-Meteo Forecast API",
+        "location": {
+            "name": "Nasr City",
+            "lat": 30.0561,
+            "lon": 31.3300
+        },
+        "current": {
+            "time": current_time_str or current_time.isoformat(),
+            "temperature_2m": float(current.get("temperature_2m", 0.0)),
+            "apparent_temperature": float(current.get("apparent_temperature", 0.0)),
+            "relative_humidity_2m": float(current.get("relative_humidity_2m", 0.0)),
+            "rain": float(current.get("rain", 0.0)),
+            "precipitation": float(current.get("precipitation", 0.0)),
+            "wind_speed_10m": float(current.get("wind_speed_10m", 0.0)),
+            "weather_code": int(current.get("weather_code", 0))
+        },
+        "forecast_window": {
+            "hours": 24,
+            "rain_1h_mm": rain_1h,
+            "rain_3h_mm": rain_3h,
+            "rain_6h_mm": rain_6h,
+            "rain_24h_mm": rain_24h,
+            "max_precipitation_probability": max_prob,
+            "mean_temperature_2m": mean_temp,
+            "mean_relative_humidity_2m": mean_humidity,
+            "mean_apparent_temperature": mean_apparent,
+            "mean_wind_speed_10m": mean_wind
+        },
+        "rain_risk_expected": rain_risk_expected,
+        "recommended_event_mode": recommended_mode,
+        "warnings": warnings
+    }
+    
+    # Save live summary
+    paths.LIVE_WEATHER_SUMMARY_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(paths.LIVE_WEATHER_SUMMARY_PATH, "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2)
+    logger.info(f"Saved live weather summary to {paths.LIVE_WEATHER_SUMMARY_PATH}")
+    
+    return summary
+
+
+
 
 
