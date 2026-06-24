@@ -10,7 +10,7 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { EventSummary, RouteComparison, SummaryResponse } from "../types/api";
+import type { EventSummary, RouteComparison, SummaryResponse, LiveWeatherSummary } from "../types/api";
 import { formatInteger } from "../utils/format";
 
 interface SummaryCardsProps {
@@ -18,6 +18,7 @@ interface SummaryCardsProps {
   selectedEventId: string | null;
   events: EventSummary[];
   comparison: RouteComparison | null;
+  liveWeather?: LiveWeatherSummary | null;
 }
 
 interface MetricCardProps {
@@ -66,7 +67,7 @@ const MetricCard = ({
   </Card>
 );
 
-export const SummaryCards = ({ summary, selectedEventId, events, comparison }: SummaryCardsProps) => {
+export const SummaryCards = ({ summary, selectedEventId, events, comparison, liveWeather }: SummaryCardsProps) => {
   // Find currently active weather event summary to format nicely
   const activeEvent = events.find((e) => e.event_id === selectedEventId);
   const activeEventName = activeEvent
@@ -146,6 +147,35 @@ export const SummaryCards = ({ summary, selectedEventId, events, comparison }: S
           icon={Clock}
           tone={comparison.eta_tradeoff_percent > 15 ? "medium" : "blue"}
         />
+      )}
+      {liveWeather && (
+        <>
+          <MetricCard
+            label="Rain Risk Expected"
+            value={liveWeather.rain_risk_expected ? "Yes" : "No"}
+            icon={CircleAlert}
+            tone={liveWeather.rain_risk_expected ? "medium" : "low"}
+          />
+          <MetricCard
+            label="24h Rainfall"
+            value={liveWeather.forecast_window ? `${(liveWeather.forecast_window.rain_24h_mm ?? 0).toFixed(1)} mm` : "—"}
+            icon={CircleGauge}
+            tone="blue"
+          />
+          <MetricCard
+            label="Rain Probability"
+            value={liveWeather.forecast_window ? `${Math.round(liveWeather.forecast_window.max_precipitation_probability ?? 0)}%` : "—"}
+            icon={TrendingDown}
+            tone="blue"
+          />
+          <MetricCard
+            label="Live Weather Mode"
+            value={liveWeather.recommended_event_mode === "live" ? "Live Forecast" : "Normal Mode"}
+            icon={CalendarDays}
+            tone="purple"
+            secondaryText={liveWeather.source}
+          />
+        </>
       )}
     </section>
   );
