@@ -205,68 +205,72 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     padding: 0;
-    border: 1px solid #c6cbef;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 3px 10px rgba(44, 94, 173, 0.15);
-    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    font-size: 16px;
     line-height: 1;
     cursor: pointer;
-    transition: transform 160ms ease, box-shadow 160ms ease;
+    transition: transform 160ms ease, opacity 160ms ease;
     will-change: transform;
+    opacity: 0.8;
   }
 
   .place-marker[data-category="hospital"] {
     border: 2px solid #e63946;
-    color: #e63946;
+    border-radius: 999px;
     background: #fff5f5;
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 4px 10px rgba(230, 57, 70, 0.25);
+    font-size: 15px;
+    opacity: 1;
   }
   .place-marker[data-category="emergency"] {
     border: 2px solid #2c5ead;
-    color: #2c5ead;
+    border-radius: 999px;
     background: #f0f7ff;
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 4px 10px rgba(44, 94, 173, 0.25);
+    font-size: 15px;
+    opacity: 1;
   }
   .place-marker[data-category="police"] {
-    border: 2px solid #494ca2;
-    color: #494ca2;
-    background: #f5f5ff;
+    font-size: 15px;
+    opacity: 0.85;
   }
   .place-marker[data-category="fire_station"] {
-    border: 2px solid #e63946;
-    color: #e63946;
-    background: #fff5f5;
+    font-size: 15px;
+    opacity: 0.85;
   }
   .place-marker[data-category="clinic"] {
-    border: 2px solid #1591dc;
-    color: #1591dc;
-    background: #f0faff;
+    font-size: 14px;
+    opacity: 0.8;
   }
   .place-marker[data-category="mosque"] {
-    border: 1px solid #8186d5;
-    color: #8186d5;
-    background: #fafaff;
+    font-size: 14px;
+    opacity: 0.75;
   }
   .place-marker[data-category="mall"] {
-    border: 1px solid #8186d5;
-    color: #8186d5;
-    background: #fafaff;
+    font-size: 14px;
+    opacity: 0.75;
   }
   .place-marker[data-category="school"],
   .place-marker[data-category="university"] {
-    border: 1px solid #494ca2;
-    color: #494ca2;
-    background: #f5f5ff;
+    font-size: 14px;
+    opacity: 0.75;
   }
 
   .place-marker:hover,
   .place-marker:focus-visible {
-    transform: translateY(-2px) scale(1.14);
-    box-shadow: 0 8px 20px rgba(44, 94, 173, 0.28);
-    outline: 2px solid #4bb8fa;
-    outline-offset: 2px;
+    transform: scale(1.22);
+    opacity: 1;
+    z-index: 10;
+    outline: none;
   }
 
   .route-point-marker {

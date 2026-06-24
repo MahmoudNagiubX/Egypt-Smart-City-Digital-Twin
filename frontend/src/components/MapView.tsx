@@ -522,8 +522,7 @@ export const MapView = ({
 
       const popup = new maplibregl.Popup({ offset: 20, maxWidth: "260px" }).setHTML(`
         <div class="map-popup-card">
-          <h4>Place Details</h4>
-          <p><strong>Place Name:</strong> ${escapeHtml(safePlaceName(properties))}</p>
+          <h4>${escapeHtml(safePlaceName(properties))}</h4>
           <p><strong>Category:</strong> ${escapeHtml(properties.category_label || getCategoryLabel(properties.category))}</p>
           <p><strong>Source:</strong> ${escapeHtml(properties.source || "OpenStreetMap")}</p>
         </div>`);
