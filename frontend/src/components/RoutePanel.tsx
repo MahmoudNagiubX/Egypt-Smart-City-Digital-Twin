@@ -32,7 +32,7 @@ interface RoutePanelProps {
   onEventTypeChange: (type: "top-rain" | "latest") => void;
   routeVisibility: "normal" | "safe" | "both";
   onRouteVisibilityChange: (visibility: "normal" | "safe" | "both") => void;
-  selectionState?: "idle" | "origin-set" | "routing" | "complete" | "error";
+  selectionState?: "idle" | "origin-set" | "routing" | "complete" | "error" | "selecting-destination" | "ready" | "loading";
   routeSource?: "demo" | "custom" | "custom-live";
   routingError?: string | null;
   onResetRoute?: () => void;
@@ -208,7 +208,7 @@ export const RoutePanel = ({
           {isLive && (comparison as any).live_weather_summary && (
             <>
               <Metric 
-                label="Live Rainfall" 
+                label="24h Rainfall" 
                 value={`${((comparison as any).live_weather_summary.forecast_window?.rain_24h_mm ?? (comparison as any).live_weather_summary.rain_24h_mm ?? 0).toFixed(1)} mm`} 
               />
               <Metric 
