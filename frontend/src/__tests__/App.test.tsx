@@ -147,11 +147,11 @@ test('App renders dashboard title and disclaimers', async () => {
   expect(document.title).toBe("Egypt Smart City Digital Twin");
 
   // Disclaimer visibility
-  const note = screen.getAllByText(/not official emergency dispatch instructions/i);
+  const note = screen.getAllByText(/About this prototype/i);
   expect(note.length).toBeGreaterThan(0);
 });
 
-test('SummaryCards renders the eight operational summary cards', () => {
+test('SummaryCards renders the operational summary cards and hides technical stats', () => {
   const mockSummary = {
     zone_count: 416,
     prediction_row_count: 12480,
@@ -164,16 +164,53 @@ test('SummaryCards renders the eight operational summary cards', () => {
     dataset_name: "real_observed_training_dataset.csv",
     honesty_statement: "Model-estimated risk scores."
   };
-  const mockHealth = { status: "healthy", module_name: "Nasr City Weather-Impact Emergency Mobility Module", outputs_available: {}, official_flood_labels_claimed: false, demo_scenarios_used_for_training: false };
   
-  render(<SummaryCards summary={mockSummary} health={mockHealth} />);
+  const mockEvents = [
+    { event_id: "evt_dry_009", timestamp: "2020-03-12T00:00", mean_rain_24h_mm: 0, max_rain_24h_mm: 0, mean_predicted_score: 0.1, high_risk_zone_count: 0 }
+  ];
   
-  expect(screen.getByText(/Zones Analyzed/i)).toBeDefined();
-  expect(screen.getByText(/Prediction Rows/i)).toBeDefined();
-  expect(screen.getByText(/Low Risk/i)).toBeDefined();
-  expect(screen.getByText(/Routing Ready/i)).toBeDefined();
-  expect(screen.getByText(/12\D?480/i)).toBeDefined();
-  expect(screen.queryByText(/evt_dry_009|evt_0557/)).toBeNull();
+  const { rerender } = render(
+    <SummaryCards
+      summary={mockSummary}
+      selectedEventId="evt_dry_009"
+      events={mockEvents}
+      comparison={null}
+    />
+  );
+  
+  expect(screen.getByText(/Medium Risk Areas/i)).toBeDefined();
+  expect(screen.getByText(/High Risk Areas/i)).toBeDefined();
+  expect(screen.getByText(/Active Weather Event/i)).toBeDefined();
+  expect(screen.getByText(/Route Safety/i)).toBeDefined();
+  
+  // User cards only: check that technical indicators are hidden/removed
+  expect(screen.queryByText(/Zones Analyzed/i)).toBeNull();
+  expect(screen.queryByText(/Prediction Rows/i)).toBeNull();
+  expect(screen.queryByText(/Routing Ready/i)).toBeNull();
+
+  // Test that comparison stats are shown when comparison is present
+  const mockComp = {
+    risk_reduction_percent: 45,
+    eta_tradeoff_percent: 5,
+    safe_route_available: true,
+    safe_route_quality: "strong",
+    selected_origin_zone_code: "NSR-GRID-119",
+    selected_destination_facility_name: "Selected Destination",
+    honesty_note: "Note"
+  } as any;
+
+  rerender(
+    <SummaryCards
+      summary={mockSummary}
+      selectedEventId="evt_dry_009"
+      events={mockEvents}
+      comparison={mockComp}
+    />
+  );
+
+  expect(screen.getByText(/Risk Reduction/i)).toBeDefined();
+  expect(screen.getByText(/ETA Tradeoff/i)).toBeDefined();
+  expect(screen.getByText(/45%/)).toBeDefined();
 });
 
 test('SummaryCards renders safely with partial or missing mock data', () => {
@@ -189,13 +226,19 @@ test('SummaryCards renders safely with partial or missing mock data', () => {
     dataset_name: undefined as any,
     honesty_statement: undefined as any
   };
-  const mockHealth = null;
 
-  render(<SummaryCards summary={mockSummary} health={mockHealth} />);
+  render(
+    <SummaryCards
+      summary={mockSummary}
+      selectedEventId={null}
+      events={[]}
+      comparison={null}
+    />
+  );
 
-  // Should display the fallback "—" instead of crashing
-  const elements = screen.getAllByText(/—/);
-  expect(elements.length).toBeGreaterThan(0);
+  // Should display the fallback "0" or fallback event/safety instead of crashing
+  expect(screen.getByText(/No Active Event/i)).toBeDefined();
+  expect(screen.getByText(/No Route Selected/i)).toBeDefined();
 });
 
 
@@ -241,7 +284,7 @@ test('RoutePanel renders risk reduction and ETA tradeoff metrics', () => {
   expect(screen.getByText(/^15$/)).toBeDefined();
 });
 
-test('LayerToggle renders spatial and risk toggle controls', () => {
+test('LayerToggle renders spatial, risk toggle controls, and opacity controls', () => {
   const mockLayers = {
     boundary: true,
     grid: false,
@@ -261,15 +304,26 @@ test('LayerToggle renders spatial and risk toggle controls', () => {
     selectedRisk: false
   };
 
-  render(<LayerToggle layers={mockLayers} onToggle={vi.fn()} />);
+  render(
+    <LayerToggle
+      layers={mockLayers}
+      onToggle={vi.fn()}
+      riskFillOpacity={0.35}
+      setRiskFillOpacity={vi.fn()}
+      gridLineOpacity={0.20}
+      setGridLineOpacity={vi.fn()}
+    />
+  );
 
-  expect(screen.getByText(/Nasr City Boundary/i)).toBeDefined();
-  expect(screen.getByText(/Analysis Grid/i)).toBeDefined();
+  expect(screen.getByText(/Boundary/i)).toBeDefined();
+  expect(screen.getByText(/Grid Overlay/i)).toBeDefined();
   expect(screen.getByText(/Emergency Facilities/i)).toBeDefined();
-  expect(screen.getByText(/Latest event/i)).toBeDefined();
+  expect(screen.getByText(/Latest Event/i)).toBeDefined();
   expect(screen.getByText(/Hospitals/i)).toBeDefined();
   expect(screen.getByText(/Mosques/i)).toBeDefined();
   expect(screen.getByText(/Malls/i)).toBeDefined();
+  expect(screen.getByText(/Risk Fill Opacity/i)).toBeDefined();
+  expect(screen.getByText(/Grid Line Opacity/i)).toBeDefined();
 });
 
 test('EventSelector dropdown renders event options', () => {
@@ -308,7 +362,6 @@ test('API Client resolves base URL defaults correctly', async () => {
 });
 
 test('MapView renders with empty mocked data and no WebGL context', () => {
-  const empty = { type: "FeatureCollection" as const, features: [] };
   const layers = {
     boundary: true,
     grid: false,
@@ -332,16 +385,16 @@ test('MapView renders with empty mocked data and no WebGL context', () => {
     <MapView
       layers={layers}
       routeVisibility="both"
-      boundaryData={empty}
-      gridData={empty}
-      placesData={empty}
+      boundaryData={null}
+      gridData={null}
+      placesData={null}
       emergencyPlaceIds={new Set()}
-      latestRiskData={empty}
-      topRainRiskData={empty}
-      riskSummaryData={empty}
-      selectedEventRiskData={empty}
-      normalRouteData={empty}
-      safeRouteData={empty}
+      latestRiskData={null}
+      topRainRiskData={null}
+      riskSummaryData={null}
+      selectedEventRiskData={null}
+      normalRouteData={null}
+      safeRouteData={null}
       routeComparison={null}
       routeOrigin={null}
       routeDestination={null}
@@ -349,6 +402,8 @@ test('MapView renders with empty mocked data and no WebGL context', () => {
       routingError={null}
       onMapPointClick={vi.fn()}
       onResetRoute={vi.fn()}
+      riskFillOpacity={0.35}
+      gridLineOpacity={0.20}
     />,
   );
 
@@ -386,9 +441,8 @@ test('RoutePanel renders a real custom-route comparison state', () => {
     />,
   );
 
-  expect(screen.getByText(/Custom Route Comparison/i)).toBeDefined();
-  expect(screen.getByText(/Selected origin/i)).toBeDefined();
-  expect(screen.getByRole('button', { name: /Reset Custom Route/i })).toBeDefined();
+  expect(screen.getByText(/^Custom Route$/)).toBeDefined();
+  expect(screen.getByText(/Custom path selection/i)).toBeDefined();
 });
 
 test('EventSelector renders correctly when mean_rain_24h_mm is missing/undefined', () => {

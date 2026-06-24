@@ -16,6 +16,7 @@ const FIELD_LABELS: Record<string, string> = {
   rain_24h_mm: "24h Rainfall",
   population_sum: "Exposed Population",
   built_surface_mean: "Built-Up Density",
+  route_type: "Route Type",
 };
 
 const EVENT_LABELS: Record<string, string> = {
@@ -32,8 +33,14 @@ const ROUTE_QUALITY_LABELS: Record<string, string> = {
   pending: "Pending",
 };
 
+// Existing API getters
 export function getFieldLabel(field: string): string {
-  return FIELD_LABELS[field] ?? "Metric";
+  if (FIELD_LABELS[field]) {
+    return FIELD_LABELS[field];
+  }
+  return field
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 export function getEventLabel(eventId: unknown): string {
@@ -112,4 +119,45 @@ export function getRouteTypeLabel(routeType: unknown): string {
   return routeType === "weather_safe" || routeType === "safe"
     ? "Weather-Safe Route"
     : "Normal Route";
+}
+
+// New required format helpers
+export function formatFieldLabel(key: string): string {
+  return getFieldLabel(key);
+}
+
+export function formatZoneLabel(zoneCode?: string): string {
+  return getZoneLabel(zoneCode);
+}
+
+export function formatEventLabel(eventId?: string, timestamp?: string): string {
+  const label = getEventLabel(eventId);
+  if (timestamp) {
+    // Format timestamp nicely if it's ISO/JSON string, otherwise output raw
+    let displayTime = timestamp;
+    try {
+      const date = new Date(timestamp);
+      if (!isNaN(date.getTime())) {
+        displayTime = date.toLocaleString(undefined, {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+    } catch {
+      // fallback to raw timestamp
+    }
+    return `${label} (${displayTime})`;
+  }
+  return label;
+}
+
+export function formatRiskClass(value?: string): string {
+  return getRiskLevelLabel(value);
+}
+
+export function formatRouteQuality(value?: string): string {
+  if (!value) return "No distinct alternative";
+  return getRouteQualityLabel(value);
 }

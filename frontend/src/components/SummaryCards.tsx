@@ -1,24 +1,23 @@
 import type { ElementType } from "react";
 import {
-  Activity,
   CalendarDays,
-  CheckCircle2,
   CircleAlert,
   CircleGauge,
-  Database,
-  MapPinned,
-  Navigation,
+  Clock,
+  ShieldCheck,
+  TrendingDown,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { HealthResponse, SummaryResponse } from "../types/api";
-import { EMPTY_VALUE, formatInteger } from "../utils/format";
+import type { EventSummary, RouteComparison, SummaryResponse } from "../types/api";
+import { formatInteger } from "../utils/format";
 
 interface SummaryCardsProps {
   summary: SummaryResponse | null;
-  health: HealthResponse | null;
+  selectedEventId: string | null;
+  events: EventSummary[];
+  comparison: RouteComparison | null;
 }
 
 interface MetricCardProps {
@@ -26,15 +25,15 @@ interface MetricCardProps {
   value: string;
   icon: ElementType;
   tone?: "blue" | "purple" | "low" | "medium" | "high";
-  badge?: string;
+  secondaryText?: string;
 }
 
 const toneClasses = {
-  blue: "bg-accent text-primary",
-  purple: "bg-secondary text-secondary-foreground",
-  low: "bg-emerald-50 text-emerald-700",
-  medium: "bg-amber-50 text-amber-700",
-  high: "bg-red-50 text-red-700",
+  blue: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400",
+  purple: "bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400",
+  low: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400",
+  medium: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
+  high: "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400",
 };
 
 const MetricCard = ({
@@ -42,84 +41,112 @@ const MetricCard = ({
   value,
   icon: Icon,
   tone = "blue",
-  badge,
+  secondaryText,
 }: MetricCardProps) => (
   <Card
     size="sm"
-    className="summary-card min-w-32 border-0 bg-card shadow-[0_8px_24px_rgba(44,94,173,0.08)] ring-1 ring-border"
+    className="summary-card min-w-32 border-0 bg-card shadow-[0_8px_24px_rgba(44,94,173,0.06)] ring-1 ring-border"
   >
     <CardHeader className="flex flex-row items-center justify-between gap-2 pb-0">
       <CardTitle className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </CardTitle>
       <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-lg", toneClasses[tone])}>
-        <Icon aria-hidden="true" />
+        <Icon className="size-4" aria-hidden="true" />
       </span>
     </CardHeader>
-    <CardContent className="flex items-end justify-between gap-2">
-      <strong className="text-lg font-semibold leading-none tracking-tight text-foreground">
+    <CardContent className="flex flex-col gap-0.5 pt-1">
+      <strong className="text-base font-semibold leading-none tracking-tight text-foreground truncate max-w-full">
         {value}
       </strong>
-      {badge ? <Badge variant="secondary">{badge}</Badge> : null}
+      {secondaryText ? (
+        <span className="text-[10px] text-muted-foreground truncate">{secondaryText}</span>
+      ) : null}
     </CardContent>
   </Card>
 );
 
-export const SummaryCards = ({ summary, health }: SummaryCardsProps) => {
-  const isHealthy = health?.status === "healthy" || health?.status === "ok";
-  const routingReady = isHealthy || Boolean(health?.outputs_available?.emergency_facilities);
+export const SummaryCards = ({ summary, selectedEventId, events, comparison }: SummaryCardsProps) => {
+  // Find currently active weather event summary to format nicely
+  const activeEvent = events.find((e) => e.event_id === selectedEventId);
+  const activeEventName = activeEvent
+    ? (activeEvent.event_id === "evt_0557"
+        ? "Historic Rain Event"
+        : activeEvent.event_id === "evt_dry_009"
+          ? "Dry Weather Event"
+          : "Weather Event")
+    : "No Active Event";
+
+  const eventTime = activeEvent?.timestamp
+    ? new Date(activeEvent.timestamp).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : undefined;
+
+  // Decide on safety status text
+  let safetyStatus = "No Route Selected";
+  let safetyTone: "blue" | "low" | "medium" | "high" = "blue";
+
+  if (comparison) {
+    if (comparison.safe_route_available) {
+      safetyStatus = "Safer Route Available";
+      safetyTone = "low";
+    } else {
+      safetyStatus = "No Distinct Safer Alternative";
+      safetyTone = "medium";
+    }
+  }
+
+  const showComparison = comparison !== null;
 
   return (
     <section
-      className="grid grid-cols-2 gap-2 px-3 py-3 sm:grid-cols-4 2xl:grid-cols-8"
+      className="grid grid-cols-2 gap-2 px-3 py-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
       aria-label="Operational summary"
     >
       <MetricCard
-        label="System Status"
-        value={isHealthy ? "Online" : health ? "Attention" : EMPTY_VALUE}
-        icon={isHealthy ? CheckCircle2 : CircleAlert}
-        badge="Backend"
-      />
-      <MetricCard
-        label="Zones Analyzed"
-        value={formatInteger(summary?.zone_count)}
-        icon={MapPinned}
-      />
-      <MetricCard
-        label="Events"
-        value={formatInteger(summary?.event_count)}
-        icon={CalendarDays}
-        tone="purple"
-      />
-      <MetricCard
-        label="Prediction Rows"
-        value={formatInteger(summary?.prediction_row_count)}
-        icon={Database}
-        tone="purple"
-      />
-      <MetricCard
-        label="Low Risk"
-        value={formatInteger(summary?.risk_class_counts?.low)}
-        icon={Activity}
-        tone="low"
-      />
-      <MetricCard
-        label="Medium Risk"
-        value={formatInteger(summary?.risk_class_counts?.medium)}
+        label="Medium Risk Areas"
+        value={summary ? formatInteger(summary.risk_class_counts?.medium) : "0"}
         icon={CircleGauge}
         tone="medium"
       />
       <MetricCard
-        label="High Risk"
-        value={formatInteger(summary?.risk_class_counts?.high)}
+        label="High Risk Areas"
+        value={summary ? formatInteger(summary.risk_class_counts?.high) : "0"}
         icon={CircleAlert}
         tone="high"
       />
       <MetricCard
-        label="Routing Ready"
-        value={routingReady ? "Ready" : health ? "Unavailable" : EMPTY_VALUE}
-        icon={Navigation}
+        label="Active Weather Event"
+        value={activeEventName}
+        icon={CalendarDays}
+        tone="purple"
+        secondaryText={eventTime}
       />
+      <MetricCard
+        label="Route Safety"
+        value={safetyStatus}
+        icon={ShieldCheck}
+        tone={safetyTone}
+      />
+      {showComparison && (
+        <MetricCard
+          label="Risk Reduction"
+          value={`${(comparison.risk_reduction_percent ?? 0).toFixed(0)}%`}
+          icon={TrendingDown}
+          tone="low"
+        />
+      )}
+      {showComparison && (
+        <MetricCard
+          label="ETA Tradeoff"
+          value={`${comparison.eta_tradeoff_percent >= 0 ? "+" : ""}${(comparison.eta_tradeoff_percent ?? 0).toFixed(0)}%`}
+          icon={Clock}
+          tone={comparison.eta_tradeoff_percent > 15 ? "medium" : "blue"}
+        />
+      )}
     </section>
   );
 };

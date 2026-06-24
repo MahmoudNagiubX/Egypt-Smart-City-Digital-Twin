@@ -45,9 +45,18 @@ const pointCoordinates = (coordinates: unknown): [number, number] | null => {
   return typeof lon === "number" && typeof lat === "number" ? [lon, lat] : null;
 };
 
+const containsArabic = (text?: string | null): boolean => {
+  if (!text) return false;
+  return /[\u0600-\u06FF]/.test(text);
+};
+
 const safePlaceName = (properties: PlaceProperties) => {
   const title = properties.display_name?.trim();
-  if (!title || /^(?:osm[-:_ ]?)?(?:node|way|relation)?[-:_ ]?\d+$/i.test(title)) {
+  if (
+    !title ||
+    /^(?:osm[-:_ ]?)?(?:node|way|relation)?[-:_ ]?\d+$/i.test(title) ||
+    containsArabic(title)
+  ) {
     return properties.category_label || getCategoryLabel(properties.category);
   }
   return title;
@@ -94,6 +103,8 @@ interface MapViewProps {
   routingError: string | null;
   onMapPointClick: (coordinate: RouteCoordinate) => void;
   onResetRoute: () => void;
+  riskFillOpacity: number;
+  gridLineOpacity: number;
 }
 
 export const MapView = ({
@@ -116,6 +127,8 @@ export const MapView = ({
   routingError,
   onMapPointClick,
   onResetRoute,
+  riskFillOpacity,
+  gridLineOpacity,
 }: MapViewProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -168,6 +181,26 @@ export const MapView = ({
         "safe-route",
       ].forEach(addGeoJSONSource);
 
+      // Improve label language handling to force English labels or hide Arabic labels
+      try {
+        const styleLayers = map.getStyle().layers;
+        styleLayers.forEach((layer) => {
+          if (layer.type === "symbol") {
+            const textField = map.getLayoutProperty(layer.id, "text-field");
+            if (textField) {
+              map.setLayoutProperty(layer.id, "text-field", [
+                "coalesce",
+                ["get", "name:en"],
+                ["get", "name_en"],
+                "",
+              ]);
+            }
+          }
+        });
+      } catch (err) {
+        console.warn("Could not modify map text labels to English/empty:", err);
+      }
+
       map.addLayer({
         id: "boundary-layer",
         type: "line",
@@ -175,7 +208,7 @@ export const MapView = ({
         paint: {
           "line-color": "#2C5EAD",
           "line-width": 2.5,
-          "line-opacity": 0.88,
+          "line-opacity": Math.min(1.0, gridLineOpacity * 3),
           "line-dasharray": [3, 1.5],
         },
       }, firstSymbolLayer);
@@ -183,7 +216,7 @@ export const MapView = ({
         id: "grid-layer",
         type: "line",
         source: "grid",
-        paint: { "line-color": "#8186D5", "line-width": 0.7, "line-opacity": 0.42 },
+        paint: { "line-color": "#8186D5", "line-width": 0.7, "line-opacity": gridLineOpacity },
       }, firstSymbolLayer);
 
       const riskFillColor = [
@@ -195,18 +228,18 @@ export const MapView = ({
         "#64748b",
       ] as maplibregl.ExpressionSpecification;
       [
-        ["risk-summary-layer", "risk-summary", 0.28],
-        ["latest-risk-layer", "latest-risk", 0.3],
-        ["top-rain-risk-layer", "top-rain-risk", 0.3],
-        ["selected-risk-layer", "selected-risk", 0.32],
-      ].forEach(([id, source, opacity]) => {
+        ["risk-summary-layer", "risk-summary"],
+        ["latest-risk-layer", "latest-risk"],
+        ["top-rain-risk-layer", "top-rain-risk"],
+        ["selected-risk-layer", "selected-risk"],
+      ].forEach(([id, source]) => {
         map.addLayer({
           id: id as string,
           type: "fill",
           source: source as string,
           paint: {
             "fill-color": riskFillColor,
-            "fill-opacity": opacity as number,
+            "fill-opacity": riskFillOpacity,
             "fill-outline-color": "rgba(255,255,255,0.5)",
             "fill-opacity-transition": { duration: 220, delay: 0 },
           },
@@ -285,14 +318,19 @@ export const MapView = ({
           let html: string;
           if (isRouteFeature) {
             const comparison = routeComparisonRef.current;
+            const dest = comparison?.selected_destination_facility_name || "Selected map point";
+            const cleanDest = containsArabic(dest) ? "Selected Destination" : dest;
+            const quality = comparison?.safe_route_available
+              ? getRouteQualityLabel(comparison?.safe_route_quality)
+              : "No Distinct Safer Alternative";
             html = `
               <div class="map-popup-card">
                 <h4>Route Details</h4>
                 <p><strong>Route Type:</strong> ${escapeHtml(getRouteTypeLabel(properties.route_type))}</p>
                 <p><strong>Risk Reduction:</strong> ${formatPercent(comparison?.risk_reduction_percent, 1)}</p>
                 <p><strong>ETA Tradeoff:</strong> ${formatPercent(comparison?.eta_tradeoff_percent, 1)}</p>
-                <p><strong>Destination:</strong> ${escapeHtml(comparison?.selected_destination_facility_name || "Selected map point")}</p>
-                <p><strong>Route Quality:</strong> ${escapeHtml(getRouteQualityLabel(comparison?.safe_route_quality))}</p>
+                <p><strong>Destination:</strong> ${escapeHtml(cleanDest)}</p>
+                <p><strong>Route Quality:</strong> ${escapeHtml(quality)}</p>
               </div>`;
           } else {
             const rain = properties.rain_24h_mm == null
@@ -444,6 +482,41 @@ export const MapView = ({
     setLayerVisibility("safe-route-halo-layer", showSafe);
     setLayerVisibility("safe-route-layer", showSafe);
   }, [layers, mapLoaded, routeVisibility]);
+
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+    try {
+      if (map.getLayer("grid-layer")) {
+        map.setPaintProperty("grid-layer", "line-opacity", gridLineOpacity);
+      }
+      if (map.getLayer("boundary-layer")) {
+        map.setPaintProperty("boundary-layer", "line-opacity", Math.min(1.0, gridLineOpacity * 3));
+      }
+    } catch (err) {
+      console.warn("Failed to update line opacity:", err);
+    }
+  }, [gridLineOpacity, mapLoaded]);
+
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+    try {
+      const riskLayers = [
+        "risk-summary-layer",
+        "latest-risk-layer",
+        "top-rain-risk-layer",
+        "selected-risk-layer",
+      ];
+      riskLayers.forEach((layerId) => {
+        if (map.getLayer(layerId)) {
+          map.setPaintProperty(layerId, "fill-opacity", riskFillOpacity);
+        }
+      });
+    } catch (err) {
+      console.warn("Failed to update fill opacity:", err);
+    }
+  }, [riskFillOpacity, mapLoaded]);
 
   const routeHint = routingLoading
     ? "Calculating weather-aware routes..."

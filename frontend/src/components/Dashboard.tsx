@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { CloudSun, ShieldCheck } from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
+import { CloudSun } from "lucide-react";
 import {
   getBoundaryLayer,
   getCustomEmergencyRoute,
@@ -21,7 +19,6 @@ import {
 import type {
   EventSummary,
   FeatureCollection,
-  HealthResponse,
   LayerToggles,
   PlaceProperties,
   RouteComparison,
@@ -54,10 +51,11 @@ export const Dashboard = () => {
   const prefersReducedMotion = useReducedMotion();
   const safeRouteTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [health, setHealth] = useState<HealthResponse | null>(null);
   const [summary, setSummary] = useState<SummaryResponse | null>(null);
   const [events, setEvents] = useState<EventSummary[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [riskFillOpacity, setRiskFillOpacity] = useState(0.35);
+  const [gridLineOpacity, setGridLineOpacity] = useState(0.20);
   const [routeEventType, setRouteEventType] = useState<RouteEventType>("top-rain");
   const [routeVisibility, setRouteVisibility] = useState<RouteVisibility>("both");
   const [routeSelection, setRouteSelection] = useState<RouteSelection>(emptySelection);
@@ -104,7 +102,7 @@ export const Dashboard = () => {
       try {
         setLoading(true);
         const [
-          healthResponse,
+          _healthResponse,
           summaryResponse,
           eventsResponse,
           boundaryResponse,
@@ -127,7 +125,6 @@ export const Dashboard = () => {
           getRiskSummaryLayer(),
         ]);
 
-        setHealth(healthResponse);
         setSummary(summaryResponse);
         setEvents(eventsResponse);
         setBoundaryData(boundaryResponse);
@@ -300,7 +297,6 @@ export const Dashboard = () => {
     setLayers((current) => ({ ...current, [key]: !current[key] }));
   };
 
-  const backendOnline = health?.status === "healthy" || health?.status === "ok";
   const selectionState = routingLoading
     ? "routing"
     : routingError
@@ -331,27 +327,37 @@ export const Dashboard = () => {
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-sans text-foreground">
       <header className="dashboard-header flex h-16 shrink-0 items-center justify-between border-b bg-card px-4 shadow-[0_1px_10px_rgba(44,94,173,0.05)]">
         <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm"><CloudSun /></div>
+          <div className="flex size-9 items-center justify-center rounded-xl bg-[#2C5EAD] text-white shadow-sm"><CloudSun /></div>
           <div>
-            <h1 className="text-sm font-bold tracking-tight text-primary">Egypt Smart City Digital Twin</h1>
+            <h1 className="text-sm font-bold tracking-tight text-[#2C5EAD]">Egypt Smart City Digital Twin</h1>
             <p className="text-[10px] font-medium text-muted-foreground">Nasr City Weather-Impact Emergency Mobility Module</p>
           </div>
         </div>
-        <Badge variant={backendOnline ? "secondary" : "outline"} className="gap-1.5 px-3 py-1.5">
-          <ShieldCheck aria-hidden="true" />
-          {backendOnline ? "Backend Online" : "Backend Unavailable"}
-        </Badge>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
         <SidePanel>
           <EventSelector events={events} selectedEventId={selectedEventId} onSelectEvent={setSelectedEventId} />
-          <LayerToggle layers={layers} onToggle={handleToggleLayer} />
+          <LayerToggle
+            layers={layers}
+            onToggle={handleToggleLayer}
+            riskFillOpacity={riskFillOpacity}
+            setRiskFillOpacity={setRiskFillOpacity}
+            gridLineOpacity={gridLineOpacity}
+            setGridLineOpacity={setGridLineOpacity}
+          />
           <Legend />
         </SidePanel>
 
         <main className="relative flex flex-1 flex-col overflow-hidden">
-          <div className="shrink-0 pt-2"><SummaryCards summary={summary} health={health} /></div>
+          <div className="shrink-0 pt-2">
+            <SummaryCards
+              summary={summary}
+              selectedEventId={selectedEventId}
+              events={events}
+              comparison={comparison}
+            />
+          </div>
           <div className="relative flex-1 overflow-hidden border-t">
             <MapView
               layers={layers}
@@ -373,6 +379,8 @@ export const Dashboard = () => {
               routingError={routingError}
               onMapPointClick={handleMapPointClick}
               onResetRoute={resetCustomRoute}
+              riskFillOpacity={riskFillOpacity}
+              gridLineOpacity={gridLineOpacity}
             />
 
             <AnimatePresence mode="wait">

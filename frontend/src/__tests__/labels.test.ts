@@ -7,6 +7,11 @@ import {
   getPlaceIcon,
   getRouteTypeLabel,
   getZoneLabel,
+  formatFieldLabel,
+  formatZoneLabel,
+  formatEventLabel,
+  formatRiskClass,
+  formatRouteQuality,
 } from "../utils/labels";
 
 describe("human-readable label utilities", () => {
@@ -37,5 +42,28 @@ describe("human-readable label utilities", () => {
     expect(getPlaceIcon("mosque")).toBe("🕌");
     expect(getPlaceIcon("fire_station")).toBe("🚒");
     expect(getPlaceIcon("unknown")).toBe("📍");
+  });
+
+  test("new format helpers format labels correctly", () => {
+    // 1. labels utility formats field names
+    expect(formatFieldLabel("risk_reduction_percent")).toBe("Risk Reduction");
+    expect(formatFieldLabel("predicted_risk_class")).toBe("Risk Level");
+    expect(formatFieldLabel("some_random_field")).toBe("Some Random Field");
+
+    // 2. formatZoneLabel converts NSR-GRID-119 and NSR-GRID-006 consistently
+    expect(formatZoneLabel("NSR-GRID-119")).toBe("Zone 119");
+    expect(formatZoneLabel("NSR-GRID-006")).toBe("Zone 6");
+
+    // 3. formatEventLabel handles event labels and timestamps
+    expect(formatEventLabel("evt_0557")).toBe("Historic Rain Event");
+    expect(formatEventLabel("evt_dry_009", "2026-06-25T00:00:00Z")).toContain("Dry Weather Event");
+
+    // 4. formatRiskClass formats risk classes
+    expect(formatRiskClass("high")).toBe("High");
+    expect(formatRiskClass("medium")).toBe("Medium");
+
+    // 5. formatRouteQuality formats quality codes
+    expect(formatRouteQuality("strong")).toBe("Strong improvement");
+    expect(formatRouteQuality("rejected_identical_routes")).toBe("No distinct alternative");
   });
 });

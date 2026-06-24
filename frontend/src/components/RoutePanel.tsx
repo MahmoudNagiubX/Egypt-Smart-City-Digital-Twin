@@ -24,7 +24,7 @@ import {
   formatPercent,
   toFiniteNumber,
 } from "../utils/format";
-import { getRouteQualityLabel, getZoneLabel } from "../utils/labels";
+import { getRouteQualityLabel, formatZoneLabel } from "../utils/labels";
 
 interface RoutePanelProps {
   comparison: RouteComparison | null;
@@ -117,8 +117,21 @@ export const RoutePanel = ({
     );
   }
 
-  const quality = getRouteQualityLabel(comparison.safe_route_quality);
-  const destination = comparison.selected_destination_facility_name || "Destination not available";
+  const containsArabic = (text?: string | null): boolean => {
+    if (!text) return false;
+    return /[\u0600-\u06FF]/.test(text);
+  };
+
+  const getCleanDestination = (name?: string | null) => {
+    if (!name) return "Selected Destination";
+    if (containsArabic(name)) return "Selected Destination";
+    return name;
+  };
+
+  const quality = comparison.safe_route_available
+    ? getRouteQualityLabel(comparison.safe_route_quality)
+    : "No Distinct Safer Alternative";
+  const destination = getCleanDestination(comparison.selected_destination_facility_name);
   const customRoute = routeSource === "custom";
 
   return (
@@ -130,10 +143,10 @@ export const RoutePanel = ({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <CardTitle className="flex items-center gap-2 text-sm font-bold text-primary">
-              <Navigation aria-hidden="true" /> {customRoute ? "Custom Route Comparison" : "Route Comparison"}
+              <Navigation aria-hidden="true" /> {customRoute ? "Custom Route" : "Demo Route"}
             </CardTitle>
             <CardDescription className="mt-1 flex items-center gap-1 text-[10px]">
-              <MapPin aria-hidden="true" /> {customRoute ? "Selected origin" : getZoneLabel(comparison.selected_origin_zone_code)} to {destination}
+              <MapPin aria-hidden="true" /> {customRoute ? "Custom path selection" : `${formatZoneLabel(comparison.selected_origin_zone_code)} to ${destination}`}
             </CardDescription>
           </div>
           <Badge variant={comparison.safe_route_available ? "secondary" : "outline"}>
@@ -206,11 +219,6 @@ export const RoutePanel = ({
             <RotateCcw data-icon="inline-start" /> Reset Custom Route
           </Button>
         ) : null}
-
-        <p className="flex items-start gap-1.5 rounded-lg bg-muted/70 p-2 text-[9px] leading-relaxed text-muted-foreground">
-          <Info className="mt-0.5 shrink-0" aria-hidden="true" />
-          Routes are decision-support prototype outputs, not official emergency dispatch instructions.
-        </p>
       </CardContent>
     </Card>
   );
