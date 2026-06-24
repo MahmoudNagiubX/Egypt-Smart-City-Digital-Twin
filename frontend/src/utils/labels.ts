@@ -30,6 +30,8 @@ const ROUTE_QUALITY_LABELS: Record<string, string> = {
   weak_but_valid: "Limited improvement",
   rejected_identical_routes: "No distinct alternative",
   rejected_negative_risk_reduction: "Normal route preferred",
+  no_distinct_safer_alternative: "No distinct alternative",
+  normal_route_preferred: "Normal route preferred",
   pending: "Pending",
 };
 
@@ -161,3 +163,16 @@ export function formatRouteQuality(value?: string): string {
   if (!value) return "No distinct alternative";
   return getRouteQualityLabel(value);
 }
+
+export function getRecommendationLabel(recommendation: unknown): string {
+  if (typeof recommendation !== "string") {
+    return "Normal Route Acceptable";
+  }
+  const labels: Record<string, string> = {
+    normal_route_acceptable: "Normal Route Acceptable",
+    weather_safe_route_recommended: "Weather-Safe Route Recommended",
+    no_distinct_safer_alternative: "No Distinct Safer Alternative",
+  };
+  return labels[recommendation] ?? "Normal Route Acceptable";
+}
+

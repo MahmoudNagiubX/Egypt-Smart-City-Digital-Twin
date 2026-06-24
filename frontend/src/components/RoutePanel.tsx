@@ -24,7 +24,7 @@ import {
   formatPercent,
   toFiniteNumber,
 } from "../utils/format";
-import { getRouteQualityLabel, formatZoneLabel } from "../utils/labels";
+import { getRouteQualityLabel, formatZoneLabel, getRecommendationLabel } from "../utils/labels";
 
 interface RoutePanelProps {
   comparison: RouteComparison | null;
@@ -33,7 +33,7 @@ interface RoutePanelProps {
   routeVisibility: "normal" | "safe" | "both";
   onRouteVisibilityChange: (visibility: "normal" | "safe" | "both") => void;
   selectionState?: "idle" | "origin-set" | "routing" | "complete" | "error";
-  routeSource?: "demo" | "custom";
+  routeSource?: "demo" | "custom" | "custom-live";
   routingError?: string | null;
   onResetRoute?: () => void;
 }
@@ -128,11 +128,13 @@ export const RoutePanel = ({
     return name;
   };
 
+  const isLive = (comparison as any).recommendation !== undefined;
+  const recommendationLabel = isLive ? getRecommendationLabel((comparison as any).recommendation) : "";
   const quality = comparison.safe_route_available
     ? getRouteQualityLabel(comparison.safe_route_quality)
     : "No Distinct Safer Alternative";
   const destination = getCleanDestination(comparison.selected_destination_facility_name);
-  const customRoute = routeSource === "custom";
+  const customRoute = routeSource === "custom" || routeSource === "custom-live";
 
   return (
     <Card
@@ -143,33 +145,35 @@ export const RoutePanel = ({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <CardTitle className="flex items-center gap-2 text-sm font-bold text-primary">
-              <Navigation aria-hidden="true" /> {customRoute ? "Custom Route" : "Demo Route"}
+              <Navigation aria-hidden="true" /> {customRoute ? (isLive ? "Live Custom Route" : "Custom Route") : "Demo Route"}
             </CardTitle>
             <CardDescription className="mt-1 flex items-center gap-1 text-[10px]">
               <MapPin aria-hidden="true" /> {customRoute ? "Custom path selection" : `${formatZoneLabel(comparison.selected_origin_zone_code)} to ${destination}`}
             </CardDescription>
           </div>
           <Badge variant={comparison.safe_route_available ? "secondary" : "outline"}>
-            {comparison.safe_route_available ? "Safer Route Available" : "Normal Route Recommended"}
+            {isLive ? recommendationLabel : (comparison.safe_route_available ? "Safer Route Available" : "Normal Route Recommended")}
           </Badge>
         </div>
       </CardHeader>
 
       <CardContent className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            Event Mode
-          </span>
-          <Tabs
-            value={eventType}
-            onValueChange={(value) => onEventTypeChange(value as "top-rain" | "latest")}
-          >
-            <TabsList className="grid w-full grid-cols-2 bg-muted">
-              <TabsTrigger value="top-rain">Historic Rain</TabsTrigger>
-              <TabsTrigger value="latest">Latest Observed</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+        {!isLive && (
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              Event Mode
+            </span>
+            <Tabs
+              value={eventType}
+              onValueChange={(value) => onEventTypeChange(value as "top-rain" | "latest")}
+            >
+              <TabsList className="grid w-full grid-cols-2 bg-muted">
+                <TabsTrigger value="top-rain">Historic Rain</TabsTrigger>
+                <TabsTrigger value="latest">Latest Observed</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        )}
 
         <div className="flex items-center justify-between gap-3 rounded-lg bg-secondary/70 px-3 py-2">
           <span className="flex items-center gap-1.5 text-[10px] font-semibold text-secondary-foreground">
@@ -179,6 +183,18 @@ export const RoutePanel = ({
         </div>
 
         <dl className="grid grid-cols-2 gap-2">
+          {isLive && (
+            <Metric 
+              label="Route Recommendation" 
+              value={recommendationLabel} 
+            />
+          )}
+          {isLive && (
+            <Metric 
+              label="Rain Risk Status" 
+              value={(comparison as any).rain_risk_expected ? "Rain Risk Expected" : "No Meaningful Rain Risk"} 
+            />
+          )}
           <Metric label="Risk Reduction" value={formatPercent(comparison.risk_reduction_percent, 1)} />
           <Metric label="ETA Tradeoff" value={signedPercent(comparison.eta_tradeoff_percent)} />
           <Metric
@@ -189,7 +205,19 @@ export const RoutePanel = ({
           <Metric label="Safe Route Distance" value={formatDistance(comparison.safe_distance_m)} />
           <Metric label="Normal ETA" value={formatDuration(comparison.normal_weather_eta_sec)} />
           <Metric label="Safe Route ETA" value={formatDuration(comparison.safe_weather_eta_sec)} />
-          <Metric label="Destination" value={destination} />
+          {isLive && (comparison as any).live_weather_summary && (
+            <>
+              <Metric 
+                label="Live Rainfall" 
+                value={`${((comparison as any).live_weather_summary.forecast_window?.rain_24h_mm ?? (comparison as any).live_weather_summary.rain_24h_mm ?? 0).toFixed(1)} mm`} 
+              />
+              <Metric 
+                label="Rain Probability" 
+                value={`${Math.round((comparison as any).live_weather_summary.forecast_window?.max_precipitation_probability ?? (comparison as any).live_weather_summary.max_precipitation_probability ?? 0)}%`} 
+              />
+            </>
+          )}
+          {!isLive && <Metric label="Destination" value={destination} />}
         </dl>
 
         <Separator />
