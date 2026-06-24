@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { CloudSun } from "lucide-react";
 import {
   getBoundaryLayer,
   getDemoRoute,
@@ -26,11 +25,9 @@ import type {
   PlaceProperties,
   RouteComparison,
   RouteCoordinate,
-  SummaryResponse,
   LiveWeatherSummary,
   LiveRoutingStatusResponse,
 } from "../types/api";
-import { EventSelector } from "./EventSelector";
 import { LayerToggle } from "./LayerToggle";
 import { Legend } from "./Legend";
 import { ErrorDisplay, LoadingSpinner } from "./LoadingError";
@@ -52,11 +49,28 @@ const emptySelection: RouteSelection = { origin: null, destination: null };
 const getErrorMessage = (error: unknown, fallback: string) =>
   error instanceof Error && error.message ? error.message : fallback;
 
+const BrandLogo = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="size-6 text-[#2C5EAD] shrink-0"
+    aria-hidden="true"
+  >
+    <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0z" />
+    <path d="M9 10.5c1-1.5 2.5-1.5 3.5 0s2.5 1.5 3.5 0" strokeWidth="2" className="text-[#1591DC]" />
+    <circle cx="12" cy="10" r="1.5" fill="currentColor" />
+  </svg>
+);
+
 export const Dashboard = () => {
   const prefersReducedMotion = useReducedMotion();
   const safeRouteTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [summary, setSummary] = useState<SummaryResponse | null>(null);
+  const [mapMode, setMapMode] = useState<"today" | "history">("today");
   const [events, setEvents] = useState<EventSummary[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [riskFillOpacity, setRiskFillOpacity] = useState(0.35);
@@ -66,7 +80,7 @@ export const Dashboard = () => {
   const [routeSelection, setRouteSelection] = useState<RouteSelection>(emptySelection);
   const [routingLoading, setRoutingLoading] = useState(false);
   const [routingError, setRoutingError] = useState<string | null>(null);
-  const [routeSource, setRouteSource] = useState<"demo" | "custom" | "custom-live">("demo");
+  const [routeSource, setRouteSource] = useState<"demo" | "custom" | "custom-live">("custom-live");
   const [liveWeather, setLiveWeather] = useState<LiveWeatherSummary | null>(null);
   const [liveRoutingStatus, setLiveRoutingStatus] = useState<LiveRoutingStatusResponse | null>(null);
   const [liveRiskData, setLiveRiskData] = useState<FeatureCollection | null>(null);
@@ -76,15 +90,15 @@ export const Dashboard = () => {
     boundary: true,
     grid: false,
     roadsLabels: true,
-    hospitals: true,
-    clinics: true,
-    mosques: true,
-    malls: true,
-    schools: true,
-    universities: true,
-    police: true,
-    fireStations: true,
-    emergency: true,
+    hospitals: true,       // Default visible
+    clinics: false,        // Default hidden
+    mosques: false,        // Default hidden
+    malls: false,          // Default hidden
+    schools: false,        // Default hidden
+    universities: false,   // Default hidden
+    police: false,         // Default hidden
+    fireStations: false,   // Default hidden
+    emergency: true,       // Default visible
     latestRisk: false,
     topRainRisk: false,
     riskSummary: false,
@@ -113,7 +127,7 @@ export const Dashboard = () => {
         setLoading(true);
         const [
           _healthResponse,
-          summaryResponse,
+          _summaryResponse,
           eventsResponse,
           boundaryResponse,
           gridResponse,
@@ -135,7 +149,6 @@ export const Dashboard = () => {
           getRiskSummaryLayer(),
         ]);
 
-        setSummary(summaryResponse);
         setEvents(eventsResponse);
         setBoundaryData(boundaryResponse);
         setGridData(gridResponse);
@@ -202,6 +215,12 @@ export const Dashboard = () => {
   }, [selectedEventId]);
 
   useEffect(() => {
+    if (mapMode !== "history") {
+      setNormalRouteData(null);
+      setSafeRouteData(null);
+      setComparison(null);
+      return;
+    }
     if (routeSelection.origin) return;
     let cancelled = false;
     const fetchDemoRouting = async () => {
@@ -226,7 +245,7 @@ export const Dashboard = () => {
     return () => {
       cancelled = true;
     };
-  }, [routeEventType, routeSelection.origin]);
+  }, [mapMode, routeEventType, routeSelection.origin]);
 
   useEffect(() => {
     const { origin, destination } = routeSelection;
@@ -298,7 +317,29 @@ export const Dashboard = () => {
     setNormalRouteData(null);
     setSafeRouteData(null);
     setComparison(null);
-    setRouteSource("demo");
+    setRouteSource(mapMode === "today" ? "custom-live" : "demo");
+  }, [mapMode]);
+
+  const handleMapModeChange = useCallback((mode: "today" | "history") => {
+    setMapMode(mode);
+    if (safeRouteTimerRef.current) clearTimeout(safeRouteTimerRef.current);
+    setRouteSelection(emptySelection);
+    setRoutingLoading(false);
+    setRoutingError(null);
+    setNormalRouteData(null);
+    setSafeRouteData(null);
+    setComparison(null);
+    setRouteSource(mode === "today" ? "custom-live" : "demo");
+    
+    // Automatically toggle active layers
+    setLayers((current) => ({
+      ...current,
+      liveRisk: mode === "today",
+      selectedRisk: mode === "history",
+      latestRisk: false,
+      topRainRisk: false,
+      riskSummary: false,
+    }));
   }, []);
 
   const handleMapPointClick = useCallback(
@@ -328,14 +369,12 @@ export const Dashboard = () => {
   };
 
   const selectionState = routingLoading
-    ? "routing"
-    : routingError
-      ? "error"
-      : routeSelection.destination
-        ? "complete"
-        : routeSelection.origin
-          ? "origin-set"
-          : "idle";
+    ? "loading"
+    : routeSelection.destination
+      ? "ready"
+      : routeSelection.origin
+        ? "selecting-destination"
+        : "idle";
 
   if (loading) {
     return (
@@ -357,7 +396,7 @@ export const Dashboard = () => {
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-sans text-foreground">
       <header className="dashboard-header flex h-16 shrink-0 items-center justify-between border-b bg-card px-4 shadow-[0_1px_10px_rgba(44,94,173,0.05)]">
         <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-[#2C5EAD] text-white shadow-sm"><CloudSun /></div>
+          <BrandLogo />
           <div>
             <h1 className="text-sm font-bold tracking-tight text-[#2C5EAD]">Egypt Smart City Digital Twin</h1>
             <p className="text-[10px] font-medium text-muted-foreground">Nasr City Weather-Impact Emergency Mobility Module</p>
@@ -373,14 +412,21 @@ export const Dashboard = () => {
 
       <div className="flex flex-1 overflow-hidden">
         <SidePanel>
-          <EventSelector events={events} selectedEventId={selectedEventId} onSelectEvent={setSelectedEventId} />
           <LayerToggle
+            mapMode={mapMode}
+            onMapModeChange={handleMapModeChange}
+            selectionState={selectionState}
+            routingError={routingError}
+            onResetRoute={resetCustomRoute}
             layers={layers}
             onToggle={handleToggleLayer}
             riskFillOpacity={riskFillOpacity}
             setRiskFillOpacity={setRiskFillOpacity}
             gridLineOpacity={gridLineOpacity}
             setGridLineOpacity={setGridLineOpacity}
+            events={events}
+            selectedEventId={selectedEventId}
+            onSelectEvent={setSelectedEventId}
           />
           <Legend />
         </SidePanel>
@@ -394,9 +440,7 @@ export const Dashboard = () => {
           )}
           <div className="shrink-0 pt-2">
             <SummaryCards
-              summary={summary}
-              selectedEventId={selectedEventId}
-              events={events}
+              mapMode={mapMode}
               comparison={comparison}
               liveWeather={liveWeather}
             />
