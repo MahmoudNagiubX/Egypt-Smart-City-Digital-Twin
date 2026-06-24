@@ -579,12 +579,110 @@ export const MapView = ({
     map.getStyle().layers
       .filter((layer) => /^(road_|bridge_|tunnel_|highway-|label_)/.test(layer.id))
       .forEach((layer) => setLayerVisibility(layer.id, layers.roadsLabels));
-    const showNormal = routeVisibility === "normal" || routeVisibility === "both";
-    const showSafe = routeVisibility === "safe" || routeVisibility === "both";
-    setLayerVisibility("normal-route-layer", showNormal);
-    setLayerVisibility("safe-route-halo-layer", showSafe);
-    setLayerVisibility("safe-route-layer", showSafe);
-  }, [layers, mapLoaded, routeVisibility]);
+  }, [layers, mapLoaded]);
+
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+    
+    // Check recommendation
+    const recommendation = routeComparison?.recommendation;
+    
+    // Default fallback values (e.g. before calculation or for historical)
+    let normalColor = "#8186D5";
+    let normalWidth = 3.5;
+    let normalDash: [number, number] | null = [2, 2];
+    let normalOpacity = 0.72;
+    
+    let safeColor = "#1591DC";
+    let safeWidth = 5;
+    let safeDash: [number, number] | null = null;
+    let safeOpacity = 0.96;
+    let haloOpacity = 0.2;
+    let haloColor = "#4BB8FA";
+    
+    let showSafeRoute = routeVisibility === "safe" || routeVisibility === "both";
+    let showNormalRoute = routeVisibility === "normal" || routeVisibility === "both";
+
+    if (recommendation === "normal_route_acceptable") {
+      // Normal route is safe and blue
+      normalColor = "#1591DC";
+      normalWidth = 5;
+      normalDash = null; // solid
+      normalOpacity = 0.96;
+      
+      // Safe route can be hidden by default or shown as optional
+      if (routeVisibility === "both") {
+        showSafeRoute = false;
+      }
+      safeColor = "#8186D5";
+      safeWidth = 3.5;
+      safeDash = [2, 2];
+      safeOpacity = 0.5;
+      haloOpacity = 0;
+    } else if (recommendation === "weather_safe_route_recommended") {
+      // Normal route is risky and red
+      normalColor = "#E63946";
+      normalWidth = 3.5;
+      normalDash = [2, 2];
+      normalOpacity = 0.8;
+      
+      // Safe route is strong solid blue
+      safeColor = "#1591DC";
+      safeWidth = 5.5;
+      safeDash = null;
+      safeOpacity = 0.96;
+      haloOpacity = 0.22;
+      haloColor = "#4BB8FA";
+    } else if (recommendation === "no_distinct_safer_alternative") {
+      // Both routes are neutral blue/purple
+      normalColor = "#8186D5";
+      normalWidth = 5;
+      normalDash = null; // solid
+      normalOpacity = 0.9;
+      
+      safeColor = "#8186D5";
+      safeWidth = 3.5;
+      safeDash = [2, 2]; // dashed/secondary
+      safeOpacity = 0.6;
+      haloOpacity = 0;
+    }
+
+    try {
+      if (map.getLayer("normal-route-layer")) {
+        map.setPaintProperty("normal-route-layer", "line-color", normalColor);
+        map.setPaintProperty("normal-route-layer", "line-width", normalWidth);
+        map.setPaintProperty("normal-route-layer", "line-opacity", normalOpacity);
+        if (normalDash) {
+          map.setPaintProperty("normal-route-layer", "line-dasharray", normalDash);
+        } else {
+          map.setPaintProperty("normal-route-layer", "line-dasharray", [1, 0]);
+        }
+        map.setLayoutProperty("normal-route-layer", "visibility", showNormalRoute ? "visible" : "none");
+      }
+      
+      if (map.getLayer("safe-route-layer")) {
+        map.setPaintProperty("safe-route-layer", "line-color", safeColor);
+        map.setPaintProperty("safe-route-layer", "line-width", safeWidth);
+        map.setPaintProperty("safe-route-layer", "line-opacity", safeOpacity);
+        if (safeDash) {
+          map.setPaintProperty("safe-route-layer", "line-dasharray", safeDash);
+        } else {
+          map.setPaintProperty("safe-route-layer", "line-dasharray", [1, 0]);
+        }
+        map.setLayoutProperty("safe-route-layer", "visibility", showSafeRoute ? "visible" : "none");
+      }
+      
+      if (map.getLayer("safe-route-halo-layer")) {
+        map.setPaintProperty("safe-route-halo-layer", "line-color", haloColor);
+        map.setPaintProperty("safe-route-halo-layer", "line-opacity", haloOpacity);
+        map.setLayoutProperty("safe-route-halo-layer", "visibility", showSafeRoute ? "visible" : "none");
+      }
+    } catch (err) {
+      console.warn("Failed to update route layers styling:", err);
+    }
+  }, [mapLoaded, routeComparison, routeVisibility]);
+
 
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return;
