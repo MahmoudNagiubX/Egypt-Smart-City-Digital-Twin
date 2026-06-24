@@ -209,41 +209,34 @@ test('App renders dashboard title and disclaimers', async () => {
 });
 
 test('SummaryCards renders the operational summary cards and hides technical stats', () => {
-  const mockSummary = {
-    zone_count: 416,
-    prediction_row_count: 12480,
-    event_count: 30,
-    risk_class_counts: { low: 4502, medium: 6732, high: 1246 },
-    highest_risk_zones: [],
-    latest_event_id: "evt_dry_009",
-    top_rain_event_id: "evt_0557",
-    model_name: "weather_impact_rf_model.joblib",
-    dataset_name: "real_observed_training_dataset.csv",
-    honesty_statement: "Model-estimated risk scores."
+  const mockLiveWeather = {
+    status: "ok",
+    source: "open-meteo",
+    location: { name: "Nasr City", lat: 30.06, lon: 31.33 },
+    current: { time: "2026-06-25T00:00", temperature_2m: 25.0, rain: 0.0, precipitation: 0.0, wind_speed_10m: 10.0, weather_code: 0 },
+    forecast_window: { hours: 24, rain_1h_mm: 0.0, rain_3h_mm: 0.0, rain_6h_mm: 0.0, rain_24h_mm: 5.2, max_precipitation_probability: 85.0 },
+    rain_risk_expected: true,
+    recommended_event_mode: "live" as const,
+    warnings: []
   };
-  
-  const mockEvents = [
-    { event_id: "evt_dry_009", timestamp: "2020-03-12T00:00", mean_rain_24h_mm: 0, max_rain_24h_mm: 0, mean_predicted_score: 0.1, high_risk_zone_count: 0 }
-  ];
-  
+
   const { rerender } = render(
     <SummaryCards
-      summary={mockSummary}
-      selectedEventId="evt_dry_009"
-      events={mockEvents}
+      mapMode="today"
       comparison={null}
+      liveWeather={mockLiveWeather}
     />
   );
+
+  expect(screen.getByText(/Today’s Rain Risk/i)).toBeDefined();
+  expect(screen.getByText(/Rain Probability/i)).toBeDefined();
+  expect(screen.getByText(/Route Recommendation/i)).toBeDefined();
+  expect(screen.getByText(/Risk Reduction/i)).toBeDefined();
   
-  expect(screen.getByText(/Medium Risk Areas/i)).toBeDefined();
-  expect(screen.getByText(/High Risk Areas/i)).toBeDefined();
-  expect(screen.getByText(/Active Weather Event/i)).toBeDefined();
-  expect(screen.getByText(/Route Safety/i)).toBeDefined();
-  
-  // User cards only: check that technical indicators are hidden/removed
-  expect(screen.queryByText(/Zones Analyzed/i)).toBeNull();
-  expect(screen.queryByText(/Prediction Rows/i)).toBeNull();
-  expect(screen.queryByText(/Routing Ready/i)).toBeNull();
+  // Checks actual values
+  expect(screen.getByText("Expected")).toBeDefined();
+  expect(screen.getByText("85%")).toBeDefined();
+  expect(screen.getByText("Waiting for route")).toBeDefined();
 
   // Test that comparison stats are shown when comparison is present
   const mockComp = {
@@ -253,49 +246,33 @@ test('SummaryCards renders the operational summary cards and hides technical sta
     safe_route_quality: "strong",
     selected_origin_zone_code: "NSR-GRID-119",
     selected_destination_facility_name: "Selected Destination",
-    honesty_note: "Note"
+    honesty_note: "Note",
+    recommendation: "weather_safe_route_recommended"
   } as any;
 
   rerender(
     <SummaryCards
-      summary={mockSummary}
-      selectedEventId="evt_dry_009"
-      events={mockEvents}
+      mapMode="today"
       comparison={mockComp}
+      liveWeather={mockLiveWeather}
     />
   );
 
-  expect(screen.getByText(/Risk Reduction/i)).toBeDefined();
-  expect(screen.getByText(/ETA Tradeoff/i)).toBeDefined();
-  expect(screen.getByText(/45%/)).toBeDefined();
+  expect(screen.getByText("Weather-Safe Route Recommended")).toBeDefined();
+  expect(screen.getByText("45%")).toBeDefined();
 });
 
 test('SummaryCards renders safely with partial or missing mock data', () => {
-  const mockSummary = {
-    zone_count: undefined as any,
-    prediction_row_count: undefined as any,
-    event_count: undefined as any,
-    risk_class_counts: undefined as any,
-    highest_risk_zones: [] as any,
-    latest_event_id: undefined as any,
-    top_rain_event_id: undefined as any,
-    model_name: undefined as any,
-    dataset_name: undefined as any,
-    honesty_statement: undefined as any
-  };
-
   render(
     <SummaryCards
-      summary={mockSummary}
-      selectedEventId={null}
-      events={[]}
+      mapMode="today"
       comparison={null}
+      liveWeather={null}
     />
   );
 
-  // Should display the fallback "0" or fallback event/safety instead of crashing
-  expect(screen.getByText(/No Active Event/i)).toBeDefined();
-  expect(screen.getByText(/No Route Selected/i)).toBeDefined();
+  expect(screen.getByText(/Today’s Rain Risk/i)).toBeDefined();
+  expect(screen.getAllByText("—").length).toBeGreaterThan(0);
 });
 
 
@@ -362,26 +339,55 @@ test('LayerToggle renders spatial, risk toggle controls, and opacity controls', 
     liveRisk: false
   };
 
-  render(
+  const { rerender } = render(
     <LayerToggle
+      mapMode="today"
+      onMapModeChange={vi.fn()}
+      selectionState="idle"
+      routingError={null}
+      onResetRoute={vi.fn()}
       layers={mockLayers}
       onToggle={vi.fn()}
       riskFillOpacity={0.35}
       setRiskFillOpacity={vi.fn()}
       gridLineOpacity={0.20}
       setGridLineOpacity={vi.fn()}
+      events={[]}
+      selectedEventId={null}
+      onSelectEvent={vi.fn()}
     />
   );
 
   expect(screen.getByText(/Boundary/i)).toBeDefined();
   expect(screen.getByText(/Grid Overlay/i)).toBeDefined();
   expect(screen.getByText(/Emergency Facilities/i)).toBeDefined();
-  expect(screen.getByText(/Latest Event/i)).toBeDefined();
+  expect(screen.getByText(/Risk Fill Opacity/i)).toBeDefined();
+  expect(screen.getByText(/Grid Line Opacity/i)).toBeDefined();
   expect(screen.getByText(/Hospitals/i)).toBeDefined();
   expect(screen.getByText(/Mosques/i)).toBeDefined();
   expect(screen.getByText(/Malls/i)).toBeDefined();
-  expect(screen.getByText(/Risk Fill Opacity/i)).toBeDefined();
-  expect(screen.getByText(/Grid Line Opacity/i)).toBeDefined();
+
+  // Now rerender in history mode to verify historical controls are visible
+  rerender(
+    <LayerToggle
+      mapMode="history"
+      onMapModeChange={vi.fn()}
+      selectionState="idle"
+      routingError={null}
+      onResetRoute={vi.fn()}
+      layers={mockLayers}
+      onToggle={vi.fn()}
+      riskFillOpacity={0.35}
+      setRiskFillOpacity={vi.fn()}
+      gridLineOpacity={0.20}
+      setGridLineOpacity={vi.fn()}
+      events={[]}
+      selectedEventId={null}
+      onSelectEvent={vi.fn()}
+    />
+  );
+
+  expect(screen.getByText(/Latest Event/i)).toBeDefined();
 });
 
 test('EventSelector dropdown renders event options', () => {
