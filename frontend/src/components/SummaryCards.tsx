@@ -42,9 +42,16 @@ const MetricCard = ({
 }: MetricCardProps) => (
   <Card
     size="sm"
-    className="summary-card min-w-32 border-0 bg-card shadow-[0_4px_12px_rgba(44,94,173,0.03)] ring-1 ring-border transition-all hover:shadow-[0_6px_18px_rgba(44,94,173,0.06)]"
+    className={cn(
+      "summary-card min-w-32 border-0 bg-gradient-to-b from-white to-[#F0F4FC] shadow-[0_4px_12px_rgba(44,94,173,0.03)] ring-1 ring-border transition-all hover:shadow-[0_6px_18px_rgba(44,94,173,0.06)] hover:-translate-y-0.5 duration-200 border-t-[3px]",
+      tone === "blue" && "border-t-[#1591DC]",
+      tone === "purple" && "border-t-[#8186D5]",
+      tone === "low" && "border-t-emerald-500",
+      tone === "medium" && "border-t-amber-500",
+      tone === "high" && "border-t-[#E63946]"
+    )}
   >
-    <CardHeader className="flex flex-row items-center justify-between gap-2 pb-0">
+    <CardHeader className="flex flex-row items-center justify-between gap-2 pb-0 pt-2.5 px-3.5">
       <CardTitle className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </CardTitle>
@@ -52,7 +59,7 @@ const MetricCard = ({
         <Icon className="size-4" aria-hidden="true" />
       </span>
     </CardHeader>
-    <CardContent className="flex flex-col gap-0.5 pt-1.5 pb-2.5">
+    <CardContent className="flex flex-col gap-0.5 pt-1.5 pb-2.5 px-3.5">
       <strong className="text-xs font-bold leading-none tracking-tight text-foreground truncate max-w-full">
         {value}
       </strong>

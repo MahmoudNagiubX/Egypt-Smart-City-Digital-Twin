@@ -146,9 +146,23 @@ export const RoutePanel = ({
   return (
     <Card
       size="sm"
-      className="route-panel border-0 bg-card/95 shadow-[0_18px_50px_rgba(44,94,173,0.18)] ring-1 ring-border backdrop-blur-xl"
+      className={cn(
+        "route-panel border-0 bg-gradient-to-br from-white to-[#C4E2F5]/25 shadow-[0_18px_50px_rgba(44,94,173,0.18)] ring-1 ring-border backdrop-blur-xl border-t-[4px] transition-all",
+        rec === "weather_safe_route_recommended"
+          ? "border-t-[#E63946]"
+          : rec === "no_distinct_safer_alternative"
+            ? "border-t-[#8186D5]"
+            : "border-t-[#1591DC]"
+      )}
     >
-      <CardHeader className="border-b bg-slate-50/50 p-4">
+      <CardHeader className={cn(
+        "border-b p-4 transition-colors",
+        rec === "weather_safe_route_recommended"
+          ? "bg-gradient-to-r from-[#E63946]/5 to-[#1591DC]/5"
+          : rec === "no_distinct_safer_alternative"
+            ? "bg-slate-50/50"
+            : "bg-gradient-to-r from-[#1591DC]/5 to-[#C4E2F5]/10"
+      )}>
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between gap-2">
             <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">

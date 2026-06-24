@@ -10,7 +10,7 @@ export const Legend: React.FC = () => (
         <p className="text-[10px] text-muted-foreground">Risk, routes, and facilities</p>
       </div>
     </div>
-    <div className="flex flex-col gap-3 rounded-xl border bg-slate-50/70 p-3">
+    <div className="flex flex-col gap-3 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/10 p-3 shadow-sm">
       <div className="flex flex-col gap-1.5">
         <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Today’s Rain Risk</span>
         <div className="flex flex-col gap-1">

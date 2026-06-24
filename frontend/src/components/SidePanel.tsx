@@ -61,7 +61,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({ children }) => {
     return (
       <aside
         aria-label="Map and routing controls"
-        className="relative flex h-full w-[60px] shrink-0 flex-col border-r border-slate-200 bg-gradient-to-b from-white via-[#C4E2F5]/40 to-[#C6CBEF]/30 text-foreground transition-all shadow-[4px_0_15px_rgba(44,94,173,0.05)]"
+        className="relative flex h-full w-[60px] shrink-0 flex-col border-r border-slate-200 bg-gradient-to-b from-white via-[#F7FBFF] to-[#E3E7F1] text-foreground transition-all shadow-[4px_0_15px_rgba(44,94,173,0.05)]"
       >
         <div className="flex h-16 items-center justify-center border-b border-slate-200/50">
           <button
@@ -142,7 +142,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({ children }) => {
     <aside
       aria-label="Map and routing controls"
       style={{ width: `${width}px` }}
-      className="relative flex h-full shrink-0 flex-col border-r border-slate-200 bg-gradient-to-b from-white via-[#C4E2F5]/40 to-[#C6CBEF]/30 text-foreground shadow-[8px_0_30px_rgba(44,94,173,0.06)]"
+      className="relative flex h-full shrink-0 flex-col border-r border-slate-200 bg-gradient-to-b from-white via-[#F7FBFF] to-[#E3E7F1] text-foreground shadow-[8px_0_30px_rgba(44,94,173,0.06)]"
     >
       {/* Header */}
       <div className="flex h-16 items-center justify-between border-b border-slate-200/50 px-4 py-3">

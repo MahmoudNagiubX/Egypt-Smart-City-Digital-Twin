@@ -784,7 +784,7 @@ export const MapView = ({
           <Progress value={68} aria-label="Calculating routes" />
         </div>
       ) : null}
-      <div className="absolute left-4 top-4 z-10 flex max-w-[calc(100%-5rem)] items-center gap-2 rounded-full border border-white/80 bg-white/92 px-3 py-2 text-[10px] font-semibold text-primary shadow-md backdrop-blur">
+      <div className="absolute left-4 top-4 z-10 flex max-w-[calc(100%-5rem)] items-center gap-2 rounded-full border border-[#C6CBEF]/45 bg-gradient-to-r from-white/95 to-[#C4E2F5]/90 px-3 py-2 text-[10px] font-semibold text-[#2C5EAD] shadow-md backdrop-blur">
         <span className="route-hint-dot" aria-hidden="true" />
         {routeHint}
       </div>

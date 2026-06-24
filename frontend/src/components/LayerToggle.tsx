@@ -199,7 +199,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
   return (
     <div className="flex flex-col gap-4">
       {/* 1. Map Mode Selection */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
+      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
         <SectionTitle icon={Compass} title="Map Mode" detail="Select current weather context" />
         <div className="grid grid-cols-2 gap-2 mt-2">
           <button
@@ -208,7 +208,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
             className={cn(
               "flex h-9 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
               mapMode === "today"
-                ? "bg-[#2C5EAD] text-white"
+                ? "bg-gradient-to-r from-[#2C5EAD] to-[#1591DC] text-white"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
             )}
           >
@@ -220,7 +220,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
             className={cn(
               "flex h-9 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
               mapMode === "history"
-                ? "bg-[#2C5EAD] text-white"
+                ? "bg-gradient-to-r from-[#2C5EAD] to-[#1591DC] text-white"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
             )}
           >
@@ -231,7 +231,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
 
       {/* 2. Today's Rain Risk (Show Live weather controls first in Today Mode) */}
       {mapMode === "today" && (
-        <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
+        <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
           <SectionTitle icon={Layers3} title="Today’s Rain Risk" detail="Real-time predictive overlays" />
           <div className="flex flex-col gap-0.5 mt-1.5">
             <ToggleRow
@@ -312,7 +312,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       )}
 
       {/* 3. Route Setup Instructions */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
+      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
         <SectionTitle icon={Route} title="Route Setup" detail="Interactive weather-aware routing" />
         <div className="mt-1.5 flex flex-col gap-2 px-1">
           <div className="rounded-lg bg-slate-50/70 p-2.5 border border-slate-100 text-[11px] leading-relaxed text-slate-700">
@@ -337,7 +337,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       </section>
 
       {/* 4. Map Reference Layers */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
+      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
         <SectionTitle icon={Map} title="Map Layers" detail="Reference data" />
         <div className="flex flex-col gap-0.5 mt-1.5">
           <ToggleRow
@@ -365,7 +365,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       </section>
 
       {/* 5. Points of Interest */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
+      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
         <SectionTitle icon={Landmark} title="Places" detail="Points of interest" />
         <div className="flex flex-col gap-0.5 mt-1.5 max-h-56 overflow-y-auto pr-1">
           <PoiToggleRow
@@ -445,7 +445,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
 
       {/* 6. Collapsible Historical Analysis Section (Only visible in History mode) */}
       {mapMode === "history" && (
-        <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/70 p-3 shadow-sm transition-all hover:bg-white/80">
+        <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
           <button
             type="button"
             onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
