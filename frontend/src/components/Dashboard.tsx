@@ -51,29 +51,16 @@ interface RouteSelection {
   destination: RouteCoordinate | null;
 }
 
+interface DashboardProps {
+  onGoHome?: () => void;
+}
+
 const emptySelection: RouteSelection = { origin: null, destination: null };
 
 const getErrorMessage = (error: unknown, fallback: string) =>
   error instanceof Error && error.message ? error.message : fallback;
 
-const BrandLogo = () => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="size-6 text-[#2C5EAD] shrink-0"
-    aria-hidden="true"
-  >
-    <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0z" />
-    <path d="M9 10.5c1-1.5 2.5-1.5 3.5 0s2.5 1.5 3.5 0" strokeWidth="2" className="text-[#1591DC]" />
-    <circle cx="12" cy="10" r="1.5" fill="currentColor" />
-  </svg>
-);
-
-export const Dashboard = () => {
+export const Dashboard = ({ onGoHome }: DashboardProps) => {
   const prefersReducedMotion = useReducedMotion();
   const safeRouteTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -94,6 +81,7 @@ export const Dashboard = () => {
   const [liveRiskData, setLiveRiskData] = useState<FeatureCollection | null>(null);
   const [liveWeatherError, setLiveWeatherError] = useState<string | null>(null);
   const [riskDisplayMode, setRiskDisplayMode] = useState<"focus" | "all">("focus");
+  const [showControlsDrawer, setShowControlsDrawer] = useState(false);
 
   const [layers, setLayers] = useState<LayerToggles>({
     boundary: true,
@@ -455,7 +443,7 @@ export const Dashboard = () => {
     setSelectedZoneCode(null);
     setZoneExplanation(null);
     setExplainPanelOpen(false);
-    
+
     // Automatically toggle active layers
     setLayers((current) => ({
       ...current,
@@ -503,7 +491,7 @@ export const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen w-screen flex-col items-center justify-center bg-background">
+      <div className="stitch-page flex h-screen w-screen flex-col items-center justify-center">
         <LoadingSpinner message="Synchronizing map layers, places, and weather-aware routes..." />
       </div>
     );
@@ -511,159 +499,313 @@ export const Dashboard = () => {
 
   if (error) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-background p-6">
+      <div className="stitch-page flex h-screen w-screen items-center justify-center p-6">
         <div className="w-full max-w-lg"><ErrorDisplay message={error} /></div>
       </div>
     );
   }
 
+  // Derive alert status for the map overlay pill
+  const hasActiveAlerts = liveRoutingStatus?.status !== "ok";
+
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-sans text-foreground">
-      <header className="dashboard-header flex h-16 shrink-0 items-center justify-between border-b bg-card px-4 shadow-[0_1px_10px_rgba(44,94,173,0.05)]">
-        <div className="flex items-center gap-3">
-          <BrandLogo />
-          <div>
-            <h1 className="text-sm font-bold tracking-tight text-[#2C5EAD]">Egypt Smart City Digital Twin</h1>
-            <p className="text-[10px] font-medium text-muted-foreground">Nasr City Weather-Impact Emergency Mobility Module</p>
-          </div>
-        </div>
-        {liveRoutingStatus && (
-          <div className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-[10px] font-medium text-slate-600">
-            <span className={`h-1.5 w-1.5 rounded-full ${liveRoutingStatus.status === "ok" ? "bg-emerald-500" : "bg-amber-500 animate-pulse"}`} />
-            Live Routing: {liveRoutingStatus.status === "ok" ? "Ready" : "Degraded"}
-          </div>
-        )}
-      </header>
+    <div
+      className="stitch-page flex items-start justify-center"
+      style={{ padding: '1.5rem' }}
+    >
+      {/* Atmospheric background blobs */}
+      <div className="stitch-bg-cloud-1" aria-hidden="true" />
+      <div className="stitch-bg-cloud-2" aria-hidden="true" />
 
-      <div className="flex flex-1 overflow-hidden">
-        <SidePanel>
-          <SearchBox
-            onSelectResult={setSearchSelectedPoint}
-            selectedResult={searchSelectedPoint}
-            onSetStart={handleSetStartPoint}
-            onSetDestination={handleSetDestinationPoint}
-            onClear={() => setSearchSelectedPoint(null)}
-          />
-          <LayerToggle
-            mapMode={mapMode}
-            onMapModeChange={handleMapModeChange}
-            selectionState={selectionState}
-            routingError={routingError}
-            onResetRoute={resetCustomRoute}
-            layers={layers}
-            onToggle={handleToggleLayer}
-            riskFillOpacity={riskFillOpacity}
-            setRiskFillOpacity={setRiskFillOpacity}
-            gridLineOpacity={gridLineOpacity}
-            setGridLineOpacity={setGridLineOpacity}
-            events={events}
-            selectedEventId={selectedEventId}
-            onSelectEvent={setSelectedEventId}
-            riskDisplayMode={riskDisplayMode}
-            setRiskDisplayMode={setRiskDisplayMode}
-            placesData={placesData}
-          />
-          <Legend />
-        </SidePanel>
-
-        <main className="relative flex flex-1 flex-col overflow-hidden">
-          {liveWeatherError && (
-            <div className="mx-3 mt-2 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-semibold text-amber-800">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
-              {liveWeatherError}
+      {/* Dashboard Shell */}
+      <div
+        className="stitch-dashboard-shell"
+        style={{ margin: '0 auto', height: 'calc(100vh - 3rem)', maxHeight: 920 }}
+      >
+        {/* Stitch Top Navigation Bar */}
+        <nav
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 1.5rem',
+            height: 60,
+            borderBottom: '1px solid rgba(255,255,255,0.5)',
+            background: 'rgba(255,255,255,0.4)',
+            flexShrink: 0,
+          }}
+        >
+          {/* Left: Brand + Nav tabs */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+            <button
+              onClick={onGoHome}
+              style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 16, color: 'var(--stitch-text-charcoal)' }}
+              title="Back to home"
+            >
+              <span style={{ color: 'var(--stitch-primary)' }}>Geo</span>
+              <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--stitch-tertiary-container)', margin: '0 2px' }} />
+              <span>Weather</span>
+            </button>
+            <div style={{ display: 'flex', gap: 24, fontSize: 14 }}>
+              <span style={{ color: 'var(--stitch-primary)', fontWeight: 600, borderBottom: '2px solid var(--stitch-primary)', paddingBottom: 2 }}>Overview</span>
+              <span style={{ color: 'var(--stitch-text-muted)', cursor: 'default' }}>Weather Map</span>
+              <span style={{ color: 'var(--stitch-text-muted)', cursor: 'default' }}>Station Logs</span>
+              <span style={{ color: 'var(--stitch-text-muted)', cursor: 'default' }}>Alerts</span>
             </div>
-          )}
-          <div className="shrink-0 pt-2">
-            <SummaryCards
-              mapMode={mapMode}
-              comparison={comparison}
-              liveWeather={liveWeather}
-            />
           </div>
-          <div className="relative flex-1 overflow-hidden border-t">
-            <MapView
-              layers={layers}
-              routeVisibility={routeVisibility}
-              boundaryData={boundaryData}
-              gridData={gridData}
-              placesData={placesData}
-              emergencyPlaceIds={emergencyPlaceIds}
-              latestRiskData={latestRiskData}
-              topRainRiskData={topRainRiskData}
-              riskSummaryData={riskSummaryData}
-              selectedEventRiskData={selectedEventRiskData}
-              liveRiskData={liveRiskData}
-              normalRouteData={normalRouteData}
-              safeRouteData={safeRouteData}
-              routeComparison={comparison}
-              routeOrigin={routeSelection.origin}
-              routeDestination={routeSelection.destination}
-              routingLoading={routingLoading}
-              routingError={routingError}
-              onMapPointClick={handleMapPointClick}
-              onResetRoute={resetCustomRoute}
-              riskFillOpacity={riskFillOpacity}
-              gridLineOpacity={gridLineOpacity}
-              riskDisplayMode={riskDisplayMode}
-              searchSelectedPoint={searchSelectedPoint}
-              onSetStartPoint={handleSetStartPoint}
-              onSetDestinationPoint={handleSetDestinationPoint}
-              onZoneClick={handleZoneClick}
-              selectedZoneCode={selectedZoneCode}
-              isRoutePlanningActive={isRoutePlanningActive}
+          {/* Right: Location + sync status */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'var(--stitch-text-muted)' }}>
+            <span>📍 Nasr City, Cairo</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              {liveRoutingStatus ? (
+                <>
+                  <span className={`h-1.5 w-1.5 rounded-full inline-block ${liveRoutingStatus.status === "ok" ? "bg-emerald-500" : "bg-amber-500"}`} style={{ width: 6, height: 6, borderRadius: '50%', display: 'inline-block', background: liveRoutingStatus.status === "ok" ? '#10b981' : '#f59e0b' }} />
+                  {liveRoutingStatus.status === "ok" ? "Live" : "Degraded"}
+                </>
+              ) : (
+                <>🔄 Live</>
+              )}
+            </span>
+          </div>
+        </nav>
+
+        {/* Dashboard Body */}
+        <div className="flex flex-1 overflow-hidden">
+          <SidePanel>
+            <SearchBox
+              onSelectResult={setSearchSelectedPoint}
+              selectedResult={searchSelectedPoint}
+              onSetStart={handleSetStartPoint}
+              onSetDestination={handleSetDestinationPoint}
+              onClear={() => setSearchSelectedPoint(null)}
             />
+            <LayerToggle
+              mapMode={mapMode}
+              onMapModeChange={handleMapModeChange}
+              selectionState={selectionState}
+              routingError={routingError}
+              onResetRoute={resetCustomRoute}
+              layers={layers}
+              onToggle={handleToggleLayer}
+              riskFillOpacity={riskFillOpacity}
+              setRiskFillOpacity={setRiskFillOpacity}
+              gridLineOpacity={gridLineOpacity}
+              setGridLineOpacity={setGridLineOpacity}
+              events={events}
+              selectedEventId={selectedEventId}
+              onSelectEvent={setSelectedEventId}
+              riskDisplayMode={riskDisplayMode}
+              setRiskDisplayMode={setRiskDisplayMode}
+              placesData={placesData}
+            />
+            <Legend />
+          </SidePanel>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`${routeSource}-${selectionState}`}
-                initial={prefersReducedMotion ? false : { opacity: 0, x: 14 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={prefersReducedMotion ? undefined : { opacity: 0, x: 8 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className="absolute bottom-4 right-4 z-10 hidden w-[23rem] max-h-[calc(100%-2rem)] overflow-y-auto sm:block"
+          <main className="relative flex flex-1 flex-col overflow-hidden">
+            {liveWeatherError && (
+              <div className="mx-3 mt-2 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-semibold text-amber-800">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+                {liveWeatherError}
+              </div>
+            )}
+            <div className="shrink-0 pt-2">
+              <SummaryCards
+                mapMode={mapMode}
+                comparison={comparison}
+                liveWeather={liveWeather}
+              />
+            </div>
+
+            {/* Map frame with Stitch styling */}
+            <div className="relative flex-1 overflow-hidden border-t stitch-map-frame" style={{ borderRadius: 0, margin: '8px', marginTop: 4 }}>
+
+              {/* Alerts / live status overlay pill */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 12,
+                  left: 12,
+                  zIndex: 15,
+                  background: 'rgba(255,255,255,0.85)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 999,
+                  padding: '6px 14px',
+                  border: '1px solid rgba(255,255,255,0.6)',
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: hasActiveAlerts ? 'var(--stitch-alert-orange)' : 'var(--stitch-secondary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                }}
               >
-                <RoutePanel
-                  comparison={comparison}
-                  eventType={routeEventType}
-                  onEventTypeChange={setRouteEventType}
-                  routeVisibility={routeVisibility}
-                  onRouteVisibilityChange={setRouteVisibility}
-                  selectionState={selectionState}
-                  routeSource={routeSource}
-                  routingError={routingError}
-                  onResetRoute={resetCustomRoute}
-                  onWhyThisRoute={handleWhyThisRouteClick}
-                  isRoutePlanningActive={isRoutePlanningActive}
-                  onToggleRoutePlanning={setIsRoutePlanningActive}
-                />
-              </motion.div>
-            </AnimatePresence>
+                {hasActiveAlerts ? '⚠️ Active Weather Alerts' : '✓ Live monitoring active'}
+              </div>
 
-            <AnimatePresence>
-              {explainPanelOpen && (
-                <motion.div
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: 8, scale: 0.95 }}
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute bottom-4 right-4 z-20 w-[23rem] max-h-[calc(100%-2.5rem)] overflow-y-auto sm:block"
-                >
-                  <ExplainabilityPanel
-                    zoneExplanation={zoneExplanation}
-                    routeExplanation={routeExplanation}
-                    onClose={() => {
-                      setExplainPanelOpen(false);
-                      setSelectedZoneCode(null);
+              {/* Controls drawer toggle button */}
+              <button
+                id="controls-drawer-toggle"
+                onClick={() => setShowControlsDrawer(d => !d)}
+                className="stitch-pill"
+                style={{
+                  position: 'absolute',
+                  top: 12,
+                  right: 60,
+                  zIndex: 15,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '6px 14px',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: 'var(--stitch-text-charcoal)',
+                  cursor: 'pointer',
+                  border: 'none',
+                }}
+              >
+                ≡ Controls
+              </button>
+
+              {/* Controls drawer (slides in from left) */}
+              <AnimatePresence>
+                {showControlsDrawer && (
+                  <motion.div
+                    initial={prefersReducedMotion ? false : { x: -280, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={prefersReducedMotion ? undefined : { x: -280, opacity: 0 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      bottom: 0,
+                      width: 280,
+                      zIndex: 20,
+                      padding: '1rem',
+                      background: 'rgba(255,255,255,0.92)',
+                      backdropFilter: 'blur(20px)',
+                      borderRight: '1px solid rgba(255,255,255,0.5)',
+                      overflowY: 'auto',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem',
                     }}
-                    activeTab={explainActiveTab}
-                    zoneLoading={zoneLoading}
-                    routeLoading={routeLoading}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                      <span style={{ fontWeight: 700, fontSize: 13 }}>Map Controls</span>
+                      <button
+                        onClick={() => setShowControlsDrawer(false)}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}
+                      >✕</button>
+                    </div>
+                    <LayerToggle
+                      mapMode={mapMode}
+                      onMapModeChange={handleMapModeChange}
+                      selectionState={selectionState}
+                      routingError={routingError}
+                      onResetRoute={resetCustomRoute}
+                      layers={layers}
+                      onToggle={handleToggleLayer}
+                      riskFillOpacity={riskFillOpacity}
+                      setRiskFillOpacity={setRiskFillOpacity}
+                      gridLineOpacity={gridLineOpacity}
+                      setGridLineOpacity={setGridLineOpacity}
+                      events={events}
+                      selectedEventId={selectedEventId}
+                      onSelectEvent={setSelectedEventId}
+                      riskDisplayMode={riskDisplayMode}
+                      setRiskDisplayMode={setRiskDisplayMode}
+                      placesData={placesData}
+                    />
+                    <Legend />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <MapView
+                layers={layers}
+                routeVisibility={routeVisibility}
+                boundaryData={boundaryData}
+                gridData={gridData}
+                placesData={placesData}
+                emergencyPlaceIds={emergencyPlaceIds}
+                latestRiskData={latestRiskData}
+                topRainRiskData={topRainRiskData}
+                riskSummaryData={riskSummaryData}
+                selectedEventRiskData={selectedEventRiskData}
+                liveRiskData={liveRiskData}
+                normalRouteData={normalRouteData}
+                safeRouteData={safeRouteData}
+                routeComparison={comparison}
+                routeOrigin={routeSelection.origin}
+                routeDestination={routeSelection.destination}
+                routingLoading={routingLoading}
+                routingError={routingError}
+                onMapPointClick={handleMapPointClick}
+                onResetRoute={resetCustomRoute}
+                riskFillOpacity={riskFillOpacity}
+                gridLineOpacity={gridLineOpacity}
+                riskDisplayMode={riskDisplayMode}
+                searchSelectedPoint={searchSelectedPoint}
+                onSetStartPoint={handleSetStartPoint}
+                onSetDestinationPoint={handleSetDestinationPoint}
+                onZoneClick={handleZoneClick}
+                selectedZoneCode={selectedZoneCode}
+                isRoutePlanningActive={isRoutePlanningActive}
+              />
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${routeSource}-${selectionState}`}
+                  initial={prefersReducedMotion ? false : { opacity: 0, x: 14 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={prefersReducedMotion ? undefined : { opacity: 0, x: 8 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="absolute bottom-4 right-4 z-10 hidden w-[23rem] max-h-[calc(100%-2rem)] overflow-y-auto sm:block"
+                >
+                  <RoutePanel
+                    comparison={comparison}
+                    eventType={routeEventType}
+                    onEventTypeChange={setRouteEventType}
+                    routeVisibility={routeVisibility}
+                    onRouteVisibilityChange={setRouteVisibility}
+                    selectionState={selectionState}
+                    routeSource={routeSource}
+                    routingError={routingError}
+                    onResetRoute={resetCustomRoute}
+                    onWhyThisRoute={handleWhyThisRouteClick}
+                    isRoutePlanningActive={isRoutePlanningActive}
+                    onToggleRoutePlanning={setIsRoutePlanningActive}
                   />
                 </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </main>
+              </AnimatePresence>
+
+              <AnimatePresence>
+                {explainPanelOpen && (
+                  <motion.div
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={prefersReducedMotion ? undefined : { opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="absolute bottom-4 right-4 z-20 w-[23rem] max-h-[calc(100%-2.5rem)] overflow-y-auto sm:block"
+                  >
+                    <ExplainabilityPanel
+                      zoneExplanation={zoneExplanation}
+                      routeExplanation={routeExplanation}
+                      onClose={() => {
+                        setExplainPanelOpen(false);
+                        setSelectedZoneCode(null);
+                      }}
+                      activeTab={explainActiveTab}
+                      zoneLoading={zoneLoading}
+                      routeLoading={routeLoading}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );
