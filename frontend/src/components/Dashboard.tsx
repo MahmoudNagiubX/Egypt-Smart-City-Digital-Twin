@@ -42,19 +42,10 @@ import { Legend } from "./Legend";
 import { ErrorDisplay, LoadingSpinner } from "./LoadingError";
 import { MapView } from "./MapView";
 import { RoutePanel } from "./RoutePanel";
-import { SummaryCards } from "./SummaryCards";
 import { SearchBox } from "./SearchBox";
 import { ExplainabilityPanel } from "./ExplainabilityPanel";
-import { formatDuration, toFiniteNumber, formatPercent, EMPTY_VALUE } from "../utils/format";
-
-const signedPercent = (value: unknown) => {
-  const number = toFiniteNumber(value);
-  if (number === null) {
-    return EMPTY_VALUE;
-  }
-  const prefix = number > 0 ? "+" : "";
-  return `${prefix}${formatPercent(number, 1)}`;
-};
+import { toFiniteNumber, EMPTY_VALUE } from "../utils/format";
+import { getRecommendationLabel } from "../utils/labels";
 
 const formatTemperature = (value: unknown) => {
   const number = toFiniteNumber(value);
@@ -85,6 +76,23 @@ const getWeatherIcon = (code: unknown) => {
   if (label === "Thunderstorm") return "thunderstorm";
   if (label === "Rain" || label === "Drizzle") return "rainy";
   return "partly_cloudy_day";
+};
+
+const getWeatherIconColor = (iconName: string) => {
+  switch (iconName) {
+    case "sunny":
+      return "#FFB800"; // Warm golden
+    case "partly_cloudy_day":
+      return "#42A5F5"; // Soft blue cloud
+    case "foggy":
+      return "#78909c"; // Blue-gray haze
+    case "thunderstorm":
+      return "#e0a900"; // Dark yellow lightning/storm accent
+    case "rainy":
+      return "#0288d1"; // Blue rain cloud
+    default:
+      return "#42A5F5";
+  }
 };
 
 const getAqiLabel = (aqi: unknown) => {
@@ -586,9 +594,58 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
     .slice(0, 24);
   const aqiSparklinePath = buildSparklinePath(aqiTrendValues);
 
+  // Compute KPI values for the stacked bottom cards
+  // 1. Today’s Rain Risk / Rain Risk
+  let rainRiskLabel = mapMode === "today" ? "Today’s Rain Risk" : "Rain Risk";
+  let rainRiskValue = "Low";
+  let rainRiskTone: "low" | "medium" | "high" = "low";
+
+  if (mapMode === "today") {
+    if (liveWeather) {
+      rainRiskValue = liveWeather.rain_risk_expected ? "Expected" : "No Rain Risk";
+      rainRiskTone = liveWeather.rain_risk_expected ? "medium" : "low";
+    } else {
+      rainRiskValue = "—";
+      rainRiskTone = "low";
+    }
+  } else {
+    rainRiskValue = "Expected";
+    rainRiskTone = "medium";
+  }
+
+  // 2. Rain Probability
+  let probValue = "—";
+  if (mapMode === "today") {
+    if (liveWeather?.forecast_window) {
+      probValue = `${Math.round(liveWeather.forecast_window.max_precipitation_probability ?? 0)}%`;
+    }
+  } else {
+    probValue = comparison ? "95%" : "—";
+  }
+
+  // 3. Route Recommendation
+  let recValue = "Waiting for route";
+  let recTone: "blue" | "low" | "medium" = "blue";
+  if (comparison) {
+    if (mapMode === "today") {
+      const rec = (comparison as any).recommendation;
+      recValue = getRecommendationLabel(rec);
+      recTone = rec === "weather_safe_route_recommended" ? "low" : "medium";
+    } else {
+      recValue = comparison.safe_route_available ? "Safer Route Available" : "Normal Route Recommended";
+      recTone = comparison.safe_route_available ? "low" : "medium";
+    }
+  }
+
+  // 4. Risk Reduction
+  let reductionValue = "—";
+  if (comparison) {
+    reductionValue = `${(comparison.risk_reduction_percent ?? 0).toFixed(0)}%`;
+  }
+
   return (
     <div
-      className="stitch-page flex items-start justify-center"
+      className="stitch-page flex items-center justify-center h-screen w-screen overflow-hidden"
       style={{ padding: '0.5rem' }}
     >
       {/* Atmospheric background blobs */}
@@ -663,7 +720,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
         </nav>
 
         {/* Dashboard Body */}
-        <div className="flex-1 overflow-auto p-4 md:p-6 flex flex-col gap-6">
+        <div className="flex-1 overflow-hidden p-4 flex flex-col gap-4">
           {/* Live Update & Location Row */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-xs">
@@ -695,18 +752,9 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
           </div>
 
           {/* Main 12-Column Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full min-h-0">
-            {/* Left 9 columns: Metrics, Map Card, Bottom Analytics */}
-            <div className="lg:col-span-9 flex flex-col gap-6 min-h-0">
-              
-              {/* Core Metric Cards */}
-              <div className="shrink-0">
-                <SummaryCards
-                  mapMode={mapMode}
-                  comparison={comparison}
-                  liveWeather={liveWeather}
-                />
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full min-h-0">
+            {/* Left 9 columns: Map Card, Bottom Analytics */}
+            <div className="lg:col-span-9 flex flex-col gap-4 min-h-0">
 
               {/* Map Card */}
               <div className="relative w-full h-[400px] lg:flex-1 rounded-[16px] overflow-hidden border border-white/60 shadow-sm bg-[#e8f1f8] stitch-map-frame">
@@ -935,79 +983,70 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   </div>
                 </div>
 
-                {/* 2. Route Snapshot Card */}
+                {/* 2. Composite Card 1: Today’s Rain Risk & Rain Probability */}
                 <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Route Snapshot</span>
-                    <span className="material-symbols-outlined text-[16px] text-text-muted">route</span>
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Rain & Risk Profile</span>
+                    <span className="material-symbols-outlined text-[16px] text-text-muted">umbrella</span>
                   </div>
-                  {comparison ? (
-                    <div className="flex-1 flex flex-col gap-2 mt-1">
-                      <div className="flex justify-between items-center text-[11.5px]">
-                        <span className="text-text-muted">Normal ETA</span>
-                        <span className="font-semibold text-text-charcoal font-sans">
-                          {comparison.normal_weather_eta_sec != null 
-                            ? formatDuration(comparison.normal_weather_eta_sec) 
-                            : "—"}
+                  <div className="flex-1 flex flex-col gap-2 mt-1">
+                    {/* Sub-item 1: Today's Rain Risk */}
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[9px] text-text-muted font-bold uppercase">
+                        {rainRiskLabel}
+                      </span>
+                      <div className="flex items-center justify-between mt-0.5">
+                        <span className="font-bold text-text-charcoal text-xs">
+                          {rainRiskValue}
                         </span>
-                      </div>
-                      <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
-                        <span className="text-text-muted">Safe ETA</span>
-                        <span className="font-bold text-[#006688] font-sans">
-                          {comparison.safe_weather_eta_sec != null 
-                            ? formatDuration(comparison.safe_weather_eta_sec) 
-                            : "—"}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
-                        <span className="text-text-muted">Risk Reduction</span>
-                        <span className="font-bold text-[#006d36] font-sans">
-                          {comparison.avoided_high_risk_segments != null 
-                            ? `${comparison.avoided_high_risk_segments} zones avoided` 
-                            : "—"}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
-                        <span className="text-text-muted">ETA Tradeoff</span>
-                        <span className="font-semibold text-text-charcoal font-sans">
-                          {comparison.eta_tradeoff_percent != null 
-                            ? signedPercent(comparison.eta_tradeoff_percent) 
-                            : "—"}
+                        <span className={`text-[8.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
+                          rainRiskTone === "medium" ? "bg-[#ffdcbe] text-[#ff9e2a]" :
+                          "bg-[#83fba5]/30 text-[#006d36]"
+                        }`}>
+                          {rainRiskTone.toUpperCase()}
                         </span>
                       </div>
                     </div>
-                  ) : (
-                    <div className="flex-1 flex flex-col justify-center items-center text-center py-4">
-                      <span className="material-symbols-outlined text-[20px] text-text-muted mb-1">add_location_alt</span>
-                      <p className="text-[10px] text-text-muted leading-snug px-2 font-sans">
-                        Select a start and destination on the map to display route comparison.
-                      </p>
+                    {/* Sub-item 2: Rain Probability */}
+                    <div className="flex flex-col gap-0.5 border-t border-white/10 pt-1.5">
+                      <span className="text-[9px] text-text-muted font-bold uppercase">Rain Probability</span>
+                      <span className="font-bold text-text-charcoal text-xs font-sans mt-0.5">
+                        {probValue}
+                      </span>
                     </div>
-                  )}
+                  </div>
                 </div>
 
-                {/* 3. Model & Data Sources Card */}
+                {/* 3. Composite Card 2: Route Recommendation & Risk Reduction */}
                 <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Model & Data Sources</span>
-                    <span className="material-symbols-outlined text-[16px] text-text-muted">database</span>
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Route Safety</span>
+                    <span className="material-symbols-outlined text-[16px] text-text-muted">shield</span>
                   </div>
-                  <div className="flex-1 flex flex-col gap-1.5 mt-1 text-[10.5px]">
-                    <div className="flex flex-col">
-                      <span className="text-[9px] text-text-muted font-bold uppercase">Weather Risk Model</span>
-                      <span className="font-semibold text-text-charcoal">Weather Impact Risk Model</span>
+                  <div className="flex-1 flex flex-col gap-2 mt-1">
+                    {/* Sub-item 1: Route Recommendation */}
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[9px] text-text-muted font-bold uppercase">Recommendation</span>
+                      <div className="flex items-center justify-between gap-1 mt-0.5">
+                        <span className="font-semibold text-text-charcoal text-[11px] truncate max-w-[110px]" title={recValue}>
+                          {recValue}
+                        </span>
+                        <span className={`text-[8.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
+                          recTone === "low" ? "bg-[#83fba5]/30 text-[#006d36]" :
+                          recTone === "medium" ? "bg-[#ffdcbe] text-[#ff9e2a]" :
+                          "bg-[#c2e8ff]/40 text-[#006688]"
+                        }`}>
+                          {recTone.toUpperCase()}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col border-t border-white/10 pt-1">
-                      <span className="text-[9px] text-text-muted font-bold uppercase">Routing Engine</span>
-                      <span className="font-semibold text-text-charcoal">Weather-Aware Emergency Router</span>
+                    {/* Sub-item 2: Risk Reduction */}
+                    <div className="flex flex-col gap-0.5 border-t border-white/10 pt-1.5">
+                      <span className="text-[9px] text-text-muted font-bold uppercase">Risk Reduction</span>
+                      <span className="font-bold text-[#006688] text-xs font-sans mt-0.5">
+                        {reductionValue}
+                      </span>
                     </div>
-                    <div className="flex flex-col border-t border-white/10 pt-1">
-                      <span className="text-[9px] text-text-muted font-bold uppercase">Main Data Sources</span>
-                      <span className="font-semibold text-text-charcoal truncate">Open-Meteo, OpenStreetMap, AQI API</span>
-                    </div>
-                    <p className="text-[9.5px] text-text-muted font-normal border-t border-white/10 pt-1 leading-snug font-sans">
-                      Predicts zone safety risk levels using precipitation, slope, and elevation features.
-                    </p>
                   </div>
                 </div>
 
@@ -1061,7 +1100,13 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               <div className="stitch-card flex flex-col p-4 shadow-sm relative">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-4">
-                    <span className="material-symbols-outlined text-[42px] text-[#006688]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    <span 
+                      className="material-symbols-outlined text-[42px]" 
+                      style={{ 
+                        fontVariationSettings: "'FILL' 1",
+                        color: getWeatherIconColor(currentWeatherIcon)
+                      }}
+                    >
                       {currentWeatherIcon}
                     </span>
                     <div>
@@ -1124,7 +1169,15 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                       <span className="font-bold text-text-charcoal">
                         {new Date(`${day.date}T12:00:00`).toLocaleDateString(undefined, { weekday: "short" })}
                       </span>
-                      <span className="material-symbols-outlined text-[17px] text-[#006688]" style={{ fontVariationSettings: "'FILL' 1" }}>{getWeatherIcon(day.weather_code)}</span>
+                      <span 
+                        className="material-symbols-outlined text-[17px]" 
+                        style={{ 
+                          fontVariationSettings: "'FILL' 1",
+                          color: getWeatherIconColor(getWeatherIcon(day.weather_code))
+                        }}
+                      >
+                        {getWeatherIcon(day.weather_code)}
+                      </span>
                       <span className="text-text-muted">{formatMetric(day.precipitation_probability_max, "%")} rain</span>
                       <span className="font-bold text-text-charcoal">{formatTemperature(day.temperature_2m_max)} / {formatTemperature(day.temperature_2m_min)}</span>
                     </div>
