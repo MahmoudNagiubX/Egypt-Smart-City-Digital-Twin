@@ -126,6 +126,9 @@ interface MapViewProps {
   searchSelectedPoint: any;
   onSetStartPoint: (coordinate: RouteCoordinate) => void;
   onSetDestinationPoint: (coordinate: RouteCoordinate) => void;
+  onZoneClick?: (zoneCode: string, eventId?: string | null) => void;
+  selectedZoneCode?: string | null;
+  isRoutePlanningActive?: boolean;
 }
 
 export const MapView = ({
@@ -155,6 +158,9 @@ export const MapView = ({
   searchSelectedPoint,
   onSetStartPoint,
   onSetDestinationPoint,
+  onZoneClick,
+  selectedZoneCode = null,
+  isRoutePlanningActive = false,
 }: MapViewProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -346,6 +352,19 @@ export const MapView = ({
         }
       }, firstSymbolLayer);
 
+      // Selected zone highlight layer
+      map.addLayer({
+        id: "selected-zone-highlight",
+        type: "line",
+        source: "grid",
+        paint: {
+          "line-color": "#4f46e5",
+          "line-width": 3,
+          "line-opacity": 0.95
+        },
+        filter: ["==", ["get", "zone_code"], ""]
+      }, firstSymbolLayer);
+
       map.addLayer({
         id: "normal-route-layer",
         type: "line",
@@ -469,6 +488,29 @@ export const MapView = ({
             .addTo(map);
           if (isRouteFeature) return;
         }
+        
+        let zoneClicked = false;
+        let clickedZoneCode: string | null = null;
+        let clickedEventId: string | null = null;
+        
+        if (feature) {
+          const properties = feature.properties ?? {};
+          const isRouteFeature = routeLayers.includes(feature.layer.id);
+          if (!isRouteFeature && properties.zone_code) {
+            zoneClicked = true;
+            clickedZoneCode = properties.zone_code;
+            clickedEventId = properties.event_id || null;
+          }
+        }
+        
+        const routingActive = routeOrigin || isRoutePlanningActive;
+        if (zoneClicked && clickedZoneCode && !routingActive) {
+          if (onZoneClick) {
+            onZoneClick(clickedZoneCode, clickedEventId);
+          }
+          return;
+        }
+        
         if (!routingLoadingRef.current) {
           onMapPointClickRef.current({ lat: event.lngLat.lat, lon: event.lngLat.lng });
         }
@@ -861,6 +903,22 @@ export const MapView = ({
       console.warn("Failed to update fill opacity:", err);
     }
   }, [riskFillOpacity, riskDisplayMode, mapLoaded]);
+
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+    try {
+      if (map.getLayer("selected-zone-highlight")) {
+        map.setFilter("selected-zone-highlight", [
+          "==",
+          ["get", "zone_code"],
+          selectedZoneCode || "",
+        ]);
+      }
+    } catch (err) {
+      console.warn("Failed to update selected zone filter:", err);
+    }
+  }, [selectedZoneCode, mapLoaded]);
 
   const routeHint = routingLoading
     ? "Calculating weather-aware route..."
