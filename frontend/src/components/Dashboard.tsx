@@ -38,7 +38,6 @@ import { Legend } from "./Legend";
 import { ErrorDisplay, LoadingSpinner } from "./LoadingError";
 import { MapView } from "./MapView";
 import { RoutePanel } from "./RoutePanel";
-import { SidePanel } from "./SidePanel";
 import { SummaryCards } from "./SummaryCards";
 import { SearchBox } from "./SearchBox";
 import { ExplainabilityPanel } from "./ExplainabilityPanel";
@@ -67,8 +66,8 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
   const [mapMode, setMapMode] = useState<"today" | "history">("today");
   const [events, setEvents] = useState<EventSummary[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-  const [riskFillOpacity, setRiskFillOpacity] = useState(0.35);
-  const [gridLineOpacity, setGridLineOpacity] = useState(0.20);
+  const [riskFillOpacity, setRiskFillOpacity] = useState(0.28);
+  const [gridLineOpacity, setGridLineOpacity] = useState(0.08);
   const [routeEventType, setRouteEventType] = useState<RouteEventType>("top-rain");
   const [routeVisibility, setRouteVisibility] = useState<RouteVisibility>("both");
   const [routeSelection, setRouteSelection] = useState<RouteSelection>(emptySelection);
@@ -524,287 +523,522 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
       >
         {/* Stitch Top Navigation Bar */}
         <nav
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 1.5rem',
-            height: 60,
-            borderBottom: '1px solid rgba(255,255,255,0.5)',
-            background: 'rgba(255,255,255,0.4)',
-            flexShrink: 0,
-          }}
+          className="flex items-center justify-between px-6 py-3 border-b border-glass-border bg-white/40"
+          style={{ height: 60, flexShrink: 0 }}
         >
           {/* Left: Brand + Nav tabs */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          <div className="flex items-center gap-8">
             <button
               onClick={onGoHome}
-              style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 16, color: 'var(--stitch-text-charcoal)' }}
+              className="flex items-center gap-1 font-headline-md text-base font-bold tracking-tight text-text-charcoal cursor-pointer border-none bg-transparent"
               title="Back to home"
             >
-              <span style={{ color: 'var(--stitch-primary)' }}>Geo</span>
-              <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: 'var(--stitch-tertiary-container)', margin: '0 2px' }} />
+              <span>Geo</span>
+              <span className="text-tertiary-container text-xs material-symbols-outlined font-variation-settings-['FILL'_1] text-[#ff9e2a] leading-none" style={{ fontVariationSettings: "'FILL' 1" }}>
+                fiber_manual_record
+              </span>
               <span>Weather</span>
             </button>
-            <div style={{ display: 'flex', gap: 24, fontSize: 14 }}>
-              <span style={{ color: 'var(--stitch-primary)', fontWeight: 600, borderBottom: '2px solid var(--stitch-primary)', paddingBottom: 2 }}>Overview</span>
-              <span style={{ color: 'var(--stitch-text-muted)', cursor: 'default' }}>Weather Map</span>
-              <span style={{ color: 'var(--stitch-text-muted)', cursor: 'default' }}>Station Logs</span>
-              <span style={{ color: 'var(--stitch-text-muted)', cursor: 'default' }}>Alerts</span>
+            <div className="hidden lg:flex items-center gap-6 text-xs font-semibold text-text-muted">
+              <span className="text-[#006688] border-b-2 border-[#006688] pb-1 cursor-default">Overview</span>
+              <span className="hover:text-text-charcoal transition-colors cursor-default">Weather Map</span>
+              <span className="hover:text-text-charcoal transition-colors cursor-default">Station Logs</span>
+              <span className="hover:text-text-charcoal transition-colors cursor-default">Alerts</span>
             </div>
           </div>
-          {/* Right: Location + sync status */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'var(--stitch-text-muted)' }}>
-            <span>📍 Nasr City, Cairo</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              {liveRoutingStatus ? (
-                <>
-                  <span className={`h-1.5 w-1.5 rounded-full inline-block ${liveRoutingStatus.status === "ok" ? "bg-emerald-500" : "bg-amber-500"}`} style={{ width: 6, height: 6, borderRadius: '50%', display: 'inline-block', background: liveRoutingStatus.status === "ok" ? '#10b981' : '#f59e0b' }} />
-                  {liveRoutingStatus.status === "ok" ? "Live" : "Degraded"}
-                </>
-              ) : (
-                <>🔄 Live</>
-              )}
-            </span>
-          </div>
-        </nav>
-
-        {/* Dashboard Body */}
-        <div className="flex flex-1 overflow-hidden">
-          <SidePanel>
+          {/* Center: Search */}
+          <div className="hidden md:flex flex-1 max-w-sm mx-6">
             <SearchBox
               onSelectResult={setSearchSelectedPoint}
               selectedResult={searchSelectedPoint}
               onSetStart={handleSetStartPoint}
               onSetDestination={handleSetDestinationPoint}
               onClear={() => setSearchSelectedPoint(null)}
+              variant="nav"
             />
-            <LayerToggle
-              mapMode={mapMode}
-              onMapModeChange={handleMapModeChange}
-              selectionState={selectionState}
-              routingError={routingError}
-              onResetRoute={resetCustomRoute}
-              layers={layers}
-              onToggle={handleToggleLayer}
-              riskFillOpacity={riskFillOpacity}
-              setRiskFillOpacity={setRiskFillOpacity}
-              gridLineOpacity={gridLineOpacity}
-              setGridLineOpacity={setGridLineOpacity}
-              events={events}
-              selectedEventId={selectedEventId}
-              onSelectEvent={setSelectedEventId}
-              riskDisplayMode={riskDisplayMode}
-              setRiskDisplayMode={setRiskDisplayMode}
-              placesData={placesData}
-            />
-            <Legend />
-          </SidePanel>
-
-          <main className="relative flex flex-1 flex-col overflow-hidden">
-            {liveWeatherError && (
-              <div className="mx-3 mt-2 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-semibold text-amber-800">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
-                {liveWeatherError}
-              </div>
-            )}
-            <div className="shrink-0 pt-2">
-              <SummaryCards
-                mapMode={mapMode}
-                comparison={comparison}
-                liveWeather={liveWeather}
-              />
+          </div>
+          {/* Right: Actions & Profile */}
+          <div className="flex items-center gap-4 text-xs">
+            <div className="hidden md:flex items-center gap-1.5 text-text-muted">
+              <span className="material-symbols-outlined text-[16px]">sync</span>
+              <span>Synced 2 min ago</span>
             </div>
-
-            {/* Map frame with Stitch styling */}
-            <div className="relative flex-1 overflow-hidden border-t stitch-map-frame" style={{ borderRadius: 0, margin: '8px', marginTop: 4 }}>
-
-              {/* Alerts / live status overlay pill */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 12,
-                  left: 12,
-                  zIndex: 15,
-                  background: 'rgba(255,255,255,0.85)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: 999,
-                  padding: '6px 14px',
-                  border: '1px solid rgba(255,255,255,0.6)',
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: hasActiveAlerts ? 'var(--stitch-alert-orange)' : 'var(--stitch-secondary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                }}
-              >
-                {hasActiveAlerts ? '⚠️ Active Weather Alerts' : '✓ Live monitoring active'}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1 font-medium text-text-muted">
+                <span className="material-symbols-outlined text-[16px]">thermostat</span>
+                <span>C/F</span>
               </div>
-
-              {/* Controls drawer toggle button */}
-              <button
-                id="controls-drawer-toggle"
-                onClick={() => setShowControlsDrawer(d => !d)}
-                className="stitch-pill"
-                style={{
-                  position: 'absolute',
-                  top: 12,
-                  right: 60,
-                  zIndex: 15,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  padding: '6px 14px',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: 'var(--stitch-text-charcoal)',
-                  cursor: 'pointer',
-                  border: 'none',
-                }}
-              >
-                ≡ Controls
+              <button className="relative text-text-muted hover:text-text-charcoal bg-transparent border-none cursor-pointer p-0 flex items-center">
+                <span className="material-symbols-outlined text-lg">notifications</span>
+                <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-[#FF7A00] rounded-full"></span>
               </button>
-
-              {/* Controls drawer (slides in from left) */}
-              <AnimatePresence>
-                {showControlsDrawer && (
-                  <motion.div
-                    initial={prefersReducedMotion ? false : { x: -280, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={prefersReducedMotion ? undefined : { x: -280, opacity: 0 }}
-                    transition={{ duration: 0.22, ease: "easeOut" }}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      bottom: 0,
-                      width: 280,
-                      zIndex: 20,
-                      padding: '1rem',
-                      background: 'rgba(255,255,255,0.92)',
-                      backdropFilter: 'blur(20px)',
-                      borderRight: '1px solid rgba(255,255,255,0.5)',
-                      overflowY: 'auto',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '1rem',
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                      <span style={{ fontWeight: 700, fontSize: 13 }}>Map Controls</span>
-                      <button
-                        onClick={() => setShowControlsDrawer(false)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}
-                      >✕</button>
-                    </div>
-                    <LayerToggle
-                      mapMode={mapMode}
-                      onMapModeChange={handleMapModeChange}
-                      selectionState={selectionState}
-                      routingError={routingError}
-                      onResetRoute={resetCustomRoute}
-                      layers={layers}
-                      onToggle={handleToggleLayer}
-                      riskFillOpacity={riskFillOpacity}
-                      setRiskFillOpacity={setRiskFillOpacity}
-                      gridLineOpacity={gridLineOpacity}
-                      setGridLineOpacity={setGridLineOpacity}
-                      events={events}
-                      selectedEventId={selectedEventId}
-                      onSelectEvent={setSelectedEventId}
-                      riskDisplayMode={riskDisplayMode}
-                      setRiskDisplayMode={setRiskDisplayMode}
-                      placesData={placesData}
-                    />
-                    <Legend />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <MapView
-                layers={layers}
-                routeVisibility={routeVisibility}
-                boundaryData={boundaryData}
-                gridData={gridData}
-                placesData={placesData}
-                emergencyPlaceIds={emergencyPlaceIds}
-                latestRiskData={latestRiskData}
-                topRainRiskData={topRainRiskData}
-                riskSummaryData={riskSummaryData}
-                selectedEventRiskData={selectedEventRiskData}
-                liveRiskData={liveRiskData}
-                normalRouteData={normalRouteData}
-                safeRouteData={safeRouteData}
-                routeComparison={comparison}
-                routeOrigin={routeSelection.origin}
-                routeDestination={routeSelection.destination}
-                routingLoading={routingLoading}
-                routingError={routingError}
-                onMapPointClick={handleMapPointClick}
-                onResetRoute={resetCustomRoute}
-                riskFillOpacity={riskFillOpacity}
-                gridLineOpacity={gridLineOpacity}
-                riskDisplayMode={riskDisplayMode}
-                searchSelectedPoint={searchSelectedPoint}
-                onSetStartPoint={handleSetStartPoint}
-                onSetDestinationPoint={handleSetDestinationPoint}
-                onZoneClick={handleZoneClick}
-                selectedZoneCode={selectedZoneCode}
-                isRoutePlanningActive={isRoutePlanningActive}
-              />
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`${routeSource}-${selectionState}`}
-                  initial={prefersReducedMotion ? false : { opacity: 0, x: 14 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={prefersReducedMotion ? undefined : { opacity: 0, x: 8 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute bottom-4 right-4 z-10 hidden w-[23rem] max-h-[calc(100%-2rem)] overflow-y-auto sm:block"
-                >
-                  <RoutePanel
-                    comparison={comparison}
-                    eventType={routeEventType}
-                    onEventTypeChange={setRouteEventType}
-                    routeVisibility={routeVisibility}
-                    onRouteVisibilityChange={setRouteVisibility}
-                    selectionState={selectionState}
-                    routeSource={routeSource}
-                    routingError={routingError}
-                    onResetRoute={resetCustomRoute}
-                    onWhyThisRoute={handleWhyThisRouteClick}
-                    isRoutePlanningActive={isRoutePlanningActive}
-                    onToggleRoutePlanning={setIsRoutePlanningActive}
-                  />
-                </motion.div>
-              </AnimatePresence>
-
-              <AnimatePresence>
-                {explainPanelOpen && (
-                  <motion.div
-                    initial={prefersReducedMotion ? false : { opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={prefersReducedMotion ? undefined : { opacity: 0, y: 8, scale: 0.95 }}
-                    transition={{ duration: 0.15, ease: "easeOut" }}
-                    className="absolute bottom-4 right-4 z-20 w-[23rem] max-h-[calc(100%-2.5rem)] overflow-y-auto sm:block"
-                  >
-                    <ExplainabilityPanel
-                      zoneExplanation={zoneExplanation}
-                      routeExplanation={routeExplanation}
-                      onClose={() => {
-                        setExplainPanelOpen(false);
-                        setSelectedZoneCode(null);
-                      }}
-                      activeTab={explainActiveTab}
-                      zoneLoading={zoneLoading}
-                      routeLoading={routeLoading}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div 
+                className="w-7 h-7 rounded-full bg-[#006688] border border-white/50 text-white flex items-center justify-center font-bold text-[10px]"
+                title="User Profile"
+              >
+                MN
+              </div>
             </div>
-          </main>
+          </div>
+        </nav>
+
+        {/* Dashboard Body */}
+        <div className="flex-1 overflow-auto p-4 md:p-6 flex flex-col gap-6">
+          {/* Live Update & Location Row */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="font-bold text-[#006688]">LIVE UPDATE:</span>
+              <span className="text-text-charcoal">
+                {liveWeather?.warnings && liveWeather.warnings.length > 0 
+                  ? liveWeather.warnings[0] 
+                  : (liveWeather?.rain_risk_expected 
+                      ? "Upcoming: Heavy rain predicted (Local)." 
+                      : "No immediate storm threat detected.")}
+              </span>
+              <a className="text-text-muted hover:text-[#006688] underline decoration-text-muted/50 underline-offset-2" href="#" onClick={e => e.preventDefault()}>See Forecast →</a>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1 text-xs font-semibold text-text-charcoal">
+                <span className="material-symbols-outlined text-base">location_on</span>
+                <span>Nasr City, Cairo</span>
+              </div>
+              <button 
+                onClick={() => {
+                  alert("Weather routing report generated. Downloading...");
+                }}
+                className="bg-[#c2e8ff] hover:bg-[#006688] hover:text-white text-[#004d67] px-4 py-1.5 rounded-lg text-xs font-semibold hover:bg-primary transition-colors flex items-center gap-2 shadow-sm border border-[#006688]/10 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[18px]">download</span>
+                Export
+              </button>
+            </div>
+          </div>
+
+          {/* Main 12-Column Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full min-h-0">
+            {/* Left 8 columns: Metrics, Map Card, Bottom Analytics */}
+            <div className="lg:col-span-8 flex flex-col gap-6 min-h-0">
+              
+              {/* Core Metric Cards */}
+              <div className="shrink-0">
+                <SummaryCards
+                  mapMode={mapMode}
+                  comparison={comparison}
+                  liveWeather={liveWeather}
+                />
+              </div>
+
+              {/* Map Card */}
+              <div className="relative w-full h-[400px] lg:flex-1 rounded-[16px] overflow-hidden border border-white/60 shadow-sm bg-[#e8f1f8] stitch-map-frame">
+                {/* Alerts overlay pill */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 12,
+                    left: 12,
+                    zIndex: 15,
+                    background: 'rgba(255,255,255,0.85)',
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: 999,
+                    padding: '6px 14px',
+                    border: '1px solid rgba(255,255,255,0.6)',
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: hasActiveAlerts ? 'var(--stitch-alert-orange)' : 'var(--stitch-secondary)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                  }}
+                >
+                  {hasActiveAlerts ? '⚠️ Active Weather Alerts' : '✓ Live monitoring active'}
+                </div>
+
+                {/* Secondary Hint */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 50,
+                    left: 12,
+                    zIndex: 15,
+                    background: 'rgba(255,255,255,0.7)',
+                    backdropFilter: 'blur(8px)',
+                    borderRadius: 999,
+                    padding: '4px 10px',
+                    border: '1px solid rgba(255,255,255,0.5)',
+                    fontSize: 9.5,
+                    fontWeight: 500,
+                    color: 'var(--stitch-text-muted)',
+                  }}
+                >
+                  💡 Click a zone for explanation
+                </div>
+
+                {/* Controls drawer toggle button */}
+                <button
+                  id="controls-drawer-toggle"
+                  onClick={() => setShowControlsDrawer(d => !d)}
+                  className="stitch-pill"
+                  style={{
+                    position: 'absolute',
+                    top: 12,
+                    right: 60,
+                    zIndex: 15,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    padding: '6px 14px',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: 'var(--stitch-text-charcoal)',
+                    cursor: 'pointer',
+                    border: 'none',
+                  }}
+                >
+                  ≡ Controls
+                </button>
+
+                {/* Controls drawer (slides in from left) */}
+                <AnimatePresence>
+                  {showControlsDrawer && (
+                    <motion.div
+                      initial={prefersReducedMotion ? false : { x: -300, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={prefersReducedMotion ? undefined : { x: -300, opacity: 0 }}
+                      transition={{ duration: 0.22, ease: "easeOut" }}
+                      className="stitch-glass"
+                      style={{
+                        position: 'absolute',
+                        top: 12,
+                        left: 12,
+                        bottom: 12,
+                        width: 300,
+                        zIndex: 20,
+                        padding: '1.25rem',
+                        borderRadius: '20px',
+                        overflowY: 'auto',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <span style={{ fontWeight: 700, fontSize: 13, color: 'var(--stitch-text-charcoal)' }}>Map Controls</span>
+                        <button
+                          onClick={() => setShowControlsDrawer(false)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'var(--stitch-text-muted)' }}
+                        >✕</button>
+                      </div>
+                      <LayerToggle
+                        mapMode={mapMode}
+                        onMapModeChange={handleMapModeChange}
+                        selectionState={selectionState}
+                        routingError={routingError}
+                        onResetRoute={resetCustomRoute}
+                        layers={layers}
+                        onToggle={handleToggleLayer}
+                        riskFillOpacity={riskFillOpacity}
+                        setRiskFillOpacity={setRiskFillOpacity}
+                        gridLineOpacity={gridLineOpacity}
+                        setGridLineOpacity={setGridLineOpacity}
+                        events={events}
+                        selectedEventId={selectedEventId}
+                        onSelectEvent={setSelectedEventId}
+                        riskDisplayMode={riskDisplayMode}
+                        setRiskDisplayMode={setRiskDisplayMode}
+                        placesData={placesData}
+                      />
+                      <Legend />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* MapView */}
+                <MapView
+                  layers={layers}
+                  routeVisibility={routeVisibility}
+                  boundaryData={boundaryData}
+                  gridData={gridData}
+                  placesData={placesData}
+                  emergencyPlaceIds={emergencyPlaceIds}
+                  latestRiskData={latestRiskData}
+                  topRainRiskData={topRainRiskData}
+                  riskSummaryData={riskSummaryData}
+                  selectedEventRiskData={selectedEventRiskData}
+                  liveRiskData={liveRiskData}
+                  normalRouteData={normalRouteData}
+                  safeRouteData={safeRouteData}
+                  routeComparison={comparison}
+                  routeOrigin={routeSelection.origin}
+                  routeDestination={routeSelection.destination}
+                  routingLoading={routingLoading}
+                  routingError={routingError}
+                  onMapPointClick={handleMapPointClick}
+                  onResetRoute={resetCustomRoute}
+                  riskFillOpacity={riskFillOpacity}
+                  gridLineOpacity={gridLineOpacity}
+                  riskDisplayMode={riskDisplayMode}
+                  searchSelectedPoint={searchSelectedPoint}
+                  onSetStartPoint={handleSetStartPoint}
+                  onSetDestinationPoint={handleSetDestinationPoint}
+                  onZoneClick={handleZoneClick}
+                  selectedZoneCode={selectedZoneCode}
+                  isRoutePlanningActive={isRoutePlanningActive}
+                />
+
+                {/* Route Planner Floating Card Over Map */}
+                <AnimatePresence mode="wait">
+                  {isRoutePlanningActive && (
+                    <motion.div
+                      key={`${routeSource}-${selectionState}`}
+                      initial={prefersReducedMotion ? false : { opacity: 0, x: 14 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={prefersReducedMotion ? undefined : { opacity: 0, x: 8 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="absolute bottom-4 right-4 z-10 hidden w-[23rem] max-h-[calc(100%-2rem)] overflow-y-auto sm:block"
+                    >
+                      <RoutePanel
+                        comparison={comparison}
+                        eventType={routeEventType}
+                        onEventTypeChange={setRouteEventType}
+                        routeVisibility={routeVisibility}
+                        onRouteVisibilityChange={setRouteVisibility}
+                        selectionState={selectionState}
+                        routeSource={routeSource}
+                        routingError={routingError}
+                        onResetRoute={resetCustomRoute}
+                        onWhyThisRoute={handleWhyThisRouteClick}
+                        isRoutePlanningActive={isRoutePlanningActive}
+                        onToggleRoutePlanning={setIsRoutePlanningActive}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Bottom Analytics Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
+                {/* 1. Regional Extremes Card */}
+                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Regional Extremes</span>
+                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+                  </div>
+                  <div className="flex-1 flex flex-col gap-2 mt-1">
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-text-muted">Max Wind Gust</span>
+                      <span className="font-bold text-text-charcoal">
+                        {liveWeather?.current?.wind_speed_10m != null 
+                          ? `${liveWeather.current.wind_speed_10m.toFixed(1)} km/h` 
+                          : "—"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
+                      <span className="text-text-muted">Total Rainfall</span>
+                      <span className="font-bold text-text-charcoal">
+                        {liveWeather?.forecast_window?.rain_24h_mm != null 
+                          ? `${liveWeather.forecast_window.rain_24h_mm.toFixed(1)} mm` 
+                          : "—"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
+                      <span className="text-text-muted">High-Risk Segments</span>
+                      <span className="font-bold text-text-charcoal">
+                        {comparison?.avoided_high_risk_segments != null 
+                          ? comparison.avoided_high_risk_segments 
+                          : "—"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Route Intelligence Card */}
+                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Route Intelligence</span>
+                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+                  </div>
+                  <div className="flex-1 flex flex-col gap-2 mt-1">
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-text-muted">Normal ETA</span>
+                      <span className="font-bold text-text-charcoal">
+                        {comparison?.normal_weather_eta_sec != null 
+                          ? formatDuration(comparison.normal_weather_eta_sec) 
+                          : "—"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
+                      <span className="text-text-muted">Safe ETA</span>
+                      <span className="font-bold text-text-charcoal">
+                        {comparison?.safe_weather_eta_sec != null 
+                          ? formatDuration(comparison.safe_weather_eta_sec) 
+                          : "—"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
+                      <span className="text-text-muted">ETA Tradeoff</span>
+                      <span className="font-bold text-text-charcoal">
+                        {comparison?.eta_tradeoff_percent != null 
+                          ? signedPercent(comparison.eta_tradeoff_percent) 
+                          : "—"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Model Insight Card */}
+                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Model Insight</span>
+                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+                  </div>
+                  <div className="flex-1 flex flex-col gap-1.5 mt-1 text-[10.5px]">
+                    <div className="flex flex-col">
+                      <span className="text-[9px] text-text-muted font-semibold uppercase tracking-wider">Top Driver</span>
+                      <span className="font-bold text-text-charcoal mt-0.5 truncate font-sans">built_surface_mean</span>
+                    </div>
+                    <div className="flex flex-col border-t border-white/10 pt-1">
+                      <span className="text-[9px] text-text-muted font-semibold uppercase tracking-wider">Model Type</span>
+                      <span className="font-bold text-text-charcoal mt-0.5 truncate font-sans">Ridge Regression (V2)</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Alerts / Risk Summary Card */}
+                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Alerts & Risk</span>
+                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+                  </div>
+                  <div className="flex-1 flex flex-col gap-2 mt-1">
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-text-muted">Today’s Risk</span>
+                      <span className="font-bold text-text-charcoal">
+                        {liveWeather ? (liveWeather.rain_risk_expected ? "Expected" : "Low") : "—"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
+                      <span className="text-text-muted">Probability</span>
+                      <span className="font-bold text-text-charcoal">
+                        {liveWeather?.forecast_window?.max_precipitation_probability != null 
+                          ? `${Math.round(liveWeather.forecast_window.max_precipitation_probability)}%` 
+                          : "—"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
+                      <span className="text-text-muted">High-Risk Zones</span>
+                      <span className="font-bold text-text-charcoal">
+                        {liveRoutingStatus?.risk_class_counts?.high != null 
+                          ? liveRoutingStatus.risk_class_counts.high 
+                          : "—"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right 4 columns: Detail Overview Column */}
+            <div className="lg:col-span-4 flex flex-col gap-4 overflow-y-auto pr-1 pb-2 stitch-scroll h-full">
+              <div className="flex justify-between items-center px-1">
+                <h2 className="text-sm font-bold text-text-charcoal uppercase tracking-wider">Detail Overview</h2>
+                <span className="text-[10px] text-text-muted font-semibold font-mono">
+                  {liveWeather?.current?.time 
+                    ? `Updated: ${liveWeather.current.time.split('T')[1] || ''} EET` 
+                    : "Live weather status"}
+                </span>
+              </div>
+
+              {/* Weather Info Card */}
+              <div className="stitch-card flex flex-col p-4 shadow-sm relative">
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center gap-4">
+                    <span className="material-symbols-outlined text-[42px] text-[#006688]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      {liveWeather?.rain_risk_expected ? "rainy" : "partly_cloudy_day"}
+                    </span>
+                    <div>
+                      <div className="text-3xl font-bold tracking-tight text-text-charcoal font-sans">
+                        {liveWeather?.current?.temperature_2m != null 
+                          ? `${Math.round(liveWeather.current.temperature_2m)}` 
+                          : "—"}
+                        <span className="text-sm align-top font-bold block inline-block mt-0.5 ml-0.5">°C</span>
+                      </div>
+                    </div>
+                  </div>
+                  <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+                </div>
+                <div className="mt-3">
+                  <div className="text-[9px] font-bold uppercase tracking-wider text-text-muted">Current Weather</div>
+                  <div className="text-sm font-bold text-text-charcoal mt-0.5">
+                    {liveWeather ? (liveWeather.rain_risk_expected ? "Heavy Rain Expected" : "No meaningful rain risk") : "—"}
+                  </div>
+                </div>
+                <p className="text-[10.5px] text-text-muted mt-2 leading-relaxed font-sans">
+                  Real-time predictions based on local station observations and meteorological models.
+                </p>
+                <div className="grid grid-cols-3 gap-2 mt-4 border-t border-white/20 pt-3">
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-text-muted font-sans">Humidity</div>
+                    <div className="font-bold text-xs text-text-charcoal mt-0.5 font-sans">
+                      {liveWeather?.current?.relative_humidity_2m != null 
+                        ? `${liveWeather.current.relative_humidity_2m}%` 
+                        : "—"}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-text-muted font-sans">Wind Speed</div>
+                    <div className="font-bold text-xs text-text-charcoal mt-0.5 font-sans">
+                      {liveWeather?.current?.wind_speed_10m != null 
+                        ? `${liveWeather.current.wind_speed_10m.toFixed(1)} km/h` 
+                        : "—"}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-text-muted font-sans">Precip.</div>
+                    <div className="font-bold text-xs text-text-charcoal mt-0.5 font-sans">
+                      {liveWeather?.current?.precipitation != null 
+                        ? `${liveWeather.current.precipitation.toFixed(1)} mm` 
+                        : "—"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Route Recommendation Info */}
+              <div className="stitch-card flex flex-col p-4 shadow-sm relative">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="text-[9px] font-bold uppercase tracking-wider text-[#006688]">Route Advice</div>
+                  <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+                </div>
+                <div className="text-xs font-bold text-text-charcoal">
+                  {comparison ? (
+                    <>
+                      {recTitle}
+                      <p className="text-[10px] text-text-muted font-normal mt-1 leading-relaxed font-sans">
+                        {recSubtitle}
+                      </p>
+                    </>
+                  ) : (
+                    <span className="text-text-muted font-normal">Waiting for start/destination routing setup...</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Inline Explainability Panel */}
+              <div className="flex-1 shrink-0 min-h-0">
+                <ExplainabilityPanel
+                  zoneExplanation={zoneExplanation}
+                  routeExplanation={routeExplanation}
+                  onClose={() => {
+                    setSelectedZoneCode(null);
+                    setZoneExplanation(null);
+                  }}
+                  activeTab={explainActiveTab}
+                  zoneLoading={zoneLoading}
+                  routeLoading={routeLoading}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
