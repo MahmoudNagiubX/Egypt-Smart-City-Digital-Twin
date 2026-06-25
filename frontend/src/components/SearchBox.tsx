@@ -9,6 +9,7 @@ interface SearchBoxProps {
   onSetStart: (coord: RouteCoordinate) => void;
   onSetDestination: (coord: RouteCoordinate) => void;
   onClear: () => void;
+  variant?: "sidebar" | "nav";
 }
 
 export const SearchBox: React.FC<SearchBoxProps> = ({
@@ -17,6 +18,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
   onSetStart,
   onSetDestination,
   onClear,
+  variant = "sidebar",
 }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResultItem[]>([]);
@@ -94,14 +96,24 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
     return <Landmark className="size-4 text-amber-500 shrink-0" />;
   };
 
+  const isNav = variant === "nav";
+
   return (
-    <div className="relative flex flex-col gap-2 rounded-xl border border-slate-200/60 bg-white/60 p-3 shadow-sm backdrop-blur-md">
-      <label htmlFor="map-search-input" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-        Search Map
-      </label>
+    <div 
+      className={
+        isNav 
+          ? "relative flex flex-col w-full"
+          : "relative flex flex-col gap-2 rounded-xl border border-slate-200/60 bg-white/60 p-3 shadow-sm backdrop-blur-md"
+      }
+    >
+      {!isNav && (
+        <label htmlFor="map-search-input" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+          Search Map
+        </label>
+      )}
       
       {/* Input container */}
-      <div className="relative flex items-center">
+      <div className="relative flex items-center w-full">
         <input
           id="map-search-input"
           type="text"
@@ -111,8 +123,12 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
             setDropdownOpen(true);
           }}
           onFocus={() => setDropdownOpen(true)}
-          placeholder="Search street, place, hospital..."
-          className="h-10 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-9 text-xs shadow-inner outline-none transition-all placeholder:text-muted-foreground/70 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+          placeholder={isNav ? "Search street, place, or zone" : "Search street, place, hospital..."}
+          className={
+            isNav
+              ? "h-9 w-full rounded-full border border-white/80 bg-white/60 pl-9 pr-9 text-xs shadow-inner outline-none transition-all placeholder:text-muted-foreground/75 focus:bg-white focus:ring-2 focus:ring-primary/20"
+              : "h-10 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-9 text-xs shadow-inner outline-none transition-all placeholder:text-muted-foreground/70 focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+          }
         />
         <Search className="absolute left-3 size-4 text-muted-foreground/60" />
         
@@ -132,7 +148,11 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
       {dropdownOpen && (query.trim().length >= 2 || results.length > 0) && (
         <div
           ref={dropdownRef}
-          className="absolute left-0 right-0 top-20 z-50 mt-1 max-h-60 overflow-y-auto rounded-lg border border-slate-200/80 bg-white py-1 shadow-lg"
+          className={
+            isNav
+              ? "absolute left-0 right-0 top-11 z-50 mt-1 max-h-60 overflow-y-auto rounded-xl border border-slate-200/50 bg-white/95 backdrop-blur-md py-1 shadow-lg"
+              : "absolute left-0 right-0 top-20 z-50 mt-1 max-h-60 overflow-y-auto rounded-lg border border-slate-200/80 bg-white py-1 shadow-lg"
+          }
         >
           {loading && (
             <div className="flex items-center justify-center py-4 text-[10px] text-muted-foreground">
@@ -178,7 +198,13 @@ export const SearchBox: React.FC<SearchBoxProps> = ({
 
       {/* Selected Action Panel */}
       {selectedResult && (
-        <div className="flex flex-col gap-2 rounded-lg bg-[#F1F5F9]/50 border border-slate-200/40 p-2.5 mt-1 transition-all">
+        <div 
+          className={
+            isNav
+              ? "absolute left-0 right-0 top-11 z-50 flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-white/95 backdrop-blur-md p-3 shadow-lg mt-1"
+              : "flex flex-col gap-2 rounded-lg bg-[#F1F5F9]/50 border border-slate-200/40 p-2.5 mt-1 transition-all"
+          }
+        >
           <div className="flex items-start gap-2">
             <div className="mt-0.5">{getCategoryIcon(selectedResult.category)}</div>
             <div className="flex-1 min-w-0">
