@@ -21,7 +21,6 @@ import {
   Flame,
   GraduationCap,
   Hospital,
-  Info,
   Landmark,
   Layers3,
   Map,
@@ -179,6 +178,11 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
   onActiveRiskLayerChange,
 }) => {
   const [isHistoryExpanded, setIsHistoryExpanded] = React.useState(false);
+  const [isPlacesExpanded, setIsPlacesExpanded] = React.useState(activeRiskLayer !== "heat");
+
+  React.useEffect(() => {
+    setIsPlacesExpanded(activeRiskLayer !== "heat");
+  }, [activeRiskLayer]);
 
   const poiCounts = React.useMemo(() => {
     if (!placesData || !placesData.features) return null;
@@ -349,7 +353,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       {/* 2b. Urban Heat (Only when activeRiskLayer === "heat") */}
       {activeRiskLayer === "heat" && (
         <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
-          <SectionTitle icon={Flame} title="Urban Heat" detail="Satellite heat estimate" />
+          <SectionTitle icon={Flame} title="Urban Heat" detail="Heat Risk" />
           <div className="flex flex-col gap-0.5 mt-1">
             <div className="flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/40">
               <Label className="flex min-w-0 items-center gap-2">
@@ -452,81 +456,92 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
 
       {/* 5. Points of Interest */}
       <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
-        <SectionTitle icon={Landmark} title="Places" detail="Points of interest" />
-        <div className="flex flex-col gap-0.5 mt-1 max-h-52 overflow-y-auto pr-1">
-          <PoiToggleRow
-            id="hospitals-toggle"
-            label="Hospitals"
-            checked={layers.hospitals}
-            onChange={() => onToggle("hospitals")}
-            icon={Hospital}
-            count={poiCounts?.hospital}
-          />
-          <PoiToggleRow
-            id="clinics-toggle"
-            label="Clinics"
-            checked={layers.clinics}
-            onChange={() => onToggle("clinics")}
-            icon={Stethoscope}
-            count={poiCounts?.clinic}
-          />
-          <PoiToggleRow
-            id="mosques-toggle"
-            label="Mosques"
-            checked={layers.mosques}
-            onChange={() => onToggle("mosques")}
-            icon={Landmark}
-            count={poiCounts?.mosque}
-          />
-          <PoiToggleRow
-            id="malls-toggle"
-            label="Malls"
-            checked={layers.malls}
-            onChange={() => onToggle("malls")}
-            icon={ShoppingBag}
-            count={poiCounts?.mall}
-          />
-          <PoiToggleRow
-            id="schools-toggle"
-            label="Schools"
-            checked={layers.schools}
-            onChange={() => onToggle("schools")}
-            icon={School}
-            count={poiCounts?.school}
-          />
-          <PoiToggleRow
-            id="universities-toggle"
-            label="Universities"
-            checked={layers.universities}
-            onChange={() => onToggle("universities")}
-            icon={GraduationCap}
-            count={poiCounts?.university}
-          />
-          <PoiToggleRow
-            id="police-toggle"
-            label="Police"
-            checked={layers.police}
-            onChange={() => onToggle("police")}
-            icon={Shield}
-            count={poiCounts?.police}
-          />
-          <PoiToggleRow
-            id="fire-stations-toggle"
-            label="Fire Stations"
-            checked={layers.fireStations}
-            onChange={() => onToggle("fireStations")}
-            icon={Flame}
-            count={poiCounts?.fire_station}
-          />
-          <PoiToggleRow
-            id="emergency-toggle"
-            label="Emergency Facilities"
-            checked={layers.emergency}
-            onChange={() => onToggle("emergency")}
-            icon={Ambulance}
-            count={poiCounts?.emergency}
-          />
-        </div>
+        <button
+          type="button"
+          onClick={() => setIsPlacesExpanded(!isPlacesExpanded)}
+          className="flex w-full items-center justify-between gap-2 text-left focus:outline-none"
+        >
+          <SectionTitle icon={Landmark} title="Places" detail="Points of interest" />
+          <span className="text-text-muted">
+            {isPlacesExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+          </span>
+        </button>
+        {isPlacesExpanded && (
+          <div className="flex flex-col gap-0.5 mt-1 max-h-52 overflow-y-auto pr-1">
+            <PoiToggleRow
+              id="hospitals-toggle"
+              label="Hospitals"
+              checked={layers.hospitals}
+              onChange={() => onToggle("hospitals")}
+              icon={Hospital}
+              count={poiCounts?.hospital}
+            />
+            <PoiToggleRow
+              id="clinics-toggle"
+              label="Clinics"
+              checked={layers.clinics}
+              onChange={() => onToggle("clinics")}
+              icon={Stethoscope}
+              count={poiCounts?.clinic}
+            />
+            <PoiToggleRow
+              id="mosques-toggle"
+              label="Mosques"
+              checked={layers.mosques}
+              onChange={() => onToggle("mosques")}
+              icon={Landmark}
+              count={poiCounts?.mosque}
+            />
+            <PoiToggleRow
+              id="malls-toggle"
+              label="Malls"
+              checked={layers.malls}
+              onChange={() => onToggle("malls")}
+              icon={ShoppingBag}
+              count={poiCounts?.mall}
+            />
+            <PoiToggleRow
+              id="schools-toggle"
+              label="Schools"
+              checked={layers.schools}
+              onChange={() => onToggle("schools")}
+              icon={School}
+              count={poiCounts?.school}
+            />
+            <PoiToggleRow
+              id="universities-toggle"
+              label="Universities"
+              checked={layers.universities}
+              onChange={() => onToggle("universities")}
+              icon={GraduationCap}
+              count={poiCounts?.university}
+            />
+            <PoiToggleRow
+              id="police-toggle"
+              label="Police"
+              checked={layers.police}
+              onChange={() => onToggle("police")}
+              icon={Shield}
+              count={poiCounts?.police}
+            />
+            <PoiToggleRow
+              id="fire-stations-toggle"
+              label="Fire Stations"
+              checked={layers.fireStations}
+              onChange={() => onToggle("fireStations")}
+              icon={Flame}
+              count={poiCounts?.fire_station}
+            />
+            <PoiToggleRow
+              id="emergency-toggle"
+              label="Emergency Facilities"
+              checked={layers.emergency}
+              onChange={() => onToggle("emergency")}
+              icon={Ambulance}
+              count={poiCounts?.emergency}
+            />
+          </div>
+        )}
       </section>
 
       {/* 6. Historical Analysis Section (Only visible in History mode and Rain active) */}
@@ -608,13 +623,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </section>
       )}
 
-      {/* 7. About This Prototype (Disclaimer) */}
-      <section className="flex flex-col gap-1 bg-white/30 border border-white/40 rounded-xl p-2.5">
-        <div className="flex items-start gap-1.5 text-[9.5px] text-text-muted font-medium leading-normal">
-          <Info className="size-3.5 text-text-muted/80 shrink-0 mt-0.5" aria-hidden="true" />
-          <span>Predictions are weather-impact model estimates, not official emergency dispatch commands.</span>
-        </div>
-      </section>
+      {/* Disclaimer Removed */}
     </div>
   );
 };

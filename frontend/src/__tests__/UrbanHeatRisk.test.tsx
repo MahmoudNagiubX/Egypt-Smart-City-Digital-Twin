@@ -390,8 +390,8 @@ test('4. Full App Integration renders dashboard elements, search, routing panel,
     fireEvent.click(heatBtn);
   });
 
-  // Heat Risk active: check for honesty note
-  expect(screen.getAllByText(/not an official warning/i).length).toBeGreaterThan(0);
+  // Heat Risk active: check that disclaimers/honesty notes are not visible
+  expect(screen.queryByText(/not an official warning/i)).toBeNull();
   expect(screen.queryByText(/official public-health heat warning/i)).toBeNull();
 
   // Reopen drawer since transitioning to heat mode automatically collapses it

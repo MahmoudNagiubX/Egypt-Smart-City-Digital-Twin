@@ -19,7 +19,7 @@ export const Legend: React.FC<LegendProps> = ({ activeRiskLayer = "rain" }) => (
     <div className="flex flex-col gap-3.5 pl-1.5 mt-1 border-t border-white/20 pt-2.5">
       {activeRiskLayer === "heat" ? (
         <div className="flex flex-col gap-2">
-          <span className="text-[9px] font-bold uppercase tracking-wider text-text-muted">Satellite Heat Estimate</span>
+          <span className="text-[9px] font-bold uppercase tracking-wider text-text-muted">Heat Risk</span>
           <div className="flex flex-col gap-1.5">
             <span className="flex items-center gap-2.5 text-[10px] font-medium text-text-muted">
               <span className="size-2.5 rounded-sm bg-[#fef08a] border border-black/5" />

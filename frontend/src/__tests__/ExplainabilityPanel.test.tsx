@@ -201,7 +201,7 @@ test('Route explanation tab renders recommendation label, summary, and tradeoffs
   expect(screen.getByText("+8.3%")).toBeDefined();
 });
 
-test('Honesty notes render inside the panels', () => {
+test('Honesty notes are NOT rendered inside the panels', () => {
   const { rerender } = render(
     <ExplainabilityPanel
       zoneExplanation={mockZoneExplanation}
@@ -211,8 +211,9 @@ test('Honesty notes render inside the panels', () => {
     />
   );
 
-  // Area disclaimers
-  expect(screen.getByText(/Decision-support estimate only. Not an official flood report/i)).toBeDefined();
+  // Area disclaimers should not be visible
+  expect(screen.queryByText(/Decision-support estimate only/i)).toBeNull();
+  expect(screen.queryByText(/Not an official/i)).toBeNull();
 
   // Re-render route tab
   rerender(
@@ -224,6 +225,7 @@ test('Honesty notes render inside the panels', () => {
     />
   );
 
-  // Route disclaimers
-  expect(screen.getByText(/Prototype route guidance only. Not official dispatch instructions/i)).toBeDefined();
+  // Route disclaimers should not be visible
+  expect(screen.queryByText(/Prototype route guidance only/i)).toBeNull();
+  expect(screen.queryByText(/Not official dispatch instructions/i)).toBeNull();
 });

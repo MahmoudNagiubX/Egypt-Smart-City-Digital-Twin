@@ -289,9 +289,8 @@ test('App renders dashboard title and disclaimers', async () => {
     fireEvent.click(controlsBtn);
   });
 
-  // Disclaimer visibility
-  const note = screen.getAllByText(/Predictions are weather-impact model/i);
-  expect(note.length).toBeGreaterThan(0);
+  // Disclaimer visibility - should be absent
+  expect(screen.queryByText(/Predictions are weather-impact model/i)).toBeNull();
 });
 
 test('SummaryCards renders operational cards', () => {

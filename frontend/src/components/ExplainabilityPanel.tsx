@@ -8,7 +8,6 @@ import {
   Trees, 
   Info, 
   Cpu, 
-  AlertTriangle, 
   X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -47,7 +46,6 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
   const [activeTab, setActiveTab] = useState<"area" | "route" | "model">(initialTab);
   const [modelSummary, setModelSummary] = useState<ModelExplainabilitySummaryResponse | null>(null);
   const [modelLoading, setModelLoading] = useState(false);
-  const [honestyOpen, setHonestyOpen] = useState(false);
   const [limitationsOpen, setLimitationsOpen] = useState(false);
 
   // Sync activeTab if initialTab changes
@@ -232,26 +230,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
 
                   <div className="border-t border-white/20 my-2" />
 
-                  {/* Footer Notes */}
-                  <div className="flex flex-col gap-1 mt-0.5 bg-white/40 border border-white/60 rounded-xl p-2">
-                    <p className="text-[9.5px] font-medium text-text-muted leading-relaxed">
-                      <Info className="size-3.5 inline mr-1 text-[#ff9e2a] shrink-0" />
-                      Satellite-based heat estimate.
-                    </p>
-                    
-                    <button
-                      type="button"
-                      onClick={() => setHonestyOpen(!honestyOpen)}
-                      className="text-[9.5px] text-[#006688] hover:text-[#00526e] underline text-left font-bold mt-1"
-                    >
-                      {honestyOpen ? "Hide limitations note" : "Show limitations note"}
-                    </button>
-                    {honestyOpen && (
-                      <p className="text-[9.5px] text-text-muted leading-normal mt-1 border-t border-white/10 pt-1.5 transition-all">
-                        {heatZoneExplanation.honesty_note}
-                      </p>
-                    )}
-                  </div>
+                  {/* Footer Notes Removed */}
                 </>
               ) : (
                 <div className="flex flex-col py-3 items-center text-center justify-center text-[10px] text-text-muted leading-normal font-sans">
@@ -310,26 +289,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
 
                 <div className="border-t border-white/20 my-2" />
 
-                {/* Footer Notes */}
-                <div className="flex flex-col gap-1 mt-0.5 bg-white/40 border border-white/60 rounded-xl p-2">
-                  <p className="text-[9.5px] font-medium text-text-muted leading-relaxed">
-                    <Info className="size-3.5 inline mr-1 text-[#ff9e2a] shrink-0" />
-                    {zoneExplanation.confidence_note || "Decision-support estimate only. Not an official flood report."}
-                  </p>
-                  
-                  <button
-                    type="button"
-                    onClick={() => setHonestyOpen(!honestyOpen)}
-                    className="text-[9.5px] text-[#006688] hover:text-[#00526e] underline text-left font-bold mt-1"
-                  >
-                    {honestyOpen ? "Hide limitations note" : "Show limitations note"}
-                  </button>
-                  {honestyOpen && (
-                    <p className="text-[9.5px] text-text-muted leading-normal mt-1 border-t border-white/10 pt-1.5 transition-all">
-                      {zoneExplanation.honesty_note}
-                    </p>
-                  )}
-                </div>
+                {/* Footer Notes Removed */}
               </>
             ) : (
               <div className="flex flex-col py-3 items-center text-center justify-center text-[10px] text-text-muted leading-normal">
@@ -426,14 +386,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                   </div>
                 </div>
 
-                <div className="border-t border-white/20 my-2" />
-
-                <div className="bg-white/40 border border-white/60 rounded-xl p-2 flex gap-1 items-start">
-                  <AlertTriangle className="size-3.5 text-[#ff9e2a] mt-0.5 shrink-0" />
-                  <p className="text-[9.5px] text-text-muted leading-normal">
-                    <strong>Disclaimer:</strong> {routeExplanation.honesty_note || "Prototype route guidance only."}
-                  </p>
-                </div>
+                {/* Disclaimer Removed */}
               </>
             ) : (
               <div className="flex flex-col py-3 items-center text-center justify-center text-[10px] text-text-muted leading-normal">
@@ -497,12 +450,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                     </div>
                   </div>
 
-                  <div className="bg-white/40 border border-white/60 rounded-xl p-2 mt-0.5 flex gap-1.5 items-start">
-                    <Info className="size-3.5 text-[#ff9e2a] mt-0.5 shrink-0" />
-                    <p className="text-[9.5px] text-text-muted leading-normal font-sans">
-                      {heatModelSummary.honesty_note}
-                    </p>
-                  </div>
+                  {/* Honesty Note Removed */}
                 </>
               ) : (
                 <div className="text-[11px] text-rose-500 py-4 font-semibold">
@@ -563,12 +511,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                   )}
                 </div>
 
-                <div className="bg-white/40 border border-white/60 rounded-xl p-2 mt-0.5 flex gap-1.5 items-start">
-                  <Info className="size-3.5 text-[#ff9e2a] mt-0.5 shrink-0" />
-                  <p className="text-[9.5px] text-text-muted leading-normal">
-                    {modelSummary.honesty_note}
-                  </p>
-                </div>
+                {/* Honesty Note Removed */}
               </>
             ) : (
               <div className="text-[11px] text-rose-500 py-4 font-semibold">

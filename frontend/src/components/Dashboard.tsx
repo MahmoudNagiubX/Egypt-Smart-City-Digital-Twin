@@ -884,50 +884,27 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
 
                 {/* Mode-specific map overlay chips */}
                 {activeRiskLayer === "heat" && (
-                  <>
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 12,
-                        right: 480,
-                        zIndex: 15,
-                        background: 'rgba(255,255,255,0.85)',
-                        backdropFilter: 'blur(10px)',
-                        borderRadius: 999,
-                        padding: '6px 14px',
-                        border: '1px solid rgba(255,255,255,0.6)',
-                        fontSize: 11,
-                        fontWeight: 600,
-                        color: 'var(--stitch-text-charcoal)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 6,
-                      }}
-                    >
-                      🛰️ Satellite heat estimate
-                    </div>
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 12,
-                        right: 320,
-                        zIndex: 15,
-                        background: 'rgba(255,255,255,0.85)',
-                        backdropFilter: 'blur(10px)',
-                        borderRadius: 999,
-                        padding: '6px 14px',
-                        border: '1px solid rgba(255,255,255,0.6)',
-                        fontSize: 11,
-                        fontWeight: 600,
-                        color: '#d97706',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 6,
-                      }}
-                    >
-                      🔥 Heat Risk active
-                    </div>
-                  </>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 12,
+                      right: 320,
+                      zIndex: 15,
+                      background: 'rgba(255,255,255,0.85)',
+                      backdropFilter: 'blur(10px)',
+                      borderRadius: 999,
+                      padding: '6px 14px',
+                      border: '1px solid rgba(255,255,255,0.6)',
+                      fontSize: 11,
+                      fontWeight: 600,
+                      color: '#d97706',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6,
+                    }}
+                  >
+                    🔥 Heat Risk active
+                  </div>
                 )}
 
 
@@ -970,9 +947,9 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                         top: 12,
                         left: 12,
                         bottom: 12,
-                        width: activeRiskLayer === "heat" ? 250 : 300,
+                        width: activeRiskLayer === "heat" ? 240 : 280,
                         zIndex: 20,
-                        padding: activeRiskLayer === "heat" ? '0.75rem' : '1.25rem',
+                        padding: activeRiskLayer === "heat" ? '0.75rem' : '1rem',
                         borderRadius: '20px',
                         overflowY: 'auto',
                         display: 'flex',
@@ -1161,19 +1138,27 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                       <div className="flex justify-between items-center text-[11px]">
                         <span className="text-text-muted font-sans">Model</span>
                         <span className="font-bold text-text-charcoal font-sans truncate max-w-[120px]" title={heatModelSummary?.model_name}>
-                          {heatModelSummary?.model_name ?? "—"}
+                          {heatModelSummary?.model_name ? (heatModelSummary.model_name.includes("HistGradientBoosting") ? "HGB" : heatModelSummary.model_name) : "—"}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
                         <span className="text-text-muted font-sans">Primary Driver</span>
-                        <span className="font-bold text-text-charcoal font-sans truncate max-w-[120px]">
-                          {heatModelSummary?.top_global_features?.[0]?.label ?? "—"}
+                        <span className="font-bold text-text-charcoal font-sans truncate max-w-[120px]" title={heatModelSummary?.top_global_features?.[0]?.label}>
+                          {heatModelSummary?.top_global_features?.[0]?.label ? (
+                            heatModelSummary.top_global_features[0].label.toLowerCase().includes("bare soil") ? "Bare soil" :
+                            heatModelSummary.top_global_features[0].label.toLowerCase().includes("road network") ? "Road density" :
+                            heatModelSummary.top_global_features[0].label
+                          ) : "—"}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
                         <span className="text-text-muted font-sans">Secondary Driver</span>
-                        <span className="font-bold text-text-charcoal font-sans truncate max-w-[120px]">
-                          {heatModelSummary?.top_global_features?.[1]?.label ?? "—"}
+                        <span className="font-bold text-text-charcoal font-sans truncate max-w-[120px]" title={heatModelSummary?.top_global_features?.[1]?.label}>
+                          {heatModelSummary?.top_global_features?.[1]?.label ? (
+                            heatModelSummary.top_global_features[1].label.toLowerCase().includes("bare soil") ? "Bare soil" :
+                            heatModelSummary.top_global_features[1].label.toLowerCase().includes("road network") ? "Road density" :
+                            heatModelSummary.top_global_features[1].label
+                          ) : "—"}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
@@ -1211,9 +1196,6 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                             ? "High heat anomaly predicted. Limit outdoor activities and stay hydrated." 
                             : "Standard heat levels. Seek shade during peak afternoon hours."}
                         </p>
-                      </div>
-                      <div className="text-[9.5px] text-text-muted italic text-right mt-1 font-sans">
-                        Satellite-based estimate, not an official warning.
                       </div>
                     </div>
                   </div>
@@ -1402,9 +1384,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                     {liveWeather ? (liveWeather.rain_risk_expected ? "Heavy Rain Expected" : "No meaningful rain risk") : "—"}
                   </div>
                 </div>
-                <p className="text-[9.5px] text-text-muted mt-1 leading-normal font-sans">
-                  Real-time predictions based on local observations and meteorological models.
-                </p>
+
                 <div className="grid grid-cols-3 gap-1 mt-2.5 border-t border-white/10 pt-2">
                   <div>
                     <div className="text-[8.5px] font-bold uppercase tracking-wider text-text-muted font-sans">Humidity</div>
@@ -1500,7 +1480,6 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   <div className="flex justify-between items-start mb-0.5">
                     <div>
                       <div className="text-[9px] font-bold uppercase tracking-wider text-[#d97706]">Urban Heat Summary</div>
-                      <div className="text-[8px] text-text-muted mt-0.25">Satellite heat estimate</div>
                     </div>
                     <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[14px]">more_vert</span></button>
                   </div>
@@ -1543,10 +1522,6 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                         </div>
                       </div>
 
-                      <div className="mt-1 text-[8.5px] text-text-muted italic border-t border-white/20 pt-1 leading-tight flex items-start gap-1">
-                        <span className="text-amber-500 font-bold shrink-0">⚠️</span>
-                        <span>Satellite heat estimate, not an official warning.</span>
-                      </div>
                     </div>
                   ) : (
                     <div className="text-[10px] text-text-muted py-2">Loading heat summary...</div>

@@ -480,9 +480,10 @@ export const MapView = ({
         type: "line",
         source: "urban-heat",
         paint: {
-          "line-color": "rgba(217, 119, 6, 0.45)", // subtle orange outline
-          "line-width": 1.25,
-          "line-dasharray": [3, 2],
+          "line-color": "rgba(217, 119, 6, 0.25)", // subtle orange outline (softened)
+          "line-width": 0.8, // reduced width (softened)
+          "line-dasharray": [3, 3],
+          "line-opacity": gridLineOpacity * 0.5,
         },
       }, firstSymbolLayer);
 
@@ -963,7 +964,7 @@ export const MapView = ({
     setLayerVisibility("live-risk-contour-layer", isRain && layers.liveRisk);
     setLayerVisibility("live-risk-glow-layer", isRain && layers.liveRisk);
     setLayerVisibility("urban-heat-layer", activeRiskLayer === "heat");
-    setLayerVisibility("urban-heat-outline-layer", activeRiskLayer === "heat");
+    setLayerVisibility("urban-heat-outline-layer", activeRiskLayer === "heat" && layers.grid);
     map.getStyle().layers
       .filter((layer) => /^(road_|bridge_|tunnel_|highway-|label_)/.test(layer.id))
       .forEach((layer) => setLayerVisibility(layer.id, layers.roadsLabels));
@@ -1082,6 +1083,9 @@ export const MapView = ({
       if (map.getLayer("boundary-layer")) {
         map.setPaintProperty("boundary-layer", "line-opacity", Math.min(1.0, gridLineOpacity * 3));
       }
+      if (map.getLayer("urban-heat-outline-layer")) {
+        map.setPaintProperty("urban-heat-outline-layer", "line-opacity", gridLineOpacity * 0.5);
+      }
     } catch (err) {
       console.warn("Failed to update line opacity:", err);
     }
@@ -1176,11 +1180,13 @@ export const MapView = ({
           <Progress value={68} aria-label="Calculating routes" />
         </div>
       ) : null}
-      <div className="absolute left-4 top-4 z-10 flex max-w-[calc(100%-5rem)] items-center gap-2 rounded-full border border-[#C6CBEF]/45 bg-gradient-to-r from-white/95 to-[#C4E2F5]/90 px-3 py-2 text-[10px] font-semibold text-[#2C5EAD] shadow-md backdrop-blur">
-        <span className="route-hint-dot" aria-hidden="true" />
-        {routeHint}
-      </div>
-      {routeOrigin ? (
+      {activeRiskLayer === "rain" && (
+        <div className="absolute left-4 top-4 z-10 flex max-w-[calc(100%-5rem)] items-center gap-2 rounded-full border border-[#C6CBEF]/45 bg-gradient-to-r from-white/95 to-[#C4E2F5]/90 px-3 py-2 text-[10px] font-semibold text-[#2C5EAD] shadow-md backdrop-blur">
+          <span className="route-hint-dot" aria-hidden="true" />
+          {routeHint}
+        </div>
+      )}
+      {activeRiskLayer === "rain" && routeOrigin ? (
         <Button
           type="button"
           variant="outline"
