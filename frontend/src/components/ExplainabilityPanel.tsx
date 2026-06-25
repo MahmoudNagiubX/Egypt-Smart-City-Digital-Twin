@@ -254,10 +254,10 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                   </div>
                 </>
               ) : (
-                <div className="flex flex-col py-3 items-center text-center justify-center text-[10px] text-text-muted leading-normal">
+                <div className="flex flex-col py-3 items-center text-center justify-center text-[10px] text-text-muted leading-normal font-sans">
                   <Info className="size-4.5 text-text-muted/60 mb-1" />
-                  <p className="font-bold text-text-charcoal mb-0.5">No Area Selected</p>
-                  Click a heat risk zone on the map to see explainability.
+                  <p className="font-bold text-text-charcoal mb-0.5 font-sans">No Area Selected</p>
+                  Select a heat zone to see what drives the heat estimate.
                 </div>
               )
             ) : zoneExplanation ? (
