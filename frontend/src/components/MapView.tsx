@@ -24,7 +24,7 @@ import {
   getZoneLabel,
 } from "../utils/labels";
 
-const BASEMAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
+const BASEMAP_STYLE = "https://tiles.openfreemap.org/styles/positron";
 const emptyCollection = { type: "FeatureCollection", features: [] } as const;
 type MapSourceData = Parameters<maplibregl.GeoJSONSource["setData"]>[0];
 
@@ -44,6 +44,7 @@ const pointCoordinates = (coordinates: unknown): [number, number] | null => {
   const [lon, lat] = coordinates;
   return typeof lon === "number" && typeof lat === "number" ? [lon, lat] : null;
 };
+
 
 const containsArabic = (text?: string | null): boolean => {
   if (!text) return false;
@@ -267,10 +268,10 @@ export const MapView = ({
       const riskFillColor = [
         "match",
         ["coalesce", ["get", "live_risk_class"], ["get", "predicted_risk_class"], "low"],
-        "high", "#ef4444",
-        "medium", "#f59e0b",
-        "low", "#10b981",
-        "#64748b",
+        "high", "#ba1a1a",
+        "medium", "#ff9e2a",
+        "low", "rgba(131, 251, 165, 0.12)",
+        "rgba(0, 0, 0, 0)",
       ] as maplibregl.ExpressionSpecification;
       [
         ["risk-summary-layer", "risk-summary"],
@@ -285,7 +286,7 @@ export const MapView = ({
           paint: {
             "fill-color": riskFillColor,
             "fill-opacity": riskFillOpacity,
-            "fill-outline-color": "rgba(255,255,255,0.5)",
+            "fill-outline-color": "rgba(255,255,255,0.1)",
             "fill-opacity-transition": { duration: 220, delay: 0 },
           },
         }, firstSymbolLayer);
@@ -295,10 +296,10 @@ export const MapView = ({
       const liveRiskFillColor = [
         "match",
         ["coalesce", ["get", "live_risk_class"], "low"],
-        "high", "#ef4444",
-        "medium", "#f59e0b",
-        "low", "#34d399",
-        "#64748b"
+        "high", "#ba1a1a",
+        "medium", "#ff9e2a",
+        "low", "rgba(131, 251, 165, 0.12)",
+        "rgba(0, 0, 0, 0)"
       ] as maplibregl.ExpressionSpecification;
 
       map.addLayer({
@@ -308,7 +309,7 @@ export const MapView = ({
         paint: {
           "fill-color": liveRiskFillColor,
           "fill-opacity": riskFillOpacity,
-          "fill-outline-color": "rgba(255,255,255,0.3)",
+          "fill-outline-color": "rgba(255,255,255,0.1)",
           "fill-opacity-transition": { duration: 220, delay: 0 },
         },
       }, firstSymbolLayer);
@@ -319,9 +320,9 @@ export const MapView = ({
         type: "line",
         source: "live-risk",
         paint: {
-          "line-color": "#ef4444",
-          "line-width": 8,
-          "line-opacity": 0.4,
+          "line-color": "#ba1a1a",
+          "line-width": 6,
+          "line-opacity": 0.25,
           "line-blur": 4,
         },
         filter: ["==", ["coalesce", ["get", "live_risk_class"], "low"], "high"]
@@ -336,19 +337,19 @@ export const MapView = ({
           "line-color": [
             "match",
             ["coalesce", ["get", "live_risk_class"], "low"],
-            "high", "#dc2626",
-            "medium", "#d97706",
+            "high", "#ba1a1a",
+            "medium", "#ff9e2a",
             "low", "rgba(0,0,0,0)",
             "rgba(0,0,0,0)"
           ],
           "line-width": [
             "match",
             ["coalesce", ["get", "live_risk_class"], "low"],
-            "high", 2.5,
-            "medium", 1.5,
+            "high", 1.2,
+            "medium", 0.8,
             0
           ],
-          "line-opacity": 0.8
+          "line-opacity": 0.5
         }
       }, firstSymbolLayer);
 
