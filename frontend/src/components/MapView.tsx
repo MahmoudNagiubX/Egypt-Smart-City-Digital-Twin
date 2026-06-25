@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { RotateCcw } from "lucide-react";
+import { Cross, Flame, GraduationCap, Landmark, MapPin, RotateCcw, School, Shield, ShoppingBag, Siren } from "lucide-react";
+import { createRoot, type Root } from "react-dom/client";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import type {
   FeatureCollection,
+  GeoJsonFeature,
   LayerToggles,
   PlaceProperties,
   RouteComparison,
@@ -17,7 +19,6 @@ import {
   getCategoryLabel,
   getEventLabel,
   getFieldLabel,
-  getPlaceIcon,
   getRiskLevelLabel,
   getRouteQualityLabel,
   getRouteTypeLabel,
@@ -44,6 +45,87 @@ const pointCoordinates = (coordinates: unknown): [number, number] | null => {
   const [lon, lat] = coordinates;
   return typeof lon === "number" && typeof lat === "number" ? [lon, lat] : null;
 };
+
+const polygonCentroid = (geometry: GeoJsonFeature["geometry"]): [number, number] | null => {
+  const coordinates = geometry.coordinates;
+  if (!Array.isArray(coordinates)) return null;
+  const ring =
+    geometry.type === "Polygon"
+      ? coordinates[0]
+      : geometry.type === "MultiPolygon"
+        ? coordinates[0]?.[0]
+        : null;
+  if (!Array.isArray(ring) || ring.length === 0) return null;
+
+  const points = ring.filter(
+    (point): point is [number, number] =>
+      Array.isArray(point) &&
+      point.length >= 2 &&
+      typeof point[0] === "number" &&
+      typeof point[1] === "number",
+  );
+  if (!points.length) return null;
+
+  const [lonSum, latSum] = points.reduce(
+    ([lonTotal, latTotal], [lon, lat]) => [lonTotal + lon, latTotal + lat],
+    [0, 0],
+  );
+  return [lonSum / points.length, latSum / points.length];
+};
+
+const riskScoreFromProperties = (properties: Record<string, unknown>) => {
+  const numericScore = Number(
+    properties.live_predicted_score ?? properties.predicted_score ?? properties.y_pred,
+  );
+  if (Number.isFinite(numericScore)) return Math.max(0, Math.min(1, numericScore));
+
+  const riskClass = String(
+    properties.live_risk_class ?? properties.predicted_risk_class ?? "low",
+  ).toLowerCase();
+  if (riskClass === "high") return 0.9;
+  if (riskClass === "medium") return 0.55;
+  return 0.18;
+};
+
+const toRiskCentroidCollection = (data: FeatureCollection | null): FeatureCollection => ({
+  type: "FeatureCollection",
+  features: (data?.features ?? [])
+    .reduce<GeoJsonFeature[]>((features, feature) => {
+      const coordinates = polygonCentroid(feature.geometry);
+      if (!coordinates) return features;
+      const score = riskScoreFromProperties(feature.properties ?? {});
+      features.push({
+        type: "Feature" as const,
+        properties: {
+          ...feature.properties,
+          weather_intensity: score,
+        },
+        geometry: {
+          type: "Point",
+          coordinates,
+        },
+      });
+      return features;
+    }, []),
+});
+
+const placeIconMap = {
+  hospital: Cross,
+  clinic: Cross,
+  doctors: Cross,
+  police: Shield,
+  fire_station: Flame,
+  mall: ShoppingBag,
+  mosque: Landmark,
+  place_of_worship: Landmark,
+  school: School,
+  university: GraduationCap,
+  emergency: Siren,
+  default: MapPin,
+} as const;
+
+const markerCategory = (category: unknown) =>
+  typeof category === "string" ? category.toLowerCase() : "default";
 
 
 const containsArabic = (text?: string | null): boolean => {
@@ -166,6 +248,7 @@ export const MapView = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const placeMarkersRef = useRef<maplibregl.Marker[]>([]);
+  const placeMarkerRootsRef = useRef<Root[]>([]);
   const routeMarkersRef = useRef<maplibregl.Marker[]>([]);
   const searchMarkerRef = useRef<maplibregl.Marker | null>(null);
   const onMapPointClickRef = useRef(onMapPointClick);
@@ -219,10 +302,15 @@ export const MapView = ({
         "boundary",
         "grid",
         "latest-risk",
+        "latest-risk-heat",
         "top-rain-risk",
+        "top-rain-risk-heat",
         "risk-summary",
+        "risk-summary-heat",
         "selected-risk",
+        "selected-risk-heat",
         "live-risk",
+        "live-risk-heat",
         "normal-route",
         "safe-route",
       ].forEach(addGeoJSONSource);
@@ -252,27 +340,72 @@ export const MapView = ({
         type: "line",
         source: "boundary",
         paint: {
-          "line-color": "#2C5EAD",
-          "line-width": 2.5,
-          "line-opacity": Math.min(1.0, gridLineOpacity * 3),
-          "line-dasharray": [3, 1.5],
+          "line-color": "#4ca6bd",
+          "line-width": 2,
+          "line-opacity": Math.min(0.65, gridLineOpacity * 2.6),
+          "line-dasharray": [2.4, 2],
         },
       }, firstSymbolLayer);
       map.addLayer({
         id: "grid-layer",
         type: "line",
         source: "grid",
-        paint: { "line-color": "#8186D5", "line-width": 0.7, "line-opacity": gridLineOpacity },
+        paint: { "line-color": "#8ab9c8", "line-width": 0.45, "line-opacity": gridLineOpacity * 0.55 },
       }, firstSymbolLayer);
 
       const riskFillColor = [
-        "match",
-        ["coalesce", ["get", "live_risk_class"], ["get", "predicted_risk_class"], "low"],
-        "high", "#ba1a1a",
-        "medium", "#ff9e2a",
-        "low", "rgba(131, 251, 165, 0.12)",
-        "rgba(0, 0, 0, 0)",
+        "interpolate",
+        ["linear"],
+        ["coalesce", ["get", "live_predicted_score"], ["get", "predicted_score"], ["get", "y_pred"], 0],
+        0, "rgba(20, 184, 166, 0.02)",
+        0.35, "rgba(20, 184, 166, 0.05)",
+        0.55, "rgba(245, 221, 86, 0.06)",
+        0.75, "rgba(255, 145, 77, 0.08)",
+        1, "rgba(226, 80, 73, 0.1)",
       ] as maplibregl.ExpressionSpecification;
+      const weatherHeatColor = [
+        "interpolate",
+        ["linear"],
+        ["heatmap-density"],
+        0, "rgba(109, 213, 250, 0)",
+        0.14, "rgba(103, 210, 245, 0.34)",
+        0.32, "rgba(57, 196, 177, 0.42)",
+        0.54, "rgba(173, 218, 103, 0.5)",
+        0.72, "rgba(255, 219, 88, 0.58)",
+        0.88, "rgba(255, 147, 79, 0.6)",
+        1, "rgba(226, 82, 73, 0.65)",
+      ] as maplibregl.ExpressionSpecification;
+      const weatherHeatWeight = [
+        "interpolate",
+        ["linear"],
+        ["get", "weather_intensity"],
+        0, 0.12,
+        0.25, 0.32,
+        0.5, 0.68,
+        0.75, 1.15,
+        1, 1.55,
+      ] as maplibregl.ExpressionSpecification;
+      [
+        ["risk-summary-heat-layer", "risk-summary-heat"],
+        ["latest-risk-heat-layer", "latest-risk-heat"],
+        ["top-rain-risk-heat-layer", "top-rain-risk-heat"],
+        ["selected-risk-heat-layer", "selected-risk-heat"],
+        ["live-risk-heat-layer", "live-risk-heat"],
+      ].forEach(([id, source]) => {
+        map.addLayer({
+          id: id as string,
+          type: "heatmap",
+          source: source as string,
+          maxzoom: 15.5,
+          paint: {
+            "heatmap-weight": weatherHeatWeight,
+            "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 10, 0.65, 13, 1.15, 15, 1.55],
+            "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 10, 22, 12, 34, 14, 54, 15.5, 74],
+            "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 10, 0.62, 14, 0.5, 16, 0.34],
+            "heatmap-color": weatherHeatColor,
+          },
+        }, firstSymbolLayer);
+      });
       [
         ["risk-summary-layer", "risk-summary"],
         ["latest-risk-layer", "latest-risk"],
@@ -285,21 +418,21 @@ export const MapView = ({
           source: source as string,
           paint: {
             "fill-color": riskFillColor,
-            "fill-opacity": riskFillOpacity,
-            "fill-outline-color": "rgba(255,255,255,0.1)",
+            "fill-opacity": 0.015,
+            "fill-outline-color": "rgba(255,255,255,0)",
             "fill-opacity-transition": { duration: 220, delay: 0 },
           },
         }, firstSymbolLayer);
       });
 
-      // Special live risk zone styling
       const liveRiskFillColor = [
-        "match",
-        ["coalesce", ["get", "live_risk_class"], "low"],
-        "high", "#ba1a1a",
-        "medium", "#ff9e2a",
-        "low", "rgba(131, 251, 165, 0.12)",
-        "rgba(0, 0, 0, 0)"
+        "interpolate",
+        ["linear"],
+        ["coalesce", ["get", "live_predicted_score"], 0],
+        0, "rgba(103, 210, 245, 0.02)",
+        0.45, "rgba(57, 196, 177, 0.04)",
+        0.7, "rgba(255, 219, 88, 0.06)",
+        1, "rgba(226, 82, 73, 0.1)",
       ] as maplibregl.ExpressionSpecification;
 
       map.addLayer({
@@ -308,9 +441,36 @@ export const MapView = ({
         source: "live-risk",
         paint: {
           "fill-color": liveRiskFillColor,
-          "fill-opacity": riskFillOpacity,
-          "fill-outline-color": "rgba(255,255,255,0.1)",
+          "fill-opacity": 0.015,
+          "fill-outline-color": "rgba(255,255,255,0)",
           "fill-opacity-transition": { duration: 220, delay: 0 },
+        },
+      }, firstSymbolLayer);
+
+      map.addLayer({
+        id: "live-risk-contour-layer",
+        type: "line",
+        source: "live-risk",
+        paint: {
+          "line-color": [
+            "match",
+            ["coalesce", ["get", "live_risk_class"], "low"],
+            "high", "#e25049",
+            "medium", "#f3b43f",
+            "low", "#46c5d8",
+            "#46c5d8",
+          ],
+          "line-width": [
+            "interpolate",
+            ["linear"],
+            ["coalesce", ["get", "live_predicted_score"], 0],
+            0.35, 0,
+            0.55, 0.55,
+            0.75, 1.1,
+            1, 1.8,
+          ],
+          "line-opacity": 0.22,
+          "line-blur": 2.5,
         },
       }, firstSymbolLayer);
 
@@ -320,37 +480,12 @@ export const MapView = ({
         type: "line",
         source: "live-risk",
         paint: {
-          "line-color": "#ba1a1a",
-          "line-width": 6,
-          "line-opacity": 0.25,
-          "line-blur": 4,
+          "line-color": "#e25049",
+          "line-width": 9,
+          "line-opacity": 0.18,
+          "line-blur": 7,
         },
         filter: ["==", ["coalesce", ["get", "live_risk_class"], "low"], "high"]
-      }, firstSymbolLayer);
-
-      // Outline layer for medium and high risk
-      map.addLayer({
-        id: "live-risk-outline-layer",
-        type: "line",
-        source: "live-risk",
-        paint: {
-          "line-color": [
-            "match",
-            ["coalesce", ["get", "live_risk_class"], "low"],
-            "high", "#ba1a1a",
-            "medium", "#ff9e2a",
-            "low", "rgba(0,0,0,0)",
-            "rgba(0,0,0,0)"
-          ],
-          "line-width": [
-            "match",
-            ["coalesce", ["get", "live_risk_class"], "low"],
-            "high", 1.2,
-            "medium", 0.8,
-            0
-          ],
-          "line-opacity": 0.5
-        }
       }, firstSymbolLayer);
 
       // Selected zone highlight layer
@@ -359,9 +494,10 @@ export const MapView = ({
         type: "line",
         source: "grid",
         paint: {
-          "line-color": "#4f46e5",
-          "line-width": 3,
-          "line-opacity": 0.95
+          "line-color": "#006688",
+          "line-width": 2.4,
+          "line-opacity": 0.9,
+          "line-blur": 0.4,
         },
         filter: ["==", ["get", "zone_code"], ""]
       }, firstSymbolLayer);
@@ -524,6 +660,8 @@ export const MapView = ({
         marker.getPopup()?.remove();
         marker.remove();
       });
+      placeMarkerRootsRef.current.forEach((root) => root.unmount());
+      placeMarkerRootsRef.current = [];
       routeMarkersRef.current.forEach((marker) => marker.remove());
       map.remove();
     };
@@ -536,13 +674,22 @@ export const MapView = ({
       const source = map.getSource(id) as maplibregl.GeoJSONSource | undefined;
       source?.setData(toMapSourceData(data));
     };
+    const updateHeatSource = (id: string, data: FeatureCollection | null) => {
+      const source = map.getSource(id) as maplibregl.GeoJSONSource | undefined;
+      source?.setData(toRiskCentroidCollection(data) as MapSourceData);
+    };
     updateSource("boundary", boundaryData);
     updateSource("grid", gridData);
     updateSource("latest-risk", latestRiskData);
+    updateHeatSource("latest-risk-heat", latestRiskData);
     updateSource("top-rain-risk", topRainRiskData);
+    updateHeatSource("top-rain-risk-heat", topRainRiskData);
     updateSource("risk-summary", riskSummaryData);
+    updateHeatSource("risk-summary-heat", riskSummaryData);
     updateSource("selected-risk", selectedEventRiskData);
+    updateHeatSource("selected-risk-heat", selectedEventRiskData);
     updateSource("live-risk", liveRiskData);
+    updateHeatSource("live-risk-heat", liveRiskData);
     updateSource("normal-route", normalRouteData);
     updateSource("safe-route", safeRouteData);
   }, [
@@ -565,6 +712,8 @@ export const MapView = ({
       marker.getPopup()?.remove();
       marker.remove();
     });
+    placeMarkerRootsRef.current.forEach((root) => root.unmount());
+    placeMarkerRootsRef.current = [];
     placeMarkersRef.current = [];
     for (const feature of placesData?.features ?? []) {
       const properties = feature.properties;
@@ -582,9 +731,13 @@ export const MapView = ({
       const element = document.createElement("button");
       element.type = "button";
       element.className = "place-marker";
-      element.dataset.category = properties.category;
+      const category = markerCategory(properties.category);
+      element.dataset.category = category;
       element.setAttribute("aria-label", `${safePlaceName(properties)}, ${properties.category_label}`);
-      element.textContent = getPlaceIcon(properties.category);
+      const Icon = placeIconMap[category as keyof typeof placeIconMap] ?? placeIconMap.default;
+      const markerRoot = createRoot(element);
+      markerRoot.render(<Icon aria-hidden="true" strokeWidth={2.2} />);
+      placeMarkerRootsRef.current.push(markerRoot);
       element.addEventListener("click", (event) => {
         event.stopPropagation();
         if (!routingLoadingRef.current) {
@@ -609,6 +762,8 @@ export const MapView = ({
         marker.getPopup()?.remove();
         marker.remove();
       });
+      placeMarkerRootsRef.current.forEach((root) => root.unmount());
+      placeMarkerRootsRef.current = [];
       placeMarkersRef.current = [];
     };
   }, [emergencyPlaceIds, layers, mapLoaded, placesData, zoom]);
@@ -741,8 +896,13 @@ export const MapView = ({
     setLayerVisibility("risk-summary-layer", layers.riskSummary);
     setLayerVisibility("selected-risk-layer", layers.selectedRisk);
     setLayerVisibility("live-risk-layer", layers.liveRisk);
+    setLayerVisibility("latest-risk-heat-layer", layers.latestRisk);
+    setLayerVisibility("top-rain-risk-heat-layer", layers.topRainRisk);
+    setLayerVisibility("risk-summary-heat-layer", layers.riskSummary);
+    setLayerVisibility("selected-risk-heat-layer", layers.selectedRisk);
+    setLayerVisibility("live-risk-heat-layer", layers.liveRisk);
+    setLayerVisibility("live-risk-contour-layer", layers.liveRisk);
     setLayerVisibility("live-risk-glow-layer", layers.liveRisk);
-    setLayerVisibility("live-risk-outline-layer", layers.liveRisk);
     map.getStyle().layers
       .filter((layer) => /^(road_|bridge_|tunnel_|highway-|label_)/.test(layer.id))
       .forEach((layer) => setLayerVisibility(layer.id, layers.roadsLabels));
@@ -878,7 +1038,7 @@ export const MapView = ({
       ];
       riskLayers.forEach((layerId) => {
         if (map.getLayer(layerId)) {
-          map.setPaintProperty(layerId, "fill-opacity", riskFillOpacity);
+          map.setPaintProperty(layerId, "fill-opacity", Math.min(0.04, riskFillOpacity * 0.12));
         }
       });
 
@@ -886,19 +1046,27 @@ export const MapView = ({
         map.setPaintProperty("live-risk-layer", "fill-opacity", [
           "match",
           ["coalesce", ["get", "live_risk_class"], "low"],
-          "high", riskFillOpacity,
-          "medium", riskFillOpacity,
-          "low", riskDisplayMode === "focus" ? 0.02 : riskFillOpacity * 0.4,
+          "high", Math.min(0.05, riskFillOpacity * 0.14),
+          "medium", Math.min(0.04, riskFillOpacity * 0.1),
+          "low", riskDisplayMode === "focus" ? 0.005 : Math.min(0.025, riskFillOpacity * 0.07),
           0
         ]);
       }
 
-      if (map.getLayer("live-risk-glow-layer")) {
-        map.setPaintProperty("live-risk-glow-layer", "line-opacity", riskFillOpacity * 0.8);
-      }
+      [
+        "risk-summary-heat-layer",
+        "latest-risk-heat-layer",
+        "top-rain-risk-heat-layer",
+        "selected-risk-heat-layer",
+        "live-risk-heat-layer",
+      ].forEach((layerId) => {
+        if (map.getLayer(layerId)) {
+          map.setPaintProperty(layerId, "heatmap-opacity", riskDisplayMode === "focus" ? 0.56 : 0.68);
+        }
+      });
 
-      if (map.getLayer("live-risk-outline-layer")) {
-        map.setPaintProperty("live-risk-outline-layer", "line-opacity", riskFillOpacity * 0.9);
+      if (map.getLayer("live-risk-glow-layer")) {
+        map.setPaintProperty("live-risk-glow-layer", "line-opacity", riskFillOpacity * 0.52);
       }
     } catch (err) {
       console.warn("Failed to update fill opacity:", err);

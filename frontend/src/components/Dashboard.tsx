@@ -14,6 +14,8 @@ import {
   getSummary,
   getTopRainRiskLayer,
   getLiveWeather,
+  getSevenDayForecast,
+  getAirQuality,
   getLiveWeatherRiskLayer,
   getLiveRoutingStatus,
   requestLiveEmergencyRoute,
@@ -28,6 +30,8 @@ import type {
   RouteComparison,
   RouteCoordinate,
   LiveWeatherSummary,
+  DailyForecastResponse,
+  AirQualityResponse,
   LiveRoutingStatusResponse,
   SearchResultItem,
   ZoneExplanationResponse,
@@ -50,6 +54,62 @@ const signedPercent = (value: unknown) => {
   }
   const prefix = number > 0 ? "+" : "";
   return `${prefix}${formatPercent(number, 1)}`;
+};
+
+const formatTemperature = (value: unknown) => {
+  const number = toFiniteNumber(value);
+  return number === null ? EMPTY_VALUE : `${Math.round(number)}°`;
+};
+
+const formatMetric = (value: unknown, suffix: string, digits = 0) => {
+  const number = toFiniteNumber(value);
+  return number === null ? EMPTY_VALUE : `${number.toFixed(digits)}${suffix}`;
+};
+
+const getWeatherCondition = (code: unknown) => {
+  const value = Number(code);
+  if ([0, 1].includes(value)) return "Clear";
+  if ([2, 3].includes(value)) return "Partly cloudy";
+  if ([45, 48].includes(value)) return "Hazy";
+  if ([51, 53, 55, 56, 57].includes(value)) return "Drizzle";
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(value)) return "Rain";
+  if ([95, 96, 99].includes(value)) return "Thunderstorm";
+  return "Weather update";
+};
+
+const getWeatherIcon = (code: unknown) => {
+  const label = getWeatherCondition(code);
+  if (label === "Clear") return "sunny";
+  if (label === "Partly cloudy") return "partly_cloudy_day";
+  if (label === "Hazy") return "foggy";
+  if (label === "Thunderstorm") return "thunderstorm";
+  if (label === "Rain" || label === "Drizzle") return "rainy";
+  return "partly_cloudy_day";
+};
+
+const getAqiLabel = (aqi: unknown) => {
+  const value = toFiniteNumber(aqi);
+  if (value === null) return "Unavailable";
+  if (value <= 20) return "Good";
+  if (value <= 40) return "Fair";
+  if (value <= 60) return "Moderate";
+  if (value <= 80) return "Poor";
+  if (value <= 100) return "Very poor";
+  return "Extremely poor";
+};
+
+const buildSparklinePath = (values: number[], width = 132, height = 34) => {
+  if (values.length < 2) return "";
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = Math.max(1, max - min);
+  return values
+    .map((value, index) => {
+      const x = (index / (values.length - 1)) * width;
+      const y = height - ((value - min) / range) * (height - 4) - 2;
+      return `${index === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
+    })
+    .join(" ");
 };
 
 type RouteEventType = "top-rain" | "latest";
@@ -86,6 +146,8 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
   const [routeSource, setRouteSource] = useState<"demo" | "custom" | "custom-live">("custom-live");
   const [searchSelectedPoint, setSearchSelectedPoint] = useState<SearchResultItem | null>(null);
   const [liveWeather, setLiveWeather] = useState<LiveWeatherSummary | null>(null);
+  const [dailyForecast, setDailyForecast] = useState<DailyForecastResponse | null>(null);
+  const [airQuality, setAirQuality] = useState<AirQualityResponse | null>(null);
   const [liveRoutingStatus, setLiveRoutingStatus] = useState<LiveRoutingStatusResponse | null>(null);
   const [liveRiskData, setLiveRiskData] = useState<FeatureCollection | null>(null);
   const [riskDisplayMode, setRiskDisplayMode] = useState<"focus" | "all">("focus");
@@ -178,14 +240,18 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
 
         // Fetch live weather data separately without blocking dashboard if it fails
         try {
-          const [liveWeatherRes, liveRoutingStatusRes, liveRiskRes] = await Promise.all([
+          const [liveWeatherRes, liveRoutingStatusRes, liveRiskRes, forecastRes, airQualityRes] = await Promise.all([
             getLiveWeather(),
             getLiveRoutingStatus(),
             getLiveWeatherRiskLayer(),
+            getSevenDayForecast(),
+            getAirQuality(),
           ]);
           setLiveWeather(liveWeatherRes);
           setLiveRoutingStatus(liveRoutingStatusRes);
           setLiveRiskData(liveRiskRes);
+          setDailyForecast(forecastRes);
+          setAirQuality(airQualityRes);
         } catch (liveWeatherError) {
           console.warn("Failed to load live weather/routing info:", liveWeatherError);
         }
@@ -509,11 +575,21 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
 
   // Derive alert status for the map overlay pill
   const hasActiveAlerts = liveRoutingStatus?.status !== "ok";
+  const currentWeatherIcon = liveWeather
+    ? getWeatherIcon(liveWeather.current?.weather_code)
+    : "partly_cloudy_day";
+  const aqiValue = airQuality?.current?.european_aqi ?? null;
+  const aqiLabel = getAqiLabel(aqiValue);
+  const aqiTrendValues = (airQuality?.hourly ?? [])
+    .map((item) => toFiniteNumber(item.european_aqi))
+    .filter((value): value is number => value !== null)
+    .slice(0, 24);
+  const aqiSparklinePath = buildSparklinePath(aqiTrendValues);
 
   return (
     <div
       className="stitch-page flex items-start justify-center"
-      style={{ padding: '1.5rem' }}
+      style={{ padding: '0.5rem' }}
     >
       {/* Atmospheric background blobs */}
       <div className="stitch-bg-cloud-1" aria-hidden="true" />
@@ -522,7 +598,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
       {/* Dashboard Shell */}
       <div
         className="stitch-dashboard-shell"
-        style={{ margin: '0 auto', height: 'calc(100vh - 3rem)', maxHeight: 920 }}
+        style={{ margin: '0 auto', height: 'calc(100vh - 1rem)', maxHeight: 1080 }}
       >
         <h1 className="sr-only">Egypt Smart City Digital Twin</h1>
         {/* Stitch Top Navigation Bar */}
@@ -620,8 +696,8 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
 
           {/* Main 12-Column Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full min-h-0">
-            {/* Left 8 columns: Metrics, Map Card, Bottom Analytics */}
-            <div className="lg:col-span-8 flex flex-col gap-6 min-h-0">
+            {/* Left 9 columns: Metrics, Map Card, Bottom Analytics */}
+            <div className="lg:col-span-9 flex flex-col gap-6 min-h-0">
               
               {/* Core Metric Cards */}
               <div className="shrink-0">
@@ -845,7 +921,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">High-Risk Segments</span>
+                      <span className="text-text-muted">Higher-Risk Areas</span>
                       <span className="font-bold text-text-charcoal">
                         {comparison?.avoided_high_risk_segments != null 
                           ? comparison.avoided_high_risk_segments 
@@ -889,20 +965,33 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   </div>
                 </div>
 
-                {/* 3. Model Insight Card */}
+                {/* 3. AQI Trend Card */}
                 <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Model Insight</span>
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">AQI Trend</span>
                     <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
                   </div>
-                  <div className="flex-1 flex flex-col gap-1.5 mt-1 text-[10.5px]">
-                    <div className="flex flex-col">
-                      <span className="text-[9px] text-text-muted font-semibold uppercase tracking-wider">Top Driver</span>
-                      <span className="font-bold text-text-charcoal mt-0.5 truncate font-sans">built_surface_mean</span>
+                  <div className="flex-1 flex flex-col gap-2 mt-1 text-[10.5px]">
+                    <div className="flex justify-between items-start">
+                      <div className="flex flex-col">
+                        <span className="text-[9px] text-text-muted font-semibold uppercase tracking-wider">Current AQI</span>
+                        <span className="font-bold text-text-charcoal mt-0.5 font-sans">
+                          {aqiValue != null ? Math.round(aqiValue) : "—"}
+                        </span>
+                      </div>
+                      <span className="rounded-full bg-[#E8F5E9] px-2 py-0.5 text-[9px] font-bold text-[#2f6f4f]">
+                        {aqiLabel}
+                      </span>
                     </div>
-                    <div className="flex flex-col border-t border-white/10 pt-1">
-                      <span className="text-[9px] text-text-muted font-semibold uppercase tracking-wider">Model Type</span>
-                      <span className="font-bold text-text-charcoal mt-0.5 truncate font-sans">Ridge Regression (V2)</span>
+                    <div className="border-t border-white/10 pt-1.5">
+                      {aqiSparklinePath ? (
+                        <svg viewBox="0 0 132 34" className="h-9 w-full" role="img" aria-label="Air quality trend">
+                          <path d={`${aqiSparklinePath} L 132 34 L 0 34 Z`} fill="rgba(88, 169, 118, 0.18)" />
+                          <path d={aqiSparklinePath} fill="none" stroke="#58A976" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                      ) : (
+                        <span className="text-[10px] text-text-muted">Trend unavailable from provider.</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -941,8 +1030,8 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               </div>
             </div>
 
-            {/* Right 4 columns: Detail Overview Column */}
-            <div className="lg:col-span-4 flex flex-col gap-4 overflow-y-auto pr-1 pb-2 stitch-scroll h-full">
+            {/* Right 3 columns: Detail Overview Column */}
+            <div className="lg:col-span-3 flex flex-col gap-4 overflow-y-auto pr-1 pb-2 stitch-scroll h-full">
               <div className="flex justify-between items-center px-1">
                 <h2 className="text-sm font-bold text-text-charcoal uppercase tracking-wider">Detail Overview</h2>
                 <span className="text-[10px] text-text-muted font-semibold font-mono">
@@ -957,7 +1046,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-4">
                     <span className="material-symbols-outlined text-[42px] text-[#006688]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      {liveWeather?.rain_risk_expected ? "rainy" : "partly_cloudy_day"}
+                      {currentWeatherIcon}
                     </span>
                     <div>
                       <div className="text-3xl font-bold tracking-tight text-text-charcoal font-sans">
@@ -1005,6 +1094,59 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* 7-Day Forecast */}
+              <div className="stitch-card flex flex-col p-4 shadow-sm relative">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="text-[9px] font-bold uppercase tracking-wider text-[#006688]">7-Day Forecast</div>
+                  <span className="text-[9px] font-semibold text-text-muted">{dailyForecast?.source ?? "Open-Meteo"}</span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {(dailyForecast?.daily ?? []).slice(0, 7).map((day) => (
+                    <div key={day.date} className="grid grid-cols-[3rem_1.5rem_1fr_auto] items-center gap-2 text-[11px]">
+                      <span className="font-bold text-text-charcoal">
+                        {new Date(`${day.date}T12:00:00`).toLocaleDateString(undefined, { weekday: "short" })}
+                      </span>
+                      <span className="material-symbols-outlined text-[17px] text-[#006688]" style={{ fontVariationSettings: "'FILL' 1" }}>{getWeatherIcon(day.weather_code)}</span>
+                      <span className="text-text-muted">{formatMetric(day.precipitation_probability_max, "%")} rain</span>
+                      <span className="font-bold text-text-charcoal">{formatTemperature(day.temperature_2m_max)} / {formatTemperature(day.temperature_2m_min)}</span>
+                    </div>
+                  ))}
+                  {dailyForecast?.daily?.length ? null : (
+                    <span className="text-[11px] text-text-muted">Forecast unavailable from provider.</span>
+                  )}
+                </div>
+              </div>
+
+              {/* AQI / Air Quality */}
+              <div className="stitch-card flex flex-col p-4 shadow-sm relative">
+                <div className="flex justify-between items-start gap-3">
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-[#006688]">Air Quality</div>
+                    <div className="mt-1 text-3xl font-bold text-text-charcoal">{aqiValue != null ? Math.round(aqiValue) : "—"}</div>
+                    <div className="text-xs font-bold text-text-charcoal">{aqiLabel}</div>
+                  </div>
+                  <span className="rounded-full bg-[#E8F5E9] px-2.5 py-1 text-[9px] font-bold text-[#2f6f4f]">
+                    {airQuality?.status === "ok" ? "Live AQI" : "Unavailable"}
+                  </span>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2 border-t border-white/20 pt-3 text-[11px]">
+                  <div>
+                    <span className="block text-[9px] font-bold uppercase tracking-wider text-text-muted">Major Pollutant</span>
+                    <span className="font-bold text-text-charcoal">PM2.5</span>
+                  </div>
+                  <div>
+                    <span className="block text-[9px] font-bold uppercase tracking-wider text-text-muted">PM10</span>
+                    <span className="font-bold text-text-charcoal">{formatMetric(airQuality?.current?.pm10, " ug/m3", 1)}</span>
+                  </div>
+                </div>
+                {aqiSparklinePath ? (
+                  <svg viewBox="0 0 132 34" className="mt-3 h-9 w-full" role="img" aria-label="Air quality hourly trend">
+                    <path d={`${aqiSparklinePath} L 132 34 L 0 34 Z`} fill="rgba(88, 169, 118, 0.18)" />
+                    <path d={aqiSparklinePath} fill="none" stroke="#58A976" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                ) : null}
               </div>
 
               {/* Route Recommendation Info */}

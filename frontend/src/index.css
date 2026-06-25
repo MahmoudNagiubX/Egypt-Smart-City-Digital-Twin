@@ -169,9 +169,22 @@
 
   .maplibregl-ctrl-group {
     overflow: hidden;
-    border: 1px solid rgba(220, 229, 239, 0.9);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(44, 94, 173, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 10px 28px rgba(23, 83, 114, 0.12);
+    backdrop-filter: blur(14px);
+  }
+
+  .maplibregl-ctrl-group button {
+    background-color: transparent;
+  }
+
+  .maplibregl-ctrl-scale {
+    border-color: rgba(0, 102, 136, 0.34);
+    color: #33515d;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(8px);
   }
 
   .maplibregl-popup-content {
@@ -228,64 +241,61 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     padding: 0;
-    border: none;
-    border-radius: 4px;
-    background: transparent;
-    font-size: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    color: #006688;
     line-height: 1;
     cursor: pointer;
-    transition: transform 160ms ease, opacity 160ms ease;
+    transition: transform 160ms ease, opacity 160ms ease, box-shadow 160ms ease;
     will-change: transform;
-    opacity: 0.8;
+    opacity: 0.88;
+    box-shadow: 0 6px 18px rgba(20, 69, 91, 0.12);
+    backdrop-filter: blur(8px);
+  }
+
+  .place-marker svg {
+    width: 14px;
+    height: 14px;
   }
 
   .place-marker[data-category="hospital"] {
-    border: 2px solid #e63946;
-    border-radius: 999px;
-    background: #fff5f5;
+    border-color: rgba(226, 80, 73, 0.42);
+    background: rgba(255, 247, 246, 0.92);
+    color: #e25049;
     width: 28px;
     height: 28px;
-    box-shadow: 0 4px 10px rgba(230, 57, 70, 0.25);
-    font-size: 15px;
+    box-shadow: 0 8px 22px rgba(226, 80, 73, 0.18);
     opacity: 1;
   }
   .place-marker[data-category="emergency"] {
-    border: 2px solid #2c5ead;
-    border-radius: 999px;
-    background: #f0f7ff;
+    border-color: rgba(0, 102, 136, 0.35);
+    background: rgba(231, 247, 255, 0.94);
+    color: #006688;
     width: 28px;
     height: 28px;
-    box-shadow: 0 4px 10px rgba(44, 94, 173, 0.25);
-    font-size: 15px;
+    box-shadow: 0 8px 22px rgba(0, 102, 136, 0.18);
     opacity: 1;
   }
+  .place-marker[data-category="clinic"],
   .place-marker[data-category="police"] {
-    font-size: 15px;
-    opacity: 0.85;
+    color: #2c5ead;
   }
   .place-marker[data-category="fire_station"] {
-    font-size: 15px;
-    opacity: 0.85;
-  }
-  .place-marker[data-category="clinic"] {
-    font-size: 14px;
-    opacity: 0.8;
+    color: #ff7a00;
   }
   .place-marker[data-category="mosque"] {
-    font-size: 14px;
-    opacity: 0.75;
+    color: #33856e;
   }
   .place-marker[data-category="mall"] {
-    font-size: 14px;
-    opacity: 0.75;
+    color: #8a63d2;
   }
   .place-marker[data-category="school"],
   .place-marker[data-category="university"] {
-    font-size: 14px;
-    opacity: 0.75;
+    color: #6d7380;
   }
 
   .place-marker:hover,
@@ -294,6 +304,7 @@
     opacity: 1;
     z-index: 10;
     outline: none;
+    box-shadow: 0 10px 28px rgba(20, 69, 91, 0.2);
   }
 
   .route-point-marker {
@@ -303,12 +314,12 @@
     justify-content: center;
     width: 30px;
     height: 30px;
-    border: 3px solid #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.95);
     border-radius: 999px;
     color: #ffffff;
     font-size: 12px;
     font-weight: 800;
-    box-shadow: 0 6px 18px rgba(44, 94, 173, 0.28);
+    box-shadow: 0 8px 20px rgba(23, 83, 114, 0.24);
   }
 
   .route-point-marker::after {
@@ -322,13 +333,13 @@
   }
 
   .route-point-marker--a {
-    background: #1591dc;
+    background: #006688;
     color: #c4e2f5;
   }
 
   .route-point-marker--b {
-    background: #494ca2;
-    color: #c6cbef;
+    background: #ff9e2a;
+    color: #ffe5b8;
   }
 
   .route-point-marker--a,
@@ -390,8 +401,8 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   }
   .stitch-dashboard-shell {
-    width: 100%;
-    max-width: 1440px;
+    width: 95vw;
+    max-width: 1800px;
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);

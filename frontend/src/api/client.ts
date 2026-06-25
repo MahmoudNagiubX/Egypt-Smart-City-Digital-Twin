@@ -11,6 +11,8 @@ import {
   CustomRouteRequest,
   CustomRouteResponse,
   LiveWeatherSummary,
+  DailyForecastResponse,
+  AirQualityResponse,
   LiveRoutingStatusResponse,
   LiveEmergencyRouteRequest,
   LiveEmergencyRouteResponse,
@@ -133,6 +135,89 @@ export const getLiveWeather = async (): Promise<LiveWeatherSummary> => {
   return response.data;
 };
 
+export const getSevenDayForecast = async (): Promise<DailyForecastResponse> => {
+  try {
+    const response = await axios.get("https://api.open-meteo.com/v1/forecast", {
+      params: {
+        latitude: 30.0561,
+        longitude: 31.33,
+        daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max",
+        timezone: "Africa/Cairo",
+        forecast_days: 7,
+      },
+      timeout: 12000,
+    });
+    const daily = response.data?.daily ?? {};
+    const dates: string[] = daily.time ?? [];
+    return {
+      status: "ok",
+      source: "Open-Meteo Forecast API",
+      location: { name: "Nasr City", lat: 30.0561, lon: 31.33 },
+      daily: dates.map((date, index) => ({
+        date,
+        weather_code: daily.weather_code?.[index] ?? null,
+        temperature_2m_max: daily.temperature_2m_max?.[index] ?? null,
+        temperature_2m_min: daily.temperature_2m_min?.[index] ?? null,
+        precipitation_sum: daily.precipitation_sum?.[index] ?? null,
+        precipitation_probability_max: daily.precipitation_probability_max?.[index] ?? null,
+      })),
+      warnings: [],
+    };
+  } catch (error) {
+    return {
+      status: "unavailable",
+      source: "Open-Meteo Forecast API",
+      location: { name: "Nasr City", lat: 30.0561, lon: 31.33 },
+      daily: [],
+      warnings: [error instanceof Error ? error.message : "Forecast unavailable."],
+    };
+  }
+};
+
+export const getAirQuality = async (): Promise<AirQualityResponse> => {
+  try {
+    const response = await axios.get("https://air-quality-api.open-meteo.com/v1/air-quality", {
+      params: {
+        latitude: 30.0561,
+        longitude: 31.33,
+        current: "european_aqi,pm10,pm2_5",
+        hourly: "european_aqi,pm10,pm2_5",
+        timezone: "Africa/Cairo",
+        forecast_days: 2,
+      },
+      timeout: 12000,
+    });
+    const hourly = response.data?.hourly ?? {};
+    const times: string[] = hourly.time ?? [];
+    return {
+      status: "ok",
+      source: "Open-Meteo Air Quality API",
+      location: { name: "Nasr City", lat: 30.0561, lon: 31.33 },
+      current: {
+        time: response.data?.current?.time ?? null,
+        european_aqi: response.data?.current?.european_aqi ?? null,
+        pm10: response.data?.current?.pm10 ?? null,
+        pm2_5: response.data?.current?.pm2_5 ?? null,
+      },
+      hourly: times.map((time, index) => ({
+        time,
+        european_aqi: hourly.european_aqi?.[index] ?? null,
+        pm10: hourly.pm10?.[index] ?? null,
+        pm2_5: hourly.pm2_5?.[index] ?? null,
+      })),
+      warnings: [],
+    };
+  } catch (error) {
+    return {
+      status: "unavailable",
+      source: "Open-Meteo Air Quality API",
+      location: { name: "Nasr City", lat: 30.0561, lon: 31.33 },
+      hourly: [],
+      warnings: [error instanceof Error ? error.message : "Air quality unavailable."],
+    };
+  }
+};
+
 export const getLiveWeatherRiskLayer = async (): Promise<FeatureCollection> => {
   const response = await api.get<FeatureCollection>(`${API_PREFIX}/layers/predictions/live`);
   return response.data;
@@ -199,6 +284,5 @@ export const getModelExplainabilitySummary = async (): Promise<ModelExplainabili
   );
   return response.data;
 };
-
 
 

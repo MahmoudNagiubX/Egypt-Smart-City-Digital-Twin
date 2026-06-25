@@ -197,6 +197,52 @@ export interface LiveWeatherSummary {
   warnings: string[];
 }
 
+export interface DailyForecastItem {
+  date: string;
+  weather_code?: number | null;
+  temperature_2m_max?: number | null;
+  temperature_2m_min?: number | null;
+  precipitation_sum?: number | null;
+  precipitation_probability_max?: number | null;
+}
+
+export interface DailyForecastResponse {
+  status: "ok" | "unavailable";
+  source: string;
+  location: {
+    name: string;
+    lat: number;
+    lon: number;
+  };
+  daily: DailyForecastItem[];
+  warnings: string[];
+}
+
+export interface AirQualityHourlyItem {
+  time: string;
+  european_aqi?: number | null;
+  pm10?: number | null;
+  pm2_5?: number | null;
+}
+
+export interface AirQualityResponse {
+  status: "ok" | "unavailable";
+  source: string;
+  location: {
+    name: string;
+    lat: number;
+    lon: number;
+  };
+  current?: {
+    time?: string | null;
+    european_aqi?: number | null;
+    pm10?: number | null;
+    pm2_5?: number | null;
+  };
+  hourly: AirQualityHourlyItem[];
+  warnings: string[];
+}
+
 export interface LiveRoutingStatusResponse {
   status: "ok" | "ok_with_warnings" | "failed";
   live_weather_available: boolean;
@@ -353,6 +399,5 @@ export interface ModelExplainabilitySummaryResponse {
   known_limitations: string[];
   honesty_note: string;
 }
-
 
 
