@@ -162,4 +162,26 @@ class LiveEmergencyRouteResponse(BaseModel):
     honesty_note: str
 
 
+class SearchResultItem(BaseModel):
+    id: str
+    name: str
+    display_name: str
+    category: str
+    category_label: str
+    source: str
+    lat: float
+    lon: float
+    confidence: float
+    inside_project_area: bool
+    geometry_type: Literal["Point", "LineString", "Polygon"]
+
+
+class SearchResponse(BaseModel):
+    status: str
+    query: str
+    results: List[SearchResultItem]
+    warnings: List[str]
+
+
+
 

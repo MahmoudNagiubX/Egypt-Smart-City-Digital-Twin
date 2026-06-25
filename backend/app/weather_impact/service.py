@@ -1198,6 +1198,31 @@ def get_live_routing_status() -> dict:
     }
 
 
+def search_places_and_roads(
+    q: str,
+    limit: int = 8,
+    category: str | None = None,
+    include_roads: bool = True,
+    include_places: bool = True
+):
+    """Search for places, POIs, roads, and zones within local Nasr City data."""
+    from . import search
+    results = search.search_local(
+        q=q,
+        limit=limit,
+        category=category,
+        include_roads=include_roads,
+        include_places=include_places
+    )
+    return {
+        "status": "ok",
+        "query": q,
+        "results": results,
+        "warnings": []
+    }
+
+
+
 
 
 

@@ -317,4 +317,26 @@ def post_live_emergency_route(request: schemas.LiveEmergencyRouteRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/search", response_model=schemas.SearchResponse)
+def get_search(
+    q: str = Query(..., min_length=1),
+    limit: int = Query(default=8, ge=1, le=20),
+    category: str | None = Query(default=None),
+    include_roads: bool = Query(default=True),
+    include_places: bool = Query(default=True)
+):
+    """Search street, POI place, emergency facility, or grid zone within Nasr City local index."""
+    try:
+        return service.search_places_and_roads(
+            q=q,
+            limit=limit,
+            category=category,
+            include_roads=include_roads,
+            include_places=include_places
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
 
