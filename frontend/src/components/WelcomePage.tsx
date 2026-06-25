@@ -67,83 +67,241 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onOpenDashboard }) => 
 
       {/* Hero Section */}
       <motion.main
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="flex-1 flex flex-col items-center justify-center w-full max-w-4xl mx-auto px-4 text-center z-10 min-h-0"
+        className="flex-1 w-full max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center z-10 min-h-0 py-4"
       >
-        <h1
-          className="max-w-3xl"
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 'clamp(28px, 4vw, 44px)',
-            fontWeight: 700,
-            letterSpacing: '-0.02em',
-            lineHeight: 1.1,
-            color: 'var(--stitch-text-charcoal)',
-          }}
-        >
-          Stay ahead with a{' '}<br />
-          <span className="stitch-marker-highlight">safer</span> city route plan
-        </h1>
-        <p
-          className="mt-4 max-w-xl mx-auto"
-          style={{ fontSize: 'clamp(14px, 1.5vw, 15px)', color: 'var(--stitch-text-muted)', lineHeight: 1.5 }}
-        >
-          Visualize weather risk, traffic pressure, and emergency routes across Nasr City — faster and smarter.
-        </p>
-        <div className="flex flex-row items-center justify-center gap-4 mt-6">
-          <button
-            id="welcome-open-dashboard"
-            onClick={onOpenDashboard}
-            className="font-semibold shadow-sm transition-colors"
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes pulse {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.1); }
+          }
+        `}} />
+
+        {/* Column 1 (Left column, spanning 7 cols) */}
+        <div className="lg:col-span-7 flex flex-col items-start text-left gap-4">
+          <h1
             style={{
-              background: '#1A1C1E',
-              color: 'white',
-              padding: '10px 28px',
-              borderRadius: 10,
-              fontSize: 13,
-              border: 'none',
-              cursor: 'pointer',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 'clamp(28px, 3.5vw, 44px)',
+              fontWeight: 800,
+              letterSpacing: '-0.02em',
+              lineHeight: 1.15,
+              color: 'var(--stitch-text-charcoal)',
             }}
-            onMouseOver={e => ((e.currentTarget as HTMLButtonElement).style.background = '#000')}
-            onMouseOut={e => ((e.currentTarget as HTMLButtonElement).style.background = '#1A1C1E')}
           >
-            Open Live Map
-          </button>
-          <button
-            id="welcome-see-how"
-            onClick={() => setActiveModal('how-it-works')}
-            className="font-semibold shadow-sm transition-colors"
-            style={{
-              background: 'white',
-              color: '#1A1C1E',
-              padding: '10px 28px',
-              borderRadius: 10,
-              fontSize: 13,
-              border: '1px solid #1A1C1E',
-              cursor: 'pointer',
+            Stay ahead with a<br />
+            <span className="stitch-marker-highlight">safer</span> city route plan
+          </h1>
+          
+          <p
+            style={{ 
+              fontSize: 'clamp(13px, 1.2vw, 15px)', 
+              color: 'var(--stitch-text-muted)', 
+              lineHeight: 1.5,
+              maxWidth: '480px' 
             }}
-            onMouseOver={e => ((e.currentTarget as HTMLButtonElement).style.background = '#f9f9f9')}
-            onMouseOut={e => ((e.currentTarget as HTMLButtonElement).style.background = 'white')}
           >
-            See how it works
-          </button>
+            Visualize weather risk, traffic pressure, and weather-aware emergency routes across Nasr City in real-time.
+          </p>
+
+          <div className="flex flex-row items-center gap-4 mt-2">
+            <button
+              id="welcome-open-dashboard"
+              onClick={onOpenDashboard}
+              className="font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+              style={{
+                background: '#1A1C1E',
+                color: 'white',
+                padding: '10px 24px',
+                borderRadius: 10,
+                fontSize: 13,
+                border: 'none',
+                cursor: 'pointer',
+              }}
+              onMouseOver={e => ((e.currentTarget as HTMLButtonElement).style.background = '#000')}
+              onMouseOut={e => ((e.currentTarget as HTMLButtonElement).style.background = '#1A1C1E')}
+            >
+              Open Live Map
+            </button>
+            <button
+              id="welcome-see-how"
+              onClick={() => setActiveModal('how-it-works')}
+              className="font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+              style={{
+                background: 'white',
+                color: '#1A1C1E',
+                padding: '10px 24px',
+                borderRadius: 10,
+                fontSize: 13,
+                border: '1px solid #bcc8d1',
+                cursor: 'pointer',
+              }}
+              onMouseOver={e => ((e.currentTarget as HTMLButtonElement).style.background = '#f5faff')}
+              onMouseOut={e => ((e.currentTarget as HTMLButtonElement).style.background = 'white')}
+            >
+              See how it works
+            </button>
+          </div>
+
+          {/* 4 Compact Feature/Value Cards in a 2x2 grid */}
+          <div className="grid grid-cols-2 gap-3 w-full max-w-[500px] mt-4">
+            {[
+              { emoji: '🌧️', title: 'Live Rain Risk', desc: 'Real-time ML risk scores per zone' },
+              { emoji: '🛣️', title: 'Safer Routing', desc: 'Evade high-risk flooding spots' },
+              { emoji: '🔍', title: 'Explainable AI', desc: 'Understand the underlying causes' },
+              { emoji: '📍', title: 'Smart Search', desc: 'Search streets, landmarks, POIs' },
+            ].map((feat) => (
+              <div 
+                key={feat.title} 
+                className="stitch-card p-3 flex flex-col gap-1 border border-white/50 bg-white/40 shadow-xs rounded-xl hover:bg-white/60 transition-colors"
+                style={{ padding: '0.75rem 1rem' }}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-base">{feat.emoji}</span>
+                  <h3 className="font-bold text-xs text-text-charcoal m-0">{feat.title}</h3>
+                </div>
+                <p className="text-[10px] text-text-muted m-0 leading-normal">{feat.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* 3D Folded Map Illustration Area */}
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
-          className="mt-8 relative w-full max-w-2xl mx-auto flex justify-center min-h-0 flex-1 items-center"
-        >
-          <img 
-            className="w-full h-full max-h-[30vh] object-contain drop-shadow-xl" 
-            alt="3D premium illustration of a folded paper map in soft green and blue tones" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_LMFYxjJS9V6d9n3vWHh3vt9igJkl31nAoevS6Wc9Mhy0zaJB7Gca-S-97vFZB5hF4DXPOTU7KSPbniI-lkYTY_bTnojW1ULDZpboH2oApORZW7xFTE82TA9WJty-aafNSJ9M-7j1ThICRzeS0lpgmIHh_cFKY1YdlvZyEb0tbS5jgMwj0xwYiYLFwWtFGeMsFxGASuEgfDdjTpAWdxOYTwEbLVdgwylQJ9_rWqCRQCpCGK1vb4DPrF4OVWazgS1aqcSpbC40Pg" 
-          />
-        </motion.div>
+        {/* Column 2 (Right column, spanning 5 cols) */}
+        <div className="lg:col-span-5 w-full flex justify-center h-full max-h-[380px] lg:max-h-full items-center">
+          <div 
+            className="stitch-card w-full max-w-[380px] aspect-[1.1] relative shadow-lg overflow-hidden border border-white/60 flex flex-col"
+            style={{ borderRadius: 24, padding: 0 }}
+          >
+            {/* Header / Search bar of the mini-map */}
+            <div className="flex items-center gap-2 px-3 py-2 border-b border-white/50 bg-white/40 z-10 shrink-0">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+              <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+              <div className="flex-1 bg-white/60 border border-white/80 rounded-md py-1 px-2 text-[9px] text-text-muted flex items-center gap-1.5 font-sans truncate shadow-xs">
+                <span className="material-symbols-outlined text-[10px]">search</span>
+                <span>Nasr City, Cairo (Emergency)</span>
+              </div>
+            </div>
+
+            {/* Simulated Live Map Canvas */}
+            <div className="flex-1 bg-[#e8f1f8] relative overflow-hidden">
+              {/* Street grid representation (SVG background) */}
+              <svg width="100%" height="100%" className="absolute inset-0 opacity-20 pointer-events-none" style={{ stroke: '#006688', strokeWidth: 0.75 }}>
+                {/* Horizontal streets */}
+                <line x1="0" y1="20%" x2="100%" y2="20%" />
+                <line x1="0" y1="50%" x2="100%" y2="40%" />
+                <line x1="0" y1="75%" x2="100%" y2="85%" />
+                {/* Vertical/slanted streets */}
+                <line x1="20%" y1="0" x2="10%" y2="100%" />
+                <line x1="45%" y1="0" x2="55%" y2="100%" />
+                <line x1="80%" y1="0" x2="70%" y2="100%" />
+                {/* Diagonal secondary roads */}
+                <line x1="0" y1="90%" x2="90%" y2="0" strokeDasharray="3 3" />
+                <line x1="10%" y1="10%" x2="100%" y2="70%" strokeDasharray="2 2" />
+              </svg>
+
+              {/* Weather risk intensity zones (blobs) */}
+              <div 
+                className="absolute rounded-full" 
+                style={{ 
+                  top: '15%', 
+                  left: '35%', 
+                  width: '90px', 
+                  height: '90px', 
+                  background: 'radial-gradient(circle, rgba(186,26,26,0.22) 0%, rgba(186,26,26,0) 70%)', 
+                  filter: 'blur(4px)',
+                  animation: 'pulse 3s infinite ease-in-out'
+                }} 
+              />
+              <div 
+                className="absolute rounded-full" 
+                style={{ 
+                  top: '60%', 
+                  left: '60%', 
+                  width: '110px', 
+                  height: '110px', 
+                  background: 'radial-gradient(circle, rgba(255,122,0,0.18) 0%, rgba(255,122,0,0) 70%)', 
+                  filter: 'blur(4px)' 
+                }} 
+              />
+
+              {/* Safe Route line (SVG Path with dash-array animation) */}
+              <svg width="100%" height="100%" className="absolute inset-0">
+                {/* Safe route (green/blue) */}
+                <path 
+                  d="M 60,240 C 90,180 180,180 200,120 S 290,140 330,70" 
+                  fill="none" 
+                  stroke="#006d36" 
+                  strokeWidth="3.5" 
+                  strokeLinecap="round" 
+                  style={{
+                    strokeDasharray: '400',
+                    strokeDashoffset: '0',
+                    filter: 'drop-shadow(0px 1.5px 3px rgba(0,109,54,0.4))'
+                  }}
+                />
+                {/* Normal dangerous route (red dotted) */}
+                <path 
+                  d="M 60,240 C 130,220 120,70 200,120 S 270,40 330,70" 
+                  fill="none" 
+                  stroke="#ba1a1a" 
+                  strokeWidth="2" 
+                  strokeDasharray="4 4" 
+                  opacity="0.85" 
+                  strokeLinecap="round" 
+                />
+              </svg>
+
+              {/* Start marker (A) */}
+              <div 
+                className="absolute flex items-center justify-center bg-[#006688] text-white rounded-full shadow-md font-bold text-[9px] cursor-default transition-transform hover:scale-110"
+                style={{ top: '228px', left: '48px', width: '22px', height: '22px', border: '1.5px solid white' }}
+              >
+                A
+              </div>
+
+              {/* Destination marker (B) */}
+              <div 
+                className="absolute flex items-center justify-center bg-[#006d36] text-white rounded-full shadow-md font-bold text-[9px] cursor-default transition-transform hover:scale-110"
+                style={{ top: '58px', left: '318px', width: '22px', height: '22px', border: '1.5px solid white' }}
+              >
+                B
+              </div>
+
+              {/* POI Markers: Hospital, Emergency */}
+              <div 
+                className="absolute bg-white text-[#ba1a1a] rounded-lg shadow-sm border border-white/50 flex items-center justify-center text-[11px] p-1 cursor-default hover:-translate-y-0.5 transition-transform"
+                style={{ top: '150px', left: '160px', width: '20px', height: '20px' }}
+                title="Emergency Center"
+              >
+                🏥
+              </div>
+              <div 
+                className="absolute bg-white text-[#006688] rounded-lg shadow-sm border border-white/50 flex items-center justify-center text-[11px] p-1 cursor-default hover:-translate-y-0.5 transition-transform"
+                style={{ top: '90px', left: '260px', width: '20px', height: '20px' }}
+                title="Police Station"
+              >
+                👮
+              </div>
+
+              {/* Live HUD card overlay */}
+              <div 
+                className="absolute bottom-3 left-3 right-3 stitch-glass rounded-xl p-2.5 border border-white/60 flex items-center justify-between shadow-md"
+                style={{ background: 'rgba(255,255,255,0.85)' }}
+              >
+                <div className="flex flex-col">
+                  <span className="text-[7.5px] text-text-muted font-bold uppercase tracking-wider">Live Route Recommendation</span>
+                  <span className="text-[10px] font-bold text-text-charcoal mt-0.5">Use Emergency Route (Route B)</span>
+                </div>
+                <div className="flex items-center gap-1 bg-[#83fba5]/40 text-[#006d36] text-[8.5px] font-bold px-2 py-0.5 rounded-full border border-[#83fba5]/60">
+                  <span>92% Safer</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </motion.main>
 
       {/* Footer */}

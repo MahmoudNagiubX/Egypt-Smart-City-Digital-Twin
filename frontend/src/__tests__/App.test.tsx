@@ -774,7 +774,7 @@ test('Welcome Page interactive features and modal navigation', async () => {
     fireEvent.click(featuresBtn);
   });
   expect(screen.getByText("Smart mobility features")).toBeDefined();
-  expect(screen.getByText("Live Rain Risk")).toBeDefined();
+  expect(screen.getAllByText("Live Rain Risk")[0]).toBeDefined();
 
   // 5. Model nav opens Model panel
   const modelBtn = screen.getByRole("button", { name: "Model" });
