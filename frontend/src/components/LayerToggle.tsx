@@ -67,12 +67,12 @@ const ToggleRow = ({
   onChange: () => void;
   icon?: React.ElementType;
 }) => (
-  <div className="flex items-center justify-between gap-3 rounded-lg px-1 py-1.5 transition-colors hover:bg-slate-100/50">
+  <div className="flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/40">
     <Label htmlFor={id} className="flex min-w-0 cursor-pointer items-center gap-2">
-      {Icon && <Icon className="size-4 shrink-0 text-muted-foreground" />}
-      <span className="min-w-0 text-xs font-semibold text-foreground/80">{label}</span>
+      {Icon && <Icon className="size-4 shrink-0 text-text-muted" />}
+      <span className="min-w-0 text-xs font-semibold text-text-charcoal">{label}</span>
     </Label>
-    <Switch id={id} checked={checked} onCheckedChange={onChange} size="sm" />
+    <Switch id={id} checked={checked} onCheckedChange={onChange} size="sm" className="data-[state=checked]:bg-[#006688]" />
   </div>
 );
 
@@ -95,8 +95,8 @@ const PoiToggleRow = ({
     className={cn(
       "flex items-center justify-between gap-3 rounded-lg px-2.5 py-1.5 transition-all duration-200 border border-transparent",
       checked 
-        ? "bg-[#C4E2F5]/20 border-[#C6CBEF]/40 shadow-sm" 
-        : "opacity-60 hover:opacity-100 hover:bg-slate-100/50"
+        ? "bg-[#c2e8ff]/30 border-white/50 shadow-sm" 
+        : "opacity-60 hover:opacity-100 hover:bg-white/30"
     )}
   >
     <Label htmlFor={id} className="flex min-w-0 cursor-pointer items-center gap-2 w-full justify-between">
@@ -105,14 +105,14 @@ const PoiToggleRow = ({
           <Icon 
             className={cn(
               "size-4 shrink-0 transition-colors",
-              checked ? "text-[#2C5EAD]" : "text-muted-foreground"
+              checked ? "text-[#006688]" : "text-text-muted"
             )} 
           />
         )}
         <span 
           className={cn(
             "min-w-0 text-xs font-semibold transition-colors truncate",
-            checked ? "text-[#101A3A]" : "text-slate-500"
+            checked ? "text-text-charcoal" : "text-text-muted"
           )}
         >
           {label}
@@ -121,7 +121,7 @@ const PoiToggleRow = ({
       {typeof count === "number" && (
         <span className={cn(
           "ml-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold font-mono shrink-0 transition-colors",
-          checked ? "bg-[#2C5EAD]/15 text-[#2C5EAD]" : "bg-slate-100 text-slate-400"
+          checked ? "bg-[#006688]/15 text-[#006688]" : "bg-white/40 text-text-muted"
         )}>
           {count}
         </span>
@@ -132,7 +132,7 @@ const PoiToggleRow = ({
       checked={checked} 
       onCheckedChange={onChange} 
       size="sm"
-      className="data-[state=checked]:bg-[#2C5EAD]"
+      className="data-[state=checked]:bg-[#006688]"
     />
   </div>
 );
@@ -147,10 +147,10 @@ const SectionTitle = ({
   detail: string;
 }) => (
   <div className="flex items-center gap-2">
-    <Icon className="size-4 text-primary" />
+    <Icon className="size-4 text-[#006688]" />
     <div>
-      <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-foreground">{title}</h2>
-      <p className="text-[9px] text-muted-foreground">{detail}</p>
+      <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-text-charcoal leading-tight">{title}</h2>
+      <p className="text-[9px] text-text-muted mt-0.5 leading-none">{detail}</p>
     </div>
   </div>
 );
@@ -197,19 +197,19 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
   }, [mapMode]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3.5">
       {/* 1. Map Mode Selection */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
-        <SectionTitle icon={Compass} title="Map Mode" detail="Select current weather context" />
+      <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
+        <SectionTitle icon={Compass} title="Map Mode" detail="Select weather context" />
         <div className="grid grid-cols-2 gap-2 mt-2">
           <button
             type="button"
             onClick={() => onMapModeChange("today")}
             className={cn(
-              "flex h-9 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
+              "flex h-8.5 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
               mapMode === "today"
-                ? "bg-gradient-to-r from-[#2C5EAD] to-[#1591DC] text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
+                ? "bg-[#006688] text-white"
+                : "bg-white/40 border border-white/60 text-text-charcoal hover:bg-white/70"
             )}
           >
             Today
@@ -218,10 +218,10 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
             type="button"
             onClick={() => onMapModeChange("history")}
             className={cn(
-              "flex h-9 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
+              "flex h-8.5 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
               mapMode === "history"
-                ? "bg-gradient-to-r from-[#2C5EAD] to-[#1591DC] text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
+                ? "bg-[#006688] text-white"
+                : "bg-white/40 border border-white/60 text-text-charcoal hover:bg-white/70"
             )}
           >
             History
@@ -229,11 +229,11 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </div>
       </section>
 
-      {/* 2. Today's Rain Risk (Show Live weather controls first in Today Mode) */}
+      {/* 2. Today’s Rain Risk (Show Live weather controls first in Today Mode) */}
       {mapMode === "today" && (
-        <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
+        <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
           <SectionTitle icon={Layers3} title="Today’s Rain Risk" detail="Real-time predictive overlays" />
-          <div className="flex flex-col gap-0.5 mt-1.5">
+          <div className="flex flex-col gap-0.5 mt-1">
             <ToggleRow
               id="live-risk-toggle"
               label="Today’s Rain Risk"
@@ -245,18 +245,18 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
           
           {/* Risk Display Mode Option */}
           <div className="mt-2 flex flex-col gap-1">
-            <label className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+            <label className="text-[9px] font-bold uppercase tracking-wider text-text-muted">
               Risk Display Mode
             </label>
-            <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-100/80 p-0.5">
+            <div className="grid grid-cols-2 gap-1 rounded-lg bg-white/40 border border-white/60 p-0.5">
               <button
                 type="button"
                 onClick={() => setRiskDisplayMode("focus")}
                 className={cn(
                   "rounded-md py-1 text-[10px] font-bold transition-all",
                   riskDisplayMode === "focus"
-                    ? "bg-white text-primary shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "bg-white text-[#006688] shadow-sm"
+                    : "text-text-muted hover:text-text-charcoal"
                 )}
               >
                 Focus Risk Areas
@@ -267,8 +267,8 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
                 className={cn(
                   "rounded-md py-1 text-[10px] font-bold transition-all",
                   riskDisplayMode === "all"
-                    ? "bg-white text-primary shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "bg-white text-[#006688] shadow-sm"
+                    : "text-text-muted hover:text-text-charcoal"
                 )}
               >
                 Show All Risk Zones
@@ -276,9 +276,9 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
             </div>
           </div>
 
-          <div className="mt-2.5 flex flex-col gap-2.5 border-t pt-2.5">
+          <div className="mt-2.5 flex flex-col gap-2.5 border-t border-white/10 pt-2.5">
             <div className="flex flex-col gap-1">
-              <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-text-muted">
                 <span>Risk Fill Opacity</span>
                 <span>{Math.round(riskFillOpacity * 100)}%</span>
               </div>
@@ -289,11 +289,11 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
                 step="0.05"
                 value={riskFillOpacity}
                 onChange={(e) => setRiskFillOpacity(parseFloat(e.target.value))}
-                className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-slate-200/80 accent-[#1591DC]"
+                className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-[#006688]"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-text-muted">
                 <span>Grid Line Opacity</span>
                 <span>{Math.round(gridLineOpacity * 100)}%</span>
               </div>
@@ -304,7 +304,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
                 step="0.05"
                 value={gridLineOpacity}
                 onChange={(e) => setGridLineOpacity(parseFloat(e.target.value))}
-                className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-slate-200/80 accent-[#1591DC]"
+                className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-[#006688]"
               />
             </div>
           </div>
@@ -312,22 +312,22 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       )}
 
       {/* 3. Route Setup Instructions */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
-        <SectionTitle icon={Route} title="Route Setup" detail="Interactive weather-aware routing" />
+      <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
+        <SectionTitle icon={Route} title="Route Setup" detail="Weather-aware routing" />
         <div className="mt-1.5 flex flex-col gap-2 px-1">
-          <div className="rounded-lg bg-slate-50/70 p-2.5 border border-slate-100 text-[11px] leading-relaxed text-slate-700">
-            <span className="font-semibold text-[#2C5EAD] block mb-0.5">Instruction:</span>
+          <div className="rounded-xl bg-white/40 border border-white/60 p-3 text-[11px] leading-relaxed text-text-charcoal shadow-sm">
+            <span className="font-bold text-[#006688] block mb-0.5">Instruction:</span>
             {selectionState === "idle" && "Click the map to choose your starting point"}
             {selectionState === "selecting-destination" && "Now choose your destination"}
             {selectionState === "ready" && "Route ready • click the map again to clear"}
             {selectionState === "loading" && "Calculating weather-aware route..."}
-            {routingError && <span className="text-red-500 font-medium block mt-1">{routingError}</span>}
+            {routingError && <span className="text-red-600 font-medium block mt-1">{routingError}</span>}
           </div>
           {(selectionState !== "idle" || routingError) && (
             <button
               type="button"
               onClick={onResetRoute}
-              className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 active:bg-slate-100"
+              className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/50 text-xs font-semibold text-text-charcoal transition-all hover:bg-white/80 active:bg-white"
             >
               <RotateCcw className="size-3.5" />
               Reset Route
@@ -337,9 +337,9 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       </section>
 
       {/* 4. Map Reference Layers */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
+      <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
         <SectionTitle icon={Map} title="Map Layers" detail="Reference data" />
-        <div className="flex flex-col gap-0.5 mt-1.5">
+        <div className="flex flex-col gap-0.5 mt-1">
           <ToggleRow
             id="boundary-toggle"
             label="Boundary"
@@ -365,9 +365,9 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       </section>
 
       {/* 5. Points of Interest */}
-      <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
+      <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
         <SectionTitle icon={Landmark} title="Places" detail="Points of interest" />
-        <div className="flex flex-col gap-0.5 mt-1.5 max-h-56 overflow-y-auto pr-1">
+        <div className="flex flex-col gap-0.5 mt-1 max-h-52 overflow-y-auto pr-1">
           <PoiToggleRow
             id="hospitals-toggle"
             label="Hospitals"
@@ -443,28 +443,28 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </div>
       </section>
 
-      {/* 6. Collapsible Historical Analysis Section (Only visible in History mode) */}
+      {/* 6. Historical Analysis Section (Only visible in History mode) */}
       {mapMode === "history" && (
-        <section className="flex flex-col gap-2 rounded-xl border border-slate-200/50 bg-gradient-to-b from-white to-[#C4E2F5]/12 p-3 shadow-sm transition-all hover:to-[#C4E2F5]/22">
+        <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
           <button
             type="button"
             onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
             className="flex w-full items-center justify-between gap-2 text-left focus:outline-none"
           >
-            <SectionTitle icon={CalendarRange} title="Historical Analysis" detail="Explore past weather scenarios" />
-            <span className="text-slate-400">
+            <SectionTitle icon={CalendarRange} title="Historical Analysis" detail="Past scenarios" />
+            <span className="text-text-muted">
               {isHistoryExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
             </span>
           </button>
 
           {isHistoryExpanded && (
-            <div className="mt-2.5 flex flex-col gap-3 border-t pt-2.5">
+            <div className="mt-2 flex flex-col gap-3 border-t border-white/10 pt-2.5">
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+                <label className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">
                   Choose Historical Event
                 </label>
                 <Select value={selectedEventId || ""} onValueChange={onSelectEvent}>
-                  <SelectTrigger className="h-9 w-full bg-white shadow-sm text-xs" aria-label="Observed weather event">
+                  <SelectTrigger className="h-8.5 w-full bg-white/70 shadow-sm text-xs border-white/60" aria-label="Observed weather event">
                     <SelectValue placeholder="Select an event…" />
                   </SelectTrigger>
                   <SelectContent className="max-h-72">
@@ -484,8 +484,8 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
                 </Select>
               </div>
 
-              <div className="flex flex-col gap-1 border-t pt-2">
-                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+              <div className="flex flex-col gap-1 border-t border-white/10 pt-2.5">
+                <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1">
                   Historical Risk Layers
                 </span>
                 <ToggleRow
@@ -523,13 +523,12 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
       )}
 
       {/* 7. About This Prototype (Disclaimer) */}
-      <section className="flex flex-col gap-1 border border-slate-200/50 bg-white/40 rounded-xl p-2.5">
-        <div className="flex items-center gap-1.5 text-[9px] text-slate-500 font-semibold leading-relaxed">
-          <Info className="size-3.5 text-slate-400 shrink-0" aria-hidden="true" />
-          <span>Predictions are weather-impact model estimates, not official dispatch commands.</span>
+      <section className="flex flex-col gap-1 bg-white/30 border border-white/40 rounded-xl p-2.5">
+        <div className="flex items-start gap-1.5 text-[9.5px] text-text-muted font-medium leading-normal">
+          <Info className="size-3.5 text-text-muted/80 shrink-0 mt-0.5" aria-hidden="true" />
+          <span>Predictions are weather-impact model estimates, not official emergency dispatch commands.</span>
         </div>
       </section>
     </div>
   );
 };
-
