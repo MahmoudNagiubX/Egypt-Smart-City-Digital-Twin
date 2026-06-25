@@ -68,6 +68,30 @@ vi.mock('maplibre-gl', () => {
   };
 });
 
+// Mock motion/react to avoid framer-motion async/animation delays in tests
+vi.mock('motion/react', () => {
+  const motionMock = new Proxy({}, {
+    get: (_target, key) => {
+      return ({ children, ...props }: any) => {
+        const cleanProps = { ...props };
+        delete cleanProps.initial;
+        delete cleanProps.animate;
+        delete cleanProps.exit;
+        delete cleanProps.transition;
+        delete cleanProps.whileInView;
+        const Tag = key as any;
+        return <Tag {...cleanProps}>{children}</Tag>;
+      };
+    }
+  });
+
+  return {
+    motion: motionMock,
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+    useReducedMotion: () => true,
+  };
+});
+
 // Mock API Client calls
 vi.mock('../api/client', () => ({
   getHealth: vi.fn().mockResolvedValue({ status: "healthy", module_name: "Nasr City Weather-Impact Emergency Mobility Module", outputs_available: {}, official_flood_labels_claimed: false, demo_scenarios_used_for_training: false }),
@@ -104,6 +128,23 @@ vi.mock('../api/client', () => ({
     forecast_window: { hours: 24, rain_1h_mm: 0.0, rain_3h_mm: 0.0, rain_6h_mm: 0.0, rain_24h_mm: 0.0, max_precipitation_probability: 0.0 },
     rain_risk_expected: false,
     recommended_event_mode: "normal",
+    warnings: []
+  }),
+  getSevenDayForecast: vi.fn().mockResolvedValue({
+    status: "ok",
+    source: "Open-Meteo Forecast API",
+    location: { name: "Nasr City", lat: 30.0561, lon: 31.33 },
+    daily: [
+      { date: "2026-06-25", weather_code: 0, temperature_2m_max: 30, temperature_2m_min: 20, precipitation_sum: 0, precipitation_probability_max: 0 }
+    ],
+    warnings: []
+  }),
+  getAirQuality: vi.fn().mockResolvedValue({
+    status: "ok",
+    source: "Open-Meteo Air Quality API",
+    location: { name: "Nasr City", lat: 30.0561, lon: 31.33 },
+    current: { time: "2026-06-25T00:00", european_aqi: 15, pm10: 5, pm2_5: 2 },
+    hourly: [],
     warnings: []
   }),
   getLiveWeatherRiskLayer: vi.fn().mockResolvedValue({ type: "FeatureCollection", features: [] }),
