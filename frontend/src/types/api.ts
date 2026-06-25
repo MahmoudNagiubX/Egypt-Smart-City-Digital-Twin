@@ -400,4 +400,84 @@ export interface ModelExplainabilitySummaryResponse {
   honesty_note: string;
 }
 
+export interface HeatHealthResponse {
+  status: string;
+  model_available: boolean;
+  latest_layer_available: boolean;
+  explainability_available: boolean;
+  message: string;
+}
+
+export interface HeatSummaryHottestZone {
+  zone_code: string;
+  zone_label: string;
+  predicted_heat_anomaly_c: number;
+  predicted_heat_risk_class: string;
+}
+
+export interface HeatSummaryResponse {
+  status: string;
+  date: string;
+  zone_count: number;
+  risk_counts: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+  max_heat_anomaly_c: number;
+  mean_heat_anomaly_c: number;
+  hottest_zone: HeatSummaryHottestZone;
+  model_name: string;
+  honesty_note: string;
+}
+
+export interface HeatZoneFactor {
+  factor: string;
+  label: string;
+  value: number;
+  impact: string;
+  reason: string;
+}
+
+export interface HeatZoneExplanationResponse {
+  status: string;
+  zone_code: string;
+  zone_label: string;
+  date: string;
+  predicted_heat_risk_class: string;
+  predicted_heat_anomaly_c: number;
+  predicted_heat_risk_score: number;
+  summary: string;
+  top_factors: HeatZoneFactor[];
+  explanation_text: string;
+  honesty_note: string;
+}
+
+export interface HeatGlobalFeatureImportance {
+  feature: string;
+  label: string;
+  importance: number;
+  reason: string;
+}
+
+export interface HeatDataAuthenticity {
+  landsat_rows: number;
+  fallback_rows: number;
+  ready_for_training: boolean;
+}
+
+export interface HeatModelSummaryResponse {
+  status: string;
+  model_name: string;
+  target: string;
+  feature_count: number;
+  metrics: Record<string, any>;
+  top_global_features: HeatGlobalFeatureImportance[];
+  data_authenticity: HeatDataAuthenticity;
+  honesty_note: string;
+}
+
+export type HeatLayerGeoJson = FeatureCollection;
+
+
 
