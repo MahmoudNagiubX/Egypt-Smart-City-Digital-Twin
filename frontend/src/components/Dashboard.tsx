@@ -697,9 +697,20 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
           </div>
           {/* Right: Actions & Profile */}
           <div className="flex items-center gap-4 text-xs">
-            <div className="hidden md:flex items-center gap-1.5 text-text-muted">
-              <span className="material-symbols-outlined text-[16px]">sync</span>
-              <span>Synced 2 min ago</span>
+            <div className="hidden md:flex items-center gap-1.5 text-[12.5px] font-semibold text-text-charcoal bg-emerald-50/70 border border-emerald-200/50 px-2.5 py-1 rounded-full shadow-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span>Live</span>
+              {liveWeather?.current?.time ? (
+                <>
+                  <span className="text-text-muted font-normal text-[11px]">·</span>
+                  <span className="text-text-muted font-normal text-[11px]">
+                    Updated {liveWeather.current.time.split('T')[1]?.substring(0, 5) || ''}
+                  </span>
+                </>
+              ) : null}
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1 font-medium text-text-muted">
