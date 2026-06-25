@@ -1,0 +1,76 @@
+{
+  "status": "success",
+  "file_dependencies": {
+    "best_model": {
+      "path": "C:\\Users\\mahmo\\Documents\\Smart Digital Twin\\backend\\app\\data\\nasr_city\\heat\\models\\heat_best_model_v1.joblib",
+      "exists": true
+    },
+    "latest_geojson": {
+      "path": "C:\\Users\\mahmo\\Documents\\Smart Digital Twin\\backend\\app\\data\\nasr_city\\heat\\models\\heat_zone_predictions_latest.geojson",
+      "exists": true
+    },
+    "explanation_csv": {
+      "path": "C:\\Users\\mahmo\\Documents\\Smart Digital Twin\\backend\\app\\data\\nasr_city\\heat\\models\\heat_zone_explanation_factors_v1.csv",
+      "exists": true
+    },
+    "metrics_json": {
+      "path": "C:\\Users\\mahmo\\Documents\\Smart Digital Twin\\backend\\app\\data\\nasr_city\\heat\\models\\heat_best_model_v1_metrics.json",
+      "exists": true
+    },
+    "columns_json": {
+      "path": "C:\\Users\\mahmo\\Documents\\Smart Digital Twin\\backend\\app\\data\\nasr_city\\heat\\models\\heat_feature_columns_v1.json",
+      "exists": true
+    },
+    "permutation_csv": {
+      "path": "C:\\Users\\mahmo\\Documents\\Smart Digital Twin\\backend\\app\\data\\nasr_city\\heat\\models\\heat_permutation_importance_v1.csv",
+      "exists": true
+    },
+    "authenticity_json": {
+      "path": "C:\\Users\\mahmo\\Documents\\Smart Digital Twin\\backend\\app\\data\\nasr_city\\heat\\heat_data_authenticity_report.json",
+      "exists": true
+    },
+    "readiness_json": {
+      "path": "C:\\Users\\mahmo\\Documents\\Smart Digital Twin\\backend\\app\\data\\nasr_city\\heat\\heat_training_readiness_report.json",
+      "exists": true
+    }
+  },
+  "health_check": {
+    "status": "ok",
+    "model_available": true,
+    "latest_layer_available": true,
+    "explainability_available": true,
+    "message": "Urban heat risk outputs are available."
+  },
+  "summary_check": {
+    "status": "passed",
+    "zone_count": 411,
+    "risk_counts": {
+      "low": 256,
+      "medium": 155,
+      "high": 0
+    },
+    "hottest_zone": {
+      "zone_code": "NSR-GRID-382",
+      "zone_label": "Zone 382",
+      "predicted_heat_anomaly_c": 4.397109964628051,
+      "predicted_heat_risk_class": "low"
+    }
+  },
+  "model_summary_check": {
+    "status": "passed",
+    "feature_count": 61,
+    "top_global_features_count": 6,
+    "landsat_rows": 4932
+  },
+  "explain_check": {
+    "status": "passed",
+    "test_zone": "NSR-GRID-382",
+    "top_factor_label": "Road Density",
+    "top_factor_impact": "increases heat risk"
+  },
+  "honesty_checks": {
+    "no_official_claims": true,
+    "no_forbidden_words": true,
+    "has_disclaimer": true
+  }
+}

@@ -267,6 +267,80 @@ class ModelExplainabilitySummaryResponse(BaseModel):
     honesty_note: str
 
 
+class HeatHealthResponse(BaseModel):
+    status: str
+    model_available: bool
+    latest_layer_available: bool
+    explainability_available: bool
+    message: str
+
+
+class HeatSummaryHottestZone(BaseModel):
+    zone_code: str
+    zone_label: str
+    predicted_heat_anomaly_c: float
+    predicted_heat_risk_class: str
+
+
+class HeatSummaryResponse(BaseModel):
+    status: str
+    date: str
+    zone_count: int
+    risk_counts: Dict[str, int]
+    max_heat_anomaly_c: float
+    mean_heat_anomaly_c: float
+    hottest_zone: HeatSummaryHottestZone
+    model_name: str
+    honesty_note: str
+
+
+class HeatZoneFactor(BaseModel):
+    factor: str
+    label: str
+    value: float
+    impact: str
+    reason: str
+
+
+class HeatZoneExplainResponse(BaseModel):
+    status: str
+    zone_code: str
+    zone_label: str
+    date: str
+    predicted_heat_risk_class: str
+    predicted_heat_anomaly_c: float
+    predicted_heat_risk_score: float
+    summary: str
+    top_factors: List[HeatZoneFactor]
+    explanation_text: str
+    honesty_note: str
+
+
+class HeatGlobalFeatureImportance(BaseModel):
+    feature: str
+    label: str
+    importance: float
+    reason: str
+
+
+class HeatDataAuthenticity(BaseModel):
+    landsat_rows: int
+    fallback_rows: int
+    ready_for_training: bool
+
+
+class HeatModelSummaryResponse(BaseModel):
+    status: str
+    model_name: str
+    target: str
+    feature_count: int
+    metrics: Dict[str, Union[float, int, str, dict, list, None]]
+    top_global_features: List[HeatGlobalFeatureImportance]
+    data_authenticity: HeatDataAuthenticity
+    honesty_note: str
+
+
+
 
 
 
