@@ -752,7 +752,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
           </div>
 
           {/* Main 12-Column Grid (Note: Duplicated top KPI row removed completely to move map immediately under live updates) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full min-h-0">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1 min-h-0">
             {/* Left 9 columns: Map Card, Bottom Analytics */}
             <div className="lg:col-span-9 flex flex-col gap-4 min-h-0">
 
