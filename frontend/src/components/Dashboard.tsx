@@ -1031,145 +1031,286 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               </div>
 
               {/* Bottom Analytics Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
-                {/* 1. Regional Extremes Card */}
-                <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Regional Extremes</span>
-                    <span className="material-symbols-outlined text-[16px] text-text-muted">thermostat</span>
-                  </div>
-                  <div className="flex-1 flex flex-col gap-2 mt-1">
-                    <div className="flex justify-between items-center text-[12.5px]">
-                      <span className="text-text-muted">Max Wind Gust</span>
-                      <span className="font-bold text-text-charcoal font-sans">
-                        {liveWeather?.current?.wind_speed_10m != null 
-                          ? `${liveWeather.current.wind_speed_10m.toFixed(1)} km/h` 
-                          : "—"}
-                      </span>
+              {activeRiskLayer === "heat" ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
+                  {/* 1. Urban Heat Extremes */}
+                  <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Urban Heat Extremes</span>
+                      <span className="material-symbols-outlined text-[16px] text-text-muted">thermostat</span>
                     </div>
-                    <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">Expected Rain</span>
-                      <span className="font-bold text-text-charcoal font-sans">
-                        {liveWeather?.forecast_window?.rain_24h_mm != null 
-                          ? `${liveWeather.forecast_window.rain_24h_mm.toFixed(1)} mm` 
-                          : "—"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">High-Risk Zones</span>
-                      <span className={`font-bold font-sans ${liveRoutingStatus?.risk_class_counts?.high ? "text-[#ba1a1a]" : "text-text-charcoal"}`}>
-                        {liveRoutingStatus?.risk_class_counts?.high ?? 0} active
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">Alert Summary</span>
-                      <span className="font-semibold text-text-charcoal text-right text-[11px] truncate max-w-[120px]">
-                        {liveWeather?.rain_risk_expected ? "Heavy Precipitation Alert" : "Normal Local Weather"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 2. Composite Card 1: Today’s Rain Risk & Rain Probability */}
-                <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Rain & Risk Profile</span>
-                    <span className="material-symbols-outlined text-[16px] text-text-muted">umbrella</span>
-                  </div>
-                  <div className="flex-1 flex flex-col gap-2 mt-1">
-                    {/* Sub-item 1: Today's Rain Risk */}
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-[10px] text-text-muted font-bold uppercase">
-                        {rainRiskLabel}
-                      </span>
-                      <div className="flex items-center justify-between mt-0.5">
-                        <span className="font-bold text-text-charcoal text-[13.5px]">
-                          {rainRiskValue}
+                    <div className="flex-1 flex flex-col gap-2 mt-1">
+                      <div className="flex justify-between items-center text-[12.5px]">
+                        <span className="text-text-muted font-sans">Hottest Zone</span>
+                        <span className="font-bold text-text-charcoal truncate max-w-[120px] font-sans">
+                          {heatSummary?.hottest_zone?.zone_label || heatSummary?.hottest_zone?.zone_code || "—"}
                         </span>
-                        <span className={`text-[9.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
-                          rainRiskTone === "medium" ? "bg-[#ffdcbe] text-[#ff9e2a]" :
-                          "bg-[#83fba5]/30 text-[#006d36]"
-                        }`}>
-                          {rainRiskTone.toUpperCase()}
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted font-sans">Max Anomaly</span>
+                        <span className="font-bold text-[#ba1a1a] font-sans">
+                          {heatSummary?.max_heat_anomaly_c != null 
+                            ? `+${heatSummary.max_heat_anomaly_c.toFixed(1)}°C` 
+                            : "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted font-sans">Mean Anomaly</span>
+                        <span className="font-bold text-[#ba1a1a] font-sans">
+                          {heatSummary?.mean_heat_anomaly_c != null 
+                            ? `+${heatSummary.mean_heat_anomaly_c.toFixed(1)}°C` 
+                            : "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted font-sans">Zones Analyzed</span>
+                        <span className="font-bold text-text-charcoal font-sans">
+                          {heatSummary?.zone_count ?? "—"}
                         </span>
                       </div>
                     </div>
-                    {/* Sub-item 2: Rain Probability */}
-                    <div className="flex flex-col gap-0.5 border-t border-white/10 pt-1.5">
-                      <span className="text-[10px] text-text-muted font-bold uppercase">Rain Probability</span>
-                      <span className="font-bold text-text-charcoal text-[13.5px] font-sans mt-0.5">
-                        {probValue}
-                      </span>
-                    </div>
                   </div>
-                </div>
 
-                {/* 3. Composite Card 2: Route Recommendation & Risk Reduction */}
-                <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Route Safety</span>
-                    <span className="material-symbols-outlined text-[16px] text-text-muted">shield</span>
-                  </div>
-                  <div className="flex-1 flex flex-col gap-2 mt-1">
-                    {/* Sub-item 1: Route Recommendation */}
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-[10px] text-text-muted font-bold uppercase">Route Recommendation</span>
-                      <div className="flex items-center justify-between gap-1 mt-0.5">
-                        <span className="font-semibold text-text-charcoal text-[12.5px] truncate max-w-[110px]" title={recValue}>
-                          {recValue}
+                  {/* 2. Heat & Exposure Profile */}
+                  <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Heat & Exposure Profile</span>
+                      <span className="material-symbols-outlined text-[16px] text-text-muted">bar_chart</span>
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2 mt-1">
+                      <div className="flex justify-between items-center text-[12.5px]">
+                        <span className="text-text-muted font-sans">Low / Medium / High</span>
+                        <span className="font-bold text-text-charcoal font-mono">
+                          {heatSummary 
+                            ? `${heatSummary.risk_counts.low} / ${heatSummary.risk_counts.medium} / ${heatSummary.risk_counts.high}`
+                            : "—"}
                         </span>
-                        <span className={`text-[9.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
-                          recTone === "low" ? "bg-[#83fba5]/30 text-[#006d36]" :
-                          recTone === "medium" ? "bg-[#ffdcbe] text-[#ff9e2a]" :
-                          "bg-[#c2e8ff]/40 text-[#006688]"
-                        }`}>
-                          {recTone.toUpperCase()}
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted font-sans">Anomaly Range</span>
+                        <span className="font-bold text-text-charcoal font-sans">
+                          {heatSummary?.max_heat_anomaly_c != null 
+                            ? `0.0 to +${heatSummary.max_heat_anomaly_c.toFixed(1)}°C`
+                            : "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted font-sans">High Exposure Areas</span>
+                        <span className={`font-bold font-sans ${heatSummary?.risk_counts?.high ? "text-[#ba1a1a]" : "text-text-charcoal"}`}>
+                          {heatSummary?.risk_counts?.high ?? 0} active
                         </span>
                       </div>
                     </div>
-                    {/* Sub-item 2: Risk Reduction */}
-                    <div className="flex flex-col gap-0.5 border-t border-white/10 pt-1.5">
-                      <span className="text-[10px] text-text-muted font-bold uppercase">Risk Reduction</span>
-                      <span className="font-bold text-[#006688] text-[13.5px] font-sans mt-0.5">
-                        {reductionValue}
-                      </span>
-                    </div>
                   </div>
-                </div>
 
-                {/* 4. Safety Guidance Card */}
-                <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Safety Guidance</span>
-                    <span className="material-symbols-outlined text-[16px] text-text-muted">security</span>
+                  {/* 3. Heat Model Insight */}
+                  <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Heat Model Insight</span>
+                      <span className="material-symbols-outlined text-[16px] text-text-muted">psychology</span>
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2 mt-1">
+                      <div className="flex justify-between items-center text-[11px]">
+                        <span className="text-text-muted font-sans">Model</span>
+                        <span className="font-bold text-text-charcoal font-sans truncate max-w-[120px]" title={heatModelSummary?.model_name}>
+                          {heatModelSummary?.model_name ?? "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted font-sans">Primary Driver</span>
+                        <span className="font-bold text-text-charcoal font-sans truncate max-w-[120px]">
+                          {heatModelSummary?.top_global_features?.[0]?.label ?? "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted font-sans">Secondary Driver</span>
+                        <span className="font-bold text-text-charcoal font-sans truncate max-w-[120px]">
+                          {heatModelSummary?.top_global_features?.[1]?.label ?? "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted font-sans">Landsat Rows</span>
+                        <span className="font-bold text-text-charcoal font-sans">
+                          {heatModelSummary?.data_authenticity?.landsat_rows ?? "—"}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex-1 flex flex-col justify-between mt-1 gap-2">
-                    <div className="flex justify-between items-center text-[12.5px]">
-                      <span className="text-text-muted">Caution Level</span>
-                      {liveWeather?.rain_risk_expected ? (
-                        <span className="rounded-full bg-[#FFEbee] px-2 py-0.5 text-[10px] font-bold text-[#ba1a1a]">
-                          Elevated
-                        </span>
-                      ) : (
-                        <span className="rounded-full bg-[#E8F5E9] px-2 py-0.5 text-[10px] font-bold text-[#2f6f4f]">
-                          Low
-                        </span>
-                      )}
+
+                  {/* 4. Heat Safety Guidance */}
+                  <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Heat Safety Guidance</span>
+                      <span className="material-symbols-outlined text-[16px] text-text-muted">security</span>
                     </div>
-                    <div className="border-t border-white/10 pt-2 flex flex-col gap-1">
-                      <span className="text-[10px] text-text-muted font-bold uppercase">Today's Advice</span>
-                      <p className="text-[12.5px] font-semibold text-text-charcoal leading-snug font-sans">
-                        {liveWeather?.rain_risk_expected 
-                          ? "Heavy rain expected. Avoid low-lying streets and use weather-safe routing." 
-                          : "Normal movement is acceptable. Check live updates regularly."}
-                      </p>
-                    </div>
-                    <div className="text-[10px] text-text-muted italic text-right mt-1 font-sans">
-                      Nasr City dispatch advisory
+                    <div className="flex-1 flex flex-col justify-between mt-1 gap-2">
+                      <div className="flex justify-between items-center text-[12.5px]">
+                        <span className="text-text-muted font-sans">Caution Level</span>
+                        {(heatSummary?.risk_counts?.high ?? 0) > 0 ? (
+                          <span className="rounded-full bg-[#FFEbee] px-2 py-0.5 text-[10px] font-bold text-[#ba1a1a]">
+                            Elevated
+                          </span>
+                        ) : (
+                          <span className="rounded-full bg-[#E8F5E9] px-2 py-0.5 text-[10px] font-bold text-[#2f6f4f]">
+                            Normal
+                          </span>
+                        )}
+                      </div>
+                      <div className="border-t border-white/10 pt-2 flex flex-col gap-1">
+                        <span className="text-[10px] text-text-muted font-bold uppercase">Today's Advice</span>
+                        <p className="text-[11.5px] font-semibold text-text-charcoal leading-snug font-sans">
+                          {(heatSummary?.risk_counts?.high ?? 0) > 0 
+                            ? "High heat anomaly predicted. Limit outdoor activities and stay hydrated." 
+                            : "Standard heat levels. Seek shade during peak afternoon hours."}
+                        </p>
+                      </div>
+                      <div className="text-[9.5px] text-text-muted italic text-right mt-1 font-sans">
+                        Satellite-based estimate, not an official warning.
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
+                  {/* 1. Regional Extremes Card */}
+                  <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Regional Extremes</span>
+                      <span className="material-symbols-outlined text-[16px] text-text-muted">thermostat</span>
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2 mt-1">
+                      <div className="flex justify-between items-center text-[12.5px]">
+                        <span className="text-text-muted">Max Wind Gust</span>
+                        <span className="font-bold text-text-charcoal font-sans">
+                          {liveWeather?.current?.wind_speed_10m != null 
+                            ? `${liveWeather.current.wind_speed_10m.toFixed(1)} km/h` 
+                            : "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted">Expected Rain</span>
+                        <span className="font-bold text-text-charcoal font-sans">
+                          {liveWeather?.forecast_window?.rain_24h_mm != null 
+                            ? `${liveWeather.forecast_window.rain_24h_mm.toFixed(1)} mm` 
+                            : "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted">High-Risk Zones</span>
+                        <span className={`font-bold font-sans ${liveRoutingStatus?.risk_class_counts?.high ? "text-[#ba1a1a]" : "text-text-charcoal"}`}>
+                          {liveRoutingStatus?.risk_class_counts?.high ?? 0} active
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted">Alert Summary</span>
+                        <span className="font-semibold text-text-charcoal text-right text-[11px] truncate max-w-[120px]">
+                          {liveWeather?.rain_risk_expected ? "Heavy Precipitation Alert" : "Normal Local Weather"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. Composite Card 1: Today’s Rain Risk & Rain Probability */}
+                  <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Rain & Risk Profile</span>
+                      <span className="material-symbols-outlined text-[16px] text-text-muted">umbrella</span>
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2 mt-1">
+                      {/* Sub-item 1: Today's Rain Risk */}
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] text-text-muted font-bold uppercase">
+                          {rainRiskLabel}
+                        </span>
+                        <div className="flex items-center justify-between mt-0.5">
+                          <span className="font-bold text-text-charcoal text-[13.5px]">
+                            {rainRiskValue}
+                          </span>
+                          <span className={`text-[9.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
+                            rainRiskTone === "medium" ? "bg-[#ffdcbe] text-[#ff9e2a]" :
+                            "bg-[#83fba5]/30 text-[#006d36]"
+                          }`}>
+                            {rainRiskTone.toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Sub-item 2: Rain Probability */}
+                      <div className="flex flex-col gap-0.5 border-t border-white/10 pt-1.5">
+                        <span className="text-[10px] text-text-muted font-bold uppercase">Rain Probability</span>
+                        <span className="font-bold text-text-charcoal text-[13.5px] font-sans mt-0.5">
+                          {probValue}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3. Composite Card 2: Route Recommendation & Risk Reduction */}
+                  <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Route Safety</span>
+                      <span className="material-symbols-outlined text-[16px] text-text-muted">shield</span>
+                    </div>
+                    <div className="flex-1 flex flex-col gap-2 mt-1">
+                      {/* Sub-item 1: Route Recommendation */}
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] text-text-muted font-bold uppercase">Route Recommendation</span>
+                        <div className="flex items-center justify-between gap-1 mt-0.5">
+                          <span className="font-semibold text-text-charcoal text-[12.5px] truncate max-w-[110px]" title={recValue}>
+                            {recValue}
+                          </span>
+                          <span className={`text-[9.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
+                            recTone === "low" ? "bg-[#83fba5]/30 text-[#006d36]" :
+                            recTone === "medium" ? "bg-[#ffdcbe] text-[#ff9e2a]" :
+                            "bg-[#c2e8ff]/40 text-[#006688]"
+                          }`}>
+                            {recTone.toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+                      {/* Sub-item 2: Risk Reduction */}
+                      <div className="flex flex-col gap-0.5 border-t border-white/10 pt-1.5">
+                        <span className="text-[10px] text-text-muted font-bold uppercase">Risk Reduction</span>
+                        <span className="font-bold text-[#006688] text-[13.5px] font-sans mt-0.5">
+                          {reductionValue}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 4. Safety Guidance Card */}
+                  <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Safety Guidance</span>
+                      <span className="material-symbols-outlined text-[16px] text-text-muted">security</span>
+                    </div>
+                    <div className="flex-1 flex flex-col justify-between mt-1 gap-2">
+                      <div className="flex justify-between items-center text-[12.5px]">
+                        <span className="text-text-muted">Caution Level</span>
+                        {liveWeather?.rain_risk_expected ? (
+                          <span className="rounded-full bg-[#FFEbee] px-2 py-0.5 text-[10px] font-bold text-[#ba1a1a]">
+                            Elevated
+                          </span>
+                        ) : (
+                          <span className="rounded-full bg-[#E8F5E9] px-2 py-0.5 text-[10px] font-bold text-[#2f6f4f]">
+                            Low
+                          </span>
+                        )}
+                      </div>
+                      <div className="border-t border-white/10 pt-2 flex flex-col gap-1">
+                        <span className="text-[10px] text-text-muted font-bold uppercase">Today's Advice</span>
+                        <p className="text-[12.5px] font-semibold text-text-charcoal leading-snug font-sans">
+                          {liveWeather?.rain_risk_expected 
+                            ? "Heavy rain expected. Avoid low-lying streets and use weather-safe routing." 
+                            : "Normal movement is acceptable. Check live updates regularly."}
+                        </p>
+                      </div>
+                      <div className="text-[10px] text-text-muted italic text-right mt-1 font-sans">
+                        Nasr City dispatch advisory
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Right 3 columns: Detail Overview Column */}
