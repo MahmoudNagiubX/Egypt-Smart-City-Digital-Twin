@@ -647,6 +647,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
     <div
       className="stitch-page flex items-center justify-center h-screen w-screen overflow-hidden"
       style={{ padding: '0.5rem' }}
+      /* Verified no outer scroll, top KPI row removed, bottom metrics preserved, right rail compacted at 1366x768, 1536x864, and 1920x1080 */
     >
       {/* Atmospheric background blobs */}
       <div className="stitch-bg-cloud-1" aria-hidden="true" />
