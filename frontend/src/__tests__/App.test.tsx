@@ -523,6 +523,9 @@ test('MapView renders safely with zoom-restricted POI markers', () => {
       riskFillOpacity={0.35}
       gridLineOpacity={0.20}
       riskDisplayMode="focus"
+      searchSelectedPoint={null}
+      onSetStartPoint={vi.fn()}
+      onSetDestinationPoint={vi.fn()}
     />
   );
 
@@ -663,6 +666,9 @@ test('MapView filters markers by active category state', () => {
       riskFillOpacity={0.35}
       gridLineOpacity={0.20}
       riskDisplayMode="focus"
+      searchSelectedPoint={null}
+      onSetStartPoint={vi.fn()}
+      onSetDestinationPoint={vi.fn()}
     />
   );
 

@@ -14,9 +14,13 @@ logger = logging.getLogger(__name__)
 _search_index: List[dict] = []
 _initialized = False
 
-def normalize_text(text: str) -> str:
+def normalize_text(text) -> str:
     if not text:
         return ""
+    if isinstance(text, list):
+        text = " ".join(str(x) for x in text)
+    else:
+        text = str(text)
     text = text.lower().strip()
     # Ignore punctuation
     text = re.sub(r'[^\w\s]', '', text)
@@ -88,8 +92,12 @@ def build_local_search_index():
                 lat, lon = coords
                 
             name = properties.get("name") or properties.get("display_name")
+            if isinstance(name, list):
+                name = " / ".join(str(x) for x in name if str(x).strip() != "")
             display_name = properties.get("display_name")
-            
+            if isinstance(display_name, list):
+                display_name = " / ".join(str(x) for x in display_name if str(x).strip() != "")
+                
             if not name:
                 missing_name_count += 1
                 name = properties.get("category_label") or "POI"
@@ -131,17 +139,23 @@ def build_local_search_index():
             for feature in roads_data.get("features", []):
                 properties = feature.get("properties") or {}
                 name = properties.get("name") or properties.get("name:en")
-                if name is not None and str(name).lower() != "nan" and str(name).strip() != "":
-                    geom = feature.get("geometry") or {}
-                    norm_name = normalize_text(name)
-                    
-                    if norm_name not in road_segments:
-                        road_segments[norm_name] = {
-                            "name": name,
-                            "highway": properties.get("highway") or "road",
-                            "geometries": []
-                        }
-                    road_segments[norm_name]["geometries"].append(geom)
+                if name is not None:
+                    if isinstance(name, list):
+                        name_str = " / ".join(str(x) for x in name if str(x).strip() != "")
+                    else:
+                        name_str = str(name)
+                        
+                    if name_str.lower() != "nan" and name_str.strip() != "":
+                        geom = feature.get("geometry") or {}
+                        norm_name = normalize_text(name_str)
+                        
+                        if norm_name not in road_segments:
+                            road_segments[norm_name] = {
+                                "name": name_str,
+                                "highway": properties.get("highway") or "road",
+                                "geometries": []
+                            }
+                        road_segments[norm_name]["geometries"].append(geom)
             
             for norm_name, road_info in road_segments.items():
                 lats = []
@@ -154,7 +168,9 @@ def build_local_search_index():
                 avg_lon = sum(lons)/len(lons) if lons else 31.0
                 
                 hw = road_info["highway"]
-                category_label = hw.replace("_", " ").capitalize()
+                if isinstance(hw, list):
+                    hw = hw[0] if hw else "road"
+                category_label = str(hw).replace("_", " ").capitalize()
                 
                 item = {
                     "id": f"road-{norm_name[:30]}",

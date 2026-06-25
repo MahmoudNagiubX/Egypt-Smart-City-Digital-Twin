@@ -134,7 +134,7 @@ test("typing query calls search API and renders results", async () => {
   const resultItem = await screen.findByText("Nasr City Hospital");
   expect(resultItem).toBeDefined();
   
-  const categoryLabel = screen.getByText(/Hospital/i);
+  const categoryLabel = screen.getByText(/Hospital\s+•\s+OpenStreetMap/i);
   expect(categoryLabel).toBeDefined();
 });
 
