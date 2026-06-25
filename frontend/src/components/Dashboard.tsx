@@ -1449,51 +1449,55 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               {/* Route Recommendation / Heat Summary Info */}
               {activeRiskLayer === "heat" ? (
                 <div className="stitch-card flex flex-col py-2 px-3 shadow-sm relative">
-                  <div className="flex justify-between items-start mb-1">
-                    <div className="text-[8.5px] font-bold uppercase tracking-wider text-[#d97706]">Urban Heat Summary</div>
+                  <div className="flex justify-between items-start mb-0.5">
+                    <div>
+                      <div className="text-[9px] font-bold uppercase tracking-wider text-[#d97706]">Urban Heat Summary</div>
+                      <div className="text-[8px] text-text-muted mt-0.25">Satellite heat estimate</div>
+                    </div>
                     <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[14px]">more_vert</span></button>
                   </div>
                   {heatSummary ? (
-                    <div className="flex flex-col gap-1 text-[10px] text-text-charcoal font-sans">
-                      <div className="flex justify-between">
-                        <span className="text-text-muted">Date:</span>
-                        <span className="font-bold">{heatSummary.date}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-text-muted font-sans">Zones count:</span>
-                        <span className="font-bold">{heatSummary.zone_count}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-text-muted">Hottest Zone:</span>
-                        <span className="font-bold truncate max-w-[120px]">{heatSummary.hottest_zone?.zone_label || heatSummary.hottest_zone?.zone_code || "—"}</span>
-                      </div>
-                      <div className="flex justify-between pl-2 border-l border-amber-500 bg-amber-500/5">
-                        <span className="text-text-muted">Heat anomaly:</span>
-                        <span className="font-bold text-[#ba1a1a]">+{heatSummary.hottest_zone?.predicted_heat_anomaly_c?.toFixed(1)}°C</span>
-                      </div>
-                      <div className="flex justify-between pl-2 border-l border-amber-500 bg-amber-500/5">
-                        <span className="text-text-muted">Risk level:</span>
-                        <span className={`font-bold uppercase text-[9px] px-1 py-0.25 rounded ${
-                          (heatSummary.hottest_zone?.predicted_heat_risk_class || "").toLowerCase() === "high" ? "bg-red-100 text-red-700" :
-                          (heatSummary.hottest_zone?.predicted_heat_risk_class || "").toLowerCase() === "medium" ? "bg-amber-100 text-amber-700" :
-                          "bg-green-100 text-green-700"
+                    <div className="flex flex-col gap-1 text-[10px] text-text-charcoal font-sans mt-1">
+                      <div className="flex items-center justify-between">
+                        <div className="text-xl font-extrabold tracking-tight text-[#ba1a1a]">
+                          +{heatSummary.hottest_zone?.predicted_heat_anomaly_c?.toFixed(1)}°C
+                          <span className="text-[9px] font-normal text-text-muted ml-1 align-middle block sm:inline-block">Heat anomaly</span>
+                        </div>
+                        <span className={`font-bold uppercase text-[8.5px] px-1.5 py-0.5 rounded border ${
+                          (heatSummary.hottest_zone?.predicted_heat_risk_class || "").toLowerCase() === "high" ? "bg-red-50 text-red-700 border-red-200" :
+                          (heatSummary.hottest_zone?.predicted_heat_risk_class || "").toLowerCase() === "medium" ? "bg-amber-50 text-amber-700 border-amber-200" :
+                          "bg-green-50 text-green-700 border-green-200"
                         }`}>
                           {heatSummary.hottest_zone?.predicted_heat_risk_class}
                         </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-text-muted">Mean / Max anomaly:</span>
-                        <span className="font-bold">+{heatSummary.mean_heat_anomaly_c?.toFixed(1)}°C / +{heatSummary.max_heat_anomaly_c?.toFixed(1)}°C</span>
+                      
+                      <div className="text-[10px] text-text-muted border-t border-white/10 pt-1 mt-0.5">
+                        Hottest Zone: <span className="font-bold text-text-charcoal">{heatSummary.hottest_zone?.zone_label || heatSummary.hottest_zone?.zone_code || "—"}</span>
                       </div>
-                      <div className="flex justify-between border-t border-white/20 pt-1 mt-1 text-[9px] text-text-muted">
-                        <span>Risk classes:</span>
-                        <span>
-                          L: {heatSummary.risk_counts?.low} | M: {heatSummary.risk_counts?.medium} | H: {heatSummary.risk_counts?.high}
-                        </span>
+
+                      <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-1 bg-white/40 border border-white/60 rounded-xl p-1.5 text-[9.5px]">
+                        <div className="flex justify-between">
+                          <span className="text-text-muted">Zones:</span>
+                          <span className="font-bold text-text-charcoal">{heatSummary.zone_count}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-text-muted">Low Risk:</span>
+                          <span className="font-bold text-green-700">{heatSummary.risk_counts?.low}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-text-muted">Med Risk:</span>
+                          <span className="font-bold text-amber-700">{heatSummary.risk_counts?.medium}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-text-muted">High Risk:</span>
+                          <span className="font-bold text-red-700">{heatSummary.risk_counts?.high}</span>
+                        </div>
                       </div>
-                      <div className="mt-1 text-[9px] text-text-muted italic border-t border-white/20 pt-1 leading-tight flex items-start gap-1">
+
+                      <div className="mt-1 text-[8.5px] text-text-muted italic border-t border-white/20 pt-1 leading-tight flex items-start gap-1">
                         <span className="text-amber-500 font-bold shrink-0">⚠️</span>
-                        <span>Satellite-based heat estimate, not an official warning.</span>
+                        <span>Satellite heat estimate, not an official warning.</span>
                       </div>
                     </div>
                   ) : (
