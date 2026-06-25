@@ -281,4 +281,78 @@ export interface SearchResponse {
   warnings: string[];
 }
 
+export interface TopFactor {
+  factor: string;
+  label: string;
+  value: number;
+  impact: string;
+  reason: string;
+}
+
+export interface ZoneExplanationResponse {
+  status: string;
+  zone_code: string;
+  zone_label: string;
+  mode: string;
+  risk_score: number;
+  risk_class: string;
+  risk_label: string;
+  summary: string;
+  top_factors: TopFactor[];
+  explanation_text: string;
+  confidence_note: string;
+  honesty_note: string;
+}
+
+export interface RouteReason {
+  label: string;
+  value: string;
+  reason: string;
+}
+
+export interface RouteDetailExplanation {
+  summary: string;
+  risk_level: string;
+  high_risk_segments: number;
+  mean_risk_score: number;
+}
+
+export interface RouteExplanationResponse {
+  status: string;
+  mode: string;
+  recommendation: "normal_route_acceptable" | "weather_safe_route_recommended" | "no_distinct_safer_alternative";
+  recommendation_label: string;
+  summary: string;
+  route_reasons: RouteReason[];
+  normal_route_explanation: RouteDetailExplanation;
+  safe_route_explanation: RouteDetailExplanation;
+  comparison: {
+    risk_reduction_percent: number;
+    eta_tradeoff_percent: number;
+    avoided_high_risk_segments: number;
+    normal_distance_m: number;
+    safe_distance_m: number;
+  };
+  honesty_note: string;
+}
+
+export interface GlobalFeatureImportance {
+  feature: string;
+  label: string;
+  importance: number;
+  reason: string;
+}
+
+export interface ModelExplainabilitySummaryResponse {
+  status: string;
+  model_name: string;
+  model_type: string;
+  target: string;
+  top_global_features: GlobalFeatureImportance[];
+  metrics: Record<string, any>;
+  known_limitations: string[];
+  honesty_note: string;
+}
+
+
 

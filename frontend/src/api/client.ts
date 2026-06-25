@@ -15,6 +15,10 @@ import {
   LiveEmergencyRouteRequest,
   LiveEmergencyRouteResponse,
   SearchResponse,
+  ZoneExplanationResponse,
+  RouteExplanationResponse,
+  ModelExplainabilitySummaryResponse,
+  RouteCoordinate,
 } from "../types/api";
 
 const BASE_URL = import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
@@ -164,5 +168,37 @@ export const searchLocalPlaces = async (
   });
   return response.data;
 };
+
+export const getZoneExplanation = async (
+  zoneCode: string,
+  mode: "live" | "historical" = "live",
+  eventId?: string
+): Promise<ZoneExplanationResponse> => {
+  const response = await api.get<ZoneExplanationResponse>(
+    `${API_PREFIX}/explain/zone/${zoneCode}`,
+    { params: { mode, ...(eventId ? { event_id: eventId } : {}) } }
+  );
+  return response.data;
+};
+
+export const explainRoute = async (
+  origin: RouteCoordinate,
+  destination: RouteCoordinate,
+  mode: string = "live"
+): Promise<RouteExplanationResponse> => {
+  const response = await api.post<RouteExplanationResponse>(
+    `${API_PREFIX}/explain/route`,
+    { origin, destination, mode }
+  );
+  return response.data;
+};
+
+export const getModelExplainabilitySummary = async (): Promise<ModelExplainabilitySummaryResponse> => {
+  const response = await api.get<ModelExplainabilitySummaryResponse>(
+    `${API_PREFIX}/model/explainability-summary`
+  );
+  return response.data;
+};
+
 
 
