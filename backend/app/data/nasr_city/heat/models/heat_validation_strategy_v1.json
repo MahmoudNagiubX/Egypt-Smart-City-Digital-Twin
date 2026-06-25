@@ -1,0 +1,37 @@
+{
+  "validation_types": {
+    "scene_grouped_split": {
+      "group_column": "scene_id",
+      "splits_count": 5,
+      "purpose": "tests generalization to unseen satellite scenes, atmospheric conditions, and dates",
+      "unique_scene_groups_total": 12,
+      "average_samples_per_scene": 411.0
+    },
+    "zone_grouped_split": {
+      "group_column": "zone_code",
+      "splits_count": 5,
+      "purpose": "tests spatial generalization to unseen geographic sectors of Nasr City",
+      "unique_zone_groups_total": 411,
+      "average_samples_per_zone": 12.0
+    }
+  },
+  "leakage_risk_explanation": "Random K-Fold splitting would suffer from spatial autocorrelation (the same zone observed on different dates leaking geographic features) and temporal correlation (different zones observed on the same date leaking atmospheric baseline features). Grouped cross-validation on scene_id and zone_code ensures honest evaluation.",
+  "scene_groups_distribution": {
+    "LC08_L2SP_176039_20251023_20251121_02_T1": 411,
+    "LC08_L2SP_176039_20251007_20251115_02_T1": 411,
+    "LC09_L2SP_176039_20250929_20250930_02_T1": 411,
+    "LC09_L2SP_176039_20250913_20250915_02_T1": 411,
+    "LC08_L2SP_176039_20250905_20250912_02_T1": 411,
+    "LC09_L2SP_176039_20250828_20250830_02_T1": 411,
+    "LC08_L2SP_176039_20250820_20250826_02_T1": 411,
+    "LC09_L2SP_176039_20250812_20250815_02_T1": 411,
+    "LC08_L2SP_176039_20250804_20250814_02_T1": 411,
+    "LC09_L2SP_176039_20250727_20250729_02_T1": 411,
+    "LC08_L2SP_176039_20250719_20250726_02_T1": 411,
+    "LC09_L2SP_176039_20250711_20250712_02_T1": 411
+  },
+  "zone_groups_distribution_summary": {
+    "min_samples_per_zone": 12,
+    "max_samples_per_zone": 12
+  }
+}
