@@ -901,129 +901,145 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
                   <div className="flex items-center justify-between mb-2">
                     <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Regional Extremes</span>
-                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+                    <span className="material-symbols-outlined text-[16px] text-text-muted">thermostat</span>
                   </div>
                   <div className="flex-1 flex flex-col gap-2 mt-1">
-                    <div className="flex justify-between items-center text-[11px]">
+                    <div className="flex justify-between items-center text-[11.5px]">
                       <span className="text-text-muted">Max Wind Gust</span>
-                      <span className="font-bold text-text-charcoal">
+                      <span className="font-bold text-text-charcoal font-sans">
                         {liveWeather?.current?.wind_speed_10m != null 
                           ? `${liveWeather.current.wind_speed_10m.toFixed(1)} km/h` 
                           : "—"}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">Total Rainfall</span>
-                      <span className="font-bold text-text-charcoal">
+                    <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
+                      <span className="text-text-muted">Expected Rain</span>
+                      <span className="font-bold text-text-charcoal font-sans">
                         {liveWeather?.forecast_window?.rain_24h_mm != null 
                           ? `${liveWeather.forecast_window.rain_24h_mm.toFixed(1)} mm` 
                           : "—"}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">Higher-Risk Areas</span>
-                      <span className="font-bold text-text-charcoal">
-                        {comparison?.avoided_high_risk_segments != null 
-                          ? comparison.avoided_high_risk_segments 
-                          : "—"}
+                    <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
+                      <span className="text-text-muted">High-Risk Zones</span>
+                      <span className={`font-bold font-sans ${liveRoutingStatus?.risk_class_counts?.high ? "text-[#ba1a1a]" : "text-text-charcoal"}`}>
+                        {liveRoutingStatus?.risk_class_counts?.high ?? 0} active
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
+                      <span className="text-text-muted">Alert Summary</span>
+                      <span className="font-semibold text-text-charcoal text-right text-[10px] truncate max-w-[120px]">
+                        {liveWeather?.rain_risk_expected ? "Heavy Precipitation Alert" : "Normal Local Weather"}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* 2. Route Intelligence Card */}
+                {/* 2. Route Snapshot Card */}
                 <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Route Intelligence</span>
-                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Route Snapshot</span>
+                    <span className="material-symbols-outlined text-[16px] text-text-muted">route</span>
                   </div>
-                  <div className="flex-1 flex flex-col gap-2 mt-1">
-                    <div className="flex justify-between items-center text-[11px]">
-                      <span className="text-text-muted">Normal ETA</span>
-                      <span className="font-bold text-text-charcoal">
-                        {comparison?.normal_weather_eta_sec != null 
-                          ? formatDuration(comparison.normal_weather_eta_sec) 
-                          : "—"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">Safe ETA</span>
-                      <span className="font-bold text-text-charcoal">
-                        {comparison?.safe_weather_eta_sec != null 
-                          ? formatDuration(comparison.safe_weather_eta_sec) 
-                          : "—"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">ETA Tradeoff</span>
-                      <span className="font-bold text-text-charcoal">
-                        {comparison?.eta_tradeoff_percent != null 
-                          ? signedPercent(comparison.eta_tradeoff_percent) 
-                          : "—"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. AQI Trend Card */}
-                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">AQI Trend</span>
-                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
-                  </div>
-                  <div className="flex-1 flex flex-col gap-2 mt-1 text-[10.5px]">
-                    <div className="flex justify-between items-start">
-                      <div className="flex flex-col">
-                        <span className="text-[9px] text-text-muted font-semibold uppercase tracking-wider">Current AQI</span>
-                        <span className="font-bold text-text-charcoal mt-0.5 font-sans">
-                          {aqiValue != null ? Math.round(aqiValue) : "—"}
+                  {comparison ? (
+                    <div className="flex-1 flex flex-col gap-2 mt-1">
+                      <div className="flex justify-between items-center text-[11.5px]">
+                        <span className="text-text-muted">Normal ETA</span>
+                        <span className="font-semibold text-text-charcoal font-sans">
+                          {comparison.normal_weather_eta_sec != null 
+                            ? formatDuration(comparison.normal_weather_eta_sec) 
+                            : "—"}
                         </span>
                       </div>
-                      <span className="rounded-full bg-[#E8F5E9] px-2 py-0.5 text-[9px] font-bold text-[#2f6f4f]">
-                        {aqiLabel}
-                      </span>
+                      <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted">Safe ETA</span>
+                        <span className="font-bold text-[#006688] font-sans">
+                          {comparison.safe_weather_eta_sec != null 
+                            ? formatDuration(comparison.safe_weather_eta_sec) 
+                            : "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted">Risk Reduction</span>
+                        <span className="font-bold text-[#006d36] font-sans">
+                          {comparison.avoided_high_risk_segments != null 
+                            ? `${comparison.avoided_high_risk_segments} zones avoided` 
+                            : "—"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
+                        <span className="text-text-muted">ETA Tradeoff</span>
+                        <span className="font-semibold text-text-charcoal font-sans">
+                          {comparison.eta_tradeoff_percent != null 
+                            ? signedPercent(comparison.eta_tradeoff_percent) 
+                            : "—"}
+                        </span>
+                      </div>
                     </div>
-                    <div className="border-t border-white/10 pt-1.5">
-                      {aqiSparklinePath ? (
-                        <svg viewBox="0 0 132 34" className="h-9 w-full" role="img" aria-label="Air quality trend">
-                          <path d={`${aqiSparklinePath} L 132 34 L 0 34 Z`} fill="rgba(88, 169, 118, 0.18)" />
-                          <path d={aqiSparklinePath} fill="none" stroke="#58A976" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                      ) : (
-                        <span className="text-[10px] text-text-muted">Trend unavailable from provider.</span>
-                      )}
+                  ) : (
+                    <div className="flex-1 flex flex-col justify-center items-center text-center py-4">
+                      <span className="material-symbols-outlined text-[20px] text-text-muted mb-1">add_location_alt</span>
+                      <p className="text-[10px] text-text-muted leading-snug px-2 font-sans">
+                        Select a start and destination on the map to display route comparison.
+                      </p>
                     </div>
+                  )}
+                </div>
+
+                {/* 3. Model & Data Sources Card */}
+                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Model & Data Sources</span>
+                    <span className="material-symbols-outlined text-[16px] text-text-muted">database</span>
+                  </div>
+                  <div className="flex-1 flex flex-col gap-1.5 mt-1 text-[10.5px]">
+                    <div className="flex flex-col">
+                      <span className="text-[9px] text-text-muted font-bold uppercase">Weather Risk Model</span>
+                      <span className="font-semibold text-text-charcoal">Weather Impact Risk Model</span>
+                    </div>
+                    <div className="flex flex-col border-t border-white/10 pt-1">
+                      <span className="text-[9px] text-text-muted font-bold uppercase">Routing Engine</span>
+                      <span className="font-semibold text-text-charcoal">Weather-Aware Emergency Router</span>
+                    </div>
+                    <div className="flex flex-col border-t border-white/10 pt-1">
+                      <span className="text-[9px] text-text-muted font-bold uppercase">Main Data Sources</span>
+                      <span className="font-semibold text-text-charcoal truncate">Open-Meteo, OpenStreetMap, AQI API</span>
+                    </div>
+                    <p className="text-[9.5px] text-text-muted font-normal border-t border-white/10 pt-1 leading-snug font-sans">
+                      Predicts zone safety risk levels using precipitation, slope, and elevation features.
+                    </p>
                   </div>
                 </div>
 
-                {/* 4. Alerts / Risk Summary Card */}
+                {/* 4. Safety Guidance Card */}
                 <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Alerts & Risk</span>
-                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Safety Guidance</span>
+                    <span className="material-symbols-outlined text-[16px] text-text-muted">security</span>
                   </div>
-                  <div className="flex-1 flex flex-col gap-2 mt-1">
-                    <div className="flex justify-between items-center text-[11px]">
-                      <span className="text-text-muted">Today’s Risk</span>
-                      <span className="font-bold text-text-charcoal">
-                        {liveWeather ? (liveWeather.rain_risk_expected ? "Expected" : "Low") : "—"}
-                      </span>
+                  <div className="flex-1 flex flex-col justify-between mt-1 gap-2">
+                    <div className="flex justify-between items-center text-[11.5px]">
+                      <span className="text-text-muted">Caution Level</span>
+                      {liveWeather?.rain_risk_expected ? (
+                        <span className="rounded-full bg-[#FFEbee] px-2 py-0.5 text-[9.5px] font-bold text-[#ba1a1a]">
+                          Elevated
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-[#E8F5E9] px-2 py-0.5 text-[9.5px] font-bold text-[#2f6f4f]">
+                          Low
+                        </span>
+                      )}
                     </div>
-                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">Probability</span>
-                      <span className="font-bold text-text-charcoal">
-                        {liveWeather?.forecast_window?.max_precipitation_probability != null 
-                          ? `${Math.round(liveWeather.forecast_window.max_precipitation_probability)}%` 
-                          : "—"}
-                      </span>
+                    <div className="border-t border-white/10 pt-2 flex flex-col gap-1">
+                      <span className="text-[9px] text-text-muted font-bold uppercase">Today's Advice</span>
+                      <p className="text-[11px] font-semibold text-text-charcoal leading-snug font-sans">
+                        {liveWeather?.rain_risk_expected 
+                          ? "Heavy rain expected. Avoid low-lying streets and use weather-safe routing." 
+                          : "Normal movement is acceptable. Check live updates regularly."}
+                      </p>
                     </div>
-                    <div className="flex justify-between items-center text-[11px] border-t border-white/10 pt-1.5">
-                      <span className="text-text-muted">High-Risk Zones</span>
-                      <span className="font-bold text-text-charcoal">
-                        {liveRoutingStatus?.risk_class_counts?.high != null 
-                          ? liveRoutingStatus.risk_class_counts.high 
-                          : "—"}
-                      </span>
+                    <div className="text-[9.5px] text-text-muted italic text-right mt-1 font-sans">
+                      Nasr City dispatch advisory
                     </div>
                   </div>
                 </div>
