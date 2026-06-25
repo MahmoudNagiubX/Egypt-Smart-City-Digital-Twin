@@ -4,9 +4,9 @@ import {
   CircleGauge,
   ShieldCheck,
   TrendingDown,
+  MoreVertical,
 } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { RouteComparison, LiveWeatherSummary } from "../types/api";
 import { getRecommendationLabel } from "../utils/labels";
@@ -26,11 +26,11 @@ interface MetricCardProps {
 }
 
 const toneClasses = {
-  blue: "text-blue-600 dark:text-blue-400",
-  purple: "text-purple-600 dark:text-purple-400",
-  low: "text-emerald-600 dark:text-emerald-400",
-  medium: "text-amber-600 dark:text-amber-400",
-  high: "text-red-600 dark:text-red-400",
+  blue: "text-[#006688] bg-[#c2e8ff]/40",
+  purple: "text-[#8b5000] bg-[#ffdcbe]/40",
+  low: "text-[#006d36] bg-[#83fba5]/30",
+  medium: "text-[#ff9e2a] bg-[#ffdcbe]/40",
+  high: "text-[#ba1a1a] bg-[#ffdad6]/60",
 };
 
 const MetricCard = ({
@@ -40,34 +40,29 @@ const MetricCard = ({
   tone = "blue",
   secondaryText,
 }: MetricCardProps) => (
-  <Card
-    size="sm"
-    className={cn(
-      "summary-card min-w-32 border-0 bg-gradient-to-b from-white to-[#F0F4FC] shadow-[0_4px_12px_rgba(44,94,173,0.03)] ring-1 ring-border transition-all hover:shadow-[0_6px_18px_rgba(44,94,173,0.06)] hover:-translate-y-0.5 duration-200 border-t-[3px]",
-      tone === "blue" && "border-t-[#1591DC]",
-      tone === "purple" && "border-t-[#8186D5]",
-      tone === "low" && "border-t-emerald-500",
-      tone === "medium" && "border-t-amber-500",
-      tone === "high" && "border-t-[#E63946]"
-    )}
-  >
-    <CardHeader className="flex flex-row items-center justify-between gap-2 pb-0 pt-2.5 px-3.5">
-      <CardTitle className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+  <div className="stitch-card flex flex-col justify-between relative overflow-hidden transition-all duration-200 hover:-translate-y-0.5 shadow-sm p-4 h-full">
+    <div className="flex items-start justify-between">
+      <span className="stitch-label-sm text-[10px] text-text-muted font-semibold tracking-wider uppercase truncate max-w-[70%]">
         {label}
-      </CardTitle>
-      <span className={cn("flex size-5 shrink-0 items-center justify-center", toneClasses[tone])}>
-        <Icon className="size-4" aria-hidden="true" />
       </span>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-0.5 pt-1.5 pb-2.5 px-3.5">
-      <strong className="text-xs font-bold leading-none tracking-tight text-foreground truncate max-w-full">
+      <div className="flex items-center gap-1">
+        <span className={cn("flex size-5 items-center justify-center rounded-full", toneClasses[tone])}>
+          <Icon className="size-3" aria-hidden="true" />
+        </span>
+        <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5 transition-colors">
+          <MoreVertical className="size-3" />
+        </button>
+      </div>
+    </div>
+    <div className="mt-3 flex flex-col justify-end flex-1">
+      <strong className="text-sm font-bold tracking-tight text-text-charcoal truncate">
         {value}
       </strong>
       {secondaryText ? (
-        <span className="text-[9px] text-muted-foreground truncate mt-0.5">{secondaryText}</span>
+        <span className="text-[9px] text-text-muted truncate mt-0.5 leading-normal">{secondaryText}</span>
       ) : null}
-    </CardContent>
-  </Card>
+    </div>
+  </div>
 );
 
 export const SummaryCards = ({ mapMode, comparison, liveWeather }: SummaryCardsProps) => {
@@ -119,13 +114,15 @@ export const SummaryCards = ({ mapMode, comparison, liveWeather }: SummaryCardsP
 
   // 4. Risk Reduction
   let reductionValue = "—";
+  let reductionTone: "blue" | "low" = "blue";
   if (comparison) {
     reductionValue = `${(comparison.risk_reduction_percent ?? 0).toFixed(0)}%`;
+    reductionTone = comparison.risk_reduction_percent > 0 ? "low" : "blue";
   }
 
   return (
     <section
-      className="grid grid-cols-2 gap-2 px-3 py-1.5 lg:grid-cols-4"
+      className="grid grid-cols-2 gap-3 px-3 py-1 lg:grid-cols-4"
       aria-label="Operational summary"
     >
       <MetricCard
@@ -151,7 +148,7 @@ export const SummaryCards = ({ mapMode, comparison, liveWeather }: SummaryCardsP
         label="Risk Reduction"
         value={reductionValue}
         icon={TrendingDown}
-        tone={comparison && comparison.risk_reduction_percent > 0 ? "low" : "blue"}
+        tone={reductionTone}
       />
     </section>
   );
