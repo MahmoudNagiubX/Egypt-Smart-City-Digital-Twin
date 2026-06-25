@@ -21,6 +21,11 @@ import {
   requestLiveEmergencyRoute,
   getZoneExplanation,
   explainRoute,
+  getHeatHealth,
+  getLatestHeatLayer,
+  getHeatSummary,
+  getHeatZoneExplanation,
+  getHeatModelSummary,
 } from "../api/client";
 import type {
   EventSummary,
@@ -36,6 +41,11 @@ import type {
   SearchResultItem,
   ZoneExplanationResponse,
   RouteExplanationResponse,
+  HeatHealthResponse,
+  HeatSummaryResponse,
+  HeatLayerGeoJson,
+  HeatZoneExplanationResponse,
+  HeatModelSummaryResponse,
 } from "../types/api";
 import { LayerToggle } from "./LayerToggle";
 import { Legend } from "./Legend";
@@ -158,6 +168,12 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
   const [airQuality, setAirQuality] = useState<AirQualityResponse | null>(null);
   const [liveRoutingStatus, setLiveRoutingStatus] = useState<LiveRoutingStatusResponse | null>(null);
   const [liveRiskData, setLiveRiskData] = useState<FeatureCollection | null>(null);
+  const [activeRiskLayer, setActiveRiskLayer] = useState<"rain" | "heat">("rain");
+  const [heatHealth, setHeatHealth] = useState<HeatHealthResponse | null>(null);
+  const [heatSummary, setHeatSummary] = useState<HeatSummaryResponse | null>(null);
+  const [heatLayerGeojson, setHeatLayerGeojson] = useState<HeatLayerGeoJson | null>(null);
+  const [heatModelSummary, setHeatModelSummary] = useState<HeatModelSummaryResponse | null>(null);
+  const [selectedHeatZoneExplanation, setSelectedHeatZoneExplanation] = useState<HeatZoneExplanationResponse | null>(null);
   const [riskDisplayMode, setRiskDisplayMode] = useState<"focus" | "all">("focus");
   const [showControlsDrawer, setShowControlsDrawer] = useState(false);
 
@@ -203,6 +219,12 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (heatHealth) {
+      console.log(`Heat Risk module status: ${heatHealth.status} - ${heatHealth.message}`);
+    }
+  }, [heatHealth]);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -262,6 +284,22 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
           setAirQuality(airQualityRes);
         } catch (liveWeatherError) {
           console.warn("Failed to load live weather/routing info:", liveWeatherError);
+        }
+
+        // Fetch heat risk data separately without blocking dashboard if it fails
+        try {
+          const [heatHealthRes, heatSummaryRes, heatLayerRes, heatModelRes] = await Promise.all([
+            getHeatHealth(),
+            getHeatSummary(),
+            getLatestHeatLayer(),
+            getHeatModelSummary(),
+          ]);
+          setHeatHealth(heatHealthRes);
+          setHeatSummary(heatSummaryRes);
+          setHeatLayerGeojson(heatLayerRes);
+          setHeatModelSummary(heatModelRes);
+        } catch (heatError) {
+          console.warn("Failed to load heat risk info:", heatError);
         }
 
       } catch (initialError) {
@@ -429,58 +467,108 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
     (zoneCode: string, eventId?: string | null) => {
       if (!zoneCode) {
         setExplainActiveTab("area");
-        setZoneExplanation({
-          status: "error",
-          zone_code: "",
-          zone_label: "Unknown Area",
-          mode: mapMode === "history" ? "historical" : "live",
-          risk_score: 0,
-          risk_class: "low",
-          risk_label: "No Risk",
-          summary: "This zone cannot be explained because it has no zone identifier.",
-          top_factors: [],
-          explanation_text: "Missing zone code identifier.",
-          confidence_note: "Decision-support estimate only. Not an official flood report.",
-          honesty_note: "Decision-support estimate only. Not an official flood report."
-        });
+        if (activeRiskLayer === "heat") {
+          setSelectedHeatZoneExplanation({
+            status: "error",
+            zone_code: "",
+            zone_label: "Unknown Area",
+            date: "unknown",
+            predicted_heat_risk_class: "low",
+            predicted_heat_anomaly_c: 0.0,
+            predicted_heat_risk_score: 0.0,
+            summary: "This zone cannot be explained because it has no zone identifier.",
+            top_factors: [],
+            explanation_text: "Missing zone code identifier.",
+            honesty_note: "Decision-support estimate only. Not an official heat warning."
+          });
+        } else {
+          setZoneExplanation({
+            status: "error",
+            zone_code: "",
+            zone_label: "Unknown Area",
+            mode: mapMode === "history" ? "historical" : "live",
+            risk_score: 0,
+            risk_class: "low",
+            risk_label: "No Risk",
+            summary: "This zone cannot be explained because it has no zone identifier.",
+            top_factors: [],
+            explanation_text: "Missing zone code identifier.",
+            confidence_note: "Decision-support estimate only. Not an official flood report.",
+            honesty_note: "Decision-support estimate only. Not an official flood report."
+          });
+        }
         return;
       }
 
       setSelectedZoneCode(zoneCode);
       setExplainActiveTab("area");
       setZoneLoading(true);
-      setZoneExplanation(null);
 
-      const mode = mapMode === "history" ? "historical" : "live";
-      const evtId = mapMode === "history" ? (eventId || selectedEventId || undefined) : undefined;
-
-      getZoneExplanation(zoneCode, mode, evtId)
-        .then((res) => {
-          setZoneExplanation(res);
-        })
-        .catch((err) => {
-          console.error("Failed to load zone explanation:", err);
-          setZoneExplanation({
-            status: "error",
-            zone_code: zoneCode,
-            zone_label: "Unknown Zone",
-            mode,
-            risk_score: 0,
-            risk_class: "low",
-            risk_label: "No Risk",
-            summary: "This zone cannot be explained because it has no zone identifier or the explanation request failed.",
-            top_factors: [],
-            explanation_text: "Request failed.",
-            confidence_note: "Decision-support estimate only. Not an official flood report.",
-            honesty_note: "Decision-support estimate only. Not an official flood report."
+      if (activeRiskLayer === "heat") {
+        setSelectedHeatZoneExplanation(null);
+        getHeatZoneExplanation(zoneCode)
+          .then((res) => {
+            setSelectedHeatZoneExplanation(res);
+          })
+          .catch((err) => {
+            console.error("Failed to load heat zone explanation:", err);
+            setSelectedHeatZoneExplanation({
+              status: "error",
+              zone_code: zoneCode,
+              zone_label: "Unknown Zone",
+              date: "unknown",
+              predicted_heat_risk_class: "low",
+              predicted_heat_anomaly_c: 0.0,
+              predicted_heat_risk_score: 0.0,
+              summary: "This zone cannot be explained because the explanation request failed.",
+              top_factors: [],
+              explanation_text: "Request failed.",
+              honesty_note: "Decision-support estimate only. Not an official heat warning."
+            });
+          })
+          .finally(() => {
+            setZoneLoading(false);
           });
-        })
-        .finally(() => {
-          setZoneLoading(false);
-        });
+      } else {
+        setZoneExplanation(null);
+        const mode = mapMode === "history" ? "historical" : "live";
+        const evtId = mapMode === "history" ? (eventId || selectedEventId || undefined) : undefined;
+
+        getZoneExplanation(zoneCode, mode, evtId)
+          .then((res) => {
+            setZoneExplanation(res);
+          })
+          .catch((err) => {
+            console.error("Failed to load zone explanation:", err);
+            setZoneExplanation({
+              status: "error",
+              zone_code: zoneCode,
+              zone_label: "Unknown Zone",
+              mode,
+              risk_score: 0,
+              risk_class: "low",
+              risk_label: "No Risk",
+              summary: "This zone cannot be explained because it has no zone identifier or the explanation request failed.",
+              top_factors: [],
+              explanation_text: "Request failed.",
+              confidence_note: "Decision-support estimate only. Not an official flood report.",
+              honesty_note: "Decision-support estimate only. Not an official flood report."
+            });
+          })
+          .finally(() => {
+            setZoneLoading(false);
+          });
+      }
     },
-    [mapMode, selectedEventId],
+    [mapMode, selectedEventId, activeRiskLayer],
   );
+
+  const handleActiveRiskLayerChange = useCallback((layer: "rain" | "heat") => {
+    setActiveRiskLayer(layer);
+    setSelectedZoneCode(null);
+    setZoneExplanation(null);
+    setSelectedHeatZoneExplanation(null);
+  }, []);
 
   const handleWhyThisRouteClick = useCallback(() => {
     const { origin, destination } = routeSelection;
@@ -868,8 +956,10 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                         riskDisplayMode={riskDisplayMode}
                         setRiskDisplayMode={setRiskDisplayMode}
                         placesData={placesData}
+                        activeRiskLayer={activeRiskLayer}
+                        onActiveRiskLayerChange={handleActiveRiskLayerChange}
                       />
-                      <Legend />
+                      <Legend activeRiskLayer={activeRiskLayer} />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -905,6 +995,8 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   onZoneClick={handleZoneClick}
                   selectedZoneCode={selectedZoneCode}
                   isRoutePlanningActive={isRoutePlanningActive}
+                  activeRiskLayer={activeRiskLayer}
+                  heatLayerGeojson={heatLayerGeojson}
                 />
 
                 {/* Route Planner Floating Card Over Map */}
@@ -1212,38 +1304,93 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 ) : null}
               </div>
 
-              {/* Route Recommendation Info */}
-              <div className="stitch-card flex flex-col py-2 px-3 shadow-sm relative">
-                <div className="flex justify-between items-start mb-1">
-                  <div className="text-[8.5px] font-bold uppercase tracking-wider text-[#006688]">Route Advice</div>
-                  <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[14px]">more_vert</span></button>
-                </div>
-                <div className="text-[11px] font-bold text-text-charcoal">
-                  {comparison ? (() => {
-                    const rec = (comparison as any).recommendation || 
-                      (comparison.safe_route_available ? "weather_safe_route_recommended" : "normal_route_acceptable");
-                    let title = "Normal Route Acceptable";
-                    let subtitle = "No rain risk expected on this route.";
-                    if (rec === "weather_safe_route_recommended") {
-                      title = "Weather-Safe Recommended";
-                      subtitle = "Normal route crosses high-risk areas. Use safer route.";
-                    } else if (rec === "no_distinct_safer_alternative") {
-                      title = "No Distinct Safer Alternative";
-                      subtitle = "No route found with lower model risk.";
-                    }
-                    return (
-                      <>
-                        {title}
-                        <p className="text-[9.5px] text-text-muted font-normal mt-0.5 leading-tight font-sans">
-                          {subtitle}
-                        </p>
-                      </>
-                    );
-                  })() : (
-                    <span className="text-text-muted font-normal">Waiting for start/destination routing setup...</span>
+              {/* Route Recommendation / Heat Summary Info */}
+              {activeRiskLayer === "heat" ? (
+                <div className="stitch-card flex flex-col py-2 px-3 shadow-sm relative">
+                  <div className="flex justify-between items-start mb-1">
+                    <div className="text-[8.5px] font-bold uppercase tracking-wider text-[#d97706]">Urban Heat Summary</div>
+                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[14px]">more_vert</span></button>
+                  </div>
+                  {heatSummary ? (
+                    <div className="flex flex-col gap-1 text-[10px] text-text-charcoal font-sans">
+                      <div className="flex justify-between">
+                        <span className="text-text-muted">Date:</span>
+                        <span className="font-bold">{heatSummary.date}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-text-muted font-sans">Zones count:</span>
+                        <span className="font-bold">{heatSummary.zone_count}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-text-muted">Hottest Zone:</span>
+                        <span className="font-bold truncate max-w-[120px]">{heatSummary.hottest_zone?.zone_label || heatSummary.hottest_zone?.zone_code || "—"}</span>
+                      </div>
+                      <div className="flex justify-between pl-2 border-l border-amber-500 bg-amber-500/5">
+                        <span className="text-text-muted">Heat anomaly:</span>
+                        <span className="font-bold text-[#ba1a1a]">+{heatSummary.hottest_zone?.predicted_heat_anomaly_c?.toFixed(1)}°C</span>
+                      </div>
+                      <div className="flex justify-between pl-2 border-l border-amber-500 bg-amber-500/5">
+                        <span className="text-text-muted">Risk level:</span>
+                        <span className={`font-bold uppercase text-[9px] px-1 py-0.25 rounded ${
+                          (heatSummary.hottest_zone?.predicted_heat_risk_class || "").toLowerCase() === "high" ? "bg-red-100 text-red-700" :
+                          (heatSummary.hottest_zone?.predicted_heat_risk_class || "").toLowerCase() === "medium" ? "bg-amber-100 text-amber-700" :
+                          "bg-green-100 text-green-700"
+                        }`}>
+                          {heatSummary.hottest_zone?.predicted_heat_risk_class}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-text-muted">Mean / Max anomaly:</span>
+                        <span className="font-bold">+{heatSummary.mean_heat_anomaly_c?.toFixed(1)}°C / +{heatSummary.max_heat_anomaly_c?.toFixed(1)}°C</span>
+                      </div>
+                      <div className="flex justify-between border-t border-white/20 pt-1 mt-1 text-[9px] text-text-muted">
+                        <span>Risk classes:</span>
+                        <span>
+                          L: {heatSummary.risk_counts?.low} | M: {heatSummary.risk_counts?.medium} | H: {heatSummary.risk_counts?.high}
+                        </span>
+                      </div>
+                      <div className="mt-1 text-[9px] text-text-muted italic border-t border-white/20 pt-1 leading-tight flex items-start gap-1">
+                        <span className="text-amber-500 font-bold shrink-0">⚠️</span>
+                        <span>Satellite-based heat estimate, not an official warning.</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-[10px] text-text-muted py-2">Loading heat summary...</div>
                   )}
                 </div>
-              </div>
+              ) : (
+                <div className="stitch-card flex flex-col py-2 px-3 shadow-sm relative">
+                  <div className="flex justify-between items-start mb-1">
+                    <div className="text-[8.5px] font-bold uppercase tracking-wider text-[#006688]">Route Advice</div>
+                    <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[14px]">more_vert</span></button>
+                  </div>
+                  <div className="text-[11px] font-bold text-text-charcoal">
+                    {comparison ? (() => {
+                      const rec = (comparison as any).recommendation || 
+                        (comparison.safe_route_available ? "weather_safe_route_recommended" : "normal_route_acceptable");
+                      let title = "Normal Route Acceptable";
+                      let subtitle = "No rain risk expected on this route.";
+                      if (rec === "weather_safe_route_recommended") {
+                        title = "Weather-Safe Recommended";
+                        subtitle = "Normal route crosses high-risk areas. Use safer route.";
+                      } else if (rec === "no_distinct_safer_alternative") {
+                        title = "No Distinct Safer Alternative";
+                        subtitle = "No route found with lower model risk.";
+                      }
+                      return (
+                        <>
+                          {title}
+                          <p className="text-[9.5px] text-text-muted font-normal mt-0.5 leading-tight font-sans">
+                            {subtitle}
+                          </p>
+                        </>
+                      );
+                    })() : (
+                      <span className="text-text-muted font-normal">Waiting for start/destination routing setup...</span>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Inline Explainability Panel */}
               <div className="flex-1 shrink-0 min-h-0">
@@ -1253,10 +1400,14 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   onClose={() => {
                     setSelectedZoneCode(null);
                     setZoneExplanation(null);
+                    setSelectedHeatZoneExplanation(null);
                   }}
                   activeTab={explainActiveTab}
                   zoneLoading={zoneLoading}
                   routeLoading={routeLoading}
+                  activeRiskLayer={activeRiskLayer}
+                  heatZoneExplanation={selectedHeatZoneExplanation}
+                  heatModelSummary={heatModelSummary}
                 />
               </div>
             </div>
