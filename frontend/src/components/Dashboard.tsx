@@ -41,6 +41,16 @@ import { RoutePanel } from "./RoutePanel";
 import { SummaryCards } from "./SummaryCards";
 import { SearchBox } from "./SearchBox";
 import { ExplainabilityPanel } from "./ExplainabilityPanel";
+import { formatDuration, toFiniteNumber, formatPercent, EMPTY_VALUE } from "../utils/format";
+
+const signedPercent = (value: unknown) => {
+  const number = toFiniteNumber(value);
+  if (number === null) {
+    return EMPTY_VALUE;
+  }
+  const prefix = number > 0 ? "+" : "";
+  return `${prefix}${formatPercent(number, 1)}`;
+};
 
 type RouteEventType = "top-rain" | "latest";
 type RouteVisibility = "normal" | "safe" | "both";
@@ -78,7 +88,6 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
   const [liveWeather, setLiveWeather] = useState<LiveWeatherSummary | null>(null);
   const [liveRoutingStatus, setLiveRoutingStatus] = useState<LiveRoutingStatusResponse | null>(null);
   const [liveRiskData, setLiveRiskData] = useState<FeatureCollection | null>(null);
-  const [liveWeatherError, setLiveWeatherError] = useState<string | null>(null);
   const [riskDisplayMode, setRiskDisplayMode] = useState<"focus" | "all">("focus");
   const [showControlsDrawer, setShowControlsDrawer] = useState(false);
 
@@ -119,7 +128,6 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
   const [zoneLoading, setZoneLoading] = useState(false);
   const [routeExplanation, setRouteExplanation] = useState<RouteExplanationResponse | null>(null);
   const [routeLoading, setRouteLoading] = useState(false);
-  const [explainPanelOpen, setExplainPanelOpen] = useState(false);
   const [explainActiveTab, setExplainActiveTab] = useState<"area" | "route" | "model">("area");
   const [isRoutePlanningActive, setIsRoutePlanningActive] = useState(false);
 
@@ -178,10 +186,8 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
           setLiveWeather(liveWeatherRes);
           setLiveRoutingStatus(liveRoutingStatusRes);
           setLiveRiskData(liveRiskRes);
-          setLiveWeatherError(null);
         } catch (liveWeatherError) {
           console.warn("Failed to load live weather/routing info:", liveWeatherError);
-          setLiveWeatherError("Unable to fetch live weather details. Showing offline/historical layers.");
         }
 
       } catch (initialError) {
@@ -349,7 +355,6 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
     (zoneCode: string, eventId?: string | null) => {
       if (!zoneCode) {
         setExplainActiveTab("area");
-        setExplainPanelOpen(true);
         setZoneExplanation({
           status: "error",
           zone_code: "",
@@ -369,7 +374,6 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
 
       setSelectedZoneCode(zoneCode);
       setExplainActiveTab("area");
-      setExplainPanelOpen(true);
       setZoneLoading(true);
       setZoneExplanation(null);
 
@@ -409,7 +413,6 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
     if (!origin || !destination) return;
 
     setExplainActiveTab("route");
-    setExplainPanelOpen(true);
     setRouteLoading(true);
     setRouteExplanation(null);
 
@@ -441,7 +444,6 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
     setIsRoutePlanningActive(false);
     setSelectedZoneCode(null);
     setZoneExplanation(null);
-    setExplainPanelOpen(false);
 
     // Automatically toggle active layers
     setLayers((current) => ({
@@ -491,6 +493,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
   if (loading) {
     return (
       <div className="stitch-page flex h-screen w-screen flex-col items-center justify-center">
+        <h1 className="sr-only">Egypt Smart City Digital Twin</h1>
         <LoadingSpinner message="Synchronizing map layers, places, and weather-aware routes..." />
       </div>
     );
@@ -521,6 +524,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
         className="stitch-dashboard-shell"
         style={{ margin: '0 auto', height: 'calc(100vh - 3rem)', maxHeight: 920 }}
       >
+        <h1 className="sr-only">Egypt Smart City Digital Twin</h1>
         {/* Stitch Top Navigation Bar */}
         <nav
           className="flex items-center justify-between px-6 py-3 border-b border-glass-border bg-white/40"
@@ -1010,14 +1014,27 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
                 </div>
                 <div className="text-xs font-bold text-text-charcoal">
-                  {comparison ? (
-                    <>
-                      {recTitle}
-                      <p className="text-[10px] text-text-muted font-normal mt-1 leading-relaxed font-sans">
-                        {recSubtitle}
-                      </p>
-                    </>
-                  ) : (
+                  {comparison ? (() => {
+                    const rec = (comparison as any).recommendation || 
+                      (comparison.safe_route_available ? "weather_safe_route_recommended" : "normal_route_acceptable");
+                    let title = "Normal Route Acceptable";
+                    let subtitle = "No meaningful rain risk is expected on this route.";
+                    if (rec === "weather_safe_route_recommended") {
+                      title = "Weather-Safe Route Recommended";
+                      subtitle = "The normal route crosses higher-risk areas. Use the safer route.";
+                    } else if (rec === "no_distinct_safer_alternative") {
+                      title = "No Distinct Safer Alternative";
+                      subtitle = "The system did not find a route with lower model-estimated risk.";
+                    }
+                    return (
+                      <>
+                        {title}
+                        <p className="text-[10px] text-text-muted font-normal mt-1 leading-relaxed font-sans">
+                          {subtitle}
+                        </p>
+                      </>
+                    );
+                  })() : (
                     <span className="text-text-muted font-normal">Waiting for start/destination routing setup...</span>
                   )}
                 </div>

@@ -1,6 +1,15 @@
 // @vitest-environment jsdom
-import { render, screen, act, cleanup } from '@testing-library/react'
+import { render, screen, act, cleanup, fireEvent } from '@testing-library/react'
 import { expect, test, vi, afterEach } from 'vitest'
+
+// Mock IntersectionObserver for Framer Motion viewport options
+class IntersectionObserverMock {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+}
+(globalThis as any).IntersectionObserver = IntersectionObserverMock as any;
+
 import App from '../App'
 import { SummaryCards } from '../components/SummaryCards'
 import { RoutePanel } from '../components/RoutePanel'
@@ -151,13 +160,26 @@ test('App renders dashboard title and disclaimers', async () => {
     render(<App />);
   });
   
-  // Dashboard Title
-  const title = screen.getAllByText(/Nasr City Weather-Impact/i);
-  expect(title.length).toBeGreaterThan(0);
+  // Verify welcome page title
+  expect(screen.getAllByText(/safer/i).length).toBeGreaterThan(0);
+
+  // Transition to dashboard
+  const openBtn = screen.getByText("Open Live Map");
+  await act(async () => {
+    fireEvent.click(openBtn);
+  });
+
+  // Dashboard Title check
   expect(document.title).toBe("Egypt Smart City Digital Twin");
 
+  // Open controls drawer to render the LayerToggle disclaimer
+  const controlsBtn = screen.getByText(/Controls/i);
+  await act(async () => {
+    fireEvent.click(controlsBtn);
+  });
+
   // Disclaimer visibility
-  const note = screen.getAllByText(/Predictions are weather-impact model estimates/i);
+  const note = screen.getAllByText(/Predictions are weather-impact model/i);
   expect(note.length).toBeGreaterThan(0);
 });
 
