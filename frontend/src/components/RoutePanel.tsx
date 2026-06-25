@@ -1,19 +1,5 @@
 import { Info, MapPin, Navigation, RotateCcw, Route } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { RouteComparison } from "../types/api";
 import {
   EMPTY_VALUE,
@@ -51,11 +37,11 @@ const signedPercent = (value: unknown) => {
 };
 
 const Metric = ({ label, value }: { label: string; value: string }) => (
-  <div className="rounded-lg bg-muted/70 px-2.5 py-2">
-    <dt className="text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+  <div className="rounded-lg bg-white/40 border border-white/40 px-2 py-1.5 flex flex-col justify-between">
+    <dt className="text-[9px] font-bold uppercase tracking-[0.08em] text-text-muted">
       {label}
     </dt>
-    <dd className="mt-1 break-words text-xs font-semibold text-foreground">{value}</dd>
+    <dd className="mt-0.5 break-words text-xs font-bold text-text-charcoal">{value}</dd>
   </div>
 );
 
@@ -74,12 +60,13 @@ export const RoutePanel = ({
   if (!comparison) {
     if (routeSource === "custom" || routeSource === "custom-live") {
       return (
-        <Card size="sm" className="route-panel border-0 bg-card/95 shadow-xl ring-1 ring-border">
-          <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2 text-primary">
-              <MapPin aria-hidden="true" /> Custom Route
-            </CardTitle>
-            <CardDescription>
+        <div className="stitch-card flex flex-col gap-3 shadow-lg pointer-events-auto p-4 max-w-sm">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#006688]">
+              <MapPin className="size-4" aria-hidden="true" />
+              <span>Custom Route Planner</span>
+            </div>
+            <p className="text-[11px] text-text-muted mt-1 leading-normal">
               {selectionState === "idle"
                 ? (isRoutePlanningActive 
                     ? "Click the map to select the starting point." 
@@ -89,52 +76,68 @@ export const RoutePanel = ({
                   : selectionState === "routing" || selectionState === "loading"
                     ? "Comparing normal and weather-safe paths."
                     : "The selected points could not be routed."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            {selectionState === "routing" || selectionState === "loading" ? (
-              <Progress value={68} className="route-progress" aria-label="Calculating custom route" />
-            ) : null}
-            {routingError ? (
-              <Alert variant="destructive">
-                <Info aria-hidden="true" />
-                <AlertTitle>Route unavailable</AlertTitle>
-                <AlertDescription>{routingError}</AlertDescription>
-              </Alert>
-            ) : null}
+            </p>
+          </div>
+          
+          {(selectionState === "routing" || selectionState === "loading") && (
+            <div className="w-full bg-white/40 h-1.5 rounded-full overflow-hidden relative">
+              <div 
+                className="bg-gradient-to-r from-[#006688] to-[#00c2ff] h-full absolute top-0 bottom-0"
+                style={{
+                  width: '50%',
+                  animation: 'route-loading-sweep 1.1s ease-in-out infinite'
+                }}
+              />
+            </div>
+          )}
 
-            {selectionState === "idle" && onToggleRoutePlanning && (
-              <div className="flex items-center justify-between border rounded-lg p-2.5 bg-slate-50/50">
-                <span className="text-xs font-semibold text-slate-700">Route Planning Mode</span>
-                <Switch 
-                  checked={isRoutePlanningActive} 
-                  onCheckedChange={onToggleRoutePlanning}
-                  size="sm"
-                />
+          {routingError && (
+            <div className="rounded-lg border border-red-200 bg-red-50/80 p-2.5 text-xs text-red-700 flex flex-col gap-1">
+              <div className="flex items-center gap-1 font-bold">
+                <Info className="size-3.5" aria-hidden="true" />
+                <span>Route unavailable</span>
               </div>
-            )}
+              <p className="text-[10px] leading-normal">{routingError}</p>
+            </div>
+          )}
 
-            {(selectionState !== "idle" || routingError) && onResetRoute ? (
-              <Button type="button" variant="outline" size="sm" onClick={onResetRoute}>
-                <RotateCcw data-icon="inline-start" /> Reset Route
-              </Button>
-            ) : null}
-          </CardContent>
-        </Card>
+          {selectionState === "idle" && onToggleRoutePlanning && (
+            <div className="flex items-center justify-between border border-white/60 rounded-xl p-2.5 bg-white/40">
+              <span className="text-[11px] font-bold text-text-charcoal">Route Planning Mode</span>
+              <Switch 
+                checked={isRoutePlanningActive} 
+                onCheckedChange={onToggleRoutePlanning}
+                size="sm"
+                className="data-[state=checked]:bg-[#006688]"
+              />
+            </div>
+          )}
+
+          {(selectionState !== "idle" || routingError) && onResetRoute && (
+            <button 
+              type="button" 
+              onClick={onResetRoute}
+              className="flex h-9 items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/50 text-xs font-semibold text-text-charcoal hover:bg-white/80 transition-colors"
+            >
+              <RotateCcw className="size-3.5" /> 
+              <span>Reset Route</span>
+            </button>
+          )}
+        </div>
       );
     }
 
     return (
-      <Card size="sm" className="border-0 bg-card/95 shadow-xl ring-1 ring-border">
-        <CardHeader>
-          <CardTitle>Route Comparison</CardTitle>
-          <CardDescription>Preparing route metrics</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-2">
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-24 w-full" />
-        </CardContent>
-      </Card>
+      <div className="stitch-card flex flex-col gap-3 shadow-lg pointer-events-auto p-4 max-w-sm">
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-bold text-text-charcoal">Route Comparison</span>
+          <span className="text-[10px] text-text-muted">Preparing route metrics...</span>
+        </div>
+        <div className="animate-pulse flex flex-col gap-2">
+          <div className="h-6 bg-white/40 rounded w-3/4"></div>
+          <div className="h-20 bg-white/40 rounded"></div>
+        </div>
+      </div>
     );
   }
 
@@ -155,7 +158,7 @@ export const RoutePanel = ({
     recSubtitle = "The system did not find a route with lower model-estimated risk.";
   }
 
-  // Calculate metrics cleanly
+  // Calculate metrics
   const riskRedVal = toFiniteNumber(comparison.risk_reduction_percent);
   const riskReductionText = riskRedVal !== null && riskRedVal <= 0
     ? "No change"
@@ -170,51 +173,42 @@ export const RoutePanel = ({
     : EMPTY_VALUE;
 
   return (
-    <Card
-      size="sm"
+    <div
       className={cn(
-        "route-panel border-0 bg-gradient-to-br from-white to-[#C4E2F5]/25 shadow-[0_18px_50px_rgba(44,94,173,0.18)] ring-1 ring-border backdrop-blur-xl border-t-[4px] transition-all",
+        "stitch-card flex flex-col gap-3 shadow-lg pointer-events-auto p-4 max-w-sm border-t-[3px] transition-all duration-200",
         rec === "weather_safe_route_recommended"
-          ? "border-t-[#E63946]"
+          ? "border-t-[#ba1a1a]"
           : rec === "no_distinct_safer_alternative"
-            ? "border-t-[#8186D5]"
-            : "border-t-[#1591DC]"
+            ? "border-t-[#8b5000]"
+            : "border-t-[#006688]"
       )}
     >
-      <CardHeader className={cn(
-        "border-b p-4 transition-colors",
-        rec === "weather_safe_route_recommended"
-          ? "bg-gradient-to-r from-[#E63946]/5 to-[#1591DC]/5"
-          : rec === "no_distinct_safer_alternative"
-            ? "bg-slate-50/50"
-            : "bg-gradient-to-r from-[#1591DC]/5 to-[#C4E2F5]/10"
-      )}>
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center justify-between gap-2">
-            <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              <Navigation className="size-3.5 text-primary" aria-hidden="true" />
-              {customRoute ? "Live Route" : "Scenario Route"}
-            </span>
-            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold border ${
-              rec === "weather_safe_route_recommended"
-                ? "bg-red-50 text-red-700 border-red-200"
-                : rec === "no_distinct_safer_alternative"
-                  ? "bg-slate-50 text-slate-600 border-slate-200"
-                  : "bg-emerald-50 text-emerald-700 border-emerald-200"
-            }`}>
-              {recTitle}
-            </span>
-          </div>
-          <h2 className="mt-2 text-sm font-bold text-foreground">
+      <div className="flex flex-col gap-1 border-b border-white/20 pb-3">
+        <div className="flex items-center justify-between gap-2">
+          <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-text-muted">
+            <Navigation className="size-3 text-[#006688]" aria-hidden="true" />
+            {customRoute ? "Live Route" : "Scenario Route"}
+          </span>
+          <span className={cn(
+            "rounded-full px-2 py-0.5 text-[9px] font-bold border",
+            rec === "weather_safe_route_recommended"
+              ? "bg-[#ffdad6]/80 text-[#ba1a1a] border-[#ffdad6]"
+              : rec === "no_distinct_safer_alternative"
+                ? "bg-white/40 text-[#8b5000] border-[#ffdcbe]"
+                : "bg-[#83fba5]/20 text-[#006d36] border-[#83fba5]/50"
+          )}>
             {recTitle}
-          </h2>
-          <p className="text-xs text-muted-foreground">
-            {recSubtitle}
-          </p>
+          </span>
         </div>
-      </CardHeader>
+        <h2 className="mt-2 text-xs font-bold text-text-charcoal">
+          {recTitle}
+        </h2>
+        <p className="text-[10px] leading-normal text-text-muted mt-0.5">
+          {recSubtitle}
+        </p>
+      </div>
 
-      <CardContent className="flex flex-col gap-3 pt-3">
+      <div className="max-h-48 overflow-y-auto pr-1">
         <dl className="grid grid-cols-2 gap-2">
           <Metric label="Risk Reduction" value={riskReductionText} />
           <Metric label="ETA Tradeoff" value={signedPercent(comparison.eta_tradeoff_percent)} />
@@ -226,47 +220,55 @@ export const RoutePanel = ({
           <Metric label="Safe Route ETA" value={formatDuration(comparison.safe_weather_eta_sec)} />
           <Metric label="High-Risk Segments Avoided" value={formatInteger(comparison.avoided_high_risk_segments)} />
         </dl>
+      </div>
 
-        <Separator />
-
+      <div className="flex flex-col gap-2.5 border-t border-white/20 pt-3 mt-1.5">
         <div className="flex items-center justify-between gap-3">
-          <span className="flex items-center gap-1.5 text-[10px] font-semibold">
-            <Route aria-hidden="true" /> Visible Routes
+          <span className="flex items-center gap-1.5 text-[10px] font-bold text-text-charcoal">
+            <Route className="size-3.5 text-text-muted" aria-hidden="true" /> 
+            <span>Visible Routes</span>
           </span>
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            size="sm"
-            spacing={0}
-            value={routeVisibility}
-            onValueChange={(value) =>
-              value && onRouteVisibilityChange(value as "normal" | "safe" | "both")
-            }
-          >
-            <ToggleGroupItem value="normal" aria-label="Show normal route">Normal</ToggleGroupItem>
-            <ToggleGroupItem value="safe" aria-label="Show weather-safe route">Safe</ToggleGroupItem>
-            <ToggleGroupItem value="both" aria-label="Show both routes">Both</ToggleGroupItem>
-          </ToggleGroup>
+          <div className="inline-flex rounded-lg bg-white/40 border border-white/60 p-0.5">
+            {(["normal", "safe", "both"] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => onRouteVisibilityChange(mode)}
+                className={cn(
+                  "rounded px-2.5 py-1 text-[10px] font-bold uppercase transition-all",
+                  routeVisibility === mode
+                    ? "bg-[#006688] text-white shadow-sm"
+                    : "text-text-muted hover:text-text-charcoal"
+                )}
+              >
+                {mode === "both" ? "Both" : mode === "safe" ? "Safe" : "Normal"}
+              </button>
+            ))}
+          </div>
         </div>
 
         {onWhyThisRoute && (
-          <Button
+          <button
             type="button"
-            variant="default"
-            size="sm"
             onClick={onWhyThisRoute}
-            className="w-full bg-[#2C5EAD] hover:bg-[#1A4B95] text-white flex items-center justify-center gap-1.5 py-2 font-bold shadow-sm"
+            className="w-full bg-[#006688] hover:bg-[#00526e] text-white flex items-center justify-center gap-1.5 py-2 rounded-lg font-bold text-xs shadow-sm transition-colors"
           >
-            <Info className="size-4" /> Why this route?
-          </Button>
+            <Info className="size-3.5" /> 
+            <span>Why this route?</span>
+          </button>
         )}
 
-        {customRoute && onResetRoute ? (
-          <Button type="button" variant="outline" size="sm" onClick={onResetRoute}>
-            <RotateCcw data-icon="inline-start" /> Reset Custom Route
-          </Button>
-        ) : null}
-      </CardContent>
-    </Card>
+        {customRoute && onResetRoute && (
+          <button 
+            type="button" 
+            onClick={onResetRoute}
+            className="w-full flex h-8 items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/40 text-xs font-semibold text-text-charcoal hover:bg-white/80 transition-colors"
+          >
+            <RotateCcw className="size-3.5" /> 
+            <span>Reset Custom Route</span>
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
