@@ -338,5 +338,47 @@ def get_search(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/explain/zone/{zone_code}", response_model=schemas.ZoneExplainResponse)
+def get_explain_zone(
+    zone_code: str,
+    mode: str = Query(default="live"),
+    event_id: str | None = Query(default=None)
+):
+    """Explain estimated risk factors for a specific zone."""
+    try:
+        return service.explain_zone_risk(zone_code, mode=mode, event_id=event_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/explain/route", response_model=schemas.RouteExplainResponse)
+def post_explain_route(request: schemas.RouteExplainRequest):
+    """Explain weather-safe custom routing decisions and tradeoffs."""
+    try:
+        origin = {"lat": request.origin.lat, "lon": request.origin.lon}
+        destination = {"lat": request.destination.lat, "lon": request.destination.lon}
+        return service.explain_route_recommendation(origin, destination, mode=request.mode)
+    except routing.RoutingPointOutsideGraphError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/model/explainability-summary", response_model=schemas.ModelExplainabilitySummaryResponse)
+def get_model_explainability_summary():
+    """Retrieve global model explainability metrics, permutation importances, and limitations."""
+    try:
+        return service.get_model_explainability_summary()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
 
 

@@ -1222,6 +1222,25 @@ def search_places_and_roads(
     }
 
 
+def explain_zone_risk(zone_code: str, mode: str = "live", event_id: str | None = None) -> dict:
+    """Delegate to explainability module to explain zone risk factors."""
+    from . import explain
+    return explain.explain_zone_risk(zone_code, mode=mode, event_id=event_id)
+
+
+def explain_route_recommendation(origin: dict, destination: dict, mode: str = "live") -> dict:
+    """Delegate to explainability module to explain route recommendations and tradeoffs."""
+    from . import explain
+    return explain.explain_route_recommendation(origin, destination, mode=mode)
+
+
+def get_model_explainability_summary() -> dict:
+    """Delegate to explainability module to retrieve global model explainability metrics."""
+    from . import explain
+    return explain.get_model_explainability_summary()
+
+
+
 
 
 

@@ -183,5 +183,90 @@ class SearchResponse(BaseModel):
     warnings: List[str]
 
 
+# Phase 9C — Explainability Schemas
+class ZoneFactor(BaseModel):
+    factor: str
+    label: str
+    value: float
+    impact: str
+    reason: str
+
+
+class ZoneExplainResponse(BaseModel):
+    status: str
+    zone_code: str
+    zone_label: str
+    mode: str
+    risk_score: float
+    risk_class: str
+    risk_label: str
+    summary: str
+    top_factors: List[ZoneFactor]
+    explanation_text: str
+    confidence_note: str
+    honesty_note: str
+
+
+class RouteExplainRequest(BaseModel):
+    origin: RouteCoordinate
+    destination: RouteCoordinate
+    mode: str = "live"
+    route_preference: str = "both"
+
+
+class RouteReason(BaseModel):
+    label: str
+    value: str
+    reason: str
+
+
+class RouteDetailExplanation(BaseModel):
+    summary: str
+    risk_level: str
+    high_risk_segments: int
+    mean_risk_score: float
+
+
+class RouteComparisonSummary(BaseModel):
+    risk_reduction_percent: float
+    eta_tradeoff_percent: float
+    avoided_high_risk_segments: int
+    normal_distance_m: float
+    safe_distance_m: float
+
+
+class RouteExplainResponse(BaseModel):
+    status: str
+    mode: str
+    recommendation: str
+    recommendation_label: str
+    summary: str
+    route_reasons: List[RouteReason]
+    normal_route_explanation: RouteDetailExplanation
+    safe_route_explanation: RouteDetailExplanation
+    comparison: RouteComparisonSummary
+    honesty_note: str
+
+
+class GlobalFeatureImportance(BaseModel):
+    feature: str
+    label: str
+    importance: float
+    reason: str
+
+
+class ModelExplainabilitySummaryResponse(BaseModel):
+    status: str
+    model_name: str
+    model_type: str
+    target: str
+    top_global_features: List[GlobalFeatureImportance]
+    metrics: Dict[str, Union[float, int, str, dict, list, None]]
+    model_size_mb: float
+    known_limitations: List[str]
+    honesty_note: str
+
+
+
 
 

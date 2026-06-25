@@ -108,6 +108,15 @@ LIVE_WEATHER_FORECAST_CACHE_PATH = LIVE_WEATHER_CACHE_DIR / "live_open_meteo_for
 LIVE_ROAD_RISK_WEIGHTS_GEOJSON_PATH = NASR_CITY_OUTPUTS / "live_road_risk_weights.geojson"
 LIVE_ROUTE_VALIDATION_REPORT_PATH = NASR_CITY_OUTPUTS / "live_route_validation_report.json"
 
+# Explainability paths
+ZONE_EXPLANATION_FACTORS_V2_PATH = NASR_CITY_MODELS / "weather_impact_zone_explanation_factors_v2.csv"
+PERMUTATION_IMPORTANCE_V2_PATH = NASR_CITY_MODELS / "weather_impact_permutation_importance_v2.csv"
+BEST_MODEL_V2_METRICS_PATH = NASR_CITY_MODELS / "weather_impact_best_model_v2_metrics.json"
+BEST_MODEL_V2_CARD_PATH = NASR_CITY_MODELS / "weather_impact_best_model_v2_card.md"
+MODEL_SELECTION_REASON_V2_PATH = NASR_CITY_MODELS / "weather_impact_model_selection_reason_v2.json"
+EXPLAINABILITY_API_REPORT_PATH = NASR_CITY_DIR / "reports" / "explainability_api_report.json"
+MODEL_EXPLAINABILITY_SUMMARY_PATH = NASR_CITY_DIR / "reports" / "model_explainability_summary.json"
+
 
 # System integrity audit paths
 SYSTEM_INTEGRITY_AUDIT_REPORT_PATH = NASR_CITY_OUTPUTS / "system_integrity_audit_report.json"
