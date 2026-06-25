@@ -698,3 +698,60 @@ test('MapView filters markers by active category state', () => {
   // but this ensures categoryVisible filters them without rendering errors).
   expect(screen.getByLabelText(/Interactive Nasr City weather-impact map/i)).toBeDefined();
 });
+
+test('Welcome Page interactive features and modal navigation', async () => {
+  await act(async () => {
+    render(<App />);
+  });
+
+  // 1. Welcome Page renders
+  expect(screen.getAllByText(/safer/i).length).toBeGreaterThan(0);
+  expect(screen.getByText("Open Live Map")).toBeDefined();
+  expect(screen.getByText("See how it works")).toBeDefined();
+
+  // 7. Check that bottom feature card elements are NOT visible by default (no "What it does" header)
+  expect(screen.queryByText("What it does")).toBeNull();
+
+  // 3. See how it works opens How it works panel
+  const seeHowBtn = screen.getByText("See how it works");
+  await act(async () => {
+    fireEvent.click(seeHowBtn);
+  });
+  expect(screen.getByText("How the system works")).toBeDefined();
+  expect(screen.getByText("Search / Click Map")).toBeDefined();
+
+  // 6. Closing panel works
+  const closeBtn = screen.getByLabelText("Close modal");
+  await act(async () => {
+    fireEvent.click(closeBtn);
+  });
+  expect(screen.queryByText("How the system works")).toBeNull();
+
+  // 4. Features nav opens Features panel
+  const featuresBtn = screen.getByRole("button", { name: "Features" });
+  await act(async () => {
+    fireEvent.click(featuresBtn);
+  });
+  expect(screen.getByText("Smart mobility features")).toBeDefined();
+  expect(screen.getByText("Live Rain Risk")).toBeDefined();
+
+  // 5. Model nav opens Model panel
+  const modelBtn = screen.getByRole("button", { name: "Model" });
+  await act(async () => {
+    fireEvent.click(modelBtn);
+  });
+  expect(screen.getByText("How the AI model helps")).toBeDefined();
+
+  // Close again
+  const closeBtn2 = screen.getByLabelText("Close modal");
+  await act(async () => {
+    fireEvent.click(closeBtn2);
+  });
+
+  // 2 & 8. Open Live Map button switches to Dashboard
+  const openBtn = screen.getByText("Open Live Map");
+  await act(async () => {
+    fireEvent.click(openBtn);
+  });
+  expect(document.title).toBe("Egypt Smart City Digital Twin");
+});
