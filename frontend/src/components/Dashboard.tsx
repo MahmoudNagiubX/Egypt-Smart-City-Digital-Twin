@@ -946,7 +946,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               {/* Bottom Analytics Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
                 {/* 1. Regional Extremes Card */}
-                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
+                <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
                   <div className="flex items-center justify-between mb-2">
                     <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Regional Extremes</span>
                     <span className="material-symbols-outlined text-[16px] text-text-muted">thermostat</span>
@@ -984,7 +984,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 </div>
 
                 {/* 2. Composite Card 1: Today’s Rain Risk & Rain Probability */}
-                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
+                <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
                   <div className="flex items-center justify-between mb-2">
                     <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Rain & Risk Profile</span>
                     <span className="material-symbols-outlined text-[16px] text-text-muted">umbrella</span>
@@ -1018,7 +1018,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 </div>
 
                 {/* 3. Composite Card 2: Route Recommendation & Risk Reduction */}
-                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
+                <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
                   <div className="flex items-center justify-between mb-2">
                     <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Route Safety</span>
                     <span className="material-symbols-outlined text-[16px] text-text-muted">shield</span>
@@ -1026,7 +1026,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   <div className="flex-1 flex flex-col gap-2 mt-1">
                     {/* Sub-item 1: Route Recommendation */}
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[9px] text-text-muted font-bold uppercase">Recommendation</span>
+                      <span className="text-[9px] text-text-muted font-bold uppercase">Route Recommendation</span>
                       <div className="flex items-center justify-between gap-1 mt-0.5">
                         <span className="font-semibold text-text-charcoal text-[11px] truncate max-w-[110px]" title={recValue}>
                           {recValue}
@@ -1051,7 +1051,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 </div>
 
                 {/* 4. Safety Guidance Card */}
-                <div className="stitch-card flex flex-col justify-between p-4 relative h-full">
+                <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
                   <div className="flex items-center justify-between mb-2">
                     <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Safety Guidance</span>
                     <span className="material-symbols-outlined text-[16px] text-text-muted">security</span>
