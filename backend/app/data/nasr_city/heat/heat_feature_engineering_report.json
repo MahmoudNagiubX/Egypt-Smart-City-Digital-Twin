@@ -1,0 +1,62 @@
+{
+  "feature_groups": {
+    "thermal": [
+      "lst_c",
+      "heat_anomaly_c",
+      "lst_percentile_rank",
+      "hot_zone_flag"
+    ],
+    "vegetation": [
+      "ndvi_mean",
+      "ndvi_min",
+      "ndvi_max",
+      "low_vegetation_flag",
+      "vegetation_ratio"
+    ],
+    "built_environment": [
+      "ndbi_mean",
+      "built_surface_mean",
+      "built_up_ratio",
+      "imperviousness_proxy",
+      "built_up_high_flag"
+    ],
+    "land_cover": [
+      "built_up_ratio_lc",
+      "vegetation_ratio_lc",
+      "bare_land_ratio",
+      "water_ratio"
+    ],
+    "mobility": [
+      "road_density",
+      "major_road_density"
+    ],
+    "exposure": [
+      "population_sum",
+      "population_density",
+      "exposure_score"
+    ],
+    "weather_context": [
+      "current_air_temperature",
+      "humidity",
+      "wind_speed",
+      "day_of_year",
+      "month",
+      "season"
+    ]
+  },
+  "interaction_features": [
+    "lst_x_built_up",
+    "lst_x_low_vegetation",
+    "built_up_x_low_vegetation",
+    "heat_anomaly_x_population",
+    "heat_anomaly_x_road_density",
+    "ndbi_x_low_ndvi"
+  ],
+  "feature_correlations_with_lst": {
+    "built_surface_mean": 0.9999999931677632,
+    "tree_cover_ratio": 0.16047908542955377,
+    "bare_sparse_ratio": -0.9251805425498223,
+    "ndvi_mean": -0.41970049082537797,
+    "ndbi_mean": 0.3712589822556961
+  }
+}
