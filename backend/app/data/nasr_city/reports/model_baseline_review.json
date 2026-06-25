@@ -1,0 +1,122 @@
+{
+  "dataset_path": "backend/app/data/nasr_city/processed/real_observed_training_dataset.csv",
+  "row_count": 12480,
+  "feature_count": 49,
+  "target_columns": [
+    "data_driven_weather_impact_score"
+  ],
+  "current_selected_model": "Random Forest",
+  "current_metrics": {
+    "Baseline (Mean Predictor)": {
+      "mae": 0.18780366129250917,
+      "rmse": 0.23126440776308108,
+      "r2": -0.11547157439475653,
+      "severity_accuracy": 0.5212339743589743
+    },
+    "Random Forest": {
+      "mae": 0.017386380028670927,
+      "rmse": 0.02875723994399888,
+      "r2": 0.9827521362723217,
+      "severity_accuracy": 0.9803685897435898
+    },
+    "HistGradientBoosting": {
+      "mae": 0.0338391225039743,
+      "rmse": 0.050344930168899425,
+      "r2": 0.9471369282146258,
+      "severity_accuracy": 0.9499198717948718
+    }
+  },
+  "train_test_split_strategy": "Event-based split using GroupShuffleSplit on event_id. 24 training events (9984 rows) and 6 test events (2496 rows) with no spatial-temporal overlap between splits.",
+  "leakage_risks": "High spatial autocorrelation due to neighboring zone grid units sharing similar static features (e.g. built-up density, elevation). Although temporal/event leakage is mitigated by event-based splitting, spatial features are highly stable and risk leakage might exist.",
+  "weak_label_limitation": "Target variable is an engineered hazard-exposure-vulnerability risk target rather than official street-level verified flood incident labels.",
+  "class_distribution": {
+    "low": {
+      "count": 4491,
+      "percentage": 35.99
+    },
+    "medium": {
+      "count": 6704,
+      "percentage": 53.72
+    },
+    "high": {
+      "count": 1285,
+      "percentage": 10.3
+    }
+  },
+  "missing_value_summary": {
+    "has_missing": true,
+    "missing_counts": {
+      "elevation_warning": 12480,
+      "builtup_warning": 12480,
+      "landcover_warning": 12480,
+      "population_warning": 12480,
+      "gpm_warning": 12480
+    },
+    "total_missing": 62400
+  },
+  "top_feature_importance": [
+    {
+      "feature": "built_surface_mean",
+      "importance": 0.4954519029369621,
+      "rank": 1
+    },
+    {
+      "feature": "rain_24h_mm",
+      "importance": 0.3968937332554,
+      "rank": 2
+    },
+    {
+      "feature": "rain_3h_mm",
+      "importance": 0.0177322097881123,
+      "rank": 3
+    },
+    {
+      "feature": "rain_1h_mm",
+      "importance": 0.017253235632293,
+      "rank": 4
+    },
+    {
+      "feature": "wind_speed_10m",
+      "importance": 0.0151853742648866,
+      "rank": 5
+    },
+    {
+      "feature": "elevation_max",
+      "importance": 0.01500735030287,
+      "rank": 6
+    },
+    {
+      "feature": "rain_6h_mm",
+      "importance": 0.0108622110121234,
+      "rank": 7
+    },
+    {
+      "feature": "apparent_temperature",
+      "importance": 0.0064042250231465,
+      "rank": 8
+    },
+    {
+      "feature": "temperature_2m",
+      "importance": 0.0054019657869335,
+      "rank": 9
+    },
+    {
+      "feature": "slope_mean",
+      "importance": 0.0031172128689094,
+      "rank": 10
+    }
+  ],
+  "current_model_weaknesses": [
+    "Heavy Random Forest joblib model (96.5 MB) makes inference deployment heavy.",
+    "Relies on engineered surrogate target rather than actual ground truth flood data.",
+    "Very high R2 (0.98) points to high likelihood of overfitting or spatial feature leakage.",
+    "Lacks dynamic temporal propagation (e.g. water routing, flow accumulation between zones)."
+  ],
+  "recommended_next_candidate_models": [
+    "RandomForestRegressor tuned",
+    "ExtraTreesRegressor",
+    "HistGradientBoostingRegressor tuned",
+    "GradientBoostingRegressor",
+    "Ridge/ElasticNet baseline if useful"
+  ]
+}
