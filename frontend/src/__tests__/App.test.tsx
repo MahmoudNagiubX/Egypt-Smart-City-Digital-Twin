@@ -193,6 +193,76 @@ vi.mock('../api/client', () => ({
       honesty_note: "Decision-support prototype output."
     },
     honesty_note: "Decision-support prototype output."
+  }),
+  getHeatHealth: vi.fn().mockResolvedValue({
+    status: "healthy",
+    model_available: true,
+    latest_layer_available: true,
+    explainability_available: true,
+    message: "HistGradientBoostingRegressor heat model online"
+  }),
+  getLatestHeatLayer: vi.fn().mockResolvedValue({
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        properties: {
+          zone_code: "NSR-GRID-123",
+          predicted_heat_risk_score: 0.75,
+          predicted_heat_risk_class: "high",
+          predicted_heat_anomaly_c: 4.2,
+          observed_lst_c: 42.1,
+          date: "2026-06-25"
+        },
+        geometry: { type: "Polygon", coordinates: [[[31.3, 30.0], [31.35, 30.0], [31.35, 30.05], [31.3, 30.05], [31.3, 30.0]]] }
+      }
+    ]
+  }),
+  getHeatSummary: vi.fn().mockResolvedValue({
+    status: "ok",
+    date: "2026-06-25",
+    zone_count: 100,
+    risk_counts: { low: 50, medium: 30, high: 20 },
+    max_heat_anomaly_c: 4.5,
+    mean_heat_anomaly_c: 2.1,
+    hottest_zone: {
+      zone_code: "NSR-GRID-123",
+      zone_label: "Area 123",
+      predicted_heat_anomaly_c: 4.5,
+      predicted_heat_risk_class: "High"
+    },
+    model_name: "HistGradientBoostingRegressor",
+    honesty_note: "Satellite-based heat estimate, not an official warning."
+  }),
+  getHeatZoneExplanation: vi.fn().mockResolvedValue({
+    status: "ok",
+    zone_code: "NSR-GRID-123",
+    zone_label: "Area 123",
+    date: "2026-06-25",
+    predicted_heat_risk_class: "high",
+    predicted_heat_anomaly_c: 4.5,
+    predicted_heat_risk_score: 0.75,
+    summary: "High density of built surface contributing to heat accumulation.",
+    top_factors: [
+      { factor: "built_up_density", label: "Built-Up Density", value: 0.85, impact: "increases anomaly", reason: "Dense structures hold heat." }
+    ],
+    explanation_text: "A dense build-up of structures in this area causes elevated surface temp.",
+    honesty_note: "Satellite-based heat estimate, not an official warning."
+  }),
+  getHeatModelSummary: vi.fn().mockResolvedValue({
+    status: "ok",
+    model_name: "HistGradientBoostingRegressor",
+    target: "heat_anomaly_c",
+    feature_count: 61,
+    top_global_features: [
+      { feature: "built_up_density", label: "Built-Up Density", importance: 0.45, reason: "Built environments absorb more solar radiation." }
+    ],
+    data_authenticity: {
+      landsat_rows: 4932,
+      fallback_rows: 0,
+      ready_for_training: true
+    },
+    honesty_note: "Trained on real Landsat-derived heat anomalies."
   })
 }));
 
