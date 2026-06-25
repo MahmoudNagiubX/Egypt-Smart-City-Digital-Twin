@@ -25,3 +25,5 @@ This module integrates satellite-based thermal observations from Landsat 8/9 wit
 ## Disclaimer & Honesty Statement
 > [!IMPORTANT]
 > This heat-risk layer estimates relative urban heat exposure from satellite land-surface temperature and geospatial features. It is not an official public-health heat warning system.
+> 
+> Rows generated through fallback physics simulation are marked and are not treated as real Landsat observations.

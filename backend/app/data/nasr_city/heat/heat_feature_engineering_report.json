@@ -53,10 +53,10 @@
     "ndbi_x_low_ndvi"
   ],
   "feature_correlations_with_lst": {
-    "built_surface_mean": 0.9999999931677632,
-    "tree_cover_ratio": 0.16047908542955377,
-    "bare_sparse_ratio": -0.9251805425498223,
-    "ndvi_mean": -0.41970049082537797,
-    "ndbi_mean": 0.3712589822556961
+    "built_surface_mean": -0.35398037992753767,
+    "tree_cover_ratio": -0.13821243513182743,
+    "bare_sparse_ratio": 0.34187470477899334,
+    "ndvi_mean": -0.18819775469873123,
+    "ndbi_mean": 0.335397640288996
   }
 }

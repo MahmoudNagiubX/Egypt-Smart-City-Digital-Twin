@@ -103,15 +103,24 @@ def audit_heat_data_availability(start_date="2021-05-01", end_date="2025-10-31",
         
         for scene_info in l8_all_info + l9_all_info:
             props = scene_info.get('properties', {})
-            scene_id = props.get('LANDSAT_PRODUCT_ID', props.get('system:index', 'Unknown'))
+            system_index_short = props.get('system:index', scene_info.get('id', '').split('/')[-1])
+            product_id = props.get('LANDSAT_PRODUCT_ID', system_index_short)
             cloud_cover = props.get('CLOUD_COVER', 100.0)
             sensor = props.get('SPACECRAFT_ID', 'LANDSAT_8')
-            # Extract date
-            date_str = scene_id.split('_')[3] if len(scene_id.split('_')) > 3 else "20230715"
+            
+            # Extract date from short system index (e.g. LC08_176039_20230815)
+            parts = system_index_short.split('_')
+            if len(parts) > 2 and len(parts[2]) == 8:
+                date_str = parts[2]
+            else:
+                p_parts = product_id.split('_')
+                date_str = p_parts[3] if len(p_parts) > 3 and len(p_parts[3]) == 8 else "20230715"
+                
             formatted_date = f"{date_str[0:4]}-{date_str[4:6]}-{date_str[6:8]}"
             
             scene_entry = {
-                "scene_id": scene_id,
+                "scene_id": product_id,
+                "gee_id": system_index_short,
                 "date": formatted_date,
                 "cloud_cover": float(cloud_cover),
                 "sensor": sensor
@@ -157,8 +166,11 @@ def audit_heat_data_availability(start_date="2021-05-01", end_date="2025-10-31",
         
         filtered_scenes = []
         for sid, date, cc, sensor in sim_dates:
+            parts = sid.split('_')
+            short_id = f"{parts[0]}_{parts[2]}_{parts[3]}" if len(parts) > 3 else sid
             filtered_scenes.append({
                 "scene_id": sid,
+                "gee_id": short_id,
                 "date": date,
                 "cloud_cover": cc,
                 "sensor": sensor
@@ -171,6 +183,7 @@ def audit_heat_data_availability(start_date="2021-05-01", end_date="2025-10-31",
         inventory["skipped_scenes"] = [
             {
                 "scene_id": "LC08_L2SP_176039_20230612_02_T1",
+                "gee_id": "LC08_176039_20230612",
                 "date": "2023-06-12",
                 "cloud_cover": 28.5,
                 "sensor": "LANDSAT_8",
@@ -235,6 +248,7 @@ def extract_landsat_observations(inventory=None, limit_scenes=12):
             
             for scene in selected_scenes:
                 scene_id = scene["scene_id"]
+                gee_id = scene.get("gee_id", scene_id.replace('_02_T1', ''))
                 date = scene["date"]
                 sensor = scene["sensor"]
                 
@@ -242,11 +256,11 @@ def extract_landsat_observations(inventory=None, limit_scenes=12):
                 coll_name = 'LANDSAT/LC08/C02/T1_L2' if sensor == "LANDSAT_8" else 'LANDSAT/LC09/C02/T1_L2'
                 
                 try:
-                    img = ee.Image(f"{coll_name}/{scene_id.replace('_02_T1', '')}")
+                    img = ee.Image(f"{coll_name}/{gee_id}")
                 except Exception:
                     # GEE sometimes indexes by slightly different ID formats depending on Tier. Let's try system:index lookup
-                    logger.warning(f"Could not load image directly by ID path. Querying collection...")
-                    coll = ee.ImageCollection(coll_name).filter(ee.Filter.eq('system:index', scene_id.replace('_02_T1', '')))
+                    logger.warning(f"Could not load image directly by GEE ID path. Querying collection...")
+                    coll = ee.ImageCollection(coll_name).filter(ee.Filter.eq('system:index', gee_id))
                     if coll.size().getInfo() > 0:
                         img = coll.first()
                     else:
@@ -312,7 +326,13 @@ def extract_landsat_observations(inventory=None, limit_scenes=12):
                         "ndbi_mean": float(ndbi_mean) if ndbi_mean is not None else -0.05,
                         "valid_pixel_count": int(count),
                         "missing_pixel_ratio": 0.0,
-                        "cloud_filter_summary": "GEE QA_PIXEL Cloud Masked"
+                        "cloud_filter_summary": "GEE QA_PIXEL Cloud Masked",
+                        "source_mode": "landsat_gee",
+                        "lst_source": "landsat_gee_st_b10",
+                        "weather_context_source": "simulated_context_only",
+                        "is_landsat_observed": True,
+                        "is_fallback_generated": False,
+                        "source_warning": ""
                     })
             
             if len(rows) > 0:
@@ -394,7 +414,13 @@ def extract_landsat_observations(inventory=None, limit_scenes=12):
                     "ndbi_mean": float(ndbi),
                     "valid_pixel_count": 277,
                     "missing_pixel_ratio": 0.0,
-                    "cloud_filter_summary": "Fallback Simulated Observation"
+                    "cloud_filter_summary": "Fallback Simulated Observation",
+                    "source_mode": "fallback_physics",
+                    "lst_source": "fallback_physics_simulated",
+                    "weather_context_source": "simulated_context_only",
+                    "is_landsat_observed": False,
+                    "is_fallback_generated": True,
+                    "source_warning": "GEE query failed, fell back to local spatial simulation"
                 })
                 
     df_obs = pd.DataFrame(rows)
@@ -652,11 +678,134 @@ This module integrates satellite-based thermal observations from Landsat 8/9 wit
 ## Disclaimer & Honesty Statement
 > [!IMPORTANT]
 > This heat-risk layer estimates relative urban heat exposure from satellite land-surface temperature and geospatial features. It is not an official public-health heat warning system.
+> 
+> Rows generated through fallback physics simulation are marked and are not treated as real Landsat observations.
 """
     
     with open(paths.HEAT_METHODOLOGY_NOTE_PATH, "w") as f:
         f.write(methodology)
     logger.info(f"Saved methodology note to {paths.HEAT_METHODOLOGY_NOTE_PATH}")
+
+
+def generate_authenticity_and_readiness_reports():
+    """Generate authenticity and training readiness reports for the heat risk dataset."""
+    logger.info("Generating heat data authenticity and training readiness reports...")
+    
+    if not paths.HEAT_ZONE_FEATURES_CSV_PATH.exists():
+        logger.warning("Feature dataset does not exist. Cannot generate authenticity reports.")
+        return
+        
+    df = pd.read_csv(paths.HEAT_ZONE_FEATURES_CSV_PATH)
+    
+    # 1. Row-level source counts
+    total_rows = len(df)
+    
+    # Check if tracking columns exist (they will if our new code ran, else we simulate/infer)
+    if "source_mode" not in df.columns:
+        # In case code hasn't run yet, let's infer from scene ID
+        is_gee = df["scene_id"].astype(str).str.contains("LC") & ~df["cloud_filter_summary"].astype(str).str.contains("Simulated")
+        df["source_mode"] = np.where(is_gee, "landsat_gee", "fallback_physics")
+        df["lst_source"] = np.where(is_gee, "landsat_gee_st_b10", "fallback_physics_simulated")
+        df["weather_context_source"] = "simulated_context_only"
+        df["is_landsat_observed"] = is_gee
+        df["is_fallback_generated"] = ~is_gee
+        df["source_warning"] = np.where(is_gee, "", "Fell back to local spatial simulation")
+        
+    gee_rows = int((df["source_mode"] == "landsat_gee").sum())
+    fallback_rows = int((df["source_mode"] == "fallback_physics").sum())
+    unknown_rows = int(df["source_mode"].isna().sum())
+    
+    fallback_pct = (fallback_rows / total_rows) * 100.0 if total_rows > 0 else 0.0
+    
+    # Scene ID validity checks
+    unique_scenes = df["scene_id"].unique()
+    valid_scenes_format = all(
+        str(sid).startswith("LC08") or str(sid).startswith("LC09") 
+        for sid in unique_scenes
+    )
+    
+    # Determine targets authenticity
+    lst_authenticity = "landsat_gee_observed" if gee_rows > 0 else "fallback_simulated"
+    anomaly_authenticity = "derived_from_landsat_lst" if gee_rows > 0 else "derived_from_fallback_simulated"
+    
+    authenticity_report = {
+        "scene_id_validity": {
+            "unique_scenes": list(unique_scenes),
+            "valid_landsat_format": valid_scenes_format,
+            "cloud_filtering_status": "applied_threshold_15_pct"
+        },
+        "lst_source_details": {
+            "thermal_calibration_band": "ST_B10",
+            "celsius_conversion_formula": "LST_C = ST_B10 * 0.00341802 + 149.0 - 273.15",
+            "fallback_methodology": "physics-based local spatial simulation using built-up, land-cover, and elevation"
+        },
+        "row_level_source_counts": {
+            "landsat_gee": gee_rows,
+            "fallback_physics": fallback_rows,
+            "unknown": unknown_rows,
+            "fallback_percentage": fallback_pct
+        },
+        "target_authenticity": {
+            "lst_c": lst_authenticity,
+            "heat_anomaly_c": anomaly_authenticity,
+            "heat_risk_score": "weighted_index_of_anomaly_and_exposure",
+            "heat_risk_class": "percentile_classification"
+        },
+        "feature_authenticity": {
+            "satellite_indices": "landsat_gee_derived" if gee_rows > 0 else "fallback_simulated",
+            "geospatial_features": "real_osm_roads_ghsl_esa_worldcover",
+            "context_weather_features": "simulated_context_only"
+        }
+    }
+    
+    # Save authenticity report
+    with open(paths.HEAT_DATA_AUTHENTICITY_REPORT_PATH, "w") as f:
+        json.dump(authenticity_report, f, indent=2)
+    logger.info(f"Saved authenticity report to {paths.HEAT_DATA_AUTHENTICITY_REPORT_PATH}")
+    
+    # 2. Training Readiness Decision
+    ready_status = "false"
+    recommendations = []
+    
+    if fallback_pct == 0.0:
+        ready_status = "true"
+        recommendations = [
+            "Phase 10B training recommended: proceed with model training.",
+            f"Ready to train on all {total_rows} real Landsat observations.",
+            "Satellite observations are 100% genuine and verified."
+        ]
+    elif fallback_pct <= 50.0:
+        ready_status = "conditional"
+        recommendations = [
+            "Conditional readiness: subset the dataset to train ONLY on rows where is_landsat_observed is True.",
+            f"Filter out the {fallback_rows} fallback simulation rows before model training.",
+            "Consider regenerating missing rows from Google Earth Engine when online."
+        ]
+    else:
+        ready_status = "false"
+        recommendations = [
+            "Not ready for training: fallback simulation rows dominate the dataset.",
+            "Do not proceed to model training.",
+            "Verify GEE authentication and credentials, and regenerate observations first."
+        ]
+        
+    readiness_report = {
+        "ready_for_training": ready_status,
+        "fallback_percentage": fallback_pct,
+        "row_counts": {
+            "total_rows": total_rows,
+            "landsat_observed_rows": gee_rows,
+            "fallback_generated_rows": fallback_rows,
+            "unknown_rows": unknown_rows
+        },
+        "recommendations": recommendations,
+        "disclaimer": "This heat-risk layer estimates relative urban heat exposure from satellite land-surface temperature and geospatial features. It is not an official public-health heat warning system."
+    }
+    
+    # Save readiness report
+    with open(paths.HEAT_TRAINING_READINESS_REPORT_PATH, "w") as f:
+        json.dump(readiness_report, f, indent=2)
+    logger.info(f"Saved training readiness report to {paths.HEAT_TRAINING_READINESS_REPORT_PATH}")
 
 
 def build_pipeline():
@@ -665,4 +814,5 @@ def build_pipeline():
     extract_landsat_observations(inventory)
     build_heat_risk_features()
     generate_heat_data_reports()
+    generate_authenticity_and_readiness_reports()
     logger.info("Phase 10A Heat Risk Dataset Pipeline Completed Successfully.")

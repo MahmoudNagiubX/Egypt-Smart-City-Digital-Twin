@@ -80,7 +80,13 @@ def test_heat_observations_exist():
         "lst_max_c",
         "valid_pixel_count",
         "missing_pixel_ratio",
-        "cloud_filter_summary"
+        "cloud_filter_summary",
+        "source_mode",
+        "lst_source",
+        "weather_context_source",
+        "is_landsat_observed",
+        "is_fallback_generated",
+        "source_warning"
     ]
     for col in required_cols:
         assert col in df_obs.columns
@@ -134,7 +140,60 @@ def test_methodology_note_honesty():
         content = f.read()
         
     honesty_statement = "This heat-risk layer estimates relative urban heat exposure from satellite land-surface temperature and geospatial features. It is not an official public-health heat warning system."
+    fallback_honesty = "Rows generated through fallback physics simulation are marked and are not treated as real Landsat observations."
+    
     assert honesty_statement in content
+    assert fallback_honesty in content
+
+
+def test_authenticity_report_exists():
+    """Verify data authenticity report exists and is valid JSON."""
+    if not paths.HEAT_DATA_AUTHENTICITY_REPORT_PATH.exists():
+        heat.generate_authenticity_and_readiness_reports()
+        
+    assert paths.HEAT_DATA_AUTHENTICITY_REPORT_PATH.exists()
+    
+    with open(paths.HEAT_DATA_AUTHENTICITY_REPORT_PATH, "r") as f:
+        report = json.load(f)
+        
+    assert "scene_id_validity" in report
+    assert "lst_source_details" in report
+    assert "row_level_source_counts" in report
+    assert "target_authenticity" in report
+    assert "feature_authenticity" in report
+
+
+def test_training_readiness_report_exists():
+    """Verify training readiness report exists and contains ready_for_training."""
+    if not paths.HEAT_TRAINING_READINESS_REPORT_PATH.exists():
+        heat.generate_authenticity_and_readiness_reports()
+        
+    assert paths.HEAT_TRAINING_READINESS_REPORT_PATH.exists()
+    
+    with open(paths.HEAT_TRAINING_READINESS_REPORT_PATH, "r") as f:
+        report = json.load(f)
+        
+    assert "ready_for_training" in report
+    assert report["ready_for_training"] in ["true", "false", "conditional"]
+    assert "fallback_percentage" in report
+    assert "row_counts" in report
+
+
+def test_fallback_rows_not_mislabeled():
+    """Verify that fallback simulated rows are not mislabeled as Landsat observed."""
+    if not paths.HEAT_ZONE_OBSERVATIONS_PATH.exists():
+        heat.extract_landsat_observations(limit_scenes=2)
+        
+    df = pd.read_csv(paths.HEAT_ZONE_OBSERVATIONS_PATH)
+    
+    # Check consistent labeling: landsat_gee must have is_landsat_observed=True, and vice versa
+    gee_mask = df["source_mode"] == "landsat_gee"
+    assert (df.loc[gee_mask, "is_landsat_observed"] == True).all()
+    assert (df.loc[gee_mask, "is_fallback_generated"] == False).all()
+    
+    fallback_mask = df["source_mode"] == "fallback_physics"
+    assert (df.loc[fallback_mask, "is_landsat_observed"] == False).all()
+    assert (df.loc[fallback_mask, "is_fallback_generated"] == True).all()
 
 
 def test_readme_unmodified():

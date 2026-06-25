@@ -1,6 +1,6 @@
 {
-  "row_count": 4992,
-  "zone_count": 416,
+  "row_count": 4932,
+  "zone_count": 411,
   "scene_count": 12,
   "date_coverage": {
     "min_date": "2025-07-11",
@@ -18,13 +18,19 @@
     "valid_pixel_count": 0,
     "missing_pixel_ratio": 0,
     "cloud_filter_summary": 0,
+    "source_mode": 0,
+    "lst_source": 0,
+    "weather_context_source": 0,
+    "is_landsat_observed": 0,
+    "is_fallback_generated": 0,
+    "source_warning": 4932,
     "built_surface_mean": 0,
     "built_surface_sum": 0,
     "built_surface_max": 0,
     "built_surface_nres_mean": 0,
     "built_surface_nres_sum": 0,
     "builtup_source": 0,
-    "builtup_warning": 4992,
+    "builtup_warning": 4932,
     "tree_cover_ratio": 0,
     "grassland_ratio": 0,
     "builtup_landcover_ratio": 0,
@@ -32,11 +38,11 @@
     "water_ratio": 0,
     "dominant_landcover_class": 0,
     "landcover_source": 0,
-    "landcover_warning": 4992,
+    "landcover_warning": 4932,
     "population_sum": 0,
     "population_mean": 0,
     "population_source": 0,
-    "population_warning": 4992,
+    "population_warning": 4932,
     "population_density_proxy": 0,
     "zone_area_m2": 0,
     "zone_area_km2": 0,
@@ -60,7 +66,7 @@
     "slope_min": 0,
     "slope_max": 0,
     "elevation_source": 0,
-    "elevation_warning": 4992,
+    "elevation_warning": 4932,
     "low_elevation_score": 0,
     "low_slope_score": 0,
     "lst_c": 0,
@@ -98,22 +104,21 @@
   },
   "target_distribution": {
     "lst_c": {
-      "mean": 26035.973804657784,
-      "std": 19074.86658877224,
-      "min": 36.48388399876582,
-      "max": 59696.82718952041
+      "mean": 44.798373747123144,
+      "std": 4.340331087010247,
+      "min": 32.67629149733675,
+      "max": 54.37619131372632
     },
     "heat_anomaly_c": {
-      "mean": -1056.646862675195,
-      "std": 19074.866494214577,
-      "min": -27052.56750041425,
-      "max": 32603.01930609116
+      "mean": -0.0669506120561242,
+      "std": 2.0553470720166476,
+      "min": -5.991324412025413,
+      "max": 5.595169467863606
     }
   },
   "heat_risk_class_distribution": {
-    "low": 2688,
-    "medium": 2232,
-    "high": 72
+    "low": 3077,
+    "medium": 1855
   },
   "warnings": [],
   "leakage_risks": [

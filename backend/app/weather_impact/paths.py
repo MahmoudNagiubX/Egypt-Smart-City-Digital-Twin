@@ -133,6 +133,8 @@ HEAT_ZONE_FEATURES_GEOJSON_PATH = NASR_CITY_HEAT_DIR / "heat_zone_features.geojs
 HEAT_FEATURE_ENGINEERING_REPORT_PATH = NASR_CITY_HEAT_DIR / "heat_feature_engineering_report.json"
 HEAT_DATA_QUALITY_REPORT_PATH = NASR_CITY_HEAT_DIR / "heat_data_quality_report.json"
 HEAT_METHODOLOGY_NOTE_PATH = NASR_CITY_HEAT_DIR / "heat_methodology_note.md"
+HEAT_DATA_AUTHENTICITY_REPORT_PATH = NASR_CITY_HEAT_DIR / "heat_data_authenticity_report.json"
+HEAT_TRAINING_READINESS_REPORT_PATH = NASR_CITY_HEAT_DIR / "heat_training_readiness_report.json"
 
 
 def ensure_data_dirs():
