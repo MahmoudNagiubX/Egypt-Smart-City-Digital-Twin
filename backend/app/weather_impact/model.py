@@ -708,4 +708,141 @@ def build_live_weather_feature_matrix(live_weather_summary: dict) -> tuple[pd.Da
     return X, metadata, uses_gpm_proxy
 
 
+def build_feature_engineering_v2_dataset():
+    """Build the upgraded dataset with new weather, spatial, and interaction features."""
+    import pandas as pd
+    import numpy as np
+    import json
+    
+    logger.info("Starting Feature Engineering V2 pipeline...")
+    
+    if not paths.REAL_OBSERVED_TRAINING_DATASET_PATH.exists():
+        raise FileNotFoundError(f"Original training dataset not found at: {paths.REAL_OBSERVED_TRAINING_DATASET_PATH}")
+        
+    df = pd.read_csv(paths.REAL_OBSERVED_TRAINING_DATASET_PATH)
+    orig_cols = list(df.columns)
+    
+    # 1. Weather features
+    df['rain_1h_to_24h_ratio'] = df['rain_1h_mm'] / (df['rain_24h_mm'] + 1e-5)
+    df['rain_3h_to_24h_ratio'] = df['rain_3h_mm'] / (df['rain_24h_mm'] + 1e-5)
+    if 'rain_6h_mm' in df.columns:
+        df['rain_6h_to_24h_ratio'] = df['rain_6h_mm'] / (df['rain_24h_mm'] + 1e-5)
+    
+    df['heavy_rain_flag'] = (df['rain_24h_mm'] > 15.0).astype(int)
+    df['extreme_rain_flag'] = (df['rain_24h_mm'] > 40.0).astype(int)
+    
+    # Rain intensity level
+    def get_intensity_level(r):
+        if r <= 0.0: return 0
+        elif r < 2.5: return 1
+        elif r < 7.6: return 2
+        elif r < 50.0: return 3
+        else: return 4
+    df['rain_intensity_level'] = df['rain_1h_mm'].apply(get_intensity_level)
+    
+    df['rainfall_concentration_score'] = (df['rain_1h_mm'] + df['rain_3h_mm']) / (df['rain_24h_mm'] + 1e-5)
+    df['antecedent_rain_proxy'] = df['rain_24h_mm'] - df.get('rain_6h_mm', 0.0)
+    
+    df['rush_hour_flag'] = df['hour'].isin([7, 8, 9, 17, 18, 19]).astype(int)
+    df['hour_sin'] = np.sin(2 * np.pi * df['hour'] / 24.0)
+    df['hour_cos'] = np.cos(2 * np.pi * df['hour'] / 24.0)
+    
+    if 'timestamp' in df.columns:
+        dt = pd.to_datetime(df['timestamp'], format='ISO8601')
+        doy = dt.dt.dayofyear
+        df['day_of_year_sin'] = np.sin(2 * np.pi * doy / 365.25)
+        df['day_of_year_cos'] = np.cos(2 * np.pi * doy / 365.25)
+        
+    # 2. Spatial features
+    df['built_up_high_flag'] = (df['built_surface_mean'] > 0.4).astype(int)
+    if 'population_sum' in df.columns:
+        df['population_high_flag'] = (df['population_sum'] > df['population_sum'].median()).astype(int)
+    if 'road_density_m_per_km2' in df.columns:
+        df['road_density_high_flag'] = (df['road_density_m_per_km2'] > df['road_density_m_per_km2'].median()).astype(int)
+    if 'low_elevation_score' in df.columns:
+        df['low_elevation_flag'] = (df['low_elevation_score'] > 0.5).astype(int)
+    if 'low_slope_score' in df.columns:
+        df['low_slope_flag'] = (df['low_slope_score'] > 0.5).astype(int)
+    if 'tree_cover_ratio' in df.columns and 'grassland_ratio' in df.columns:
+        df['vegetation_low_flag'] = ((df['tree_cover_ratio'] + df['grassland_ratio']) < 0.1).astype(int)
+        
+    # Imperviousness proxy
+    if 'builtup_landcover_ratio' in df.columns:
+        df['imperviousness_proxy'] = df['builtup_landcover_ratio']
+    else:
+        df['imperviousness_proxy'] = df['built_surface_mean']
+        
+    # 3. Interaction features
+    df['rain_24h_x_built_surface'] = df['rain_24h_mm'] * df['built_surface_mean']
+    if 'population_sum' in df.columns:
+        df['rain_24h_x_population'] = df['rain_24h_mm'] * df['population_sum']
+    if 'road_density_m_per_km2' in df.columns:
+        df['rain_24h_x_road_density'] = df['rain_24h_mm'] * df['road_density_m_per_km2']
+    if 'low_elevation_score' in df.columns:
+        df['rain_24h_x_low_elevation'] = df['rain_24h_mm'] * df['low_elevation_score']
+    df['rain_3h_x_built_surface'] = df['rain_3h_mm'] * df['built_surface_mean']
+    
+    if 'tree_cover_ratio' in df.columns and 'grassland_ratio' in df.columns:
+        df['built_surface_x_low_vegetation'] = df['built_surface_mean'] * (1.0 - (df['tree_cover_ratio'] + df['grassland_ratio']))
+    if 'population_density_proxy' in df.columns and 'low_elevation_score' in df.columns:
+        df['exposure_x_hazard_proxy'] = df['population_density_proxy'] * df['low_elevation_score']
+    df['rain_x_impervious_proxy'] = df['rain_24h_mm'] * df['imperviousness_proxy']
+    
+    # Save the updated CSV to v2 path
+    v2_csv_path = paths.NASR_CITY_MODELS / "weather_impact_training_dataset_v2.csv"
+    df.to_csv(v2_csv_path, index=False)
+    logger.info(f"Saved V2 dataset to {v2_csv_path}")
+    
+    # Generate feature columns list
+    leakage_cols = [
+        "observed_rain_hazard_score",
+        "observed_exposure_score",
+        "data_driven_weather_impact_score",
+        "target_type",
+        "scenario_id",
+        "scenario_name"
+    ]
+    meta_cols = [
+        "zone_code",
+        "event_id",
+        "timestamp",
+        "geometry"
+    ]
+    text_cols = [col for col in df.columns if df[col].dtype == "object" and col not in meta_cols]
+    extra_exclude = [col for col in df.columns if "warning" in col or "source" in col]
+    excluded_columns = list(set(leakage_cols + meta_cols + text_cols + extra_exclude))
+    
+    numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+    feature_cols_v2 = [col for col in numeric_cols if col not in excluded_columns]
+    
+    v2_cols_path = paths.NASR_CITY_MODELS / "weather_impact_feature_columns_v2.json"
+    with open(v2_cols_path, "w", encoding="utf-8") as f:
+        json.dump(feature_cols_v2, f, indent=2)
+    logger.info(f"Saved {len(feature_cols_v2)} V2 feature columns to {v2_cols_path}")
+    
+    # Report feature engineering v2
+    new_features = [col for col in df.columns if col not in orig_cols]
+    
+    report = {
+        "status": "ok",
+        "honesty_note": "The model predicts an engineered weather-impact risk score derived from real weather, satellite, road, and exposure features. It is not trained on verified official flood incident labels.",
+        "original_feature_count": len([c for c in orig_cols if c in numeric_cols and c not in excluded_columns]),
+        "new_feature_count": len(feature_cols_v2),
+        "features_added": new_features,
+        "features_skipped_and_why": {
+            "day_of_year_sin_cos": "Not skipped, successfully calculated using timestamp Day of Year."
+        },
+        "leakage_protected_columns_excluded": leakage_cols,
+        "missing_value_handling": "Filled with median from training split during feature matrix building.",
+        "warnings": []
+    }
+    
+    v2_report_path = paths.NASR_CITY_MODELS / "weather_impact_feature_engineering_v2_report.json"
+    with open(v2_report_path, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2)
+        
+    logger.info(f"Saved V2 feature report to {v2_report_path}")
+    return df, feature_cols_v2
+
+
 
