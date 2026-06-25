@@ -457,11 +457,11 @@ export const MapView = ({
         "interpolate",
         ["linear"],
         ["coalesce", ["get", "predicted_heat_risk_score"], 0],
-        0, "rgba(254, 240, 138, 0.4)", // soft yellow
-        0.3, "rgba(251, 191, 36, 0.45)", // amber
-        0.6, "rgba(249, 115, 22, 0.5)", // orange
-        0.8, "rgba(220, 38, 38, 0.55)", // red
-        1.0, "rgba(153, 27, 27, 0.6)"  // deep red
+        0, "rgba(255, 253, 224, 0.15)",   // low heat: pale yellow and subtle
+        0.2, "rgba(254, 240, 138, 0.35)", // low-medium soft yellow
+        0.5, "rgba(249, 115, 22, 0.45)",  // medium heat: orange
+        0.8, "rgba(220, 38, 38, 0.55)",   // high heat: red
+        1.0, "rgba(153, 27, 27, 0.65)"    // high heat: deep red
       ] as maplibregl.ExpressionSpecification;
 
       map.addLayer({
@@ -471,7 +471,18 @@ export const MapView = ({
         paint: {
           "fill-color": heatFillColor,
           "fill-opacity": riskFillOpacity,
-          "fill-outline-color": "rgba(249, 115, 22, 0.15)",
+          "fill-outline-color": "rgba(249, 115, 22, 0.05)",
+        },
+      }, firstSymbolLayer);
+
+      map.addLayer({
+        id: "urban-heat-outline-layer",
+        type: "line",
+        source: "urban-heat",
+        paint: {
+          "line-color": "rgba(217, 119, 6, 0.45)", // subtle orange outline
+          "line-width": 1.25,
+          "line-dasharray": [3, 2],
         },
       }, firstSymbolLayer);
 
@@ -952,6 +963,7 @@ export const MapView = ({
     setLayerVisibility("live-risk-contour-layer", isRain && layers.liveRisk);
     setLayerVisibility("live-risk-glow-layer", isRain && layers.liveRisk);
     setLayerVisibility("urban-heat-layer", activeRiskLayer === "heat");
+    setLayerVisibility("urban-heat-outline-layer", activeRiskLayer === "heat");
     map.getStyle().layers
       .filter((layer) => /^(road_|bridge_|tunnel_|highway-|label_)/.test(layer.id))
       .forEach((layer) => setLayerVisibility(layer.id, layers.roadsLabels));
