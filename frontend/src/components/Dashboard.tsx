@@ -671,7 +671,9 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
   }
 
   // Derive alert status for the map overlay pill
-  const hasActiveAlerts = liveRoutingStatus?.status !== "ok";
+  const hasActiveAlerts = activeRiskLayer === "heat"
+    ? !!(liveWeather?.warnings && liveWeather.warnings.length > 0)
+    : liveRoutingStatus?.status !== "ok";
   const currentWeatherIcon = liveWeather
     ? getWeatherIcon(liveWeather.current?.weather_code)
     : "partly_cloudy_day";
@@ -941,7 +943,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                       animate={{ x: 0, opacity: 1 }}
                       exit={prefersReducedMotion ? undefined : { x: -300, opacity: 0 }}
                       transition={{ duration: 0.22, ease: "easeOut" }}
-                      className="stitch-glass"
+                      className="stitch-glass stitch-scroll"
                       style={{
                         position: 'absolute',
                         top: 12,
@@ -1034,7 +1036,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                       animate={{ opacity: 1, x: 0 }}
                       exit={prefersReducedMotion ? undefined : { opacity: 0, x: 8 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute bottom-4 right-4 z-10 hidden w-[23rem] max-h-[calc(100%-2rem)] overflow-y-auto sm:block"
+                      className="absolute bottom-4 right-4 z-10 hidden w-[23rem] max-h-[calc(100%-2rem)] overflow-y-auto sm:block stitch-scroll"
                     >
                       <RoutePanel
                         comparison={comparison}
