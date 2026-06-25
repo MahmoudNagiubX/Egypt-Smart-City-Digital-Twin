@@ -14,6 +14,7 @@ import {
   LiveRoutingStatusResponse,
   LiveEmergencyRouteRequest,
   LiveEmergencyRouteResponse,
+  SearchResponse,
 } from "../types/api";
 
 const BASE_URL = import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
@@ -152,4 +153,16 @@ export const requestLiveEmergencyRoute = async (
   );
   return response.data;
 };
+
+export const searchLocalPlaces = async (
+  q: string,
+  limit?: number,
+  category?: string
+): Promise<SearchResponse> => {
+  const response = await api.get<SearchResponse>(`${API_PREFIX}/search`, {
+    params: { q, ...(limit ? { limit } : {}), ...(category ? { category } : {}) },
+  });
+  return response.data;
+};
+
 

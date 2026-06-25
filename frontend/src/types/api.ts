@@ -259,3 +259,26 @@ export interface LiveEmergencyRouteResponse {
 
 export type RouteMode = "demo" | "custom-live";
 
+
+export interface SearchResultItem {
+  id: string;
+  name: string;
+  display_name: string;
+  category: string;
+  category_label: string;
+  source: string;
+  lat: number;
+  lon: number;
+  confidence: number;
+  inside_project_area: boolean;
+  geometry_type: "Point" | "LineString" | "Polygon";
+}
+
+export interface SearchResponse {
+  status: string;
+  query: string;
+  results: SearchResultItem[];
+  warnings: string[];
+}
+
+

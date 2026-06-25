@@ -27,6 +27,7 @@ import type {
   RouteCoordinate,
   LiveWeatherSummary,
   LiveRoutingStatusResponse,
+  SearchResultItem,
 } from "../types/api";
 import { LayerToggle } from "./LayerToggle";
 import { Legend } from "./Legend";
@@ -35,6 +36,7 @@ import { MapView } from "./MapView";
 import { RoutePanel } from "./RoutePanel";
 import { SidePanel } from "./SidePanel";
 import { SummaryCards } from "./SummaryCards";
+import { SearchBox } from "./SearchBox";
 
 type RouteEventType = "top-rain" | "latest";
 type RouteVisibility = "normal" | "safe" | "both";
@@ -81,6 +83,7 @@ export const Dashboard = () => {
   const [routingLoading, setRoutingLoading] = useState(false);
   const [routingError, setRoutingError] = useState<string | null>(null);
   const [routeSource, setRouteSource] = useState<"demo" | "custom" | "custom-live">("custom-live");
+  const [searchSelectedPoint, setSearchSelectedPoint] = useState<SearchResultItem | null>(null);
   const [liveWeather, setLiveWeather] = useState<LiveWeatherSummary | null>(null);
   const [liveRoutingStatus, setLiveRoutingStatus] = useState<LiveRoutingStatusResponse | null>(null);
   const [liveRiskData, setLiveRiskData] = useState<FeatureCollection | null>(null);
@@ -313,6 +316,7 @@ export const Dashboard = () => {
   const resetCustomRoute = useCallback(() => {
     if (safeRouteTimerRef.current) clearTimeout(safeRouteTimerRef.current);
     setRouteSelection(emptySelection);
+    setSearchSelectedPoint(null);
     setRoutingLoading(false);
     setRoutingError(null);
     setNormalRouteData(null);
@@ -320,6 +324,21 @@ export const Dashboard = () => {
     setComparison(null);
     setRouteSource(mapMode === "today" ? "custom-live" : "demo");
   }, [mapMode]);
+
+  const handleSetStartPoint = useCallback((coordinate: RouteCoordinate) => {
+    if (safeRouteTimerRef.current) clearTimeout(safeRouteTimerRef.current);
+    setRouteSelection(prev => ({ origin: coordinate, destination: prev.destination }));
+    setRouteSource("custom");
+    setRoutingError(null);
+  }, []);
+
+  const handleSetDestinationPoint = useCallback((coordinate: RouteCoordinate) => {
+    if (!routeSelection.origin) {
+      setRoutingError("Start point selected first, then choose destination.");
+      return;
+    }
+    setRouteSelection(prev => ({ origin: prev.origin, destination: coordinate }));
+  }, [routeSelection.origin]);
 
   const handleMapModeChange = useCallback((mode: "today" | "history") => {
     setMapMode(mode);
@@ -413,6 +432,13 @@ export const Dashboard = () => {
 
       <div className="flex flex-1 overflow-hidden">
         <SidePanel>
+          <SearchBox
+            onSelectResult={setSearchSelectedPoint}
+            selectedResult={searchSelectedPoint}
+            onSetStart={handleSetStartPoint}
+            onSetDestination={handleSetDestinationPoint}
+            onClear={() => setSearchSelectedPoint(null)}
+          />
           <LayerToggle
             mapMode={mapMode}
             onMapModeChange={handleMapModeChange}
@@ -474,6 +500,9 @@ export const Dashboard = () => {
               riskFillOpacity={riskFillOpacity}
               gridLineOpacity={gridLineOpacity}
               riskDisplayMode={riskDisplayMode}
+              searchSelectedPoint={searchSelectedPoint}
+              onSetStartPoint={handleSetStartPoint}
+              onSetDestinationPoint={handleSetDestinationPoint}
             />
 
             <AnimatePresence mode="wait">

@@ -123,6 +123,9 @@ interface MapViewProps {
   riskFillOpacity: number;
   gridLineOpacity: number;
   riskDisplayMode: "focus" | "all";
+  searchSelectedPoint: any;
+  onSetStartPoint: (coordinate: RouteCoordinate) => void;
+  onSetDestinationPoint: (coordinate: RouteCoordinate) => void;
 }
 
 export const MapView = ({
@@ -149,11 +152,15 @@ export const MapView = ({
   riskFillOpacity,
   gridLineOpacity,
   riskDisplayMode,
+  searchSelectedPoint,
+  onSetStartPoint,
+  onSetDestinationPoint,
 }: MapViewProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const placeMarkersRef = useRef<maplibregl.Marker[]>([]);
   const routeMarkersRef = useRef<maplibregl.Marker[]>([]);
+  const searchMarkerRef = useRef<maplibregl.Marker | null>(null);
   const onMapPointClickRef = useRef(onMapPointClick);
   const routingLoadingRef = useRef(routingLoading);
   const routeComparisonRef = useRef(routeComparison);
@@ -584,6 +591,99 @@ export const MapView = ({
       routeMarkersRef.current = [];
     };
   }, [mapLoaded, routeDestination, routeOrigin]);
+
+  // Handle search point flyTo and marker
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+    
+    // Clear previous search marker
+    if (searchMarkerRef.current) {
+      searchMarkerRef.current.remove();
+      searchMarkerRef.current = null;
+    }
+    
+    if (!searchSelectedPoint) return;
+    
+    // Create new search marker (blue/purple pin)
+    const element = document.createElement("div");
+    element.className = "search-result-marker";
+    element.style.cursor = "pointer";
+    element.innerHTML = `
+      <div style="background-color: white; border-radius: 9999px; padding: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 2px solid #4f46e5;">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+      </div>
+    `;
+    
+    const marker = new maplibregl.Marker({ element, anchor: "bottom" })
+      .setLngLat([searchSelectedPoint.lon, searchSelectedPoint.lat])
+      .addTo(map);
+      
+    searchMarkerRef.current = marker;
+    
+    // Determine zoom level depending on category
+    const zoomLevel = searchSelectedPoint.category === "road" || searchSelectedPoint.category === "zone" ? 14.0 : 15.5;
+    
+    // Fly to location
+    map.flyTo({
+      center: [searchSelectedPoint.lon, searchSelectedPoint.lat],
+      zoom: zoomLevel,
+      speed: 1.2,
+      essential: true
+    });
+    
+    // Add popup with options
+    const popupHTML = `
+      <div style="padding: 10px; font-family: sans-serif; min-width: 180px;">
+        <h4 style="font-size: 12px; font-weight: bold; margin: 0; color: #1e293b;">${escapeHtml(searchSelectedPoint.display_name)}</h4>
+        <p style="font-size: 10px; color: #64748b; margin: 2px 0 0 0;">${escapeHtml(searchSelectedPoint.category_label)}</p>
+        ${!searchSelectedPoint.inside_project_area ? `
+          <div style="margin-top: 8px; font-size: 9px; font-weight: 600; color: #b45309; background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 4px; padding: 4px; line-height: 1.3;">
+            This location is outside the current Nasr City study area.
+          </div>
+        ` : ""}
+        <div style="margin-top: 10px; display: flex; gap: 8px;">
+          <button id="btn-set-start" style="padding: 4px 8px; border: none; border-radius: 4px; background-color: #2C5EAD; color: white; font-size: 10px; font-weight: bold; cursor: pointer; transition: background-color 0.2s;">Set Start</button>
+          <button id="btn-set-dest" style="padding: 4px 8px; border: none; border-radius: 4px; background-color: #10b981; color: white; font-size: 10px; font-weight: bold; cursor: pointer; transition: background-color 0.2s;">Set Dest</button>
+        </div>
+      </div>
+    `;
+    
+    const popup = new maplibregl.Popup({ offset: [0, -25], closeButton: true })
+      .setLngLat([searchSelectedPoint.lon, searchSelectedPoint.lat])
+      .setHTML(popupHTML)
+      .addTo(map);
+      
+    // Set popup listener
+    setTimeout(() => {
+      const btnStart = document.getElementById("btn-set-start");
+      const btnDest = document.getElementById("btn-set-dest");
+      
+      if (btnStart) {
+        btnStart.addEventListener("click", () => {
+          onSetStartPoint({ lat: searchSelectedPoint.lat, lon: searchSelectedPoint.lon });
+          popup.remove();
+        });
+      }
+      if (btnDest) {
+        btnDest.addEventListener("click", () => {
+          onSetDestinationPoint({ lat: searchSelectedPoint.lat, lon: searchSelectedPoint.lon });
+          popup.remove();
+        });
+      }
+    }, 50);
+    
+    return () => {
+      popup.remove();
+      if (searchMarkerRef.current) {
+        searchMarkerRef.current.remove();
+        searchMarkerRef.current = null;
+      }
+    };
+  }, [mapLoaded, searchSelectedPoint, onSetStartPoint, onSetDestinationPoint]);
 
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return;
