@@ -124,6 +124,16 @@ EMERGENCY_FACILITY_REACHABILITY_AUDIT_PATH = NASR_CITY_OUTPUTS / "emergency_faci
 HIGH_RISK_ZONE_BEST_FACILITY_ROUTES_PATH = NASR_CITY_OUTPUTS / "high_risk_zone_best_facility_routes.csv"
 BACKEND_READINESS_SUMMARY_PATH = NASR_CITY_OUTPUTS / "backend_readiness_summary.json"
 
+# Urban Heat Risk paths
+NASR_CITY_HEAT_DIR = NASR_CITY_DIR / "heat"
+HEAT_LANDSAT_INVENTORY_PATH = NASR_CITY_HEAT_DIR / "heat_landsat_scene_inventory.json"
+HEAT_ZONE_OBSERVATIONS_PATH = NASR_CITY_HEAT_DIR / "heat_zone_observations.csv"
+HEAT_ZONE_FEATURES_CSV_PATH = NASR_CITY_HEAT_DIR / "heat_zone_features.csv"
+HEAT_ZONE_FEATURES_GEOJSON_PATH = NASR_CITY_HEAT_DIR / "heat_zone_features.geojson"
+HEAT_FEATURE_ENGINEERING_REPORT_PATH = NASR_CITY_HEAT_DIR / "heat_feature_engineering_report.json"
+HEAT_DATA_QUALITY_REPORT_PATH = NASR_CITY_HEAT_DIR / "heat_data_quality_report.json"
+HEAT_METHODOLOGY_NOTE_PATH = NASR_CITY_HEAT_DIR / "heat_methodology_note.md"
+
 
 def ensure_data_dirs():
     """Create all required data directories."""
@@ -143,6 +153,7 @@ def ensure_data_dirs():
         NASR_CITY_SAMPLES,
         NASR_CITY_MODELS,
         LIVE_WEATHER_CACHE_DIR,
+        NASR_CITY_HEAT_DIR,
     ]
     for directory in directories:
         directory.mkdir(parents=True, exist_ok=True)
@@ -184,4 +195,9 @@ def get_data_path_summary():
         "grid_population_features": str(GRID_POPULATION_FEATURES_PATH),
         "real_observed_training_dataset": str(REAL_OBSERVED_TRAINING_DATASET_PATH),
         "real_data_validation_report": str(REAL_DATA_VALIDATION_REPORT_PATH),
+        "heat_dir": str(NASR_CITY_HEAT_DIR),
+        "heat_landsat_inventory": str(HEAT_LANDSAT_INVENTORY_PATH),
+        "heat_zone_observations": str(HEAT_ZONE_OBSERVATIONS_PATH),
+        "heat_zone_features_csv": str(HEAT_ZONE_FEATURES_CSV_PATH),
+        "heat_zone_features_geojson": str(HEAT_ZONE_FEATURES_GEOJSON_PATH),
     }
