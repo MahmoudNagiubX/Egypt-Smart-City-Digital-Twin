@@ -1,0 +1,79 @@
+{
+  "dataset": "real_observed_training_dataset.csv",
+  "rows": 12480,
+  "source_groups": {
+    "open_meteo_weather": {
+      "status": "real_observed",
+      "columns": [
+        "timestamp",
+        "rain_1h_mm",
+        "rain_3h_mm",
+        "rain_6h_mm",
+        "rain_24h_mm",
+        "temperature_2m",
+        "apparent_temperature",
+        "relative_humidity_2m",
+        "wind_speed_10m"
+      ]
+    },
+    "gpm_imerg_satellite_rainfall": {
+      "status": "real_satellite",
+      "columns": [
+        "gpm_precipitation_mean",
+        "gpm_precipitation_max",
+        "gpm_precipitation_sum"
+      ]
+    },
+    "srtm_elevation": {
+      "status": "real_satellite_dem",
+      "columns": [
+        "elevation_mean",
+        "slope_mean",
+        "low_elevation_score",
+        "low_slope_score"
+      ]
+    },
+    "ghsl_builtup": {
+      "status": "real_satellite_builtup_or_partial_fallback",
+      "columns": [
+        "built_surface_mean",
+        "built_surface_sum",
+        "built_surface_nres_mean",
+        "built_surface_nres_sum"
+      ]
+    },
+    "esa_worldcover": {
+      "status": "real_satellite_landcover",
+      "columns": [
+        "tree_cover_ratio",
+        "grassland_ratio",
+        "builtup_landcover_ratio",
+        "bare_sparse_ratio",
+        "water_ratio"
+      ]
+    },
+    "worldpop_population": {
+      "status": "real_population_grid",
+      "columns": [
+        "population_sum",
+        "population_mean",
+        "population_density_proxy"
+      ]
+    },
+    "engineered_targets": {
+      "status": "engineered_from_real_observations_not_official_flood_labels",
+      "columns": [
+        "observed_rain_hazard_score",
+        "observed_exposure_score",
+        "data_driven_weather_impact_score",
+        "target_type"
+      ]
+    }
+  },
+  "demo_scenarios_used_for_training": false,
+  "official_flood_labels_available": false,
+  "status": "ok",
+  "warnings": [
+    "30 rows used GHSL partial null fallback."
+  ]
+}

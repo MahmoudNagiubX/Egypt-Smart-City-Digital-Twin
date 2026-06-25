@@ -1,0 +1,155 @@
+{
+  "current_feature_groups_found": {
+    "weather": [
+      "rain_1h_mm",
+      "rain_3h_mm",
+      "rain_6h_mm",
+      "rain_24h_mm",
+      "temperature_2m",
+      "apparent_temperature",
+      "relative_humidity_2m",
+      "wind_speed_10m",
+      "hour"
+    ],
+    "satellite_rain": [
+      "gpm_precipitation_mean",
+      "gpm_precipitation_max",
+      "gpm_precipitation_sum"
+    ],
+    "terrain": [
+      "elevation_mean",
+      "elevation_min",
+      "elevation_max",
+      "elevation_std",
+      "slope_mean",
+      "slope_min",
+      "slope_max",
+      "low_elevation_score",
+      "low_slope_score"
+    ],
+    "built_up": [
+      "built_surface_mean",
+      "built_surface_sum",
+      "built_surface_max",
+      "built_surface_nres_mean",
+      "built_surface_nres_sum"
+    ],
+    "land_cover": [
+      "tree_cover_ratio",
+      "grassland_ratio",
+      "builtup_landcover_ratio",
+      "bare_sparse_ratio",
+      "water_ratio",
+      "dominant_landcover_class"
+    ],
+    "exposure": [
+      "population_sum",
+      "population_mean",
+      "population_density_proxy"
+    ],
+    "road_network": [
+      "wind_speed_10m",
+      "road_count",
+      "road_length_m",
+      "road_density_m_per_km2",
+      "primary_road_count",
+      "secondary_road_count",
+      "tertiary_road_count",
+      "residential_road_count",
+      "service_road_count",
+      "unknown_road_count",
+      "avg_base_speed_kph",
+      "avg_base_travel_time_sec",
+      "intersection_proxy_count"
+    ]
+  },
+  "missing_feature_groups": {
+    "interaction_features": [
+      "rain * built-up density",
+      "rain * low elevation",
+      "rain * road density",
+      "rain * population",
+      "rain * slope inverse",
+      "built-up * low vegetation",
+      "high population * high risk"
+    ],
+    "routing_related_features": [
+      "mean route risk",
+      "max route risk",
+      "high-risk segment count",
+      "road class weighted risk",
+      "route delay penalty"
+    ],
+    "weather_features": [
+      "precipitation probability",
+      "rainfall intensity category",
+      "antecedent rainfall windows (e.g. 12h, 48h, 72h)"
+    ],
+    "spatial_features": [
+      "distance to main roads",
+      "distance to emergency facilities",
+      "distance to hospitals",
+      "local low-point (sink) indicator",
+      "road density (refined)",
+      "intersection density (refined)"
+    ]
+  },
+  "high_priority_feature_improvements": [
+    {
+      "feature": "rush_hour_flag",
+      "description": "Binary flag indicating rush hour status (7-9 AM, 5-7 PM) based on hourly timestamp to improve routing risk overlays.",
+      "complexity": "Low",
+      "expected_impact": "High (adds temporal context to risk and routing calculations)"
+    },
+    {
+      "feature": "rain_x_builtup_interaction",
+      "description": "Interaction term between rainfall accumulation (rain_24h_mm) and built-up ratio to flag zones where high rain directly meets low-absorption surfaces.",
+      "complexity": "Low",
+      "expected_impact": "High (aligns model predictions directly with physics of runoff)"
+    },
+    {
+      "feature": "rain_x_low_elevation_interaction",
+      "description": "Interaction term between 24h rainfall and low elevation hazard score to capture pooling risk.",
+      "complexity": "Low",
+      "expected_impact": "High (models topological pooling susceptibility under rain)"
+    }
+  ],
+  "medium_priority_feature_improvements": [
+    {
+      "feature": "distance_to_emergency_facilities",
+      "description": "Minimum distance from zone centroid to the nearest hospital or emergency station, representing accessibility risk.",
+      "complexity": "Medium",
+      "expected_impact": "Medium (critical for priority routing and safety margins)"
+    },
+    {
+      "feature": "local_low_point_indicator",
+      "description": "Topographical sink indicator based on DEM calculations where elevation is strictly lower than all neighboring grid nodes.",
+      "complexity": "Medium",
+      "expected_impact": "High (flags physical accumulation basins)"
+    },
+    {
+      "feature": "rain_intensity_category",
+      "description": "Categorical rainfall scale (light, moderate, heavy, extreme) representing hourly and accumulation levels based on meteorological thresholds.",
+      "complexity": "Low",
+      "expected_impact": "Medium (adds non-linear threshold mappings)"
+    }
+  ],
+  "low_priority_future_features": [
+    {
+      "feature": "builtup_x_low_vegetation",
+      "description": "Combined ratio representing high artificial cover and lack of green space.",
+      "complexity": "Low",
+      "expected_impact": "Medium"
+    },
+    {
+      "feature": "distance_to_main_roads",
+      "description": "Proximity to highway, trunk, or primary road classes.",
+      "complexity": "Medium",
+      "expected_impact": "Medium"
+    }
+  ],
+  "expected_impact": "Introducing interaction terms and spatial sink nodes will allow linear models or decision trees to capture high-order physical constraints directly, significantly reducing overfitting to single features (like built_surface_mean) and increasing robustness to unseen weather events.",
+  "implementation_complexity": "Medium. Mostly requires vector GIS calculations using geopandas and networkx graphs, and pandas transformations for interaction terms.",
+  "data_availability": "High. All raw inputs (DEM elevation, ESA WorldCover, OSM road graph, emergency facilities) are already successfully loaded and cached in processed data directories.",
+  "honesty_notes": "Because the current target variable is an engineered index using a linear combination of rainfall, built-up surfaces, elevation, and population, the machine learning models will naturally learn these linear combinations easily (hence the 0.98 R2 score). Adding direct interaction terms might exacerbate this target-leakage-like behavior. The ultimate feature engineering goal is to transition the target to verified flood incident points when municipal logs are integrated."
+}

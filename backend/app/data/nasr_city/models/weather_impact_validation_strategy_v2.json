@@ -1,0 +1,60 @@
+{
+  "honesty_note": "The model predicts an engineered weather-impact risk score derived from real weather, satellite, road, and exposure features. It is not trained on verified official flood incident labels.",
+  "primary_validation_strategy": "Event-based split (GroupShuffleSplit on event_id)",
+  "why_honest": " Cairo rainfall and storms are highly clustered in time. Event-based splitting ensures that test set storms are completely unseen during training, preventing severe temporal and weather data leakage. Zone-based splitting checks how well the model generalizes geographically, identifying spatial leakage due to highly stable static grid features.",
+  "event_split": {
+    "train_rows": 9984,
+    "test_rows": 2496,
+    "train_events": [
+      "evt_0550",
+      "evt_0548",
+      "evt_0737",
+      "evt_0765",
+      "evt_0414",
+      "evt_0780",
+      "evt_0907",
+      "evt_0549",
+      "evt_0554",
+      "evt_0038",
+      "evt_0454",
+      "evt_0710",
+      "evt_0547",
+      "evt_0411",
+      "evt_0557",
+      "evt_0868",
+      "evt_dry_001",
+      "evt_dry_002",
+      "evt_dry_003",
+      "evt_dry_005",
+      "evt_dry_006",
+      "evt_dry_007",
+      "evt_dry_009",
+      "evt_dry_010"
+    ],
+    "test_events": [
+      "evt_0551",
+      "evt_0814",
+      "evt_0552",
+      "evt_0767",
+      "evt_dry_004",
+      "evt_dry_008"
+    ]
+  },
+  "zone_split": {
+    "train_rows": 9960,
+    "test_rows": 2520,
+    "train_zones_count": 332,
+    "test_zones_count": 84
+  },
+  "selected_primary_validation_strategy_results": {
+    "selected_model": "Ridge Baseline",
+    "event_split_mae": 1.2035487891399933e-05,
+    "event_split_rmse": 1.5907170413326763e-05,
+    "event_split_r2": 0.9999999947225178,
+    "zone_split_mae": 3.033960861843308e-06,
+    "zone_split_rmse": 3.940113864938464e-06,
+    "zone_split_r2": 0.9999999995954276,
+    "generalization_gap_mae": 9.001527029556624e-06,
+    "spatial_generalization_warning": "Zone split R2 is lower than event split R2. This is expected due to spatial autocorrelation where grid cells share static spatial features. It indicates that the model relies partially on spatial location variables, highlighting the need for dynamic flow propagation models."
+  }
+}

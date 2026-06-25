@@ -1,0 +1,38 @@
+# Python
+
+**/__pycache__/
+*.pyc
+.venv/
+.env
+.env.local
+
+# Data
+
+backend/app/data/**/raw/*.tif
+backend/app/data/**/raw/*.zip
+backend/app/data/**/raw/*.nc
+backend/app/data/**/raw/*.hdf
+backend/app/data/**/raw/*.grib
+backend/app/data/**/raw/*.gpkg
+
+# Keep lightweight processed/demo outputs
+
+!backend/app/data/**/processed/*.geojson
+!backend/app/data/**/processed/*.csv
+!backend/app/data/**/outputs/*.geojson
+!backend/app/data/**/outputs/*.csv
+!backend/app/data/**/samples/*.json
+
+# Node
+
+node_modules/
+frontend/dist/
+
+# OS
+
+.DS_Store
+Thumbs.db
+
+# Temporary
+
+tmp/

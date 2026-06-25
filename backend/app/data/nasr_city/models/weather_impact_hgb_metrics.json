@@ -1,0 +1,41 @@
+{
+  "model_name": "HistGradientBoosting",
+  "honesty_note": "These metrics evaluate the models against the data_driven_weather_impact_score target, which is an engineered risk score derived from real observed weather and geospatial features. These are not verified street-level flood incident labels, and no operational flood prediction accuracy is claimed.",
+  "mae": 0.0338391225039743,
+  "rmse": 0.050344930168899425,
+  "r2": 0.9471369282146258,
+  "target_min": 0.0,
+  "target_max": 0.945145500418866,
+  "target_mean": 0.4633500242303748,
+  "prediction_min": 0.002222641594592834,
+  "prediction_max": 0.8748813793232049,
+  "prediction_mean": 0.42987288422287206,
+  "severity_accuracy": 0.9499198717948718,
+  "severity_confusion_matrix": [
+    [
+      712,
+      0,
+      0
+    ],
+    [
+      15,
+      1286,
+      0
+    ],
+    [
+      0,
+      110,
+      373
+    ]
+  ],
+  "true_severity_counts": {
+    "low": 712,
+    "medium": 1301,
+    "high": 483
+  },
+  "predicted_severity_counts": {
+    "low": 727,
+    "medium": 1396,
+    "high": 373
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model_name": "Random Forest",
+  "honesty_note": "These metrics evaluate the models against the data_driven_weather_impact_score target, which is an engineered risk score derived from real observed weather and geospatial features. These are not verified street-level flood incident labels, and no operational flood prediction accuracy is claimed.",
+  "mae": 0.017386380028670927,
+  "rmse": 0.02875723994399888,
+  "r2": 0.9827521362723217,
+  "target_min": 0.0,
+  "target_max": 0.945145500418866,
+  "target_mean": 0.4633500242303748,
+  "prediction_min": 0.0,
+  "prediction_max": 0.9345335093762563,
+  "prediction_mean": 0.4479672567502516,
+  "severity_accuracy": 0.9803685897435898,
+  "severity_confusion_matrix": [
+    [
+      712,
+      0,
+      0
+    ],
+    [
+      14,
+      1285,
+      2
+    ],
+    [
+      0,
+      33,
+      450
+    ]
+  ],
+  "true_severity_counts": {
+    "low": 712,
+    "medium": 1301,
+    "high": 483
+  },
+  "predicted_severity_counts": {
+    "low": 726,
+    "medium": 1318,
+    "high": 452
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "status": "ok",
+  "live_weather_available": true,
+  "live_risk_layer_available": true,
+  "live_road_weights_available": true,
+  "rain_risk_expected": true,
+  "official_flood_labels_claimed": false,
+  "official_emergency_dispatch_claimed": false,
+  "warnings": []
+}

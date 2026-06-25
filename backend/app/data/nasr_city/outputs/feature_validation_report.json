@@ -1,0 +1,16 @@
+{
+  "grid_cells": 416,
+  "scenario_count": 5,
+  "expected_rows": 2080,
+  "actual_rows": 2080,
+  "required_columns_present": true,
+  "missing_required_columns": [],
+  "normalized_score_columns_valid": true,
+  "score_columns_out_of_range": [],
+  "critical_null_counts": {},
+  "elevation_source_counts": {
+    "srtm_earth_engine": 2080
+  },
+  "status": "ok",
+  "warnings": []
+}

@@ -1,0 +1,7 @@
+{
+  "status": "ok",
+  "zone_smoke_test_live": "passed",
+  "zone_smoke_test_historical": "passed",
+  "route_smoke_test": "passed",
+  "warnings": []
+}

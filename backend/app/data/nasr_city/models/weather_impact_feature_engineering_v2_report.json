@@ -1,0 +1,49 @@
+{
+  "status": "ok",
+  "honesty_note": "The model predicts an engineered weather-impact risk score derived from real weather, satellite, road, and exposure features. It is not trained on verified official flood incident labels.",
+  "original_feature_count": 49,
+  "new_feature_count": 77,
+  "features_added": [
+    "rain_1h_to_24h_ratio",
+    "rain_3h_to_24h_ratio",
+    "rain_6h_to_24h_ratio",
+    "heavy_rain_flag",
+    "extreme_rain_flag",
+    "rain_intensity_level",
+    "rainfall_concentration_score",
+    "antecedent_rain_proxy",
+    "rush_hour_flag",
+    "hour_sin",
+    "hour_cos",
+    "day_of_year_sin",
+    "day_of_year_cos",
+    "built_up_high_flag",
+    "population_high_flag",
+    "road_density_high_flag",
+    "low_elevation_flag",
+    "low_slope_flag",
+    "vegetation_low_flag",
+    "imperviousness_proxy",
+    "rain_24h_x_built_surface",
+    "rain_24h_x_population",
+    "rain_24h_x_road_density",
+    "rain_24h_x_low_elevation",
+    "rain_3h_x_built_surface",
+    "built_surface_x_low_vegetation",
+    "exposure_x_hazard_proxy",
+    "rain_x_impervious_proxy"
+  ],
+  "features_skipped_and_why": {
+    "day_of_year_sin_cos": "Not skipped, successfully calculated using timestamp Day of Year."
+  },
+  "leakage_protected_columns_excluded": [
+    "observed_rain_hazard_score",
+    "observed_exposure_score",
+    "data_driven_weather_impact_score",
+    "target_type",
+    "scenario_id",
+    "scenario_name"
+  ],
+  "missing_value_handling": "Filled with median from training split during feature matrix building.",
+  "warnings": []
+}

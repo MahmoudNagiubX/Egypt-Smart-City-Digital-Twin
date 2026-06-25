@@ -1,0 +1,27 @@
+{
+  "boundary_exists": true,
+  "roads_exists": true,
+  "nodes_exists": true,
+  "graph_exists": true,
+  "facilities_exists": true,
+  "roads_count": 17411,
+  "nodes_count": 7325,
+  "facilities_count": 44,
+  "boundary_crs": "EPSG:4326",
+  "roads_crs": "EPSG:4326",
+  "nodes_crs": "EPSG:4326",
+  "facilities_crs": "EPSG:4326",
+  "missing_road_geometries": 0,
+  "missing_road_lengths": 0,
+  "missing_travel_time": 0,
+  "missing_speed_kph": 0,
+  "road_bounds": [
+    31.3140553,
+    29.9938422,
+    31.4310698,
+    30.0858975
+  ],
+  "fallbacks_used": [],
+  "status": "ok",
+  "warnings": []
+}

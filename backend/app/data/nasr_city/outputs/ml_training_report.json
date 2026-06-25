@@ -1,0 +1,30 @@
+{
+  "row_count": 12480,
+  "column_count": 67,
+  "target_column_exists": true,
+  "target_type_values": [
+    "engineered_from_real_observations"
+  ],
+  "demo_scenario_columns_present_or_absent": "absent",
+  "event_id_exists": true,
+  "timestamp_exists": true,
+  "missing_values_summary": {
+    "elevation_warning": 12480,
+    "builtup_warning": 12480,
+    "landcover_warning": 12480,
+    "population_warning": 12480,
+    "gpm_warning": 12480
+  },
+  "numeric_feature_count": 54,
+  "excluded_columns": [
+    "zone_code",
+    "data_driven_weather_impact_score",
+    "observed_rain_hazard_score",
+    "observed_exposure_score",
+    "event_id",
+    "timestamp",
+    "target_type"
+  ],
+  "status": "ok",
+  "warnings": []
+}

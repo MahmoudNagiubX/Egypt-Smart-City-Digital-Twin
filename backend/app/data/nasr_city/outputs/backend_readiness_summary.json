@@ -1,0 +1,16 @@
+{
+  "frontend_ready": true,
+  "api_base_path": "/api/weather-impact",
+  "recommended_frontend_layers": [
+    "boundary",
+    "grid",
+    "emergency-facilities",
+    "risk-summary",
+    "predictions/top-rain",
+    "predictions/latest"
+  ],
+  "recommended_demo_event": "top-rain",
+  "recommended_route_demo": "top-rain",
+  "blocking_issues": [],
+  "non_blocking_warnings": []
+}

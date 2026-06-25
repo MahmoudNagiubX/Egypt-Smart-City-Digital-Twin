@@ -1,0 +1,107 @@
+{
+  "zone_risk_explanation": {
+    "outputs": [
+      "risk_score",
+      "risk_class",
+      "top_contributing_factors",
+      "natural_language_reason",
+      "confidence_limitation_note"
+    ],
+    "natural_language_template": "This zone is marked as {risk_class} risk because today\u2019s rainfall overlaps with high built-up density, dense road coverage, and limited vegetation. The score is model-estimated and not an official flood report.",
+    "top_factors_limit": 3,
+    "rule_templates": [
+      {
+        "condition": "rain_24h_mm > 20 and built_surface_mean > 0.4",
+        "explanation": "High rainfall on dense built-up surface leading to heavy surface runoff."
+      },
+      {
+        "condition": "low_elevation_score > 0.7 and rain_24h_mm > 15",
+        "explanation": "Low-lying topographic depression susceptible to water accumulation."
+      }
+    ]
+  },
+  "route_explanation": {
+    "outputs": [
+      "why_normal_route_risky_or_acceptable",
+      "why_safe_route_selected",
+      "risk_reduction_reason",
+      "eta_tradeoff_reason",
+      "high_risk_segments_avoided",
+      "weather_context"
+    ],
+    "natural_language_template": "The weather-safe route is recommended because it avoids road segments crossing {severity_level}-risk rain impact zones. It reduces estimated route risk by {risk_reduction_pct}% with a {eta_tradeoff_min}-minute ETA tradeoff.",
+    "eta_tradeoff_threshold_minutes": 15.0
+  },
+  "technical_explainability": {
+    "methods": [
+      "permutation_importance",
+      "model_feature_importance",
+      "route_segment_contribution_summaries",
+      "rule_based_explanation_templates"
+    ],
+    "future_shap_integration": {
+      "package": "shap",
+      "status": "planned_phase_9b",
+      "requirements": "Install shap package safely and run TreeExplainer on Random Forest model to yield local shap values for each zone."
+    }
+  },
+  "api_design": {
+    "proposed_endpoints": [
+      {
+        "method": "GET",
+        "path": "/api/weather-impact/explain/zone/{zone_code}",
+        "description": "Get natural language and factor-based risk explanation for a specific zone",
+        "response_format": {
+          "zone_code": "string",
+          "risk_score": "float",
+          "risk_class": "string",
+          "top_factors": [
+            {
+              "factor": "string",
+              "importance_pct": "float",
+              "description": "string"
+            }
+          ],
+          "explanation": "string",
+          "disclaimer": "string"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/api/weather-impact/explain/route",
+        "description": "Compare normal and safe routes, returning segment-by-segment hazard contributions and ETA/risk tradeoffs",
+        "request_format": {
+          "origin_lat": "float",
+          "origin_lng": "float",
+          "destination_lat": "float",
+          "destination_lng": "float"
+        },
+        "response_format": {
+          "normal_route": {
+            "total_risk": "float",
+            "eta_minutes": "float",
+            "high_risk_segments": "integer"
+          },
+          "safe_route": {
+            "total_risk": "float",
+            "eta_minutes": "float",
+            "high_risk_segments": "integer"
+          },
+          "risk_reduction_pct": "float",
+          "eta_tradeoff_minutes": "float",
+          "explanation": "string"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/api/weather-impact/model/explainability-summary",
+        "description": "Get global feature importance and permutation importance metrics for the current model",
+        "response_format": {
+          "model_name": "string",
+          "global_feature_importance": "object",
+          "permutation_importance": "object"
+        }
+      }
+    ]
+  }
+}

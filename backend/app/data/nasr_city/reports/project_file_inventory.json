@@ -1,0 +1,2099 @@
+[
+  {
+    "path": "backend/app/weather_impact/data_loader.py",
+    "file_type": ".py",
+    "size": 1393,
+    "last_modified": "2026-06-22T11:48:15Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/flood.py",
+    "file_type": ".py",
+    "size": 48,
+    "last_modified": "2026-06-21T14:07:56Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/geo.py",
+    "file_type": ".py",
+    "size": 76758,
+    "last_modified": "2026-06-22T13:33:24Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/model.py",
+    "file_type": ".py",
+    "size": 29454,
+    "last_modified": "2026-06-24T21:17:07Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/paths.py",
+    "file_type": ".py",
+    "size": 9474,
+    "last_modified": "2026-06-24T21:21:56Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/router.py",
+    "file_type": ".py",
+    "size": 12022,
+    "last_modified": "2026-06-24T21:22:38Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/routing.py",
+    "file_type": ".py",
+    "size": 64722,
+    "last_modified": "2026-06-24T21:22:16Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/schemas.py",
+    "file_type": ".py",
+    "size": 4557,
+    "last_modified": "2026-06-24T21:22:32Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/scoring.py",
+    "file_type": ".py",
+    "size": 3609,
+    "last_modified": "2026-06-22T12:52:16Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/service.py",
+    "file_type": ".py",
+    "size": 49740,
+    "last_modified": "2026-06-24T21:22:24Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/traffic.py",
+    "file_type": ".py",
+    "size": 51,
+    "last_modified": "2026-06-21T14:07:58Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/weather.py",
+    "file_type": ".py",
+    "size": 26276,
+    "last_modified": "2026-06-24T21:19:09Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/__init__.py",
+    "file_type": ".py",
+    "size": 66,
+    "last_modified": "2026-06-21T14:07:48Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Core weather-impact module source code"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/data_loader.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 3274,
+    "last_modified": "2026-06-22T13:38:00Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/flood.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 199,
+    "last_modified": "2026-06-22T13:38:00Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/geo.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 92554,
+    "last_modified": "2026-06-22T13:38:00Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/model.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 41955,
+    "last_modified": "2026-06-24T21:18:48Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/paths.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 10629,
+    "last_modified": "2026-06-24T21:21:58Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/router.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 21194,
+    "last_modified": "2026-06-24T21:22:39Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/routing.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 78085,
+    "last_modified": "2026-06-24T21:22:39Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/schemas.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 8960,
+    "last_modified": "2026-06-24T21:22:34Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/scoring.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 5120,
+    "last_modified": "2026-06-22T13:38:00Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/service.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 60327,
+    "last_modified": "2026-06-24T21:22:25Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/traffic.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 204,
+    "last_modified": "2026-06-22T13:38:00Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/weather.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 34209,
+    "last_modified": "2026-06-24T21:19:10Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/weather_impact/__pycache__/__init__.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 220,
+    "last_modified": "2026-06-22T13:38:00Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/00_check_env.py",
+    "file_type": ".py",
+    "size": 475,
+    "last_modified": "2026-06-21T14:08:07Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/01_build_spatial_data.py",
+    "file_type": ".py",
+    "size": 6952,
+    "last_modified": "2026-06-21T17:29:58Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/02_collect_weather.py",
+    "file_type": ".py",
+    "size": 3907,
+    "last_modified": "2026-06-22T11:57:11Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/03_build_features.py",
+    "file_type": ".py",
+    "size": 4461,
+    "last_modified": "2026-06-22T12:32:49Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/04_build_real_observed_dataset.py",
+    "file_type": ".py",
+    "size": 6214,
+    "last_modified": "2026-06-22T13:33:29Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/05_train_model.py",
+    "file_type": ".py",
+    "size": 5145,
+    "last_modified": "2026-06-22T14:43:18Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/06_generate_predictions.py",
+    "file_type": ".py",
+    "size": 6323,
+    "last_modified": "2026-06-23T12:22:53Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/07_build_routes.py",
+    "file_type": ".py",
+    "size": 5482,
+    "last_modified": "2026-06-23T12:48:09Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/08_system_integrity_audit.py",
+    "file_type": ".py",
+    "size": 12544,
+    "last_modified": "2026-06-23T14:39:50Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/09_collect_pois.py",
+    "file_type": ".py",
+    "size": 4174,
+    "last_modified": "2026-06-24T20:31:01Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/10_generate_live_weather_risk.py",
+    "file_type": ".py",
+    "size": 2486,
+    "last_modified": "2026-06-24T21:17:28Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/11_live_weather_route_check.py",
+    "file_type": ".py",
+    "size": 2143,
+    "last_modified": "2026-06-24T21:22:42Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/12_project_model_audit.py",
+    "file_type": ".py",
+    "size": 27275,
+    "last_modified": "2026-06-25T10:32:56Z",
+    "category": "source_code",
+    "required_status": "required",
+    "reason": "Pipeline/audit/utility script"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/00_check_env.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 1244,
+    "last_modified": "2026-06-22T13:37:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/01_build_spatial_data.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 12894,
+    "last_modified": "2026-06-22T13:37:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/02_collect_weather.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 7144,
+    "last_modified": "2026-06-22T13:37:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/03_build_features.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 8096,
+    "last_modified": "2026-06-22T13:37:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/04_build_real_observed_dataset.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 11258,
+    "last_modified": "2026-06-22T13:37:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/05_train_model.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 9572,
+    "last_modified": "2026-06-22T14:43:23Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/06_generate_predictions.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 11120,
+    "last_modified": "2026-06-23T12:22:55Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/07_build_routes.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 8936,
+    "last_modified": "2026-06-23T12:49:07Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/08_system_integrity_audit.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 16196,
+    "last_modified": "2026-06-23T14:39:51Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/09_collect_pois.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 7509,
+    "last_modified": "2026-06-24T20:31:07Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/10_generate_live_weather_risk.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 4672,
+    "last_modified": "2026-06-24T21:18:48Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/scripts/__pycache__/11_live_weather_route_check.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 3878,
+    "last_modified": "2026-06-24T21:22:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/test_api_layers.py",
+    "file_type": ".py",
+    "size": 4324,
+    "last_modified": "2026-06-23T12:34:07Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_custom_routing_api.py",
+    "file_type": ".py",
+    "size": 2630,
+    "last_modified": "2026-06-24T20:29:59Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_emergency_routing.py",
+    "file_type": ".py",
+    "size": 5779,
+    "last_modified": "2026-06-23T13:53:45Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_feature_engineering.py",
+    "file_type": ".py",
+    "size": 3934,
+    "last_modified": "2026-06-22T12:36:24Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_live_weather_risk.py",
+    "file_type": ".py",
+    "size": 8681,
+    "last_modified": "2026-06-24T21:18:47Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_live_weather_routing.py",
+    "file_type": ".py",
+    "size": 6112,
+    "last_modified": "2026-06-24T21:22:56Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_model_training.py",
+    "file_type": ".py",
+    "size": 6294,
+    "last_modified": "2026-06-22T14:38:25Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_places_api.py",
+    "file_type": ".py",
+    "size": 1784,
+    "last_modified": "2026-06-24T20:25:12Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_prediction_outputs.py",
+    "file_type": ".py",
+    "size": 4737,
+    "last_modified": "2026-06-23T12:22:17Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_real_data_sources.py",
+    "file_type": ".py",
+    "size": 4011,
+    "last_modified": "2026-06-22T13:37:08Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_real_observed_dataset.py",
+    "file_type": ".py",
+    "size": 3465,
+    "last_modified": "2026-06-22T13:17:37Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_routing_api.py",
+    "file_type": ".py",
+    "size": 3447,
+    "last_modified": "2026-06-23T13:53:52Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_spatial_data.py",
+    "file_type": ".py",
+    "size": 3858,
+    "last_modified": "2026-06-21T17:33:00Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_system_integrity_audit.py",
+    "file_type": ".py",
+    "size": 5085,
+    "last_modified": "2026-06-23T14:57:28Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/test_weather_pipeline.py",
+    "file_type": ".py",
+    "size": 3352,
+    "last_modified": "2026-06-22T11:58:34Z",
+    "category": "test",
+    "required_status": "required",
+    "reason": "Backend test file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_api_layers.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 28226,
+    "last_modified": "2026-06-24T21:18:08Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_api_layers.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 28222,
+    "last_modified": "2026-06-23T12:34:32Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_api_layers.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 6686,
+    "last_modified": "2026-06-23T12:34:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_custom_routing_api.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 13170,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_custom_routing_api.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 13170,
+    "last_modified": "2026-06-24T20:30:07Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_custom_routing_api.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 3695,
+    "last_modified": "2026-06-24T20:30:06Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_emergency_routing.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 36805,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_emergency_routing.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 36793,
+    "last_modified": "2026-06-23T13:54:07Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_emergency_routing.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 8439,
+    "last_modified": "2026-06-23T13:54:20Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_feature_engineering.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 21144,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_feature_engineering.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 21144,
+    "last_modified": "2026-06-22T12:36:34Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_feature_engineering.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 6305,
+    "last_modified": "2026-06-22T13:37:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_live_weather_risk.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 42484,
+    "last_modified": "2026-06-24T21:29:57Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_live_weather_risk.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 42484,
+    "last_modified": "2026-06-24T21:18:55Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_live_weather_risk.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 13307,
+    "last_modified": "2026-06-24T21:18:48Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_live_weather_routing.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 29901,
+    "last_modified": "2026-06-24T21:29:57Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_live_weather_routing.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 29901,
+    "last_modified": "2026-06-24T21:23:02Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_live_weather_routing.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 8346,
+    "last_modified": "2026-06-24T21:22:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_model_training.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 33531,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_model_training.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 33525,
+    "last_modified": "2026-06-22T14:38:30Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_model_training.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 9436,
+    "last_modified": "2026-06-22T14:43:23Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_places_api.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 11825,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_places_api.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 11825,
+    "last_modified": "2026-06-24T20:27:34Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_places_api.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 3425,
+    "last_modified": "2026-06-24T20:28:02Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_prediction_outputs.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 28547,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_prediction_outputs.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 28547,
+    "last_modified": "2026-06-23T12:22:26Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_prediction_outputs.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 7861,
+    "last_modified": "2026-06-23T12:22:55Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_real_data_sources.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 18442,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_real_data_sources.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 18439,
+    "last_modified": "2026-06-22T13:37:17Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_real_data_sources.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 6795,
+    "last_modified": "2026-06-22T13:37:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_real_observed_dataset.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 15449,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_real_observed_dataset.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 15449,
+    "last_modified": "2026-06-22T13:17:56Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_real_observed_dataset.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 5245,
+    "last_modified": "2026-06-22T13:37:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_routing_api.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 19184,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_routing_api.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 19180,
+    "last_modified": "2026-06-23T13:54:07Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_routing_api.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 4792,
+    "last_modified": "2026-06-23T13:54:20Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_spatial_data.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 23524,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_spatial_data.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 23524,
+    "last_modified": "2026-06-21T17:33:05Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_spatial_data.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 6583,
+    "last_modified": "2026-06-22T13:37:59Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_system_integrity_audit.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 23953,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_system_integrity_audit.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 23949,
+    "last_modified": "2026-06-23T14:58:37Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_system_integrity_audit.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 8131,
+    "last_modified": "2026-06-23T14:59:22Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_weather_pipeline.cpython-311-pytest-9.0.3.pyc",
+    "file_type": ".pyc",
+    "size": 21319,
+    "last_modified": "2026-06-24T21:18:12Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_weather_pipeline.cpython-311-pytest-9.1.1.pyc",
+    "file_type": ".pyc",
+    "size": 21319,
+    "last_modified": "2026-06-22T11:58:46Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/tests/__pycache__/test_weather_pipeline.cpython-311.pyc",
+    "file_type": ".pyc",
+    "size": 5404,
+    "last_modified": "2026-06-22T13:38:00Z",
+    "category": "cache",
+    "required_status": "safe_to_delete",
+    "reason": "Temporary cache or compilation file"
+  },
+  {
+    "path": "backend/app/data/nasr_city/cache/live_open_meteo_forecast.json",
+    "file_type": ".json",
+    "size": 6694,
+    "last_modified": "2026-06-24T22:06:32Z",
+    "category": "cache",
+    "required_status": "review_needed",
+    "reason": "Cached weather forecast from Open-Meteo"
+  },
+  {
+    "path": "backend/app/data/nasr_city/maps/spatial_foundation_map.png",
+    "file_type": ".png",
+    "size": 681469,
+    "last_modified": "2026-06-21T17:32:46Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Static map visualizations"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/baseline_model_metrics.json",
+    "file_type": ".json",
+    "size": 1086,
+    "last_modified": "2026-06-22T14:43:36Z",
+    "category": "model_metrics",
+    "required_status": "generated_but_required",
+    "reason": "Model training metrics or split metadata"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/feature_importance.csv",
+    "file_type": ".csv",
+    "size": 1929,
+    "last_modified": "2026-06-22T14:43:37Z",
+    "category": "model_metrics",
+    "required_status": "generated_but_required",
+    "reason": "Feature importance metrics"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/feature_importance.png",
+    "file_type": ".png",
+    "size": 75938,
+    "last_modified": "2026-06-22T14:43:38Z",
+    "category": "model_metrics",
+    "required_status": "reproducible",
+    "reason": "Feature importance plot visualization"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/ml_feature_columns.json",
+    "file_type": ".json",
+    "size": 1145,
+    "last_modified": "2026-06-22T14:43:31Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Model-related data artifact"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/MODEL_CARD.md",
+    "file_type": ".md",
+    "size": 4079,
+    "last_modified": "2026-06-22T14:43:38Z",
+    "category": "report",
+    "required_status": "required",
+    "reason": "Model documentation and metadata card"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/model_comparison.json",
+    "file_type": ".json",
+    "size": 639,
+    "last_modified": "2026-06-22T14:43:36Z",
+    "category": "model_metrics",
+    "required_status": "generated_but_required",
+    "reason": "Model training metrics or split metadata"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/prediction_sample.csv",
+    "file_type": ".csv",
+    "size": 332480,
+    "last_modified": "2026-06-22T14:43:38Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Model-related data artifact"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/train_test_split_summary.json",
+    "file_type": ".json",
+    "size": 770,
+    "last_modified": "2026-06-22T14:43:32Z",
+    "category": "model_metrics",
+    "required_status": "generated_but_required",
+    "reason": "Model training metrics or split metadata"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/weather_impact_hgb_metrics.json",
+    "file_type": ".json",
+    "size": 1088,
+    "last_modified": "2026-06-22T14:43:36Z",
+    "category": "model_metrics",
+    "required_status": "generated_but_required",
+    "reason": "Model training metrics or split metadata"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/weather_impact_hgb_model.joblib",
+    "file_type": ".joblib",
+    "size": 1131718,
+    "last_modified": "2026-06-22T14:43:36Z",
+    "category": "model_artifact",
+    "required_status": "generated_but_required",
+    "reason": "Trained ML model binary"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/weather_impact_rf_metrics.json",
+    "file_type": ".json",
+    "size": 1063,
+    "last_modified": "2026-06-22T14:43:36Z",
+    "category": "model_metrics",
+    "required_status": "generated_but_required",
+    "reason": "Model training metrics or split metadata"
+  },
+  {
+    "path": "backend/app/data/nasr_city/models/weather_impact_rf_model.joblib",
+    "file_type": ".joblib",
+    "size": 96549617,
+    "last_modified": "2026-06-22T14:43:34Z",
+    "category": "model_artifact",
+    "required_status": "generated_but_required",
+    "reason": "Trained ML model binary"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/backend_readiness_summary.json",
+    "file_type": ".json",
+    "size": 390,
+    "last_modified": "2026-06-23T14:57:06Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/demo_route_latest_normal.geojson",
+    "file_type": ".geojson",
+    "size": 3378,
+    "last_modified": "2026-06-23T13:53:15Z",
+    "category": "route_output",
+    "required_status": "reproducible",
+    "reason": "Route analysis/comparison output"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/demo_route_latest_safe.geojson",
+    "file_type": ".geojson",
+    "size": 2746,
+    "last_modified": "2026-06-23T13:53:15Z",
+    "category": "route_output",
+    "required_status": "reproducible",
+    "reason": "Route analysis/comparison output"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/demo_route_top_rain_normal.geojson",
+    "file_type": ".geojson",
+    "size": 3384,
+    "last_modified": "2026-06-23T13:52:52Z",
+    "category": "route_output",
+    "required_status": "reproducible",
+    "reason": "Route analysis/comparison output"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/demo_route_top_rain_safe.geojson",
+    "file_type": ".geojson",
+    "size": 2475,
+    "last_modified": "2026-06-23T13:52:52Z",
+    "category": "route_output",
+    "required_status": "reproducible",
+    "reason": "Route analysis/comparison output"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/emergency_facility_reachability_audit.csv",
+    "file_type": ".csv",
+    "size": 5151,
+    "last_modified": "2026-06-23T14:55:09Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/feature_validation_report.json",
+    "file_type": ".json",
+    "size": 389,
+    "last_modified": "2026-06-22T12:42:37Z",
+    "category": "report",
+    "required_status": "reproducible",
+    "reason": "Generated validation/audit report"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/high_risk_zone_best_facility_routes.csv",
+    "file_type": ".csv",
+    "size": 13183,
+    "last_modified": "2026-06-23T14:57:05Z",
+    "category": "route_output",
+    "required_status": "reproducible",
+    "reason": "Route analysis/comparison output"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/latest_selected_event_risk.geojson",
+    "file_type": ".geojson",
+    "size": 247634,
+    "last_modified": "2026-06-23T12:23:38Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/live_road_risk_weights.geojson",
+    "file_type": ".geojson",
+    "size": 9855210,
+    "last_modified": "2026-06-24T21:22:49Z",
+    "category": "live_weather_output",
+    "required_status": "generated_but_required",
+    "reason": "Live weather hazard predictions and weights"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/live_route_validation_report.json",
+    "file_type": ".json",
+    "size": 277,
+    "last_modified": "2026-06-25T10:31:48Z",
+    "category": "live_weather_output",
+    "required_status": "generated_but_required",
+    "reason": "Live weather hazard predictions and weights"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/live_weather_risk.geojson",
+    "file_type": ".geojson",
+    "size": 292762,
+    "last_modified": "2026-06-25T10:31:48Z",
+    "category": "live_weather_output",
+    "required_status": "generated_but_required",
+    "reason": "Live weather hazard predictions and weights"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/live_weather_risk_predictions.csv",
+    "file_type": ".csv",
+    "size": 62294,
+    "last_modified": "2026-06-25T10:31:47Z",
+    "category": "live_weather_output",
+    "required_status": "generated_but_required",
+    "reason": "Live weather hazard predictions and weights"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/live_weather_risk_report.json",
+    "file_type": ".json",
+    "size": 706,
+    "last_modified": "2026-06-25T10:31:48Z",
+    "category": "live_weather_output",
+    "required_status": "generated_but_required",
+    "reason": "Live weather hazard predictions and weights"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/live_weather_summary.json",
+    "file_type": ".json",
+    "size": 821,
+    "last_modified": "2026-06-25T10:31:47Z",
+    "category": "live_weather_output",
+    "required_status": "generated_but_required",
+    "reason": "Live weather hazard predictions and weights"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/ml_training_report.json",
+    "file_type": ".json",
+    "size": 744,
+    "last_modified": "2026-06-22T14:43:30Z",
+    "category": "report",
+    "required_status": "reproducible",
+    "reason": "Generated validation/audit report"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/places_summary_report.json",
+    "file_type": ".json",
+    "size": 347,
+    "last_modified": "2026-06-24T20:28:56Z",
+    "category": "report",
+    "required_status": "reproducible",
+    "reason": "Generated validation/audit report"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/prediction_output_report.json",
+    "file_type": ".json",
+    "size": 1016,
+    "last_modified": "2026-06-23T12:23:38Z",
+    "category": "report",
+    "required_status": "reproducible",
+    "reason": "Generated validation/audit report"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/real_data_source_audit_report.json",
+    "file_type": ".json",
+    "size": 2033,
+    "last_modified": "2026-06-22T13:35:23Z",
+    "category": "report",
+    "required_status": "reproducible",
+    "reason": "Generated validation/audit report"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/real_data_validation_report.json",
+    "file_type": ".json",
+    "size": 929,
+    "last_modified": "2026-06-22T13:36:08Z",
+    "category": "report",
+    "required_status": "reproducible",
+    "reason": "Generated validation/audit report"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/real_observed_predictions.csv",
+    "file_type": ".csv",
+    "size": 3879397,
+    "last_modified": "2026-06-23T12:23:37Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/real_observed_predictions.geojson",
+    "file_type": ".geojson",
+    "size": 7430702,
+    "last_modified": "2026-06-23T12:23:38Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/road_risk_weights_latest.geojson",
+    "file_type": ".geojson",
+    "size": 10184150,
+    "last_modified": "2026-06-23T13:51:39Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/road_risk_weights_top_rain.geojson",
+    "file_type": ".geojson",
+    "size": 10160679,
+    "last_modified": "2026-06-23T13:51:38Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/route_comparison_latest.json",
+    "file_type": ".json",
+    "size": 1675,
+    "last_modified": "2026-06-23T13:53:15Z",
+    "category": "route_output",
+    "required_status": "reproducible",
+    "reason": "Route analysis/comparison output"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/route_comparison_top_rain.json",
+    "file_type": ".json",
+    "size": 1693,
+    "last_modified": "2026-06-23T13:52:52Z",
+    "category": "route_output",
+    "required_status": "reproducible",
+    "reason": "Route analysis/comparison output"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/routing_validation_report.json",
+    "file_type": ".json",
+    "size": 394,
+    "last_modified": "2026-06-23T13:53:16Z",
+    "category": "route_output",
+    "required_status": "reproducible",
+    "reason": "Route analysis/comparison output"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/spatial_validation_report.json",
+    "file_type": ".json",
+    "size": 611,
+    "last_modified": "2026-06-21T17:22:11Z",
+    "category": "report",
+    "required_status": "reproducible",
+    "reason": "Generated validation/audit report"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/system_integrity_audit_report.json",
+    "file_type": ".json",
+    "size": 1165,
+    "last_modified": "2026-06-23T14:57:06Z",
+    "category": "report",
+    "required_status": "reproducible",
+    "reason": "Generated validation/audit report"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/top_rain_event_risk.geojson",
+    "file_type": ".geojson",
+    "size": 248164,
+    "last_modified": "2026-06-23T12:23:38Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/weather_validation_report.json",
+    "file_type": ".json",
+    "size": 833,
+    "last_modified": "2026-06-22T11:57:59Z",
+    "category": "report",
+    "required_status": "reproducible",
+    "reason": "Generated validation/audit report"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/zone_risk_summary.csv",
+    "file_type": ".csv",
+    "size": 71054,
+    "last_modified": "2026-06-23T12:23:38Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/outputs/zone_risk_summary.geojson",
+    "file_type": ".geojson",
+    "size": 368622,
+    "last_modified": "2026-06-23T12:23:38Z",
+    "category": "processed_data",
+    "required_status": "reproducible",
+    "reason": "Model predictions or generated outputs"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/grid_builtup_features.csv",
+    "file_type": ".csv",
+    "size": 36394,
+    "last_modified": "2026-06-22T13:29:41Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/grid_elevation_features.csv",
+    "file_type": ".csv",
+    "size": 67699,
+    "last_modified": "2026-06-22T12:42:37Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/grid_gpm_rainfall_features.csv",
+    "file_type": ".csv",
+    "size": 636596,
+    "last_modified": "2026-06-22T13:07:52Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/grid_landcover_features.csv",
+    "file_type": ".csv",
+    "size": 40672,
+    "last_modified": "2026-06-22T13:11:15Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/grid_population_features.csv",
+    "file_type": ".csv",
+    "size": 17160,
+    "last_modified": "2026-06-22T13:13:08Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/grid_road_features.csv",
+    "file_type": ".csv",
+    "size": 51676,
+    "last_modified": "2026-06-22T12:42:32Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/grid_weather_scenario_features.csv",
+    "file_type": ".csv",
+    "size": 193196,
+    "last_modified": "2026-06-22T12:42:32Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/nasr_city_boundary.geojson",
+    "file_type": ".geojson",
+    "size": 4393,
+    "last_modified": "2026-06-21T17:19:08Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/nasr_city_emergency_facilities.geojson",
+    "file_type": ".geojson",
+    "size": 10511,
+    "last_modified": "2026-06-21T17:21:14Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/nasr_city_graph.graphml",
+    "file_type": ".graphml",
+    "size": 8935114,
+    "last_modified": "2026-06-21T17:20:25Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/nasr_city_grid_500m.geojson",
+    "file_type": ".geojson",
+    "size": 158737,
+    "last_modified": "2026-06-21T17:30:17Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/nasr_city_nodes.geojson",
+    "file_type": ".geojson",
+    "size": 1521319,
+    "last_modified": "2026-06-21T17:20:25Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/nasr_city_pois.geojson",
+    "file_type": ".geojson",
+    "size": 57282,
+    "last_modified": "2026-06-24T20:28:56Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/nasr_city_roads.geojson",
+    "file_type": ".geojson",
+    "size": 9647574,
+    "last_modified": "2026-06-21T17:20:26Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/real_observed_training_dataset.csv",
+    "file_type": ".csv",
+    "size": 8038574,
+    "last_modified": "2026-06-22T13:33:41Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/real_rain_events.csv",
+    "file_type": ".csv",
+    "size": 101865,
+    "last_modified": "2026-06-22T12:54:07Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/roads_with_zone_ids.geojson",
+    "file_type": ".geojson",
+    "size": 6148015,
+    "last_modified": "2026-06-21T17:30:52Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/selected_real_events.csv",
+    "file_type": ".csv",
+    "size": 2604,
+    "last_modified": "2026-06-22T13:06:32Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/weather_hourly_processed.csv",
+    "file_type": ".csv",
+    "size": 766753,
+    "last_modified": "2026-06-22T11:50:59Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/zone_features_ml_ready.csv",
+    "file_type": ".csv",
+    "size": 793508,
+    "last_modified": "2026-06-22T12:42:37Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/processed/zone_features_ml_ready.geojson",
+    "file_type": ".geojson",
+    "size": 2992074,
+    "last_modified": "2026-06-22T12:42:37Z",
+    "category": "processed_data",
+    "required_status": "generated_but_required",
+    "reason": "Processed geospatial datasets or features"
+  },
+  {
+    "path": "backend/app/data/nasr_city/raw/weather_history_open_meteo.csv",
+    "file_type": ".csv",
+    "size": 382162,
+    "last_modified": "2026-06-22T11:49:20Z",
+    "category": "raw_data",
+    "required_status": "required",
+    "reason": "Raw weather history / raw input data"
+  },
+  {
+    "path": "backend/app/data/nasr_city/raw/weather_history_open_meteo_2015_2025.csv",
+    "file_type": ".csv",
+    "size": 4192451,
+    "last_modified": "2026-06-22T12:54:07Z",
+    "category": "raw_data",
+    "required_status": "required",
+    "reason": "Raw weather history / raw input data"
+  },
+  {
+    "path": "backend/app/data/nasr_city/samples/weather_scenarios.json",
+    "file_type": ".json",
+    "size": 1767,
+    "last_modified": "2026-06-22T11:54:38Z",
+    "category": "raw_data",
+    "required_status": "reproducible",
+    "reason": "Sample/dummy data for testing and local runs"
+  },
+  {
+    "path": "frontend/src/App.css",
+    "file_type": ".css",
+    "size": 2891,
+    "last_modified": "2026-06-23T15:06:06Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/App.tsx",
+    "file_type": ".tsx",
+    "size": 278,
+    "last_modified": "2026-06-24T20:42:40Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/index.css",
+    "file_type": ".css",
+    "size": 9844,
+    "last_modified": "2026-06-24T21:51:19Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/main.tsx",
+    "file_type": ".tsx",
+    "size": 226,
+    "last_modified": "2026-06-23T15:22:31Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/vite-env.d.ts",
+    "file_type": ".ts",
+    "size": 38,
+    "last_modified": "2026-06-23T15:22:26Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/api/client.ts",
+    "file_type": ".ts",
+    "size": 5085,
+    "last_modified": "2026-06-24T21:25:21Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/assets/hero.png",
+    "file_type": ".png",
+    "size": 13057,
+    "last_modified": "2026-06-23T15:06:06Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/assets/react.svg",
+    "file_type": ".svg",
+    "size": 4126,
+    "last_modified": "2026-06-23T15:06:06Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/assets/vite.svg",
+    "file_type": ".svg",
+    "size": 8709,
+    "last_modified": "2026-06-23T15:06:06Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/Dashboard.tsx",
+    "file_type": ".tsx",
+    "size": 18543,
+    "last_modified": "2026-06-24T22:04:15Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/EventSelector.tsx",
+    "file_type": ".tsx",
+    "size": 2268,
+    "last_modified": "2026-06-24T20:37:36Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/LayerToggle.tsx",
+    "file_type": ".tsx",
+    "size": 19597,
+    "last_modified": "2026-06-24T22:04:57Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/Legend.tsx",
+    "file_type": ".tsx",
+    "size": 3121,
+    "last_modified": "2026-06-24T22:05:03Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/LoadingError.tsx",
+    "file_type": ".tsx",
+    "size": 1651,
+    "last_modified": "2026-06-24T20:39:35Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/MapView.tsx",
+    "file_type": ".tsx",
+    "size": 30030,
+    "last_modified": "2026-06-24T22:05:09Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/RoutePanel.tsx",
+    "file_type": ".tsx",
+    "size": 9680,
+    "last_modified": "2026-06-24T22:05:44Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/SidePanel.tsx",
+    "file_type": ".tsx",
+    "size": 7879,
+    "last_modified": "2026-06-24T22:04:36Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/SummaryCards.tsx",
+    "file_type": ".tsx",
+    "size": 5097,
+    "last_modified": "2026-06-24T22:04:28Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/alert.tsx",
+    "file_type": ".tsx",
+    "size": 2048,
+    "last_modified": "2026-06-23T15:27:37Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/badge.tsx",
+    "file_type": ".tsx",
+    "size": 1865,
+    "last_modified": "2026-06-23T15:27:26Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/button.tsx",
+    "file_type": ".tsx",
+    "size": 3385,
+    "last_modified": "2026-06-23T15:27:26Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/card.tsx",
+    "file_type": ".tsx",
+    "size": 2630,
+    "last_modified": "2026-06-23T15:27:26Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/command.tsx",
+    "file_type": ".tsx",
+    "size": 4959,
+    "last_modified": "2026-06-23T15:29:41Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/dialog.tsx",
+    "file_type": ".tsx",
+    "size": 4234,
+    "last_modified": "2026-06-23T15:29:41Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/drawer.tsx",
+    "file_type": ".tsx",
+    "size": 4382,
+    "last_modified": "2026-06-23T15:29:40Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/hover-card.tsx",
+    "file_type": ".tsx",
+    "size": 1506,
+    "last_modified": "2026-06-23T15:29:40Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/input-group.tsx",
+    "file_type": ".tsx",
+    "size": 5192,
+    "last_modified": "2026-06-23T15:29:41Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/input.tsx",
+    "file_type": ".tsx",
+    "size": 968,
+    "last_modified": "2026-06-23T15:29:40Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/label.tsx",
+    "file_type": ".tsx",
+    "size": 592,
+    "last_modified": "2026-06-23T16:04:44Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/progress.tsx",
+    "file_type": ".tsx",
+    "size": 732,
+    "last_modified": "2026-06-23T15:27:37Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/scroll-area.tsx",
+    "file_type": ".tsx",
+    "size": 1692,
+    "last_modified": "2026-06-23T15:27:37Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/select.tsx",
+    "file_type": ".tsx",
+    "size": 6679,
+    "last_modified": "2026-06-23T15:27:26Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/separator.tsx",
+    "file_type": ".tsx",
+    "size": 630,
+    "last_modified": "2026-06-23T15:27:37Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/sheet.tsx",
+    "file_type": ".tsx",
+    "size": 4556,
+    "last_modified": "2026-06-23T15:27:27Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/skeleton.tsx",
+    "file_type": ".tsx",
+    "size": 275,
+    "last_modified": "2026-06-23T15:27:37Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/sonner.tsx",
+    "file_type": ".tsx",
+    "size": 1212,
+    "last_modified": "2026-06-23T15:29:40Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/switch.tsx",
+    "file_type": ".tsx",
+    "size": 1734,
+    "last_modified": "2026-06-23T15:27:26Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/table.tsx",
+    "file_type": ".tsx",
+    "size": 2402,
+    "last_modified": "2026-06-23T15:27:38Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/tabs.tsx",
+    "file_type": ".tsx",
+    "size": 3558,
+    "last_modified": "2026-06-23T15:27:26Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/textarea.tsx",
+    "file_type": ".tsx",
+    "size": 842,
+    "last_modified": "2026-06-23T15:29:41Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/toggle-group.tsx",
+    "file_type": ".tsx",
+    "size": 3191,
+    "last_modified": "2026-06-23T15:27:38Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/toggle.tsx",
+    "file_type": ".tsx",
+    "size": 1801,
+    "last_modified": "2026-06-23T15:27:38Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/components/ui/tooltip.tsx",
+    "file_type": ".tsx",
+    "size": 2111,
+    "last_modified": "2026-06-23T15:27:26Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/lib/utils.ts",
+    "file_type": ".ts",
+    "size": 166,
+    "last_modified": "2026-06-23T15:26:04Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/types/api.ts",
+    "file_type": ".ts",
+    "size": 6582,
+    "last_modified": "2026-06-24T21:25:16Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/utils/format.ts",
+    "file_type": ".ts",
+    "size": 1963,
+    "last_modified": "2026-06-24T20:37:00Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/utils/labels.ts",
+    "file_type": ".ts",
+    "size": 5221,
+    "last_modified": "2026-06-24T22:03:30Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/__tests__/api-client.test.ts",
+    "file_type": ".ts",
+    "size": 2511,
+    "last_modified": "2026-06-24T21:28:35Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/__tests__/App.test.tsx",
+    "file_type": ".tsx",
+    "size": 21021,
+    "last_modified": "2026-06-24T22:06:09Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/__tests__/format.test.ts",
+    "file_type": ".ts",
+    "size": 2463,
+    "last_modified": "2026-06-24T20:41:08Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  },
+  {
+    "path": "frontend/src/__tests__/labels.test.ts",
+    "file_type": ".ts",
+    "size": 3463,
+    "last_modified": "2026-06-24T21:29:03Z",
+    "category": "frontend_source",
+    "required_status": "required",
+    "reason": "Frontend React application source file"
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "model_name": "Baseline (Mean Predictor)",
+  "honesty_note": "These metrics evaluate the models against the data_driven_weather_impact_score target, which is an engineered risk score derived from real observed weather and geospatial features. These are not verified street-level flood incident labels, and no operational flood prediction accuracy is claimed.",
+  "mae": 0.18780366129250917,
+  "rmse": 0.23126440776308108,
+  "r2": -0.11547157439475653,
+  "target_min": 0.0,
+  "target_max": 0.945145500418866,
+  "target_mean": 0.4633500242303748,
+  "prediction_min": 0.3889424598849287,
+  "prediction_max": 0.3889424598849287,
+  "prediction_mean": 0.38894245988492865,
+  "severity_accuracy": 0.5212339743589743,
+  "severity_confusion_matrix": [
+    [
+      0,
+      712,
+      0
+    ],
+    [
+      0,
+      1301,
+      0
+    ],
+    [
+      0,
+      483,
+      0
+    ]
+  ],
+  "true_severity_counts": {
+    "low": 712,
+    "medium": 1301,
+    "high": 483
+  },
+  "predicted_severity_counts": {
+    "low": 0,
+    "medium": 2496,
+    "high": 0
+  }
+}

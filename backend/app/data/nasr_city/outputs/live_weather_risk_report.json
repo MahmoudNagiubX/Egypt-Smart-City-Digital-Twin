@@ -1,0 +1,21 @@
+{
+  "status": "ok_with_warnings",
+  "source": "Open-Meteo Forecast API",
+  "model_used": "weather_impact_rf_model.joblib",
+  "feature_columns_used": true,
+  "prediction_rows": 416,
+  "rain_risk_expected": true,
+  "risk_class_counts": {
+    "low": 162,
+    "medium": 254,
+    "high": 0
+  },
+  "forecast_window_hours": 24,
+  "max_rain_24h_mm": 8.0,
+  "max_precipitation_probability": 95.0,
+  "uses_forecast_precipitation_proxy_for_satellite_features": true,
+  "official_flood_labels_claimed": false,
+  "official_emergency_dispatch_claimed": false,
+  "honesty_note": "Live predictions are model-estimated weather-impact risk scores, not verified flood incident labels.",
+  "warnings": []
+}

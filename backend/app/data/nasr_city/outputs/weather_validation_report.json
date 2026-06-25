@@ -1,0 +1,29 @@
+{
+  "source": "Open-Meteo Historical Weather API",
+  "location": "Nasr City, Cairo, Egypt",
+  "latitude": 30.0561,
+  "longitude": 31.33,
+  "raw_file_exists": true,
+  "processed_file_exists": true,
+  "scenarios_file_exists": true,
+  "raw_rows": 8784,
+  "processed_rows": 8784,
+  "scenario_count": 5,
+  "start_timestamp": "2024-01-01 00:00:00",
+  "end_timestamp": "2024-12-31 23:00:00",
+  "max_rain_1h_mm": 1.7,
+  "max_rain_3h_mm": 3.2,
+  "max_rain_6h_mm": 3.2,
+  "max_rain_24h_mm": 3.5,
+  "max_temperature_2m": 45.1,
+  "max_apparent_temperature": 44.2,
+  "missing_values": {},
+  "rainfall_class_counts": {
+    "none": 8716,
+    "light": 68
+  },
+  "status": "ok_with_warnings",
+  "warnings": [
+    "Historical weather data contains limited rainfall, demo storm scenarios are used for risk simulation."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "total_places": 160,
+  "categories": {
+    "hospital": 26,
+    "clinic": 13,
+    "mosque": 46,
+    "mall": 10,
+    "school": 42,
+    "university": 4,
+    "police": 4,
+    "fire_station": 1,
+    "emergency": 44,
+    "landmark": 14
+  },
+  "source": "OpenStreetMap / existing processed data",
+  "status": "ok",
+  "warnings": []
+}
