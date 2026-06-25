@@ -13,6 +13,7 @@ import type {
   PlaceProperties,
   RouteComparison,
   RouteCoordinate,
+  HeatLayerGeoJson,
 } from "../types/api";
 import { EMPTY_VALUE, formatInteger, formatNumber, formatPercent } from "../utils/format";
 import {
@@ -212,6 +213,8 @@ interface MapViewProps {
   onZoneClick?: (zoneCode: string, eventId?: string | null) => void;
   selectedZoneCode?: string | null;
   isRoutePlanningActive?: boolean;
+  activeRiskLayer?: "rain" | "heat";
+  heatLayerGeojson?: HeatLayerGeoJson | null;
 }
 
 export const MapView = ({
@@ -244,6 +247,8 @@ export const MapView = ({
   onZoneClick,
   selectedZoneCode = null,
   isRoutePlanningActive = false,
+  activeRiskLayer = "rain",
+  heatLayerGeojson = null,
 }: MapViewProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -313,6 +318,7 @@ export const MapView = ({
         "live-risk-heat",
         "normal-route",
         "safe-route",
+        "urban-heat",
       ].forEach(addGeoJSONSource);
 
       // Improve label language handling to force English labels or hide Arabic labels
@@ -447,6 +453,28 @@ export const MapView = ({
         },
       }, firstSymbolLayer);
 
+      const heatFillColor = [
+        "interpolate",
+        ["linear"],
+        ["coalesce", ["get", "predicted_heat_risk_score"], 0],
+        0, "rgba(254, 240, 138, 0.4)", // soft yellow
+        0.3, "rgba(251, 191, 36, 0.45)", // amber
+        0.6, "rgba(249, 115, 22, 0.5)", // orange
+        0.8, "rgba(220, 38, 38, 0.55)", // red
+        1.0, "rgba(153, 27, 27, 0.6)"  // deep red
+      ] as maplibregl.ExpressionSpecification;
+
+      map.addLayer({
+        id: "urban-heat-layer",
+        type: "fill",
+        source: "urban-heat",
+        paint: {
+          "fill-color": heatFillColor,
+          "fill-opacity": riskFillOpacity,
+          "fill-outline-color": "rgba(249, 115, 22, 0.15)",
+        },
+      }, firstSymbolLayer);
+
       map.addLayer({
         id: "live-risk-contour-layer",
         type: "line",
@@ -554,6 +582,7 @@ export const MapView = ({
         "risk-summary-layer",
         "selected-risk-layer",
         "live-risk-layer",
+        "urban-heat-layer",
       ];
       const routeLayers = ["normal-route-layer", "safe-route-layer"];
       [...riskLayers, ...routeLayers].forEach((layerId) => {
@@ -573,7 +602,23 @@ export const MapView = ({
           const properties = feature.properties ?? {};
           const isRouteFeature = routeLayers.includes(feature.layer.id);
           let html: string;
-          if (isRouteFeature) {
+          if (feature.layer.id === "urban-heat-layer") {
+            const anomaly = properties.predicted_heat_anomaly_c == null
+              ? EMPTY_VALUE
+              : `${properties.predicted_heat_anomaly_c > 0 ? "+" : ""}${formatNumber(properties.predicted_heat_anomaly_c, 1)}°C`;
+            const lst = properties.observed_lst_c == null
+              ? EMPTY_VALUE
+              : `${formatNumber(properties.observed_lst_c, 1)}°C`;
+            html = `
+              <div class="map-popup-card">
+                <h4>${escapeHtml(getZoneLabel(properties.zone_code))}</h4>
+                <p><strong>Heat Risk Level:</strong> <span class="risk-${escapeHtml(properties.predicted_heat_risk_class || "low")}">${escapeHtml(getRiskLevelLabel(properties.predicted_heat_risk_class))}</span></p>
+                <p><strong>Predicted Anomaly:</strong> ${anomaly}</p>
+                <p><strong>Observed Surface Temp:</strong> ${lst}</p>
+                <p><strong>Heat Risk Score:</strong> ${formatNumber(properties.predicted_heat_risk_score, 4)}</p>
+                <p><strong>Date:</strong> ${escapeHtml(properties.date)}</p>
+              </div>`;
+          } else if (isRouteFeature) {
             const comparison = routeComparisonRef.current;
             const dest = comparison?.selected_destination_facility_name || "Selected map point";
             const cleanDest = containsArabic(dest) ? "Selected Destination" : dest;
@@ -692,12 +737,14 @@ export const MapView = ({
     updateHeatSource("live-risk-heat", liveRiskData);
     updateSource("normal-route", normalRouteData);
     updateSource("safe-route", safeRouteData);
+    updateSource("urban-heat", heatLayerGeojson);
   }, [
     boundaryData,
     gridData,
     latestRiskData,
     liveRiskData,
     mapLoaded,
+    heatLayerGeojson,
     normalRouteData,
     riskSummaryData,
     safeRouteData,
@@ -889,24 +936,26 @@ export const MapView = ({
     const setLayerVisibility = (id: string, visible: boolean) => {
       if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
     };
+    const isRain = activeRiskLayer === "rain";
     setLayerVisibility("boundary-layer", layers.boundary);
     setLayerVisibility("grid-layer", layers.grid);
-    setLayerVisibility("latest-risk-layer", layers.latestRisk);
-    setLayerVisibility("top-rain-risk-layer", layers.topRainRisk);
-    setLayerVisibility("risk-summary-layer", layers.riskSummary);
-    setLayerVisibility("selected-risk-layer", layers.selectedRisk);
-    setLayerVisibility("live-risk-layer", layers.liveRisk);
-    setLayerVisibility("latest-risk-heat-layer", layers.latestRisk);
-    setLayerVisibility("top-rain-risk-heat-layer", layers.topRainRisk);
-    setLayerVisibility("risk-summary-heat-layer", layers.riskSummary);
-    setLayerVisibility("selected-risk-heat-layer", layers.selectedRisk);
-    setLayerVisibility("live-risk-heat-layer", layers.liveRisk);
-    setLayerVisibility("live-risk-contour-layer", layers.liveRisk);
-    setLayerVisibility("live-risk-glow-layer", layers.liveRisk);
+    setLayerVisibility("latest-risk-layer", isRain && layers.latestRisk);
+    setLayerVisibility("top-rain-risk-layer", isRain && layers.topRainRisk);
+    setLayerVisibility("risk-summary-layer", isRain && layers.riskSummary);
+    setLayerVisibility("selected-risk-layer", isRain && layers.selectedRisk);
+    setLayerVisibility("live-risk-layer", isRain && layers.liveRisk);
+    setLayerVisibility("latest-risk-heat-layer", isRain && layers.latestRisk);
+    setLayerVisibility("top-rain-risk-heat-layer", isRain && layers.topRainRisk);
+    setLayerVisibility("risk-summary-heat-layer", isRain && layers.riskSummary);
+    setLayerVisibility("selected-risk-heat-layer", isRain && layers.selectedRisk);
+    setLayerVisibility("live-risk-heat-layer", isRain && layers.liveRisk);
+    setLayerVisibility("live-risk-contour-layer", isRain && layers.liveRisk);
+    setLayerVisibility("live-risk-glow-layer", isRain && layers.liveRisk);
+    setLayerVisibility("urban-heat-layer", activeRiskLayer === "heat");
     map.getStyle().layers
       .filter((layer) => /^(road_|bridge_|tunnel_|highway-|label_)/.test(layer.id))
       .forEach((layer) => setLayerVisibility(layer.id, layers.roadsLabels));
-  }, [layers, mapLoaded]);
+  }, [layers, mapLoaded, activeRiskLayer]);
 
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return;
@@ -1051,6 +1100,10 @@ export const MapView = ({
           "low", riskDisplayMode === "focus" ? 0.005 : Math.min(0.025, riskFillOpacity * 0.07),
           0
         ]);
+      }
+
+      if (map.getLayer("urban-heat-layer")) {
+        map.setPaintProperty("urban-heat-layer", "fill-opacity", riskFillOpacity);
       }
 
       [
