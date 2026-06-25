@@ -17,6 +17,8 @@ import {
   getLiveWeatherRiskLayer,
   getLiveRoutingStatus,
   requestLiveEmergencyRoute,
+  getZoneExplanation,
+  explainRoute,
 } from "../api/client";
 import type {
   EventSummary,
@@ -28,6 +30,8 @@ import type {
   LiveWeatherSummary,
   LiveRoutingStatusResponse,
   SearchResultItem,
+  ZoneExplanationResponse,
+  RouteExplanationResponse,
 } from "../types/api";
 import { LayerToggle } from "./LayerToggle";
 import { Legend } from "./Legend";
@@ -37,6 +41,7 @@ import { RoutePanel } from "./RoutePanel";
 import { SidePanel } from "./SidePanel";
 import { SummaryCards } from "./SummaryCards";
 import { SearchBox } from "./SearchBox";
+import { ExplainabilityPanel } from "./ExplainabilityPanel";
 
 type RouteEventType = "top-rain" | "latest";
 type RouteVisibility = "normal" | "safe" | "both";
@@ -121,6 +126,15 @@ export const Dashboard = () => {
   const [normalRouteData, setNormalRouteData] = useState<FeatureCollection | null>(null);
   const [safeRouteData, setSafeRouteData] = useState<FeatureCollection | null>(null);
   const [comparison, setComparison] = useState<RouteComparison | null>(null);
+
+  const [selectedZoneCode, setSelectedZoneCode] = useState<string | null>(null);
+  const [zoneExplanation, setZoneExplanation] = useState<ZoneExplanationResponse | null>(null);
+  const [zoneLoading, setZoneLoading] = useState(false);
+  const [routeExplanation, setRouteExplanation] = useState<RouteExplanationResponse | null>(null);
+  const [routeLoading, setRouteLoading] = useState(false);
+  const [explainPanelOpen, setExplainPanelOpen] = useState(false);
+  const [explainActiveTab, setExplainActiveTab] = useState<"area" | "route" | "model">("area");
+  const [isRoutePlanningActive, setIsRoutePlanningActive] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -263,6 +277,7 @@ export const Dashboard = () => {
       setComparison(null);
       setNormalRouteData(null);
       setSafeRouteData(null);
+      setRouteExplanation(null);
       try {
         const response = await requestLiveEmergencyRoute({
           origin,
@@ -323,6 +338,8 @@ export const Dashboard = () => {
     setSafeRouteData(null);
     setComparison(null);
     setRouteSource(mapMode === "today" ? "custom-live" : "demo");
+    setRouteExplanation(null);
+    setIsRoutePlanningActive(false);
   }, [mapMode]);
 
   const handleSetStartPoint = useCallback((coordinate: RouteCoordinate) => {
@@ -330,6 +347,7 @@ export const Dashboard = () => {
     setRouteSelection(prev => ({ origin: coordinate, destination: prev.destination }));
     setRouteSource("custom");
     setRoutingError(null);
+    setIsRoutePlanningActive(true);
   }, []);
 
   const handleSetDestinationPoint = useCallback((coordinate: RouteCoordinate) => {
@@ -339,6 +357,88 @@ export const Dashboard = () => {
     }
     setRouteSelection(prev => ({ origin: prev.origin, destination: coordinate }));
   }, [routeSelection.origin]);
+
+  const handleZoneClick = useCallback(
+    (zoneCode: string, eventId?: string | null) => {
+      if (!zoneCode) {
+        setExplainActiveTab("area");
+        setExplainPanelOpen(true);
+        setZoneExplanation({
+          status: "error",
+          zone_code: "",
+          zone_label: "Unknown Area",
+          mode: mapMode === "history" ? "historical" : "live",
+          risk_score: 0,
+          risk_class: "low",
+          risk_label: "No Risk",
+          summary: "This zone cannot be explained because it has no zone identifier.",
+          top_factors: [],
+          explanation_text: "Missing zone code identifier.",
+          confidence_note: "Decision-support estimate only. Not an official flood report.",
+          honesty_note: "Decision-support estimate only. Not an official flood report."
+        });
+        return;
+      }
+
+      setSelectedZoneCode(zoneCode);
+      setExplainActiveTab("area");
+      setExplainPanelOpen(true);
+      setZoneLoading(true);
+      setZoneExplanation(null);
+
+      const mode = mapMode === "history" ? "historical" : "live";
+      const evtId = mapMode === "history" ? (eventId || selectedEventId || undefined) : undefined;
+
+      getZoneExplanation(zoneCode, mode, evtId)
+        .then((res) => {
+          setZoneExplanation(res);
+        })
+        .catch((err) => {
+          console.error("Failed to load zone explanation:", err);
+          setZoneExplanation({
+            status: "error",
+            zone_code: zoneCode,
+            zone_label: "Unknown Zone",
+            mode,
+            risk_score: 0,
+            risk_class: "low",
+            risk_label: "No Risk",
+            summary: "This zone cannot be explained because it has no zone identifier or the explanation request failed.",
+            top_factors: [],
+            explanation_text: "Request failed.",
+            confidence_note: "Decision-support estimate only. Not an official flood report.",
+            honesty_note: "Decision-support estimate only. Not an official flood report."
+          });
+        })
+        .finally(() => {
+          setZoneLoading(false);
+        });
+    },
+    [mapMode, selectedEventId],
+  );
+
+  const handleWhyThisRouteClick = useCallback(() => {
+    const { origin, destination } = routeSelection;
+    if (!origin || !destination) return;
+
+    setExplainActiveTab("route");
+    setExplainPanelOpen(true);
+    setRouteLoading(true);
+    setRouteExplanation(null);
+
+    const mode = mapMode === "history" ? "historical" : "live";
+
+    explainRoute(origin, destination, mode)
+      .then((res) => {
+        setRouteExplanation(res);
+      })
+      .catch((err) => {
+        console.error("Failed to load route explanation:", err);
+      })
+      .finally(() => {
+        setRouteLoading(false);
+      });
+  }, [routeSelection, mapMode]);
 
   const handleMapModeChange = useCallback((mode: "today" | "history") => {
     setMapMode(mode);
@@ -350,6 +450,11 @@ export const Dashboard = () => {
     setSafeRouteData(null);
     setComparison(null);
     setRouteSource(mode === "today" ? "custom-live" : "demo");
+    setRouteExplanation(null);
+    setIsRoutePlanningActive(false);
+    setSelectedZoneCode(null);
+    setZoneExplanation(null);
+    setExplainPanelOpen(false);
     
     // Automatically toggle active layers
     setLayers((current) => ({
@@ -503,6 +608,9 @@ export const Dashboard = () => {
               searchSelectedPoint={searchSelectedPoint}
               onSetStartPoint={handleSetStartPoint}
               onSetDestinationPoint={handleSetDestinationPoint}
+              onZoneClick={handleZoneClick}
+              selectedZoneCode={selectedZoneCode}
+              isRoutePlanningActive={isRoutePlanningActive}
             />
 
             <AnimatePresence mode="wait">
@@ -524,8 +632,35 @@ export const Dashboard = () => {
                   routeSource={routeSource}
                   routingError={routingError}
                   onResetRoute={resetCustomRoute}
+                  onWhyThisRoute={handleWhyThisRouteClick}
+                  isRoutePlanningActive={isRoutePlanningActive}
+                  onToggleRoutePlanning={setIsRoutePlanningActive}
                 />
               </motion.div>
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {explainPanelOpen && (
+                <motion.div
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute bottom-4 right-4 z-20 w-[23rem] max-h-[calc(100%-2.5rem)] overflow-y-auto sm:block"
+                >
+                  <ExplainabilityPanel
+                    zoneExplanation={zoneExplanation}
+                    routeExplanation={routeExplanation}
+                    onClose={() => {
+                      setExplainPanelOpen(false);
+                      setSelectedZoneCode(null);
+                    }}
+                    activeTab={explainActiveTab}
+                    zoneLoading={zoneLoading}
+                    routeLoading={routeLoading}
+                  />
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         </main>

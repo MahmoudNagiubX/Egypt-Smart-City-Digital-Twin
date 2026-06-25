@@ -24,6 +24,8 @@ import {
   toFiniteNumber,
 } from "../utils/format";
 
+import { Switch } from "@/components/ui/switch";
+
 interface RoutePanelProps {
   comparison: RouteComparison | null;
   eventType: "top-rain" | "latest";
@@ -34,6 +36,9 @@ interface RoutePanelProps {
   routeSource?: "demo" | "custom" | "custom-live";
   routingError?: string | null;
   onResetRoute?: () => void;
+  onWhyThisRoute?: () => void;
+  isRoutePlanningActive?: boolean;
+  onToggleRoutePlanning?: (active: boolean) => void;
 }
 
 const signedPercent = (value: unknown) => {
@@ -62,9 +67,12 @@ export const RoutePanel = ({
   routeSource = "demo",
   routingError,
   onResetRoute,
+  onWhyThisRoute,
+  isRoutePlanningActive = false,
+  onToggleRoutePlanning,
 }: RoutePanelProps) => {
   if (!comparison) {
-    if (routeSource === "custom") {
+    if (routeSource === "custom" || routeSource === "custom-live") {
       return (
         <Card size="sm" className="route-panel border-0 bg-card/95 shadow-xl ring-1 ring-border">
           <CardHeader className="border-b">
@@ -72,15 +80,19 @@ export const RoutePanel = ({
               <MapPin aria-hidden="true" /> Custom Route
             </CardTitle>
             <CardDescription>
-              {selectionState === "origin-set"
-                ? "Origin selected. Choose a destination on the map."
-                : selectionState === "routing"
-                  ? "Comparing normal and weather-safe paths."
-                  : "The selected points could not be routed."}
+              {selectionState === "idle"
+                ? (isRoutePlanningActive 
+                    ? "Click the map to select the starting point." 
+                    : "Toggle planning mode to select start/destination on the map.")
+                : selectionState === "selecting-destination"
+                  ? "Origin selected. Choose a destination on the map."
+                  : selectionState === "routing" || selectionState === "loading"
+                    ? "Comparing normal and weather-safe paths."
+                    : "The selected points could not be routed."}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
-            {selectionState === "routing" ? (
+            {selectionState === "routing" || selectionState === "loading" ? (
               <Progress value={68} className="route-progress" aria-label="Calculating custom route" />
             ) : null}
             {routingError ? (
@@ -90,7 +102,19 @@ export const RoutePanel = ({
                 <AlertDescription>{routingError}</AlertDescription>
               </Alert>
             ) : null}
-            {onResetRoute ? (
+
+            {selectionState === "idle" && onToggleRoutePlanning && (
+              <div className="flex items-center justify-between border rounded-lg p-2.5 bg-slate-50/50">
+                <span className="text-xs font-semibold text-slate-700">Route Planning Mode</span>
+                <Switch 
+                  checked={isRoutePlanningActive} 
+                  onCheckedChange={onToggleRoutePlanning}
+                  size="sm"
+                />
+              </div>
+            )}
+
+            {(selectionState !== "idle" || routingError) && onResetRoute ? (
               <Button type="button" variant="outline" size="sm" onClick={onResetRoute}>
                 <RotateCcw data-icon="inline-start" /> Reset Route
               </Button>
@@ -99,6 +123,7 @@ export const RoutePanel = ({
         </Card>
       );
     }
+
     return (
       <Card size="sm" className="border-0 bg-card/95 shadow-xl ring-1 ring-border">
         <CardHeader>
@@ -223,6 +248,18 @@ export const RoutePanel = ({
             <ToggleGroupItem value="both" aria-label="Show both routes">Both</ToggleGroupItem>
           </ToggleGroup>
         </div>
+
+        {onWhyThisRoute && (
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            onClick={onWhyThisRoute}
+            className="w-full bg-[#2C5EAD] hover:bg-[#1A4B95] text-white flex items-center justify-center gap-1.5 py-2 font-bold shadow-sm"
+          >
+            <Info className="size-4" /> Why this route?
+          </Button>
+        )}
 
         {customRoute && onResetRoute ? (
           <Button type="button" variant="outline" size="sm" onClick={onResetRoute}>
