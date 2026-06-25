@@ -7,28 +7,28 @@
     "lon": 31.33
   },
   "current": {
-    "time": "2026-06-25T00:00",
-    "temperature_2m": 24.5,
-    "apparent_temperature": 0.0,
-    "relative_humidity_2m": 0.0,
+    "time": "2026-06-25T15:45",
+    "temperature_2m": 35.0,
+    "apparent_temperature": 35.0,
+    "relative_humidity_2m": 24.0,
     "rain": 0.0,
     "precipitation": 0.0,
-    "wind_speed_10m": 8.5,
-    "weather_code": 3
+    "wind_speed_10m": 11.5,
+    "weather_code": 0
   },
   "forecast_window": {
     "hours": 24,
     "rain_1h_mm": 0.0,
-    "rain_3h_mm": 4.0,
-    "rain_6h_mm": 8.0,
-    "rain_24h_mm": 8.0,
-    "max_precipitation_probability": 95.0,
-    "mean_temperature_2m": 25.0,
-    "mean_relative_humidity_2m": 60.0,
-    "mean_apparent_temperature": 26.0,
-    "mean_wind_speed_10m": 10.0
+    "rain_3h_mm": 0.0,
+    "rain_6h_mm": 0.0,
+    "rain_24h_mm": 0.0,
+    "max_precipitation_probability": 0.0,
+    "mean_temperature_2m": 28.158333333333335,
+    "mean_relative_humidity_2m": 50.958333333333336,
+    "mean_apparent_temperature": 29.71666666666667,
+    "mean_wind_speed_10m": 7.429166666666668
   },
-  "rain_risk_expected": true,
-  "recommended_event_mode": "live",
+  "rain_risk_expected": false,
+  "recommended_event_mode": "normal",
   "warnings": []
 }
