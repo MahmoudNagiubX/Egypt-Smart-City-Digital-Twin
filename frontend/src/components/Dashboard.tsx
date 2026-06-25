@@ -882,6 +882,54 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   {hasActiveAlerts ? '⚠️ Active Weather Alerts' : '✓ No active alerts'}
                 </div>
 
+                {/* Mode-specific map overlay chips */}
+                {activeRiskLayer === "heat" && (
+                  <>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 12,
+                        right: 480,
+                        zIndex: 15,
+                        background: 'rgba(255,255,255,0.85)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: 999,
+                        padding: '6px 14px',
+                        border: '1px solid rgba(255,255,255,0.6)',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: 'var(--stitch-text-charcoal)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                      }}
+                    >
+                      🛰️ Satellite heat estimate
+                    </div>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 12,
+                        right: 320,
+                        zIndex: 15,
+                        background: 'rgba(255,255,255,0.85)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: 999,
+                        padding: '6px 14px',
+                        border: '1px solid rgba(255,255,255,0.6)',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: '#d97706',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                      }}
+                    >
+                      🔥 Heat Risk active
+                    </div>
+                  </>
+                )}
+
 
 
                 {/* Controls drawer toggle button */}
