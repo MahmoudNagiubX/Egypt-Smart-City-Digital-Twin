@@ -1127,9 +1127,7 @@ export const MapView = ({
           <RotateCcw data-icon="inline-start" /> Reset Route
         </Button>
       ) : null}
-      <div className="pointer-events-none absolute bottom-7 left-4 rounded-full border border-white/80 bg-white/90 px-3 py-1.5 text-[9px] font-medium text-muted-foreground shadow-sm backdrop-blur">
-        Light map • OpenStreetMap context
-      </div>
+
     </div>
   );
 };
