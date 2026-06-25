@@ -90,12 +90,12 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
 
   return (
     <div 
-      className="stitch-card shadow-lg flex flex-col pointer-events-auto max-h-[35rem] w-full border-t-[3px] border-t-[#006688] p-4"
+      className="stitch-card shadow-lg flex flex-col pointer-events-auto max-h-[22rem] w-full border-t-[3px] border-t-[#006688] p-3"
     >
-      <div className="border-b border-white/20 pb-2 shrink-0">
+      <div className="border-b border-white/20 pb-1 shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Cpu className="size-4.5 text-[#006688]" />
+          <div className="flex items-center gap-1.5">
+            <Cpu className="size-3.5 text-[#006688]" />
             <h2 className="text-xs font-bold text-text-charcoal">Explainability</h2>
           </div>
           <button 
@@ -108,12 +108,12 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
           </button>
         </div>
         {/* Tabs navigation */}
-        <div className="flex gap-1 border-b border-white/10 mt-3">
+        <div className="flex gap-1 border-b border-white/10 mt-1.5">
           <button
             type="button"
             onClick={() => setActiveTab("area")}
             className={cn(
-              "px-3 py-1.5 text-[11px] font-bold transition-all border-b-2 -mb-[1px]",
+              "px-2 py-1 text-[10px] font-bold transition-all border-b-2 -mb-[1px]",
               activeTab === "area" 
                 ? "border-[#006688] text-[#006688]" 
                 : "border-transparent text-text-muted hover:text-text-charcoal"
@@ -125,7 +125,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
             type="button"
             onClick={() => setActiveTab("route")}
             className={cn(
-              "px-3 py-1.5 text-[11px] font-bold transition-all border-b-2 -mb-[1px]",
+              "px-2 py-1 text-[10px] font-bold transition-all border-b-2 -mb-[1px]",
               activeTab === "route" 
                 ? "border-[#006688] text-[#006688]" 
                 : "border-transparent text-text-muted hover:text-text-charcoal"
@@ -137,7 +137,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
             type="button"
             onClick={() => setActiveTab("model")}
             className={cn(
-              "px-3 py-1.5 text-[11px] font-bold transition-all border-b-2 -mb-[1px]",
+              "px-2 py-1 text-[10px] font-bold transition-all border-b-2 -mb-[1px]",
               activeTab === "model" 
                 ? "border-[#006688] text-[#006688]" 
                 : "border-transparent text-text-muted hover:text-text-charcoal"
@@ -151,7 +151,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
       <div className="flex-1 overflow-y-auto min-h-0 pt-3">
         {/* AREA TAB */}
         {activeTab === "area" && (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {zoneLoading ? (
               <div className="flex flex-col gap-2 py-4 items-center justify-center text-xs text-text-muted">
                 <div className="size-5 border-2 border-[#006688] border-t-transparent animate-spin rounded-full mb-1" />
@@ -169,16 +169,16 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                   <p className="text-[10px] text-text-muted font-mono mt-0.5">{zoneExplanation.zone_code}</p>
                 </div>
 
-                <div className="text-[11px] bg-white/40 border border-white/60 rounded-xl p-3 leading-relaxed text-text-charcoal">
-                  <p className="font-bold text-text-charcoal mb-1">Why this area?</p>
+                <div className="text-[10px] bg-white/40 border border-white/60 rounded-xl p-2 leading-relaxed text-text-charcoal">
+                  <p className="font-bold text-text-charcoal mb-0.5">Why this area?</p>
                   {zoneExplanation.summary}
                 </div>
 
-                <div className="flex flex-col gap-2 mt-1">
+                <div className="flex flex-col gap-1.5 mt-0.5">
                   <h4 className="text-[10px] font-bold uppercase tracking-wider text-text-muted">Main Risk Drivers</h4>
                   
                   {zoneExplanation.top_factors.map((factor, idx) => (
-                    <div key={factor.factor + idx} className="flex flex-col gap-1 border border-white/60 bg-white/40 rounded-xl p-3 shadow-sm transition-all hover:shadow-md">
+                    <div key={factor.factor + idx} className="flex flex-col gap-0.5 border border-white/60 bg-white/40 rounded-xl p-2 shadow-sm transition-all hover:shadow-md">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5 min-w-0">
                           {getFactorIcon(factor.factor)}
@@ -208,7 +208,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                 <div className="border-t border-white/20 my-2" />
 
                 {/* Footer Notes */}
-                <div className="flex flex-col gap-1.5 mt-1 bg-white/40 border border-white/60 rounded-xl p-3">
+                <div className="flex flex-col gap-1 mt-0.5 bg-white/40 border border-white/60 rounded-xl p-2">
                   <p className="text-[9.5px] font-medium text-text-muted leading-relaxed">
                     <Info className="size-3.5 inline mr-1 text-[#ff9e2a] shrink-0" />
                     {zoneExplanation.confidence_note || "Decision-support estimate only. Not an official flood report."}
@@ -229,9 +229,9 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                 </div>
               </>
             ) : (
-              <div className="flex flex-col py-8 items-center text-center justify-center text-[11px] text-text-muted leading-normal">
-                <Info className="size-6 text-text-muted/60 mb-2" />
-                <p className="font-bold text-text-charcoal mb-1">No Area Selected</p>
+              <div className="flex flex-col py-3 items-center text-center justify-center text-[10px] text-text-muted leading-normal">
+                <Info className="size-4.5 text-text-muted/60 mb-1" />
+                <p className="font-bold text-text-charcoal mb-0.5">No Area Selected</p>
                 Click a risk zone on the map to see explainability.
               </div>
             )}
@@ -240,7 +240,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
 
         {/* ROUTE TAB */}
         {activeTab === "route" && (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {routeLoading ? (
               <div className="flex flex-col gap-2 py-4 items-center justify-center text-xs text-text-muted">
                 <div className="size-5 border-2 border-[#006688] border-t-transparent animate-spin rounded-full mb-1" />
@@ -264,11 +264,11 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                   </div>
                 </div>
 
-                <div className="text-[11px] bg-white/40 border border-white/60 rounded-xl p-3 leading-relaxed text-text-charcoal">
+                <div className="text-[10px] bg-white/40 border border-white/60 rounded-xl p-2 leading-relaxed text-text-charcoal">
                   {routeExplanation.summary}
                 </div>
 
-                <div className="flex flex-col gap-2 mt-1">
+                <div className="flex flex-col gap-1.5 mt-0.5">
                   <h4 className="text-[10px] font-bold uppercase tracking-wider text-text-muted">Tradeoff Drivers</h4>
                   
                   {routeExplanation.route_reasons.map((reason, idx) => {
@@ -277,7 +277,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                     const isNeutral = isRiskRed && percentVal <= 0;
                     
                     return (
-                      <div key={reason.label + idx} className="flex flex-col gap-1 border border-white/60 bg-white/40 rounded-xl p-3 shadow-sm">
+                      <div key={reason.label + idx} className="flex flex-col gap-0.5 border border-white/60 bg-white/40 rounded-xl p-2 shadow-sm">
                         <div className="flex items-center justify-between">
                           <span className="text-[11px] font-bold text-slate-700">{reason.label}</span>
                           <span className={cn(
@@ -297,20 +297,20 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                   })}
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  <div className="border border-white/60 bg-white/30 rounded-xl p-2.5 flex flex-col gap-1">
+                <div className="grid grid-cols-2 gap-2 mt-1.5">
+                  <div className="border border-white/60 bg-white/30 rounded-xl p-2 flex flex-col gap-0.5">
                     <p className="text-[10px] font-bold text-text-charcoal">Normal Route</p>
                     <p className="text-[10px] text-text-muted leading-normal">{routeExplanation.normal_route_explanation.summary}</p>
-                    <div className="flex justify-between items-center mt-auto pt-1.5 text-[9px] font-bold text-text-muted border-t border-white/10">
+                    <div className="flex justify-between items-center mt-auto pt-1 text-[9px] font-bold text-text-muted border-t border-white/10">
                       <span>Segments: {routeExplanation.normal_route_explanation.high_risk_segments}</span>
                       <span>Risk: {routeExplanation.normal_route_explanation.mean_risk_score.toFixed(3)}</span>
                     </div>
                   </div>
 
-                  <div className="border border-white/60 bg-white/30 rounded-xl p-2.5 flex flex-col gap-1">
+                  <div className="border border-white/60 bg-white/30 rounded-xl p-2 flex flex-col gap-0.5">
                     <p className="text-[10px] font-bold text-[#006688]">Weather-Safe</p>
                     <p className="text-[10px] text-text-muted leading-normal">{routeExplanation.safe_route_explanation.summary}</p>
-                    <div className="flex justify-between items-center mt-auto pt-1.5 text-[9px] font-bold text-text-muted border-t border-white/10">
+                    <div className="flex justify-between items-center mt-auto pt-1 text-[9px] font-bold text-text-muted border-t border-white/10">
                       <span>Segments: {routeExplanation.safe_route_explanation.high_risk_segments}</span>
                       <span>Risk: {routeExplanation.safe_route_explanation.mean_risk_score.toFixed(3)}</span>
                     </div>
@@ -319,17 +319,17 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
 
                 <div className="border-t border-white/20 my-2" />
 
-                <div className="bg-white/40 border border-white/60 rounded-xl p-3 flex gap-1.5 items-start">
+                <div className="bg-white/40 border border-white/60 rounded-xl p-2 flex gap-1 items-start">
                   <AlertTriangle className="size-3.5 text-[#ff9e2a] mt-0.5 shrink-0" />
                   <p className="text-[9.5px] text-text-muted leading-normal">
-                    <strong>Disclaimer:</strong> {routeExplanation.honesty_note || "Prototype route guidance only. Not official dispatch instructions."}
+                    <strong>Disclaimer:</strong> {routeExplanation.honesty_note || "Prototype route guidance only."}
                   </p>
                 </div>
               </>
             ) : (
-              <div className="flex flex-col py-8 items-center text-center justify-center text-[11px] text-text-muted leading-normal">
-                <RouteIcon className="size-6 text-text-muted/60 mb-2" />
-                <p className="font-bold text-text-charcoal mb-1">No Active Route</p>
+              <div className="flex flex-col py-3 items-center text-center justify-center text-[10px] text-text-muted leading-normal">
+                <RouteIcon className="size-4.5 text-text-muted/60 mb-1" />
+                <p className="font-bold text-text-charcoal mb-0.5">No Active Route</p>
                 Plan custom points on the map to see route tradeoffs.
               </div>
             )}
@@ -338,7 +338,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
 
         {/* MODEL TAB */}
         {activeTab === "model" && (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {modelLoading ? (
               <div className="flex flex-col gap-2 py-4 items-center justify-center text-xs text-text-muted">
                 <div className="size-5 border-2 border-[#006688] border-t-transparent animate-spin rounded-full mb-1" />
@@ -357,7 +357,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                   <h4 className="text-[10px] font-bold uppercase tracking-wider text-text-muted">Top Risk Factor Weights</h4>
                   
                   {modelSummary.top_global_features.slice(0, 5).map((feat, idx) => (
-                    <div key={feat.feature + idx} className="flex flex-col gap-1 border border-white/60 bg-white/40 rounded-xl p-3 shadow-sm">
+                    <div key={feat.feature + idx} className="flex flex-col gap-0.5 border border-white/60 bg-white/40 rounded-xl p-2 shadow-sm">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5 min-w-0">
                           {getFactorIcon(feat.feature)}
@@ -374,7 +374,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
 
                 <div className="border-t border-white/20 my-2" />
 
-                <div className="flex flex-col gap-1.5 bg-white/40 border border-white/60 rounded-xl p-3">
+                <div className="flex flex-col gap-1 bg-white/40 border border-white/60 rounded-xl p-2">
                   <button
                     type="button"
                     onClick={() => setLimitationsOpen(!limitationsOpen)}
@@ -393,7 +393,7 @@ export const ExplainabilityPanel: React.FC<ExplainabilityPanelProps> = ({
                   )}
                 </div>
 
-                <div className="bg-white/40 border border-white/60 rounded-xl p-3 mt-1 flex gap-1.5 items-start">
+                <div className="bg-white/40 border border-white/60 rounded-xl p-2 mt-0.5 flex gap-1.5 items-start">
                   <Info className="size-3.5 text-[#ff9e2a] mt-0.5 shrink-0" />
                   <p className="text-[9.5px] text-text-muted leading-normal">
                     {modelSummary.honesty_note}

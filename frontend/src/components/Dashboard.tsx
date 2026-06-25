@@ -1086,7 +1086,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
             </div>
 
             {/* Right 3 columns: Detail Overview Column */}
-            <div className="lg:col-span-3 flex flex-col gap-4 overflow-y-auto pr-1 pb-2 stitch-scroll h-full">
+            <div className="lg:col-span-3 flex flex-col gap-2.5 overflow-y-auto pr-1 pb-2 stitch-scroll h-full">
               <div className="flex justify-between items-center px-1">
                 <h2 className="text-sm font-bold text-text-charcoal uppercase tracking-wider">Detail Overview</h2>
                 <span className="text-[10px] text-text-muted font-semibold font-mono">
@@ -1097,11 +1097,11 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               </div>
 
               {/* Weather Info Card */}
-              <div className="stitch-card flex flex-col p-4 shadow-sm relative">
+              <div className="stitch-card flex flex-col py-2.5 px-3 shadow-sm relative">
                 <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <span 
-                      className="material-symbols-outlined text-[42px]" 
+                      className="material-symbols-outlined text-[36px]" 
                       style={{ 
                         fontVariationSettings: "'FILL' 1",
                         color: getWeatherIconColor(currentWeatherIcon)
@@ -1110,45 +1110,45 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                       {currentWeatherIcon}
                     </span>
                     <div>
-                      <div className="text-3xl font-bold tracking-tight text-text-charcoal font-sans">
+                      <div className="text-2xl font-bold tracking-tight text-text-charcoal font-sans">
                         {liveWeather?.current?.temperature_2m != null 
                           ? `${Math.round(liveWeather.current.temperature_2m)}` 
                           : "—"}
-                        <span className="text-sm align-top font-bold block inline-block mt-0.5 ml-0.5">°C</span>
+                        <span className="text-xs align-top font-bold block inline-block mt-0.5 ml-0.5">°C</span>
                       </div>
                     </div>
                   </div>
                   <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
                 </div>
-                <div className="mt-3">
-                  <div className="text-[9px] font-bold uppercase tracking-wider text-text-muted">Current Weather</div>
-                  <div className="text-sm font-bold text-text-charcoal mt-0.5">
+                <div className="mt-1.5">
+                  <div className="text-[8.5px] font-bold uppercase tracking-wider text-text-muted">Current Weather</div>
+                  <div className="text-xs font-bold text-text-charcoal mt-0.5">
                     {liveWeather ? (liveWeather.rain_risk_expected ? "Heavy Rain Expected" : "No meaningful rain risk") : "—"}
                   </div>
                 </div>
-                <p className="text-[10.5px] text-text-muted mt-2 leading-relaxed font-sans">
-                  Real-time predictions based on local station observations and meteorological models.
+                <p className="text-[9.5px] text-text-muted mt-1 leading-normal font-sans">
+                  Real-time predictions based on local observations and meteorological models.
                 </p>
-                <div className="grid grid-cols-3 gap-2 mt-4 border-t border-white/20 pt-3">
+                <div className="grid grid-cols-3 gap-1 mt-2.5 border-t border-white/10 pt-2">
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-text-muted font-sans">Humidity</div>
-                    <div className="font-bold text-xs text-text-charcoal mt-0.5 font-sans">
+                    <div className="text-[8.5px] font-bold uppercase tracking-wider text-text-muted font-sans">Humidity</div>
+                    <div className="font-bold text-[11px] text-text-charcoal mt-0.5 font-sans">
                       {liveWeather?.current?.relative_humidity_2m != null 
                         ? `${liveWeather.current.relative_humidity_2m}%` 
                         : "—"}
                     </div>
                   </div>
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-text-muted font-sans">Wind Speed</div>
-                    <div className="font-bold text-xs text-text-charcoal mt-0.5 font-sans">
+                    <div className="text-[8.5px] font-bold uppercase tracking-wider text-text-muted font-sans">Wind Speed</div>
+                    <div className="font-bold text-[11px] text-text-charcoal mt-0.5 font-sans">
                       {liveWeather?.current?.wind_speed_10m != null 
-                        ? `${liveWeather.current.wind_speed_10m.toFixed(1)} km/h` 
+                        ? `${liveWeather.current.wind_speed_10m.toFixed(1)} km` 
                         : "—"}
                     </div>
                   </div>
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-text-muted font-sans">Precip.</div>
-                    <div className="font-bold text-xs text-text-charcoal mt-0.5 font-sans">
+                    <div className="text-[8.5px] font-bold uppercase tracking-wider text-text-muted font-sans">Precip.</div>
+                    <div className="font-bold text-[11px] text-text-charcoal mt-0.5 font-sans">
                       {liveWeather?.current?.precipitation != null 
                         ? `${liveWeather.current.precipitation.toFixed(1)} mm` 
                         : "—"}
@@ -1158,19 +1158,19 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               </div>
 
               {/* 7-Day Forecast */}
-              <div className="stitch-card flex flex-col p-4 shadow-sm relative">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="text-[9px] font-bold uppercase tracking-wider text-[#006688]">7-Day Forecast</div>
-                  <span className="text-[9px] font-semibold text-text-muted">{dailyForecast?.source ?? "Open-Meteo"}</span>
+              <div className="stitch-card flex flex-col py-2.5 px-3 shadow-sm relative">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="text-[8.5px] font-bold uppercase tracking-wider text-[#006688]">7-Day Forecast</div>
+                  <span className="text-[8.5px] font-semibold text-text-muted">{dailyForecast?.source ?? "Open-Meteo"}</span>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
                   {(dailyForecast?.daily ?? []).slice(0, 7).map((day) => (
-                    <div key={day.date} className="grid grid-cols-[3rem_1.5rem_1fr_auto] items-center gap-2 text-[11px]">
+                    <div key={day.date} className="grid grid-cols-[2.5rem_1.2rem_1fr_auto] items-center gap-1.5 text-[10px]">
                       <span className="font-bold text-text-charcoal">
                         {new Date(`${day.date}T12:00:00`).toLocaleDateString(undefined, { weekday: "short" })}
                       </span>
                       <span 
-                        className="material-symbols-outlined text-[17px]" 
+                        className="material-symbols-outlined text-[15px]" 
                         style={{ 
                           fontVariationSettings: "'FILL' 1",
                           color: getWeatherIconColor(getWeatherIcon(day.weather_code))
@@ -1179,7 +1179,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                         {getWeatherIcon(day.weather_code)}
                       </span>
                       <span className="text-text-muted">{formatMetric(day.precipitation_probability_max, "%")} rain</span>
-                      <span className="font-bold text-text-charcoal">{formatTemperature(day.temperature_2m_max)} / {formatTemperature(day.temperature_2m_min)}</span>
+                      <span className="font-bold text-text-charcoal">{formatTemperature(day.temperature_2m_max)}/{formatTemperature(day.temperature_2m_min)}</span>
                     </div>
                   ))}
                   {dailyForecast?.daily?.length ? null : (
@@ -1189,58 +1189,58 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               </div>
 
               {/* AQI / Air Quality */}
-              <div className="stitch-card flex flex-col p-4 shadow-sm relative">
+              <div className="stitch-card flex flex-col py-2.5 px-3 shadow-sm relative">
                 <div className="flex justify-between items-start gap-3">
                   <div>
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-[#006688]">Air Quality</div>
-                    <div className="mt-1 text-3xl font-bold text-text-charcoal">{aqiValue != null ? Math.round(aqiValue) : "—"}</div>
-                    <div className="text-xs font-bold text-text-charcoal">{aqiLabel}</div>
+                    <div className="text-[8.5px] font-bold uppercase tracking-wider text-[#006688]">Air Quality</div>
+                    <div className="mt-0.5 text-2xl font-bold text-text-charcoal">{aqiValue != null ? Math.round(aqiValue) : "—"}</div>
+                    <div className="text-[11px] font-bold text-text-charcoal">{aqiLabel}</div>
                   </div>
-                  <span className="rounded-full bg-[#E8F5E9] px-2.5 py-1 text-[9px] font-bold text-[#2f6f4f]">
+                  <span className="rounded-full bg-[#E8F5E9] px-2 py-0.5 text-[8.5px] font-bold text-[#2f6f4f]">
                     {airQuality?.status === "ok" ? "Live AQI" : "Unavailable"}
                   </span>
                 </div>
-                <div className="mt-3 grid grid-cols-2 gap-2 border-t border-white/20 pt-3 text-[11px]">
+                <div className="mt-2 grid grid-cols-2 gap-1.5 border-t border-white/10 pt-2 text-[10px]">
                   <div>
-                    <span className="block text-[9px] font-bold uppercase tracking-wider text-text-muted">Major Pollutant</span>
+                    <span className="block text-[8.5px] font-bold uppercase tracking-wider text-text-muted">Major Pollutant</span>
                     <span className="font-bold text-text-charcoal">PM2.5</span>
                   </div>
                   <div>
-                    <span className="block text-[9px] font-bold uppercase tracking-wider text-text-muted">PM10</span>
-                    <span className="font-bold text-text-charcoal">{formatMetric(airQuality?.current?.pm10, " ug/m3", 1)}</span>
+                    <span className="block text-[8.5px] font-bold uppercase tracking-wider text-text-muted">PM10</span>
+                    <span className="font-bold text-text-charcoal">{formatMetric(airQuality?.current?.pm10, " ug", 1)}</span>
                   </div>
                 </div>
                 {aqiSparklinePath ? (
-                  <svg viewBox="0 0 132 34" className="mt-3 h-9 w-full" role="img" aria-label="Air quality hourly trend">
+                  <svg viewBox="0 0 132 34" className="mt-2 h-6 w-full" role="img" aria-label="Air quality hourly trend">
                     <path d={`${aqiSparklinePath} L 132 34 L 0 34 Z`} fill="rgba(88, 169, 118, 0.18)" />
-                    <path d={aqiSparklinePath} fill="none" stroke="#58A976" strokeWidth="2" strokeLinecap="round" />
+                    <path d={aqiSparklinePath} fill="none" stroke="#58A976" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
                 ) : null}
               </div>
 
               {/* Route Recommendation Info */}
-              <div className="stitch-card flex flex-col p-4 shadow-sm relative">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="text-[9px] font-bold uppercase tracking-wider text-[#006688]">Route Advice</div>
-                  <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[16px]">more_vert</span></button>
+              <div className="stitch-card flex flex-col py-2 px-3 shadow-sm relative">
+                <div className="flex justify-between items-start mb-1">
+                  <div className="text-[8.5px] font-bold uppercase tracking-wider text-[#006688]">Route Advice</div>
+                  <button className="text-text-muted hover:bg-black/5 rounded-full p-0.5"><span className="material-symbols-outlined text-[14px]">more_vert</span></button>
                 </div>
-                <div className="text-xs font-bold text-text-charcoal">
+                <div className="text-[11px] font-bold text-text-charcoal">
                   {comparison ? (() => {
                     const rec = (comparison as any).recommendation || 
                       (comparison.safe_route_available ? "weather_safe_route_recommended" : "normal_route_acceptable");
                     let title = "Normal Route Acceptable";
-                    let subtitle = "No meaningful rain risk is expected on this route.";
+                    let subtitle = "No rain risk expected on this route.";
                     if (rec === "weather_safe_route_recommended") {
-                      title = "Weather-Safe Route Recommended";
-                      subtitle = "The normal route crosses higher-risk areas. Use the safer route.";
+                      title = "Weather-Safe Recommended";
+                      subtitle = "Normal route crosses high-risk areas. Use safer route.";
                     } else if (rec === "no_distinct_safer_alternative") {
                       title = "No Distinct Safer Alternative";
-                      subtitle = "The system did not find a route with lower model-estimated risk.";
+                      subtitle = "No route found with lower model risk.";
                     }
                     return (
                       <>
                         {title}
-                        <p className="text-[10px] text-text-muted font-normal mt-1 leading-relaxed font-sans">
+                        <p className="text-[9.5px] text-text-muted font-normal mt-0.5 leading-tight font-sans">
                           {subtitle}
                         </p>
                       </>
