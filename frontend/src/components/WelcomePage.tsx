@@ -115,61 +115,19 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onOpenDashboard }) => 
           </button>
         </div>
 
-        {/* Map Preview Card */}
+        {/* 3D Folded Map Illustration Area */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
-          className="mt-16 w-full max-w-2xl mx-auto stitch-card"
-          style={{ borderRadius: 20, height: 280, overflow: 'hidden', padding: 0 }}
-          aria-hidden="true"
+          className="mt-16 relative w-full max-w-3xl mx-auto flex justify-center"
         >
-          {/* Decorative map preview */}
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(135deg, #daeeff 0%, #e8f5ee 100%)',
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {/* Grid lines simulating street map */}
-            <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.15 }}>
-              {[20, 40, 60, 80].map(y => (
-                <line key={`h${y}`} x1="0" y1={`${y}%`} x2="100%" y2={`${y}%`} stroke="#006688" strokeWidth="0.5" />
-              ))}
-              {[15, 30, 45, 60, 75, 90].map(x => (
-                <line key={`v${x}`} x1={`${x}%`} y1="0" x2={`${x}%`} y2="100%" stroke="#006688" strokeWidth="0.5" />
-              ))}
-            </svg>
-            {/* Risk zone blobs */}
-            <div style={{ position: 'absolute', top: '25%', left: '20%', width: 60, height: 60, background: 'rgba(255,120,0,0.18)', borderRadius: '50%', filter: 'blur(8px)' }} />
-            <div style={{ position: 'absolute', top: '50%', left: '55%', width: 80, height: 80, background: 'rgba(0,102,136,0.15)', borderRadius: '50%', filter: 'blur(10px)' }} />
-            <div style={{ position: 'absolute', bottom: '20%', left: '35%', width: 50, height: 50, background: 'rgba(0,109,54,0.15)', borderRadius: '50%', filter: 'blur(8px)' }} />
-            {/* Route line */}
-            <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
-              <path d="M 80 220 Q 180 160 280 140 Q 380 120 460 100" fill="none" stroke="#006688" strokeWidth="2" strokeDasharray="6 4" opacity="0.6" />
-            </svg>
-            {/* Pills */}
-            {[
-              { label: 'Start', left: '8%', top: '70%' },
-              { label: 'Route Safe', left: '38%', top: '35%' },
-              { label: 'Arrive Safely', left: '68%', top: '22%' },
-            ].map(p => (
-              <div
-                key={p.label}
-                className="stitch-pill"
-                style={{ position: 'absolute', left: p.left, top: p.top, padding: '4px 10px', fontSize: 11, fontWeight: 600, color: 'var(--stitch-text-charcoal)' }}
-              >
-                {p.label}
-              </div>
-            ))}
-            {/* Risk X marker */}
-            <div style={{ position: 'absolute', top: '28%', left: '23%', width: 20, height: 20, background: '#ffdad6', borderRadius: '50%', border: '2px solid #ba1a1a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#ba1a1a', fontWeight: 700 }}>✕</div>
-          </div>
+          <img 
+            className="w-full object-contain drop-shadow-xl" 
+            alt="3D premium illustration of a folded paper map in soft green and blue tones" 
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_LMFYxjJS9V6d9n3vWHh3vt9igJkl31nAoevS6Wc9Mhy0zaJB7Gca-S-97vFZB5hF4DXPOTU7KSPbniI-lkYTY_bTnojW1ULDZpboH2oApORZW7xFTE82TA9WJty-aafNSJ9M-7j1ThICRzeS0lpgmIHh_cFKY1YdlvZyEb0tbS5jgMwj0xwYiYLFwWtFGeMsFxGASuEgfDdjTpAWdxOYTwEbLVdgwylQJ9_rWqCRQCpCGK1vb4DPrF4OVWazgS1aqcSpbC40Pg" 
+            style={{ maxHeight: 400 }}
+          />
         </motion.div>
       </motion.main>
 
