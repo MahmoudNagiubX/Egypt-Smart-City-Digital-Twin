@@ -764,14 +764,14 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   style={{
                     position: 'absolute',
                     top: 12,
-                    left: 12,
+                    right: 170,
                     zIndex: 15,
                     background: 'rgba(255,255,255,0.85)',
                     backdropFilter: 'blur(10px)',
                     borderRadius: 999,
                     padding: '6px 14px',
                     border: '1px solid rgba(255,255,255,0.6)',
-                    fontSize: 11,
+                    fontSize: 11.5,
                     fontWeight: 600,
                     color: hasActiveAlerts ? 'var(--stitch-alert-orange)' : 'var(--stitch-secondary)',
                     display: 'flex',
@@ -779,7 +779,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                     gap: 6,
                   }}
                 >
-                  {hasActiveAlerts ? '⚠️ Active Weather Alerts' : '✓ Live monitoring active'}
+                  {hasActiveAlerts ? '⚠️ Active Weather Alerts' : '✓ No active alerts'}
                 </div>
 
 
