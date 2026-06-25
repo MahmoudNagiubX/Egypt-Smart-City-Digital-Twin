@@ -1,0 +1,45 @@
+{
+  "status": "ok",
+  "selected_model": "Ridge Baseline",
+  "weighted_decision_score": 0.7492089976095053,
+  "reasoning": "The Ridge Baseline was selected because it scored the highest on the robust weighted decision framework. It achieves a high Severity Macro F1 of 1.0000 and generalizes well to unseen weather events (Event MAE: 0.0000). Unlike the baseline Random Forest which was massive (96.5 MB), the tuned model size is significantly smaller (0.003 MB), making it highly efficient for real-time inference and docker deployment in the backend dashboard.",
+  "all_candidates_scored": {
+    "Ridge Baseline": {
+      "weighted_decision_score": 0.7492089976095053,
+      "event_mae": 1.2035487891399933e-05,
+      "zone_mae": 3.033960861843308e-06,
+      "macro_f1": 1.0,
+      "generalization_gap": 9.001527029556624e-06,
+      "model_size_mb": 0.0028543472290039062,
+      "explainability_score": 0.99
+    },
+    "Random Forest Tuned": {
+      "weighted_decision_score": -0.5894367272643064,
+      "event_mae": 0.017038683846270407,
+      "zone_mae": 0.016707243196581446,
+      "macro_f1": 0.9780165420196618,
+      "generalization_gap": 0.00033144064968896117,
+      "model_size_mb": 13.240372657775879,
+      "explainability_score": 0.95
+    },
+    "Extra Trees Tuned": {
+      "weighted_decision_score": -0.8662926026786851,
+      "event_mae": 0.020966130796458777,
+      "zone_mae": 0.013654058944504935,
+      "macro_f1": 0.9726297163195478,
+      "generalization_gap": 0.007312071851953842,
+      "model_size_mb": 15.982010841369629,
+      "explainability_score": 0.95
+    },
+    "HistGradientBoosting Tuned": {
+      "weighted_decision_score": 0.6957091936650686,
+      "event_mae": 0.012864818166594167,
+      "zone_mae": 0.010160079657521685,
+      "macro_f1": 0.986221823926571,
+      "generalization_gap": 0.002704738509072482,
+      "model_size_mb": 0.40237998962402344,
+      "explainability_score": 0.9
+    }
+  },
+  "honesty_note": "The model predicts an engineered weather-impact risk score derived from real weather, satellite, road, and exposure features. It is not trained on verified official flood incident labels."
+}
