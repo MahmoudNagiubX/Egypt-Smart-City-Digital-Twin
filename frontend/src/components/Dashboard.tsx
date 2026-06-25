@@ -782,25 +782,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                   {hasActiveAlerts ? '⚠️ Active Weather Alerts' : '✓ Live monitoring active'}
                 </div>
 
-                {/* Secondary Hint */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 50,
-                    left: 12,
-                    zIndex: 15,
-                    background: 'rgba(255,255,255,0.7)',
-                    backdropFilter: 'blur(8px)',
-                    borderRadius: 999,
-                    padding: '4px 10px',
-                    border: '1px solid rgba(255,255,255,0.5)',
-                    fontSize: 9.5,
-                    fontWeight: 500,
-                    color: 'var(--stitch-text-muted)',
-                  }}
-                >
-                  💡 Click a zone for explanation
-                </div>
+
 
                 {/* Controls drawer toggle button */}
                 <button
