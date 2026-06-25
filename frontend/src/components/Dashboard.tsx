@@ -677,7 +677,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               </span>
               <span>Weather</span>
             </button>
-            <div className="hidden lg:flex items-center gap-6 text-xs font-semibold text-text-muted">
+            <div className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-text-muted">
               <span className="text-[#006688] border-b-2 border-[#006688] pb-1 cursor-default">Overview</span>
               <span className="hover:text-text-charcoal transition-colors cursor-default">Weather Map</span>
               <span className="hover:text-text-charcoal transition-colors cursor-default">Station Logs</span>
@@ -724,7 +724,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
         <div className="flex-1 overflow-hidden p-4 flex flex-col gap-4">
           {/* Live Update & Location Row */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-2 text-[13px]">
               <span className="font-bold text-[#006688]">LIVE UPDATE:</span>
               <span className="text-text-charcoal">
                 {liveWeather?.warnings && liveWeather.warnings.length > 0 
@@ -736,7 +736,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               <a className="text-text-muted hover:text-[#006688] underline decoration-text-muted/50 underline-offset-2" href="#" onClick={e => e.preventDefault()}>See Forecast →</a>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1 text-xs font-semibold text-text-charcoal">
+              <div className="flex items-center gap-1 text-[13px] font-semibold text-text-charcoal">
                 <span className="material-symbols-outlined text-base">location_on</span>
                 <span>Nasr City, Cairo</span>
               </div>
@@ -744,7 +744,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 onClick={() => {
                   alert("Weather routing report generated. Downloading...");
                 }}
-                className="bg-[#c2e8ff] hover:bg-[#006688] hover:text-white text-[#004d67] px-4 py-1.5 rounded-lg text-xs font-semibold hover:bg-primary transition-colors flex items-center gap-2 shadow-sm border border-[#006688]/10 cursor-pointer"
+                className="bg-[#c2e8ff] hover:bg-[#006688] hover:text-white text-[#004d67] px-4 py-1.5 rounded-lg text-[13px] font-semibold hover:bg-primary transition-colors flex items-center gap-2 shadow-sm border border-[#006688]/10 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[18px]">download</span>
                 Export
@@ -949,11 +949,11 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 {/* 1. Regional Extremes Card */}
                 <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Regional Extremes</span>
+                    <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Regional Extremes</span>
                     <span className="material-symbols-outlined text-[16px] text-text-muted">thermostat</span>
                   </div>
                   <div className="flex-1 flex flex-col gap-2 mt-1">
-                    <div className="flex justify-between items-center text-[11.5px]">
+                    <div className="flex justify-between items-center text-[12.5px]">
                       <span className="text-text-muted">Max Wind Gust</span>
                       <span className="font-bold text-text-charcoal font-sans">
                         {liveWeather?.current?.wind_speed_10m != null 
@@ -961,7 +961,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                           : "—"}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
+                    <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
                       <span className="text-text-muted">Expected Rain</span>
                       <span className="font-bold text-text-charcoal font-sans">
                         {liveWeather?.forecast_window?.rain_24h_mm != null 
@@ -969,15 +969,15 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                           : "—"}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
+                    <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
                       <span className="text-text-muted">High-Risk Zones</span>
                       <span className={`font-bold font-sans ${liveRoutingStatus?.risk_class_counts?.high ? "text-[#ba1a1a]" : "text-text-charcoal"}`}>
                         {liveRoutingStatus?.risk_class_counts?.high ?? 0} active
                       </span>
                     </div>
-                    <div className="flex justify-between items-center text-[11.5px] border-t border-white/10 pt-1.5">
+                    <div className="flex justify-between items-center text-[12.5px] border-t border-white/10 pt-1.5">
                       <span className="text-text-muted">Alert Summary</span>
-                      <span className="font-semibold text-text-charcoal text-right text-[10px] truncate max-w-[120px]">
+                      <span className="font-semibold text-text-charcoal text-right text-[11px] truncate max-w-[120px]">
                         {liveWeather?.rain_risk_expected ? "Heavy Precipitation Alert" : "Normal Local Weather"}
                       </span>
                     </div>
@@ -987,20 +987,20 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 {/* 2. Composite Card 1: Today’s Rain Risk & Rain Probability */}
                 <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Rain & Risk Profile</span>
+                    <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Rain & Risk Profile</span>
                     <span className="material-symbols-outlined text-[16px] text-text-muted">umbrella</span>
                   </div>
                   <div className="flex-1 flex flex-col gap-2 mt-1">
                     {/* Sub-item 1: Today's Rain Risk */}
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[9px] text-text-muted font-bold uppercase">
+                      <span className="text-[10px] text-text-muted font-bold uppercase">
                         {rainRiskLabel}
                       </span>
                       <div className="flex items-center justify-between mt-0.5">
-                        <span className="font-bold text-text-charcoal text-xs">
+                        <span className="font-bold text-text-charcoal text-[13.5px]">
                           {rainRiskValue}
                         </span>
-                        <span className={`text-[8.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
+                        <span className={`text-[9.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
                           rainRiskTone === "medium" ? "bg-[#ffdcbe] text-[#ff9e2a]" :
                           "bg-[#83fba5]/30 text-[#006d36]"
                         }`}>
@@ -1010,8 +1010,8 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                     </div>
                     {/* Sub-item 2: Rain Probability */}
                     <div className="flex flex-col gap-0.5 border-t border-white/10 pt-1.5">
-                      <span className="text-[9px] text-text-muted font-bold uppercase">Rain Probability</span>
-                      <span className="font-bold text-text-charcoal text-xs font-sans mt-0.5">
+                      <span className="text-[10px] text-text-muted font-bold uppercase">Rain Probability</span>
+                      <span className="font-bold text-text-charcoal text-[13.5px] font-sans mt-0.5">
                         {probValue}
                       </span>
                     </div>
@@ -1021,18 +1021,18 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 {/* 3. Composite Card 2: Route Recommendation & Risk Reduction */}
                 <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Route Safety</span>
+                    <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Route Safety</span>
                     <span className="material-symbols-outlined text-[16px] text-text-muted">shield</span>
                   </div>
                   <div className="flex-1 flex flex-col gap-2 mt-1">
                     {/* Sub-item 1: Route Recommendation */}
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[9px] text-text-muted font-bold uppercase">Route Recommendation</span>
+                      <span className="text-[10px] text-text-muted font-bold uppercase">Route Recommendation</span>
                       <div className="flex items-center justify-between gap-1 mt-0.5">
-                        <span className="font-semibold text-text-charcoal text-[11px] truncate max-w-[110px]" title={recValue}>
+                        <span className="font-semibold text-text-charcoal text-[12.5px] truncate max-w-[110px]" title={recValue}>
                           {recValue}
                         </span>
-                        <span className={`text-[8.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
+                        <span className={`text-[9.5px] font-bold rounded-full px-1.5 py-0.5 shrink-0 ${
                           recTone === "low" ? "bg-[#83fba5]/30 text-[#006d36]" :
                           recTone === "medium" ? "bg-[#ffdcbe] text-[#ff9e2a]" :
                           "bg-[#c2e8ff]/40 text-[#006688]"
@@ -1043,8 +1043,8 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                     </div>
                     {/* Sub-item 2: Risk Reduction */}
                     <div className="flex flex-col gap-0.5 border-t border-white/10 pt-1.5">
-                      <span className="text-[9px] text-text-muted font-bold uppercase">Risk Reduction</span>
-                      <span className="font-bold text-[#006688] text-xs font-sans mt-0.5">
+                      <span className="text-[10px] text-text-muted font-bold uppercase">Risk Reduction</span>
+                      <span className="font-bold text-[#006688] text-[13.5px] font-sans mt-0.5">
                         {reductionValue}
                       </span>
                     </div>
@@ -1054,31 +1054,31 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                 {/* 4. Safety Guidance Card */}
                 <div className="stitch-card flex flex-col justify-between p-3 relative h-full">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="stitch-label-sm text-[10px] text-text-muted font-bold tracking-wider uppercase">Safety Guidance</span>
+                    <span className="stitch-label-sm text-[11px] text-text-muted font-bold tracking-wider uppercase">Safety Guidance</span>
                     <span className="material-symbols-outlined text-[16px] text-text-muted">security</span>
                   </div>
                   <div className="flex-1 flex flex-col justify-between mt-1 gap-2">
-                    <div className="flex justify-between items-center text-[11.5px]">
+                    <div className="flex justify-between items-center text-[12.5px]">
                       <span className="text-text-muted">Caution Level</span>
                       {liveWeather?.rain_risk_expected ? (
-                        <span className="rounded-full bg-[#FFEbee] px-2 py-0.5 text-[9.5px] font-bold text-[#ba1a1a]">
+                        <span className="rounded-full bg-[#FFEbee] px-2 py-0.5 text-[10px] font-bold text-[#ba1a1a]">
                           Elevated
                         </span>
                       ) : (
-                        <span className="rounded-full bg-[#E8F5E9] px-2 py-0.5 text-[9.5px] font-bold text-[#2f6f4f]">
+                        <span className="rounded-full bg-[#E8F5E9] px-2 py-0.5 text-[10px] font-bold text-[#2f6f4f]">
                           Low
                         </span>
                       )}
                     </div>
                     <div className="border-t border-white/10 pt-2 flex flex-col gap-1">
-                      <span className="text-[9px] text-text-muted font-bold uppercase">Today's Advice</span>
-                      <p className="text-[11px] font-semibold text-text-charcoal leading-snug font-sans">
+                      <span className="text-[10px] text-text-muted font-bold uppercase">Today's Advice</span>
+                      <p className="text-[12.5px] font-semibold text-text-charcoal leading-snug font-sans">
                         {liveWeather?.rain_risk_expected 
                           ? "Heavy rain expected. Avoid low-lying streets and use weather-safe routing." 
                           : "Normal movement is acceptable. Check live updates regularly."}
                       </p>
                     </div>
-                    <div className="text-[9.5px] text-text-muted italic text-right mt-1 font-sans">
+                    <div className="text-[10px] text-text-muted italic text-right mt-1 font-sans">
                       Nasr City dispatch advisory
                     </div>
                   </div>
