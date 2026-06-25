@@ -52,6 +52,8 @@ interface LayerToggleProps {
   riskDisplayMode: "focus" | "all";
   setRiskDisplayMode: (mode: "focus" | "all") => void;
   placesData?: FeatureCollection<PlaceProperties> | null;
+  activeRiskLayer?: "rain" | "heat";
+  onActiveRiskLayerChange?: (layer: "rain" | "heat") => void;
 }
 
 const ToggleRow = ({
@@ -173,6 +175,8 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
   riskDisplayMode,
   setRiskDisplayMode,
   placesData,
+  activeRiskLayer = "rain",
+  onActiveRiskLayerChange,
 }) => {
   const [isHistoryExpanded, setIsHistoryExpanded] = React.useState(false);
 
@@ -229,8 +233,39 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </div>
       </section>
 
+      {/* 1.5 Active Risk Layer Selection */}
+      <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
+        <SectionTitle icon={Flame} title="Active Mode" detail="Select predictive module" />
+        <div className="grid grid-cols-2 gap-2 mt-2">
+          <button
+            type="button"
+            onClick={() => onActiveRiskLayerChange?.("rain")}
+            className={cn(
+              "flex h-8.5 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
+              activeRiskLayer === "rain"
+                ? "bg-[#006688] text-white"
+                : "bg-white/40 border border-white/60 text-text-charcoal hover:bg-white/70"
+            )}
+          >
+            Rain Risk
+          </button>
+          <button
+            type="button"
+            onClick={() => onActiveRiskLayerChange?.("heat")}
+            className={cn(
+              "flex h-8.5 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
+              activeRiskLayer === "heat"
+                ? "bg-[#d97706] text-white"
+                : "bg-white/40 border border-white/60 text-text-charcoal hover:bg-white/70"
+            )}
+          >
+            Heat Risk
+          </button>
+        </div>
+      </section>
+ 
       {/* 2. Today’s Rain Risk (Show Live weather controls first in Today Mode) */}
-      {mapMode === "today" && (
+      {mapMode === "today" && activeRiskLayer === "rain" && (
         <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
           <SectionTitle icon={Layers3} title="Today’s Rain Risk" detail="Real-time predictive overlays" />
           <div className="flex flex-col gap-0.5 mt-1">
@@ -311,6 +346,55 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </section>
       )}
 
+      {/* 2b. Urban Heat (Only when activeRiskLayer === "heat") */}
+      {activeRiskLayer === "heat" && (
+        <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
+          <SectionTitle icon={Flame} title="Urban Heat" detail="Satellite heat estimate" />
+          <div className="flex flex-col gap-0.5 mt-1">
+            <div className="flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/40">
+              <Label className="flex min-w-0 items-center gap-2">
+                <Flame className="size-4 shrink-0 text-amber-600" />
+                <span className="min-w-0 text-xs font-semibold text-text-charcoal">Heat Risk Overlay</span>
+              </Label>
+              <Switch checked={true} disabled size="sm" className="data-[state=checked]:bg-[#d97706]" />
+            </div>
+          </div>
+          
+          <div className="mt-2.5 flex flex-col gap-2.5 border-t border-white/10 pt-2.5">
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-text-muted">
+                <span>Heat Layer Opacity</span>
+                <span>{Math.round(riskFillOpacity * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0.10"
+                max="0.80"
+                step="0.05"
+                value={riskFillOpacity}
+                onChange={(e) => setRiskFillOpacity(parseFloat(e.target.value))}
+                className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-[#d97706]"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-text-muted">
+                <span>Grid Line Opacity</span>
+                <span>{Math.round(gridLineOpacity * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0.05"
+                max="0.50"
+                step="0.05"
+                value={gridLineOpacity}
+                onChange={(e) => setGridLineOpacity(parseFloat(e.target.value))}
+                className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-[#d97706]"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+ 
       {/* 3. Route Setup Instructions */}
       <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
         <SectionTitle icon={Route} title="Route Setup" detail="Weather-aware routing" />
@@ -443,8 +527,8 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </div>
       </section>
 
-      {/* 6. Historical Analysis Section (Only visible in History mode) */}
-      {mapMode === "history" && (
+      {/* 6. Historical Analysis Section (Only visible in History mode and Rain active) */}
+      {mapMode === "history" && activeRiskLayer === "rain" && (
         <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
           <button
             type="button"
