@@ -9,13 +9,9 @@ import {
   Info, 
   Cpu, 
   AlertTriangle, 
-  X,
-  Compass,
-  ArrowRight,
-  TrendingDown
+  X
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { 
