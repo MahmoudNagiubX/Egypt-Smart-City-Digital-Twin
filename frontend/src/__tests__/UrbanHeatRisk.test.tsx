@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 import { render, screen, act, cleanup, fireEvent } from '@testing-library/react';
 import { expect, test, vi, afterEach } from 'vitest';
-import React from 'react';
 
 // Mock IntersectionObserver
 class IntersectionObserverMock {
@@ -157,6 +156,7 @@ vi.mock('../api/client', () => ({
     model_name: "HistGradientBoostingRegressor",
     target: "heat_anomaly_c",
     feature_count: 61,
+    metrics: {},
     top_global_features: [
       { feature: "built_up_density", label: "Built-Up Density", importance: 0.45, reason: "Built environments absorb more solar radiation." }
     ],
@@ -215,6 +215,7 @@ test('2. LayerToggle renders Heat Risk option, opacities, and toggles cleanly', 
         latestRisk: false,
         topRainRisk: false,
         riskSummary: false,
+        selectedRisk: false,
         liveRisk: false,
       }}
       onToggle={onToggle}
@@ -265,6 +266,7 @@ test('2. LayerToggle renders Heat Risk option, opacities, and toggles cleanly', 
         latestRisk: false,
         topRainRisk: false,
         riskSummary: false,
+        selectedRisk: false,
         liveRisk: false,
       }}
       onToggle={onToggle}
@@ -314,6 +316,7 @@ test('3. ExplainabilityPanel displays human-readable factors and Landsat authent
     top_global_features: [
       { feature: "built_up_density", label: "Built-Up Density", importance: 0.45, reason: "Heat driver." }
     ],
+    metrics: {},
     data_authenticity: {
       landsat_rows: 4932,
       fallback_rows: 0,
@@ -391,10 +394,22 @@ test('4. Full App Integration renders dashboard elements, search, routing panel,
   expect(screen.getAllByText(/not an official warning/i).length).toBeGreaterThan(0);
   expect(screen.queryByText(/official public-health heat warning/i)).toBeNull();
 
+  // Reopen drawer since transitioning to heat mode automatically collapses it
+  const controlsBtn2 = screen.getByText(/Controls/i);
+  await act(async () => {
+    fireEvent.click(controlsBtn2);
+  });
+
   // Toggle back to rain
   const rainBtn = screen.getByText("Rain Risk");
   await act(async () => {
     fireEvent.click(rainBtn);
+  });
+
+  // Reopen drawer since transitioning back to rain mode collapses it
+  const controlsBtn3 = screen.getByText(/Controls/i);
+  await act(async () => {
+    fireEvent.click(controlsBtn3);
   });
 
   // Routing setup checks
