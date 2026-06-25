@@ -568,6 +568,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
     setSelectedZoneCode(null);
     setZoneExplanation(null);
     setSelectedHeatZoneExplanation(null);
+    setShowControlsDrawer(false);
   }, []);
 
   const handleWhyThisRouteClick = useCallback(() => {
@@ -921,14 +922,14 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
                         top: 12,
                         left: 12,
                         bottom: 12,
-                        width: 300,
+                        width: activeRiskLayer === "heat" ? 250 : 300,
                         zIndex: 20,
-                        padding: '1.25rem',
+                        padding: activeRiskLayer === "heat" ? '0.75rem' : '1.25rem',
                         borderRadius: '20px',
                         overflowY: 'auto',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '1rem',
+                        gap: activeRiskLayer === "heat" ? '0.75rem' : '1rem',
                       }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>

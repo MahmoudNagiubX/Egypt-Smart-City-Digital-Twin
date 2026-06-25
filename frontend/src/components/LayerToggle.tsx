@@ -395,30 +395,32 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </section>
       )}
  
-      {/* 3. Route Setup Instructions */}
-      <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
-        <SectionTitle icon={Route} title="Route Setup" detail="Weather-aware routing" />
-        <div className="mt-1.5 flex flex-col gap-2 px-1">
-          <div className="rounded-xl bg-white/40 border border-white/60 p-3 text-[11px] leading-relaxed text-text-charcoal shadow-sm">
-            <span className="font-bold text-[#006688] block mb-0.5">Instruction:</span>
-            {selectionState === "idle" && "Click the map to choose your starting point"}
-            {selectionState === "selecting-destination" && "Now choose your destination"}
-            {selectionState === "ready" && "Route ready • click the map again to clear"}
-            {selectionState === "loading" && "Calculating weather-aware route..."}
-            {routingError && <span className="text-red-600 font-medium block mt-1">{routingError}</span>}
+      {/* 3. Route Setup Instructions (Only when activeRiskLayer === "rain") */}
+      {activeRiskLayer === "rain" && (
+        <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
+          <SectionTitle icon={Route} title="Route Setup" detail="Weather-aware routing" />
+          <div className="mt-1.5 flex flex-col gap-2 px-1">
+            <div className="rounded-xl bg-white/40 border border-white/60 p-3 text-[11px] leading-relaxed text-text-charcoal shadow-sm">
+              <span className="font-bold text-[#006688] block mb-0.5">Instruction:</span>
+              {selectionState === "idle" && "Click the map to choose your starting point"}
+              {selectionState === "selecting-destination" && "Now choose your destination"}
+              {selectionState === "ready" && "Route ready • click the map again to clear"}
+              {selectionState === "loading" && "Calculating weather-aware route..."}
+              {routingError && <span className="text-red-600 font-medium block mt-1">{routingError}</span>}
+            </div>
+            {(selectionState !== "idle" || routingError) && (
+              <button
+                type="button"
+                onClick={onResetRoute}
+                className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/50 text-xs font-semibold text-text-charcoal transition-all hover:bg-white/80 active:bg-white"
+              >
+                <RotateCcw className="size-3.5" />
+                Reset Route
+              </button>
+            )}
           </div>
-          {(selectionState !== "idle" || routingError) && (
-            <button
-              type="button"
-              onClick={onResetRoute}
-              className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/50 text-xs font-semibold text-text-charcoal transition-all hover:bg-white/80 active:bg-white"
-            >
-              <RotateCcw className="size-3.5" />
-              Reset Route
-            </button>
-          )}
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 4. Map Reference Layers */}
       <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
