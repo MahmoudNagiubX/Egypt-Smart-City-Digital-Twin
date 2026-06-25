@@ -1,0 +1,53 @@
+{
+  "input_file": "C:\\Users\\mahmo\\Documents\\Smart Digital Twin\\backend\\app\\data\\nasr_city\\heat\\heat_zone_features.csv",
+  "total_rows": 4932,
+  "target_column": "heat_anomaly_c",
+  "excluded_leakage_columns": [
+    "lst_c",
+    "lst_mean_c",
+    "lst_median_c",
+    "lst_max_c",
+    "heat_anomaly_c",
+    "heat_risk_score",
+    "heat_risk_class",
+    "lst_percentile_rank",
+    "hot_zone_flag",
+    "lst_x_built_up",
+    "lst_x_low_vegetation",
+    "heat_anomaly_x_population",
+    "heat_anomaly_x_road_density"
+  ],
+  "excluded_metadata_columns": [
+    "zone_code",
+    "scene_id",
+    "date",
+    "geometry",
+    "source_mode",
+    "lst_source",
+    "weather_context_source",
+    "is_landsat_observed",
+    "is_fallback_generated",
+    "source_warning",
+    "cloud_filter_summary",
+    "date_parsed",
+    "builtup_source",
+    "builtup_warning",
+    "landcover_source",
+    "landcover_warning",
+    "population_source",
+    "population_warning",
+    "elevation_source",
+    "elevation_warning",
+    "season",
+    "dominant_landcover_class"
+  ],
+  "random_state": 42,
+  "model_candidates": [
+    "DummyRegressor",
+    "Ridge",
+    "RandomForestRegressor",
+    "ExtraTreesRegressor",
+    "HistGradientBoostingRegressor",
+    "GradientBoostingRegressor"
+  ]
+}

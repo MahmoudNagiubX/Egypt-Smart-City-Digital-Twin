@@ -135,6 +135,7 @@ HEAT_DATA_QUALITY_REPORT_PATH = NASR_CITY_HEAT_DIR / "heat_data_quality_report.j
 HEAT_METHODOLOGY_NOTE_PATH = NASR_CITY_HEAT_DIR / "heat_methodology_note.md"
 HEAT_DATA_AUTHENTICITY_REPORT_PATH = NASR_CITY_HEAT_DIR / "heat_data_authenticity_report.json"
 HEAT_TRAINING_READINESS_REPORT_PATH = NASR_CITY_HEAT_DIR / "heat_training_readiness_report.json"
+HEAT_MODELS_DIR = NASR_CITY_HEAT_DIR / "models"
 
 
 def ensure_data_dirs():
@@ -156,6 +157,7 @@ def ensure_data_dirs():
         NASR_CITY_MODELS,
         LIVE_WEATHER_CACHE_DIR,
         NASR_CITY_HEAT_DIR,
+        HEAT_MODELS_DIR,
     ]
     for directory in directories:
         directory.mkdir(parents=True, exist_ok=True)
