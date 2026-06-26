@@ -1,6 +1,6 @@
-# Smart City Digital Twin - Run Commands Guide
+# Geo Weather - Run Commands Guide
 
-This document lists the PowerShell commands required to launch, test, and build the backend and frontend components of the Nasr City Weather-Impact and Heat Risk Digital Twin.
+This document lists the PowerShell commands required to launch, test, and build the backend and frontend components of the Geo Weather (Nasr City) dashboard.
 
 ---
 

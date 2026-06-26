@@ -1,4 +1,4 @@
-# Live Application URL
+# Geo Weather — Live Application URL
 
 Live app:
 * Pending deployment

@@ -25,7 +25,7 @@ This document provides the presenter with a structured walk-through script for l
 ### Introduction
 > "Welcome. Densely populated urban centers like Nasr City in Cairo face growing climate risks, including sudden rain-induced road blockages and micro-climate heat islands. 
 > 
-> The Smart Digital Twin dashboard serves as an open-data-powered, decision-support prototype to help municipal dispatchers and urban planners evaluate these environmental risks."
+> The Geo Weather dashboard serves as an open-data-powered, decision-support prototype to help municipal dispatchers and urban planners evaluate these environmental risks."
 
 ### Rain Mode & Safety Routing
 > "Under default Rain Risk mode, the platform combines live forecast data from the Open-Meteo API with building density and slope metrics. 
@@ -38,4 +38,4 @@ This document provides the presenter with a structured walk-through script for l
 > Clicking a hot zone reveals its local environmental drivers, such as high building density. Our Model Info section details the `HistGradientBoostingRegressor` model, which was trained on 4,932 real observed Landsat scene rows."
 
 ### Conclusion
-> "This digital twin demonstrates how municipal agencies can leverage explainable machine learning models and open datasets to build safer, more resilient cities. Thank you."
+> "This dashboard demonstrates how municipal agencies can leverage explainable machine learning models and open datasets to build safer, more resilient cities. Thank you."

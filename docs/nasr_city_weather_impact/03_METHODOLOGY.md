@@ -1,6 +1,6 @@
 # System Methodology
 
-This document details the mathematical logic, spatial calculations, and machine learning structures implemented in the digital twin.
+This document details the mathematical logic, spatial calculations, and machine learning structures implemented in the Geo Weather dashboard.
 
 ---
 

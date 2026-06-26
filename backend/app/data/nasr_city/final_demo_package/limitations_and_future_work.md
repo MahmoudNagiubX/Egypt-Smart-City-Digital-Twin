@@ -1,6 +1,6 @@
 # Limitations and Future Work
 
-This document outlines the current limitations of the Nasr City Weather-Impact and Heat Risk Digital Twin system and details planned expansion vectors.
+This document outlines the current limitations of the Geo Weather (Nasr City) system and details planned expansion vectors.
 
 ---
 
@@ -12,7 +12,7 @@ This document outlines the current limitations of the Nasr City Weather-Impact a
 * **OpenStreetMap Attribute Density:** Topological routing parameters (e.g. road widths, surface materials, and drainage configurations) are constrained by OSM volunteer edits and may contain gaps.
 
 ### Operational and Scientific Honesty
-* **Decision-Support Focus:** This digital twin is a decision-support prototype. It does NOT serve as an official emergency dispatch system or certified public-health hazard warning mechanism.
+* **Decision-Support Focus:** This dashboard is a decision-support prototype. It does NOT serve as an official emergency dispatch system or certified public-health hazard warning mechanism.
 * **Validation Gaps:** The correlation between predicted road hazard indices and actual physical flooding events requires validation against historical municipal emergency incident databases, which are currently unavailable to the system.
 
 ---

@@ -1,6 +1,6 @@
-# Project Description — Nasr City Weather-Impact Digital Twin
+# Project Description — Geo Weather (Nasr City)
 
-This document outlines the purpose, target user personas, and core features of the Nasr City Weather-Impact and Heat Risk Digital Twin system.
+This document outlines the purpose, target user personas, and core features of the Geo Weather (Nasr City) dashboard.
 
 ---
 
