@@ -1,6 +1,6 @@
-# Digital Twin - Technical Summary
+# Geo Weather - Technical Summary
 
-This document provides a technical specification of the Nasr City Weather-Impact and Heat Risk Digital Twin system.
+This document provides a technical specification of the Geo Weather (Nasr City) dashboard.
 
 ---
 

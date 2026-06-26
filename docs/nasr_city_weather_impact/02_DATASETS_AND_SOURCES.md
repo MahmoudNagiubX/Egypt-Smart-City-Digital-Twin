@@ -1,6 +1,6 @@
 # Datasets and Sources
 
-This document lists the baseline geographic and meteorological datasets integrated into the Nasr City Digital Twin.
+This document lists the baseline geographic and meteorological datasets integrated into the Geo Weather (Nasr City) dashboard.
 
 ---
 

@@ -1,6 +1,6 @@
 # 3-5 Minute Presentation Script
 
-This script provides a concise, professional speaking guide for demonstrating the Nasr City digital twin dashboard.
+This script provides a concise, professional speaking guide for demonstrating the Geo Weather (Nasr City) dashboard.
 
 ---
 
@@ -12,7 +12,7 @@ Municipal emergency teams and urban planners often lack integrated, street-level
 ---
 
 ### 2. System Overview (Approx. 45 seconds)
-"To address this challenge, we developed the Smart Digital Twin for Nasr City. This dashboard serves as an open-data-powered, decision-support prototype. 
+"To address this challenge, we developed the Geo Weather dashboard for Nasr City. This dashboard serves as an open-data-powered, decision-support prototype. 
 
 It is divided into two primary operational modes: **Rain Risk** for precipitation-induced street obstructions, and **Heat Risk** for land surface temperature anomalies. The platform integrates real-time weather forecasts, open geographic datasets, and machine learning models to estimate relative risks across 416 individual grid zones in Nasr City."
 
@@ -40,11 +40,11 @@ We can select a high-risk zone to see its local drivers, such as high Built-Up D
 ---
 
 ### 6. Real Data Sources & Limitations (Approx. 30 seconds)
-"The twin relies entirely on authentic, open environmental data. This includes OpenStreetMap for street topology, Landsat thermal bands, and ESA WorldCover land use maps. 
+"The system relies entirely on authentic, open environmental data. This includes OpenStreetMap for street topology, Landsat thermal bands, and ESA WorldCover land use maps. 
 
 We want to emphasize that this system is a decision-support prototype. It does not replace official emergency dispatch authorities, and its calculations represent statistical estimates rather than verified street-level flood sensors."
 
 ---
 
 ### 7. Closing Value Statement (Approx. 15 seconds)
-"In conclusion, by combining live meteorology, geospatial density markers, and explainable machine learning models, this digital twin demonstrates how municipal planners can leverage open data to build safer, more resilient cities. Thank you."
+"In conclusion, by combining live meteorology, geospatial density markers, and explainable machine learning models, this system demonstrates how municipal planners can leverage open data to build safer, more resilient cities. Thank you."

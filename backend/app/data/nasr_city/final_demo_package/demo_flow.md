@@ -1,12 +1,12 @@
 # 12-Step Demo Flow Script
 
-This script guides the presenter through the live demo of the Nasr City Weather-Impact and Heat Risk Digital Twin, explaining interactive operations step-by-step.
+This script guides the presenter through the live demo of the Geo Weather (Nasr City) dashboard, explaining interactive operations step-by-step.
 
 ---
 
 ### Step 1: Open the Application
 * **Action:** Open your browser and navigate to the frontend URL (typically `http://localhost:5173`).
-* **What to Say:** "Welcome to the Nasr City Smart Digital Twin Dashboard. We're launching the dashboard, which acts as a decision-support system for emergency mobility and environmental risks in Nasr City."
+* **What to Say:** "Welcome to the Geo Weather Dashboard. We're launching the dashboard, which acts as a decision-support system for emergency mobility and environmental risks in Nasr City."
 * **What the Evaluator Should Notice:** The clean welcome/landing page loads, showing a summary of the model capabilities, before the user proceeds to the main dashboard without layout issues.
 
 ### Step 2: Show Live Weather Status
