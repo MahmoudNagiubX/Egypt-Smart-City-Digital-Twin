@@ -1,0 +1,25 @@
+{
+  "build_folder_path": "deploy/huggingface_space_build",
+  "copied_directories": [
+    "backend",
+    "frontend",
+    "docs",
+    "deliverables"
+  ],
+  "copied_required_files": [
+    "Dockerfile",
+    "README.md",
+    "docker-compose.yml",
+    "backend/requirements.txt"
+  ],
+  "skipped_directories": [
+    ".git",
+    ".venv",
+    "node_modules",
+    "frontend/dist",
+    "**/__pycache__",
+    "**/.pytest_cache"
+  ],
+  "package_size_bytes": 242378011,
+  "ready_to_push_to_space": true
+}

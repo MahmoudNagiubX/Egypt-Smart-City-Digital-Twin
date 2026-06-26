@@ -37,3 +37,4 @@ Thumbs.db
 # Temporary
 
 tmp/
+deploy/huggingface_space_build/
