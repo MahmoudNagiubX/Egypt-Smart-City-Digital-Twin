@@ -1,16 +1,22 @@
 # Geo Weather — Live Application URL
 
 Live app:
-* Pending deployment
+* Pending Hugging Face deployment
 
 Backend health:
-* Pending deployment
+* Pending Hugging Face deployment
 
 Heat health:
-* Pending deployment
+* Pending Hugging Face deployment
 
 Deployment platform:
-* Render
+* Hugging Face Spaces Docker
 
-Branch:
-* feature/nasr-city-weather-impact-module
+Space name:
+* geo-weather
+
+Deployment branch:
+* main
+
+Expected URL format:
+* https://huggingface.co/spaces/<username>/geo-weather
