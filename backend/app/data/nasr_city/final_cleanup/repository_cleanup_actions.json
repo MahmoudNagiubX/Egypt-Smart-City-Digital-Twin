@@ -1,0 +1,27 @@
+{
+  "deleted_files": [],
+  "deleted_folders": [
+    "backend/app/data/maps",
+    "backend/app/data/models",
+    "backend/app/data/outputs",
+    "backend/app/data/processed",
+    "backend/app/data/raw",
+    "backend/app/data/samples",
+    ".pytest_cache",
+    "backend/app/__pycache__",
+    "backend/app/weather_impact/__pycache__",
+    "backend/app/tests/__pycache__",
+    "backend/app/scripts/__pycache__"
+  ],
+  "preserved_empty_folders_with_reason": {
+    "deliverables/presentation": "Required deliverables structure for final submission",
+    "deliverables/source_code_zip": "Required deliverables structure for final submission",
+    "deliverables/team_excel": "Required deliverables structure for final submission",
+    "deliverables/video_demo": "Required deliverables structure for final submission"
+  },
+  "skipped_risky_items_with_reason": {
+    "backend/app/data/nasr_city/final_demo_package/": "Contains presentation scripts, speak guides, and run configuration assets that must be preserved",
+    "backend/app/data/nasr_city/final_qa/": "Contains critical QA results, checklist files, and API reports",
+    "backend/app/data/nasr_city/heat/": "Contains baseline Landsat heat model files and regressor weights"
+  }
+}
