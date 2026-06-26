@@ -1,6 +1,6 @@
 # Live Deployment Guide — Render Docker Web Service
 
-This guide provides step-by-step instructions for deploying the Nasr City Smart Digital Twin system live on Render.
+This guide provides step-by-step instructions for deploying the Geo Weather (Nasr City) dashboard live on Render.
 
 ---
 
@@ -29,7 +29,7 @@ This guide provides step-by-step instructions for deploying the Nasr City Smart 
    Locate and select your `Smart Digital Twin` repository from the connected Git list.
 
 5. **Configure Web Service Parameters:**
-   * **Name:** `smart-digital-twin`
+   * **Name:** `geo-weather`
    * **Region:** Choose the region closest to you.
    * **Branch:** `feature/nasr-city-weather-impact-module`
    * **Runtime:** Select **Docker**.
