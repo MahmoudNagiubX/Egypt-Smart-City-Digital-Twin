@@ -1,0 +1,58 @@
+{
+  "backend_compile_status": "passed",
+  "backend_test_status": "passed",
+  "frontend_test_status": "passed",
+  "frontend_build_status": "passed",
+  "fastapi_static_serving_status": "passed",
+  "api_endpoint_smoke_status": "passed",
+  "docker_build_status": "not run locally",
+  "docker_run_status": "not run locally",
+  "endpoint_checks": [
+    {
+      "target": "Root Frontend serving",
+      "url": "http://127.0.0.1:8000/",
+      "status_code": 200,
+      "status": "passed",
+      "sanity_checked": true,
+      "content_type": "text/html; charset=utf-8",
+      "error": null
+    },
+    {
+      "target": "FastAPI health check",
+      "url": "http://127.0.0.1:8000/api/weather-impact/health",
+      "status_code": 200,
+      "status": "passed",
+      "sanity_checked": true,
+      "content_type": "application/json",
+      "error": null
+    },
+    {
+      "target": "Weather live",
+      "url": "http://127.0.0.1:8000/api/weather-impact/weather/live",
+      "status_code": 200,
+      "status": "passed",
+      "sanity_checked": true,
+      "content_type": "application/json",
+      "error": null
+    },
+    {
+      "target": "Heat health check",
+      "url": "http://127.0.0.1:8000/api/weather-impact/heat/health",
+      "status_code": 200,
+      "status": "passed",
+      "sanity_checked": true,
+      "content_type": "application/json",
+      "error": null
+    },
+    {
+      "target": "Heat risk summary",
+      "url": "http://127.0.0.1:8000/api/weather-impact/heat/summary",
+      "status_code": 200,
+      "status": "passed",
+      "sanity_checked": true,
+      "content_type": "application/json",
+      "error": null
+    }
+  ],
+  "issues_warnings": []
+}
