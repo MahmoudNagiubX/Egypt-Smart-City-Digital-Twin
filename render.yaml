@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: smart-digital-twin
+    name: geo-weather
     runtime: docker
     dockerfilePath: ./Dockerfile.deploy
     healthCheckPath: /api/weather-impact/health

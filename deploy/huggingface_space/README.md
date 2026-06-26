@@ -1,5 +1,5 @@
 ---
-title: Smart Digital Twin
+title: Geo Weather
 emoji: 🌦️
 colorFrom: blue
 colorTo: orange
@@ -8,9 +8,9 @@ app_port: 7860
 pinned: false
 ---
 
-# Smart Digital Twin - Nasr City
+# Geo Weather - Nasr City
 
-Smart Digital Twin dashboard for Nasr City weather impact, safe routing, and urban heat risk visualization.
+Geo Weather dashboard for Nasr City weather impact, safe routing, and urban heat risk visualization.
 
 ---
 

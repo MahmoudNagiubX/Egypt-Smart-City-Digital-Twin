@@ -1,6 +1,6 @@
-# Hugging Face Spaces Deployment Guide
+# Geo Weather — Hugging Face Spaces Deployment Guide
 
-This guide provides step-by-step instructions for deploying the Smart Digital Twin system to Hugging Face Spaces using the Docker SDK.
+This guide provides step-by-step instructions for deploying the Geo Weather system to Hugging Face Spaces using the Docker SDK.
 
 ---
 
@@ -11,7 +11,7 @@ This guide provides step-by-step instructions for deploying the Smart Digital Tw
 
 2. **Create a New Space:**
    * Click on your profile icon in the top right corner and select **New Space**.
-   * **Space Name:** `smart-digital-twin`
+   * **Space Name:** `geo-weather`
    * **License:** Select `mit` or leave as default.
    * **SDK:** Select **Docker**.
    * **Docker Template:** Select **Blank** (or standard docker container).
@@ -24,7 +24,7 @@ This guide provides step-by-step instructions for deploying the Smart Digital Tw
 4. **Clone the Space Repository Locally:**
    On the new Space page, copy the Git clone command and run it in a separate folder on your local machine:
    ```bash
-   git clone https://huggingface.co/spaces/<your-username>/smart-digital-twin
+   git clone https://huggingface.co/spaces/<your-username>/geo-weather
    ```
 
 5. **Generate the Clean Build Package:**
@@ -41,7 +41,7 @@ This guide provides step-by-step instructions for deploying the Smart Digital Tw
    In your cloned Space repository terminal, run:
    ```bash
    git add .
-   git commit -m "hf deploy: initial import of smart digital twin application"
+   git commit -m "hf deploy: initial import of geo weather application"
    git push
    ```
    *Note: If pushing files larger than 10MB fails, verify if Hugging Face LFS is required or prompt authentication.*
@@ -51,9 +51,9 @@ This guide provides step-by-step instructions for deploying the Smart Digital Tw
 
 9. **Retrieve the Live URL:**
    Once the status changes to `Running`, test the following endpoints in your browser:
-   * Main App: `https://huggingface.co/spaces/<your-username>/smart-digital-twin`
-   * API Health Check: `https://huggingface.co/spaces/<your-username>/smart-digital-twin/api/weather-impact/health`
-   * Heat Health Status: `https://huggingface.co/spaces/<your-username>/smart-digital-twin/api/weather-impact/heat/health`
+   * Main App: `https://huggingface.co/spaces/<your-username>/geo-weather`
+   * API Health Check: `https://huggingface.co/spaces/<your-username>/geo-weather/api/weather-impact/health`
+   * Heat Health Status: `https://huggingface.co/spaces/<your-username>/geo-weather/api/weather-impact/heat/health`
 
 10. **Record the Final Link:**
     Add the live URL to your [LIVE_APPLICATION_URL.md](file:///C:/Users/mahmo/Documents/Smart%20Digital%20Twin/deliverables/LIVE_APPLICATION_URL.md) file.
