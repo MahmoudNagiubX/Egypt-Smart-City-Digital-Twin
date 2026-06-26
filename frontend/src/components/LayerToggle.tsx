@@ -21,7 +21,6 @@ import {
   Flame,
   GraduationCap,
   Hospital,
-  Info,
   Landmark,
   Layers3,
   Map,
@@ -52,6 +51,8 @@ interface LayerToggleProps {
   riskDisplayMode: "focus" | "all";
   setRiskDisplayMode: (mode: "focus" | "all") => void;
   placesData?: FeatureCollection<PlaceProperties> | null;
+  activeRiskLayer?: "rain" | "heat";
+  onActiveRiskLayerChange?: (layer: "rain" | "heat") => void;
 }
 
 const ToggleRow = ({
@@ -173,8 +174,15 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
   riskDisplayMode,
   setRiskDisplayMode,
   placesData,
+  activeRiskLayer = "rain",
+  onActiveRiskLayerChange,
 }) => {
   const [isHistoryExpanded, setIsHistoryExpanded] = React.useState(false);
+  const [isPlacesExpanded, setIsPlacesExpanded] = React.useState(activeRiskLayer !== "heat");
+
+  React.useEffect(() => {
+    setIsPlacesExpanded(activeRiskLayer !== "heat");
+  }, [activeRiskLayer]);
 
   const poiCounts = React.useMemo(() => {
     if (!placesData || !placesData.features) return null;
@@ -229,8 +237,39 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </div>
       </section>
 
+      {/* 1.5 Active Risk Layer Selection */}
+      <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
+        <SectionTitle icon={Flame} title="Active Mode" detail="Select predictive module" />
+        <div className="grid grid-cols-2 gap-2 mt-2">
+          <button
+            type="button"
+            onClick={() => onActiveRiskLayerChange?.("rain")}
+            className={cn(
+              "flex h-8.5 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
+              activeRiskLayer === "rain"
+                ? "bg-[#006688] text-white"
+                : "bg-white/40 border border-white/60 text-text-charcoal hover:bg-white/70"
+            )}
+          >
+            Rain Risk
+          </button>
+          <button
+            type="button"
+            onClick={() => onActiveRiskLayerChange?.("heat")}
+            className={cn(
+              "flex h-8.5 items-center justify-center rounded-lg text-xs font-bold transition-all shadow-sm",
+              activeRiskLayer === "heat"
+                ? "bg-[#d97706] text-white"
+                : "bg-white/40 border border-white/60 text-text-charcoal hover:bg-white/70"
+            )}
+          >
+            Heat Risk
+          </button>
+        </div>
+      </section>
+ 
       {/* 2. Today’s Rain Risk (Show Live weather controls first in Today Mode) */}
-      {mapMode === "today" && (
+      {mapMode === "today" && activeRiskLayer === "rain" && (
         <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
           <SectionTitle icon={Layers3} title="Today’s Rain Risk" detail="Real-time predictive overlays" />
           <div className="flex flex-col gap-0.5 mt-1">
@@ -311,30 +350,81 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </section>
       )}
 
-      {/* 3. Route Setup Instructions */}
-      <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
-        <SectionTitle icon={Route} title="Route Setup" detail="Weather-aware routing" />
-        <div className="mt-1.5 flex flex-col gap-2 px-1">
-          <div className="rounded-xl bg-white/40 border border-white/60 p-3 text-[11px] leading-relaxed text-text-charcoal shadow-sm">
-            <span className="font-bold text-[#006688] block mb-0.5">Instruction:</span>
-            {selectionState === "idle" && "Click the map to choose your starting point"}
-            {selectionState === "selecting-destination" && "Now choose your destination"}
-            {selectionState === "ready" && "Route ready • click the map again to clear"}
-            {selectionState === "loading" && "Calculating weather-aware route..."}
-            {routingError && <span className="text-red-600 font-medium block mt-1">{routingError}</span>}
+      {/* 2b. Urban Heat (Only when activeRiskLayer === "heat") */}
+      {activeRiskLayer === "heat" && (
+        <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
+          <SectionTitle icon={Flame} title="Urban Heat" detail="Heat Risk" />
+          <div className="flex flex-col gap-0.5 mt-1">
+            <div className="flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/40">
+              <Label className="flex min-w-0 items-center gap-2">
+                <Flame className="size-4 shrink-0 text-amber-600" />
+                <span className="min-w-0 text-xs font-semibold text-text-charcoal">Heat Risk Overlay</span>
+              </Label>
+              <Switch checked={true} disabled size="sm" className="data-[state=checked]:bg-[#d97706]" />
+            </div>
           </div>
-          {(selectionState !== "idle" || routingError) && (
-            <button
-              type="button"
-              onClick={onResetRoute}
-              className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/50 text-xs font-semibold text-text-charcoal transition-all hover:bg-white/80 active:bg-white"
-            >
-              <RotateCcw className="size-3.5" />
-              Reset Route
-            </button>
-          )}
-        </div>
-      </section>
+          
+          <div className="mt-2.5 flex flex-col gap-2.5 border-t border-white/10 pt-2.5">
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-text-muted">
+                <span>Heat Layer Opacity</span>
+                <span>{Math.round(riskFillOpacity * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0.10"
+                max="0.80"
+                step="0.05"
+                value={riskFillOpacity}
+                onChange={(e) => setRiskFillOpacity(parseFloat(e.target.value))}
+                className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-[#d97706]"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-wider text-text-muted">
+                <span>Grid Line Opacity</span>
+                <span>{Math.round(gridLineOpacity * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0.05"
+                max="0.50"
+                step="0.05"
+                value={gridLineOpacity}
+                onChange={(e) => setGridLineOpacity(parseFloat(e.target.value))}
+                className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-[#d97706]"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+ 
+      {/* 3. Route Setup Instructions (Only when activeRiskLayer === "rain") */}
+      {activeRiskLayer === "rain" && (
+        <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
+          <SectionTitle icon={Route} title="Route Setup" detail="Weather-aware routing" />
+          <div className="mt-1.5 flex flex-col gap-2 px-1">
+            <div className="rounded-xl bg-white/40 border border-white/60 p-3 text-[11px] leading-relaxed text-text-charcoal shadow-sm">
+              <span className="font-bold text-[#006688] block mb-0.5">Instruction:</span>
+              {selectionState === "idle" && "Click the map to choose your starting point"}
+              {selectionState === "selecting-destination" && "Now choose your destination"}
+              {selectionState === "ready" && "Route ready • click the map again to clear"}
+              {selectionState === "loading" && "Calculating weather-aware route..."}
+              {routingError && <span className="text-red-600 font-medium block mt-1">{routingError}</span>}
+            </div>
+            {(selectionState !== "idle" || routingError) && (
+              <button
+                type="button"
+                onClick={onResetRoute}
+                className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-white/60 bg-white/50 text-xs font-semibold text-text-charcoal transition-all hover:bg-white/80 active:bg-white"
+              >
+                <RotateCcw className="size-3.5" />
+                Reset Route
+              </button>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* 4. Map Reference Layers */}
       <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
@@ -366,85 +456,96 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
 
       {/* 5. Points of Interest */}
       <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
-        <SectionTitle icon={Landmark} title="Places" detail="Points of interest" />
-        <div className="flex flex-col gap-0.5 mt-1 max-h-52 overflow-y-auto pr-1">
-          <PoiToggleRow
-            id="hospitals-toggle"
-            label="Hospitals"
-            checked={layers.hospitals}
-            onChange={() => onToggle("hospitals")}
-            icon={Hospital}
-            count={poiCounts?.hospital}
-          />
-          <PoiToggleRow
-            id="clinics-toggle"
-            label="Clinics"
-            checked={layers.clinics}
-            onChange={() => onToggle("clinics")}
-            icon={Stethoscope}
-            count={poiCounts?.clinic}
-          />
-          <PoiToggleRow
-            id="mosques-toggle"
-            label="Mosques"
-            checked={layers.mosques}
-            onChange={() => onToggle("mosques")}
-            icon={Landmark}
-            count={poiCounts?.mosque}
-          />
-          <PoiToggleRow
-            id="malls-toggle"
-            label="Malls"
-            checked={layers.malls}
-            onChange={() => onToggle("malls")}
-            icon={ShoppingBag}
-            count={poiCounts?.mall}
-          />
-          <PoiToggleRow
-            id="schools-toggle"
-            label="Schools"
-            checked={layers.schools}
-            onChange={() => onToggle("schools")}
-            icon={School}
-            count={poiCounts?.school}
-          />
-          <PoiToggleRow
-            id="universities-toggle"
-            label="Universities"
-            checked={layers.universities}
-            onChange={() => onToggle("universities")}
-            icon={GraduationCap}
-            count={poiCounts?.university}
-          />
-          <PoiToggleRow
-            id="police-toggle"
-            label="Police"
-            checked={layers.police}
-            onChange={() => onToggle("police")}
-            icon={Shield}
-            count={poiCounts?.police}
-          />
-          <PoiToggleRow
-            id="fire-stations-toggle"
-            label="Fire Stations"
-            checked={layers.fireStations}
-            onChange={() => onToggle("fireStations")}
-            icon={Flame}
-            count={poiCounts?.fire_station}
-          />
-          <PoiToggleRow
-            id="emergency-toggle"
-            label="Emergency Facilities"
-            checked={layers.emergency}
-            onChange={() => onToggle("emergency")}
-            icon={Ambulance}
-            count={poiCounts?.emergency}
-          />
-        </div>
+        <button
+          type="button"
+          onClick={() => setIsPlacesExpanded(!isPlacesExpanded)}
+          className="flex w-full items-center justify-between gap-2 text-left focus:outline-none"
+        >
+          <SectionTitle icon={Landmark} title="Places" detail="Points of interest" />
+          <span className="text-text-muted">
+            {isPlacesExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+          </span>
+        </button>
+        {isPlacesExpanded && (
+          <div className="flex flex-col gap-0.5 mt-1 max-h-52 overflow-y-auto pr-1">
+            <PoiToggleRow
+              id="hospitals-toggle"
+              label="Hospitals"
+              checked={layers.hospitals}
+              onChange={() => onToggle("hospitals")}
+              icon={Hospital}
+              count={poiCounts?.hospital}
+            />
+            <PoiToggleRow
+              id="clinics-toggle"
+              label="Clinics"
+              checked={layers.clinics}
+              onChange={() => onToggle("clinics")}
+              icon={Stethoscope}
+              count={poiCounts?.clinic}
+            />
+            <PoiToggleRow
+              id="mosques-toggle"
+              label="Mosques"
+              checked={layers.mosques}
+              onChange={() => onToggle("mosques")}
+              icon={Landmark}
+              count={poiCounts?.mosque}
+            />
+            <PoiToggleRow
+              id="malls-toggle"
+              label="Malls"
+              checked={layers.malls}
+              onChange={() => onToggle("malls")}
+              icon={ShoppingBag}
+              count={poiCounts?.mall}
+            />
+            <PoiToggleRow
+              id="schools-toggle"
+              label="Schools"
+              checked={layers.schools}
+              onChange={() => onToggle("schools")}
+              icon={School}
+              count={poiCounts?.school}
+            />
+            <PoiToggleRow
+              id="universities-toggle"
+              label="Universities"
+              checked={layers.universities}
+              onChange={() => onToggle("universities")}
+              icon={GraduationCap}
+              count={poiCounts?.university}
+            />
+            <PoiToggleRow
+              id="police-toggle"
+              label="Police"
+              checked={layers.police}
+              onChange={() => onToggle("police")}
+              icon={Shield}
+              count={poiCounts?.police}
+            />
+            <PoiToggleRow
+              id="fire-stations-toggle"
+              label="Fire Stations"
+              checked={layers.fireStations}
+              onChange={() => onToggle("fireStations")}
+              icon={Flame}
+              count={poiCounts?.fire_station}
+            />
+            <PoiToggleRow
+              id="emergency-toggle"
+              label="Emergency Facilities"
+              checked={layers.emergency}
+              onChange={() => onToggle("emergency")}
+              icon={Ambulance}
+              count={poiCounts?.emergency}
+            />
+          </div>
+        )}
       </section>
 
-      {/* 6. Historical Analysis Section (Only visible in History mode) */}
-      {mapMode === "history" && (
+      {/* 6. Historical Analysis Section (Only visible in History mode and Rain active) */}
+      {mapMode === "history" && activeRiskLayer === "rain" && (
         <section className="flex flex-col gap-2 border-b border-white/20 pb-3.5">
           <button
             type="button"
@@ -522,13 +623,7 @@ export const LayerToggle: React.FC<LayerToggleProps> = ({
         </section>
       )}
 
-      {/* 7. About This Prototype (Disclaimer) */}
-      <section className="flex flex-col gap-1 bg-white/30 border border-white/40 rounded-xl p-2.5">
-        <div className="flex items-start gap-1.5 text-[9.5px] text-text-muted font-medium leading-normal">
-          <Info className="size-3.5 text-text-muted/80 shrink-0 mt-0.5" aria-hidden="true" />
-          <span>Predictions are weather-impact model estimates, not official emergency dispatch commands.</span>
-        </div>
-      </section>
+      {/* Disclaimer Removed */}
     </div>
   );
 };

@@ -1,0 +1,42 @@
+{
+  "scene_id_validity": {
+    "unique_scenes": [
+      "LC08_L2SP_176039_20251023_20251121_02_T1",
+      "LC08_L2SP_176039_20251007_20251115_02_T1",
+      "LC09_L2SP_176039_20250929_20250930_02_T1",
+      "LC09_L2SP_176039_20250913_20250915_02_T1",
+      "LC08_L2SP_176039_20250905_20250912_02_T1",
+      "LC09_L2SP_176039_20250828_20250830_02_T1",
+      "LC08_L2SP_176039_20250820_20250826_02_T1",
+      "LC09_L2SP_176039_20250812_20250815_02_T1",
+      "LC08_L2SP_176039_20250804_20250814_02_T1",
+      "LC09_L2SP_176039_20250727_20250729_02_T1",
+      "LC08_L2SP_176039_20250719_20250726_02_T1",
+      "LC09_L2SP_176039_20250711_20250712_02_T1"
+    ],
+    "valid_landsat_format": true,
+    "cloud_filtering_status": "applied_threshold_15_pct"
+  },
+  "lst_source_details": {
+    "thermal_calibration_band": "ST_B10",
+    "celsius_conversion_formula": "LST_C = ST_B10 * 0.00341802 + 149.0 - 273.15",
+    "fallback_methodology": "physics-based local spatial simulation using built-up, land-cover, and elevation"
+  },
+  "row_level_source_counts": {
+    "landsat_gee": 4932,
+    "fallback_physics": 0,
+    "unknown": 0,
+    "fallback_percentage": 0.0
+  },
+  "target_authenticity": {
+    "lst_c": "landsat_gee_observed",
+    "heat_anomaly_c": "derived_from_landsat_lst",
+    "heat_risk_score": "weighted_index_of_anomaly_and_exposure",
+    "heat_risk_class": "percentile_classification"
+  },
+  "feature_authenticity": {
+    "satellite_indices": "landsat_gee_derived",
+    "geospatial_features": "real_osm_roads_ghsl_esa_worldcover",
+    "context_weather_features": "simulated_context_only"
+  }
+}

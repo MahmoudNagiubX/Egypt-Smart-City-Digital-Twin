@@ -1,0 +1,83 @@
+{
+  "best_model_name": "HistGradientBoosting_Default",
+  "selection_score": 0.1159379808507541,
+  "tuning_runs": {
+    "HistGradientBoosting_Default": {
+      "scene_split": {
+        "mae": 0.45568074905642647,
+        "rmse": 0.6022968339574333,
+        "r2": 0.9086308493907425,
+        "class_accuracy": 0.9140308191403081,
+        "class_macro_f1": 0.9089413538858235
+      },
+      "zone_split": {
+        "mae": 0.7045431480475245,
+        "rmse": 0.9091651046526463,
+        "r2": 0.7988445825081226,
+        "class_accuracy": 0.8517842660178426,
+        "class_macro_f1": 0.848728306700273
+      },
+      "generalization_gap_mae": 0.24886239899109802,
+      "model_size_mb": 0.5,
+      "selection_score": 0.1159379808507541
+    },
+    "HistGradientBoosting_Regularized": {
+      "scene_split": {
+        "mae": 0.4594909438950781,
+        "rmse": 0.603476127935183,
+        "r2": 0.9086092753864395,
+        "class_accuracy": 0.9128142741281428,
+        "class_macro_f1": 0.9076715231455941
+      },
+      "zone_split": {
+        "mae": 0.7140445475142635,
+        "rmse": 0.9235463520907345,
+        "r2": 0.7912387801008262,
+        "class_accuracy": 0.8513787510137875,
+        "class_macro_f1": 0.8482063615795179
+      },
+      "generalization_gap_mae": 0.2545536036191854,
+      "model_size_mb": 0.5,
+      "selection_score": 0.12027947577988901
+    },
+    "RandomForest_Tuned": {
+      "scene_split": {
+        "mae": 0.46301105222995725,
+        "rmse": 0.607728855335588,
+        "r2": 0.9062052297792468,
+        "class_accuracy": 0.9178832116788321,
+        "class_macro_f1": 0.912816181885105
+      },
+      "zone_split": {
+        "mae": 0.7738450266491556,
+        "rmse": 0.9959404804964486,
+        "r2": 0.7581591015536541,
+        "class_accuracy": 0.8467153284671532,
+        "class_macro_f1": 0.84316553419988
+      },
+      "generalization_gap_mae": 0.3108339744191983,
+      "model_size_mb": 8.5,
+      "selection_score": 0.23088473339617485
+    },
+    "ExtraTrees_Tuned": {
+      "scene_split": {
+        "mae": 0.4480443575599839,
+        "rmse": 0.5842951261090044,
+        "r2": 0.9121152660013919,
+        "class_accuracy": 0.9193025141930251,
+        "class_macro_f1": 0.9144554070216315
+      },
+      "zone_split": {
+        "mae": 0.736986160941724,
+        "rmse": 0.9413330236548066,
+        "r2": 0.7857458670462533,
+        "class_accuracy": 0.8603000811030008,
+        "class_macro_f1": 0.8567819617192918
+      },
+      "generalization_gap_mae": 0.2889418033817401,
+      "model_size_mb": 8.5,
+      "selection_score": 0.21466294643727382
+    }
+  },
+  "selection_rationale": "The best candidate selected is HistGradientBoosting_Default based on its low grouped MAE on unseen satellite scenes (0.456 C) and unseen spatial zones (0.705 C), while maintaining a low generalization gap and high macro F1 on risk classifications."
+}

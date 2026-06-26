@@ -1,0 +1,15 @@
+{
+  "backend_compileall_status": "passed",
+  "backend_pytest_status": "passed",
+  "backend_test_count": 146,
+  "frontend_test_status": "passed",
+  "frontend_test_count": 43,
+  "frontend_build_status": "passed",
+  "warnings": [
+    "StarletteDeprecationWarning: Using httpx with starlette.testclient is deprecated; install httpx2 instead.",
+    "PydanticDeprecatedSince20: Support for class-based config is deprecated, use ConfigDict instead.",
+    "UserWarning: Could not parse column 'reversed' as JSON; leaving as string",
+    "Vite warning: Some chunks are larger than 500 kB after minification. Consider using dynamic import() to code-split the application"
+  ],
+  "timestamp": "2026-06-26T07:38:33+03:00"
+}

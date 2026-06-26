@@ -21,9 +21,14 @@ import {
   RouteExplanationResponse,
   ModelExplainabilitySummaryResponse,
   RouteCoordinate,
+  HeatHealthResponse,
+  HeatSummaryResponse,
+  HeatLayerGeoJson,
+  HeatZoneExplanationResponse,
+  HeatModelSummaryResponse,
 } from "../types/api";
 
-const BASE_URL = import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+const BASE_URL = import.meta.env?.VITE_API_BASE_URL || "";
 const API_PREFIX = "/api/weather-impact";
 
 const api = axios.create({
@@ -282,6 +287,31 @@ export const getModelExplainabilitySummary = async (): Promise<ModelExplainabili
   const response = await api.get<ModelExplainabilitySummaryResponse>(
     `${API_PREFIX}/model/explainability-summary`
   );
+  return response.data;
+};
+
+export const getHeatHealth = async (): Promise<HeatHealthResponse> => {
+  const response = await api.get<HeatHealthResponse>(`${API_PREFIX}/heat/health`);
+  return response.data;
+};
+
+export const getLatestHeatLayer = async (): Promise<HeatLayerGeoJson> => {
+  const response = await api.get<HeatLayerGeoJson>(`${API_PREFIX}/heat/layer/latest`);
+  return response.data;
+};
+
+export const getHeatSummary = async (): Promise<HeatSummaryResponse> => {
+  const response = await api.get<HeatSummaryResponse>(`${API_PREFIX}/heat/summary`);
+  return response.data;
+};
+
+export const getHeatZoneExplanation = async (zoneCode: string): Promise<HeatZoneExplanationResponse> => {
+  const response = await api.get<HeatZoneExplanationResponse>(`${API_PREFIX}/heat/explain/zone/${zoneCode}`);
+  return response.data;
+};
+
+export const getHeatModelSummary = async (): Promise<HeatModelSummaryResponse> => {
+  const response = await api.get<HeatModelSummaryResponse>(`${API_PREFIX}/heat/model/summary`);
   return response.data;
 };
 

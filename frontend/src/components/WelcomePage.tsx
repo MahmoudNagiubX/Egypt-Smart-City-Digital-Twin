@@ -306,7 +306,7 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onOpenDashboard }) => 
 
       {/* Footer */}
       <footer className="mt-auto mb-4 px-4 text-center shrink-0" style={{ fontSize: 10, color: 'var(--stitch-text-muted)' }}>
-        Decision-support prototype only. Not an official flood forecast or emergency dispatch system.
+        Decision-support prototype.
       </footer>
 
       {/* Glass Detail Modals */}
@@ -379,7 +379,7 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onOpenDashboard }) => 
                     <div className="flex gap-3 items-start p-3.5 rounded-xl border border-amber-200/50 bg-[#ffdcbe]/25">
                       <span className="material-symbols-outlined text-[#ba1a1a] mt-0.5">info</span>
                       <p className="leading-relaxed text-xs font-medium text-text-charcoal">
-                        <strong>Honesty Statement:</strong> It supports decision-making, but it is not an official flood forecasting system or official emergency dispatch command.
+                        <strong>Information:</strong> It supports decision-making based on risk models and historical patterns.
                       </p>
                     </div>
                   </div>

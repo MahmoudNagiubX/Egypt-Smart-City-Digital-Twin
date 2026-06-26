@@ -1,0 +1,122 @@
+[
+  {
+    "endpoint": "GET /api/weather-impact/health",
+    "url": "http://127.0.0.1:8000/api/weather-impact/health",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/weather/live",
+    "url": "http://127.0.0.1:8000/api/weather-impact/weather/live",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/layers/predictions/live",
+    "url": "http://127.0.0.1:8000/api/weather-impact/layers/predictions/live",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/weather/live/report",
+    "url": "http://127.0.0.1:8000/api/weather-impact/weather/live/report",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/routing/live/status",
+    "url": "http://127.0.0.1:8000/api/weather-impact/routing/live/status",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/layers/predictions/latest",
+    "url": "http://127.0.0.1:8000/api/weather-impact/layers/predictions/latest",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/search?q=hospital",
+    "url": "http://127.0.0.1:8000/api/weather-impact/search?q=hospital",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/explain/zone/NSR-GRID-119",
+    "url": "http://127.0.0.1:8000/api/weather-impact/explain/zone/NSR-GRID-119",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/model/explainability-summary",
+    "url": "http://127.0.0.1:8000/api/weather-impact/model/explainability-summary",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/heat/health",
+    "url": "http://127.0.0.1:8000/api/weather-impact/heat/health",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/heat/layer/latest",
+    "url": "http://127.0.0.1:8000/api/weather-impact/heat/layer/latest",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/heat/summary",
+    "url": "http://127.0.0.1:8000/api/weather-impact/heat/summary",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/heat/model/summary",
+    "url": "http://127.0.0.1:8000/api/weather-impact/heat/model/summary",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/predictions/latest (legacy/unsupported)",
+    "url": "http://127.0.0.1:8000/api/weather-impact/predictions/latest",
+    "status_code": 404,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  },
+  {
+    "endpoint": "GET /api/weather-impact/heat/explain/zone/NSR-GRID-382",
+    "url": "http://127.0.0.1:8000/api/weather-impact/heat/explain/zone/NSR-GRID-382",
+    "status_code": 200,
+    "status": "passed",
+    "sanity_checked": true,
+    "error": null
+  }
+]

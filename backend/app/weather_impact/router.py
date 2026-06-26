@@ -1,7 +1,7 @@
 """FastAPI API endpoints for weather-impact assessment."""
 
 from fastapi import APIRouter, HTTPException, Query
-from . import service, paths, schemas, weather, routing
+from . import service, paths, schemas, weather, routing, heat_service, heat_explain
 
 router = APIRouter(prefix="/api/weather-impact", tags=["weather-impact"])
 
@@ -375,6 +375,69 @@ def get_model_explainability_summary():
     """Retrieve global model explainability metrics, permutation importances, and limitations."""
     try:
         return service.get_model_explainability_summary()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/heat/health", response_model=schemas.HeatHealthResponse)
+def get_heat_health():
+    """Retrieve availability and status of Urban Heat Risk components."""
+    try:
+        return heat_service.get_heat_health()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/heat/layer/latest")
+def get_heat_layer_latest():
+    """Get the latest heat risk GeoJSON layer."""
+    try:
+        return heat_service.get_latest_layer()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/heat/summary", response_model=schemas.HeatSummaryResponse)
+def get_heat_summary():
+    """Get latest heat risk dashboard summary metrics."""
+    try:
+        return heat_service.get_heat_summary()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/heat/explain/zone/{zone_code}", response_model=schemas.HeatZoneExplainResponse)
+def get_heat_explain_zone(
+    zone_code: str,
+    date: str | None = Query(default=None),
+    latest: bool = Query(default=True)
+):
+    """Explain model-estimated heat risk factors for a specific grid zone."""
+    try:
+        return heat_explain.load_explanation_and_prediction(
+            zone_code=zone_code,
+            date=date,
+            latest=latest
+        )
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/heat/model/summary", response_model=schemas.HeatModelSummaryResponse)
+def get_heat_model_summary():
+    """Retrieve global explainability, benchmarking metrics, and authenticity metadata for the Heat Risk model."""
+    try:
+        return heat_service.get_model_summary()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

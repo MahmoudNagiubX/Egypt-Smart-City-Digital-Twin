@@ -437,7 +437,7 @@
     -webkit-font-smoothing: antialiased;
   }
   .stitch-label-sm {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -475,10 +475,14 @@
     mix-blend-mode: overlay;
     pointer-events: none;
   }
+  .stitch-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(21, 145, 220, 0.35) rgba(196, 226, 245, 0.2);
+  }
   .stitch-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-  .stitch-scroll::-webkit-scrollbar-track { background: transparent; }
-  .stitch-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 4px; }
-  .stitch-scroll::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+  .stitch-scroll::-webkit-scrollbar-track { background: rgba(196, 226, 245, 0.1); border-radius: 999px; }
+  .stitch-scroll::-webkit-scrollbar-thumb { background: rgba(21, 145, 220, 0.28); border-radius: 999px; }
+  .stitch-scroll::-webkit-scrollbar-thumb:hover { background: rgba(21, 145, 220, 0.45); }
   .stitch-marker-highlight {
     position: relative;
     display: inline-block;

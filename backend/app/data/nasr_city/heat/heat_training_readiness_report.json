@@ -1,0 +1,16 @@
+{
+  "ready_for_training": "true",
+  "fallback_percentage": 0.0,
+  "row_counts": {
+    "total_rows": 4932,
+    "landsat_observed_rows": 4932,
+    "fallback_generated_rows": 0,
+    "unknown_rows": 0
+  },
+  "recommendations": [
+    "Phase 10B training recommended: proceed with model training.",
+    "Ready to train on all 4932 real Landsat observations.",
+    "Satellite observations are 100% genuine and verified."
+  ],
+  "disclaimer": "This heat-risk layer estimates relative urban heat exposure from satellite land-surface temperature and geospatial features. It is not an official public-health heat warning system."
+}

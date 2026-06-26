@@ -1,65 +1,42 @@
 # Scope Lock — Nasr City Weather-Impact Emergency Mobility Module
 
-## Final Delivery Scope
+This document locks the final delivery scope and details features included, features excluded, and scientific honesty guidelines.
 
-For the 2026-07-02 deadline, this repository will deliver one complete module:
+---
 
-Nasr City Weather-Impact Emergency Mobility Module.
+## 1. Final Delivery Scope
+The repository delivers one integrated system module:
+**Nasr City Weather-Impact and Heat Risk Emergency Mobility Module**
 
-## Core Features
+### Core Included Features
+* **Nasr City Boundaries & 500m Grid:** 416-cell gridded spatial model of the district.
+* **OpenStreetMap (OSM) Road Network:** Full road network topologies extracted using `osmnx`.
+* **Hospitals & Emergency Facilities:** Indexed coordinates of critical POIs for search and routing destination targets.
+* **Weather Forecast APIs:** Live connection to Open-Meteo current condition, forecast, and AQI layers.
+* **Precipitation-Impact Road Delay Model:** Estimated road hazard risk grids (Low, Medium, High).
+* **Emergency Safety Route Optimization:** Weighted routing algorithm calculation (Dijkstra) prioritizing safety index over pure physical distance.
+* **Urban Heat Anomaly Layer:** Landsat-derived Celsius anomaly layers.
+* **Heat Explainability Side Panels:** Local and global feature importance charts based on a `HistGradientBoostingRegressor` model trained on 4,932 real observed training rows.
 
-* Nasr City boundary and 500m grid
-* OpenStreetMap road network
-* Hospitals, clinics, and emergency facilities
-* Weather data and rainfall scenarios
-* Flood risk zones
-* Road delay layer
-* Emergency route optimization
-* FastAPI backend
-* React map dashboard
-* Documentation and demo video
+---
 
-## Optional If Time Allows
+## 2. Excluded Features (Out of Scope)
+* **Road Damage Detection:** No machine learning analysis of street surface cracking.
+* **Arabic Complaint NLP:** No citizen complaint text classification pipelines.
+* **Garbage and Trash Detection:** No visual debris classification routines.
+* **Multi-District Expansion:** Restricted strictly to the Nasr City administrative boundary.
+* **Official Emergency Dispatch:** No connection to state dispatch systems.
 
-* Heat-risk layer
-* Landsat surface temperature
-* NDVI
-* GHSL built-up density
-* ESA WorldCover
-* WorldPop exposure layer
+---
 
-## Out of Scope for This Deadline
+## 3. Repository Safety Rules
+* Do not modify or replace the root `README.md`.
+* Deliver all module-specific documentation files under `docs/nasr_city_weather_impact/`.
+* Keep the code clean and avoid unnecessary abstraction layers.
 
-* Road damage detection
-* Arabic complaint NLP
-* Garbage detection
-* Construction detection
-* Multi-district expansion
-* Real-time official traffic API integration
-* Full hydrological flood simulation
-* IoT sensor integration
-* Citizen reporting module
+---
 
-## Repository Safety Rules
+## 4. Scientific Honesty Statement
+This decision-support prototype estimates relative environmental risk using open data, spatial indices, scenario calculations, and machine learning regressors. 
 
-* Do not replace or rewrite root README.md without explicit confirmation.
-* Do not delete existing project files.
-* Add module-specific docs under docs/nasr_city_weather_impact/.
-* Keep the architecture clean and maintainable.
-* Avoid unnecessary files, factories, managers, handlers, or abstract layers.
-
-## Implementation Direction
-
-The final approach is:
-
-Open geospatial/weather data
-→ grid-based feature engineering
-→ rule-based flood, traffic, and emergency risk scoring
-→ ML surrogate model trained on engineered weak labels
-→ weather-aware route optimization
-→ FastAPI backend
-→ React MapLibre dashboard
-
-## Honesty Statement
-
-This MVP does not claim to be an officially validated flood forecasting system. It is a geospatial ML-powered decision-support prototype that estimates relative weather-impact risk using open data, engineered features, scenario simulation, and explainable scoring. The ML component is trained on engineered weak labels because verified street-level flood incident labels for Nasr City are not available within the project deadline.
+Because verified street-level flood incident records for Nasr City are unavailable, the rain models are trained on engineered weak labels. The heat models are trained on 4,932 verified Landsat observations. The system is a decision-support dashboard and does not represent an official emergency authority or public-health warning alert.

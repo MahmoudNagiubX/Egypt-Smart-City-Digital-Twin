@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: smart-digital-twin
+    runtime: docker
+    dockerfilePath: ./Dockerfile.deploy
+    healthCheckPath: /api/weather-impact/health
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: ENVIRONMENT
+        value: "production"
