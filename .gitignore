@@ -38,3 +38,14 @@ Thumbs.db
 
 tmp/
 deploy/huggingface_space_build/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+deploy/huggingface_space_build/
+frontend/dist/
+node_modules/
+.venv/
+.env
