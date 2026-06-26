@@ -1,0 +1,16 @@
+.venv/
+node_modules/
+.pytest_cache/
+**/__pycache__/
+frontend/dist/
+.git/
+.env
+.env.local
+*.pyc
+tmp/
+*.log
+.github/
+.idea/
+.vscode/
+deliverables/presentation/*.png
+deliverables/video_demo/*.mp4
