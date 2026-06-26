@@ -656,7 +656,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
   if (loading) {
     return (
       <div className="stitch-page flex h-screen w-screen flex-col items-center justify-center">
-        <h1 className="sr-only">Egypt Smart City Digital Twin</h1>
+        <h1 className="sr-only">Geo Weather</h1>
         <LoadingSpinner message="Synchronizing map layers, places, and weather-aware routes..." />
       </div>
     );
@@ -749,7 +749,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
         className="stitch-dashboard-shell"
         style={{ margin: '0 auto', height: 'calc(100vh - 1rem)', maxHeight: 1080 }}
       >
-        <h1 className="sr-only">Egypt Smart City Digital Twin</h1>
+        <h1 className="sr-only">Geo Weather</h1>
         {/* Stitch Top Navigation Bar */}
         <nav
           className="flex items-center justify-between px-6 py-3 border-b border-glass-border bg-white/40"

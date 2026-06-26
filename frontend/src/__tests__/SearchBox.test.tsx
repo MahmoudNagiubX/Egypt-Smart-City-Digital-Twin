@@ -212,6 +212,6 @@ test("Dashboard renders with SearchBox without crashing", async () => {
     render(<Dashboard />);
   });
   
-  const h1 = screen.getByText("Egypt Smart City Digital Twin");
+  const h1 = screen.getByText("Geo Weather");
   expect(h1).toBeDefined();
 });

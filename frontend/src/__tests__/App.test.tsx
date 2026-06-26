@@ -281,7 +281,7 @@ test('App renders dashboard title and disclaimers', async () => {
   });
 
   // Dashboard Title check
-  expect(document.title).toBe("Egypt Smart City Digital Twin");
+  expect(document.title).toBe("Geo Weather");
 
   // Open controls drawer to render the LayerToggle disclaimer
   const controlsBtn = screen.getByText(/Controls/i);
@@ -863,5 +863,5 @@ test('Welcome Page interactive features and modal navigation', async () => {
   await act(async () => {
     fireEvent.click(openBtn);
   });
-  expect(document.title).toBe("Egypt Smart City Digital Twin");
+  expect(document.title).toBe("Geo Weather");
 });
