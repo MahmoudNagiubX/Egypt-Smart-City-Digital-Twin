@@ -147,6 +147,21 @@ const emptySelection: RouteSelection = { origin: null, destination: null };
 const getErrorMessage = (error: unknown, fallback: string) =>
   error instanceof Error && error.message ? error.message : fallback;
 
+const getFriendlyLiveWeatherWarning = (warnings: string[] | undefined): string | null => {
+  if (!warnings || warnings.length === 0) return null;
+  const w = warnings[0];
+  if (
+    w.includes("429") ||
+    w.toLowerCase().includes("rate-limited") ||
+    w.toLowerCase().includes("rate-limit") ||
+    w.toLowerCase().includes("too many requests") ||
+    w.toLowerCase().includes("api fetch failed")
+  ) {
+    return "Live weather provider is temporarily rate-limited. Showing cached weather data.";
+  }
+  return w;
+};
+
 export const Dashboard = ({ onGoHome }: DashboardProps) => {
   const prefersReducedMotion = useReducedMotion();
   const safeRouteTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -672,7 +687,16 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
 
   // Derive alert status for the map overlay pill
   const hasActiveAlerts = activeRiskLayer === "heat"
-    ? !!(liveWeather?.warnings && liveWeather.warnings.length > 0)
+    ? !!(
+        liveWeather?.warnings &&
+        liveWeather.warnings.filter(
+          (w) =>
+            !w.toLowerCase().includes("rate-limited") &&
+            !w.toLowerCase().includes("rate-limit") &&
+            !w.toLowerCase().includes("cached weather") &&
+            !w.toLowerCase().includes("temporarily unavailable")
+        ).length > 0
+      )
     : liveRoutingStatus?.status !== "ok";
   const currentWeatherIcon = liveWeather
     ? getWeatherIcon(liveWeather.current?.weather_code)
@@ -830,7 +854,7 @@ export const Dashboard = ({ onGoHome }: DashboardProps) => {
               <span className="font-bold text-[#006688]">LIVE UPDATE:</span>
               <span className="text-text-charcoal">
                 {liveWeather?.warnings && liveWeather.warnings.length > 0 
-                  ? liveWeather.warnings[0] 
+                  ? getFriendlyLiveWeatherWarning(liveWeather.warnings) 
                   : (liveWeather?.rain_risk_expected 
                       ? "Upcoming: Heavy rain predicted (Local)." 
                       : "No immediate storm threat detected.")}

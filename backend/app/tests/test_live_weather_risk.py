@@ -217,3 +217,53 @@ def test_live_prediction_layer_and_report_endpoints(monkeypatch, mock_forecast_d
     assert report_data["status"] in ["ok", "ok_with_warnings"]
     assert report_data["prediction_rows"] == 416
     assert report_data["official_flood_labels_claimed"] is False
+
+
+def test_fallback_rate_limit_with_cache(monkeypatch, tmp_path, mock_forecast_data):
+    """Test fallback when API fails but a cache exists."""
+    import requests
+    # Mock cache path to a temp path
+    mock_cache = tmp_path / "mock_forecast.json"
+    
+    import json
+    import os
+    import time
+    with open(mock_cache, "w", encoding="utf-8") as f:
+        json.dump(mock_forecast_data, f)
+    os.utime(mock_cache, (time.time() - 3600, time.time() - 3600))
+        
+    monkeypatch.setattr(paths, "LIVE_WEATHER_FORECAST_CACHE_PATH", mock_cache)
+    
+    # Mock requests.get to raise ConnectionError
+    def mock_get(*args, **kwargs):
+        raise requests.exceptions.ConnectionError("Connection refused")
+        
+    monkeypatch.setattr(requests, "get", mock_get)
+    
+    data, warnings = weather.fetch_live_weather_forecast()
+    assert data["_fallback_status"] == "ok_with_cached_weather"
+    assert any("rate-limited" in w for w in warnings)
+    
+    summary = weather.summarize_live_weather_forecast(data, warnings=warnings)
+    assert summary["status"] == "ok_with_cached_weather"
+    assert "warning" in summary
+    assert "Live weather provider" in summary["warning"]
+
+
+def test_fallback_rate_limit_no_cache(monkeypatch, tmp_path):
+    """Test fallback when API fails and no cache exists."""
+    import requests
+    mock_cache = tmp_path / "nonexistent.json"
+    monkeypatch.setattr(paths, "LIVE_WEATHER_FORECAST_CACHE_PATH", mock_cache)
+    
+    def mock_get(*args, **kwargs):
+        raise requests.exceptions.HTTPError("429 Client Error: Too Many Requests")
+        
+    monkeypatch.setattr(requests, "get", mock_get)
+    
+    data, warnings = weather.fetch_live_weather_forecast()
+    assert data["_fallback_status"] == "provider_temporarily_unavailable"
+    
+    summary = weather.summarize_live_weather_forecast(data, warnings=warnings)
+    assert summary["status"] == "provider_temporarily_unavailable"
+    assert "warning" in summary

@@ -475,6 +475,7 @@ def fetch_live_weather_forecast(cache_expiry_hours: float = 3.0) -> tuple[dict, 
     import os
     import time
     import json
+    import requests
     
     warnings = []
     paths.ensure_data_dirs()
@@ -490,7 +491,22 @@ def fetch_live_weather_forecast(cache_expiry_hours: float = 3.0) -> tuple[dict, 
     }
     
     cache_path = paths.LIVE_WEATHER_FORECAST_CACHE_PATH
+    ttl_seconds = 10 * 60  # 10 minutes cache TTL
     
+    # 1. If cache is fresh, use cache directly without calling Open-Meteo API
+    if cache_path.exists():
+        try:
+            mtime = os.path.getmtime(cache_path)
+            age_seconds = time.time() - mtime
+            if age_seconds < ttl_seconds:
+                logger.info(f"Loading fresh weather forecast from cache ({age_seconds:.1f} seconds old, TTL {ttl_seconds} seconds)")
+                with open(cache_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                return data, []
+        except Exception as cache_err:
+            logger.warning(f"Failed to read fresh cache: {cache_err}. Will attempt API fetch.")
+
+    # 2. Cache is stale or missing. Try Open-Meteo API.
     try:
         logger.info("Requesting live weather forecast from Open-Meteo API...")
         response = requests.get(url, params=params, timeout=15)
@@ -502,14 +518,13 @@ def fetch_live_weather_forecast(cache_expiry_hours: float = 3.0) -> tuple[dict, 
         with open(cache_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
         logger.info(f"Saved fresh weather forecast to cache at {cache_path}")
-        return data, warnings
+        return data, []
         
     except Exception as e:
         err_msg = str(e)
         logger.warning(f"Failed to fetch weather forecast from API: {err_msg}")
-        warnings.append(f"API fetch failed: {err_msg}")
         
-        # Try loading from cache
+        # 3. Open-Meteo fails or returns 429: fall back to stale cache if available
         if cache_path.exists():
             try:
                 mtime = os.path.getmtime(cache_path)
@@ -518,18 +533,26 @@ def fetch_live_weather_forecast(cache_expiry_hours: float = 3.0) -> tuple[dict, 
                 with open(cache_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                 
-                if age_hours > cache_expiry_hours:
-                    warnings.append(f"Using cached forecast which is stale ({age_hours:.1f} hours old, max allowed {cache_expiry_hours} hours).")
-                else:
-                    warnings.append(f"Using cached forecast ({age_hours:.1f} hours old).")
+                data["_fallback_status"] = "ok_with_cached_weather"
                 
-                logger.info(f"Loaded weather forecast from cache ({age_hours:.1f} hours old)")
+                # Friendly message first, then internal details
+                friendly_msg = "Live weather provider is temporarily rate-limited. Showing cached weather data."
+                warnings.append(friendly_msg)
+                warnings.append(f"Live weather provider rate-limited the request. Cached weather data is being used. Age: {age_hours:.1f} hours.")
+                
+                logger.info(f"Fell back to stale weather forecast cache ({age_hours:.1f} hours old)")
                 return data, warnings
             except Exception as cache_err:
                 logger.error(f"Failed to load cached weather forecast: {cache_err}")
                 warnings.append(f"Failed to load cached weather: {cache_err}")
                 
-        raise RuntimeError(f"Live weather forecast unavailable: Open-Meteo API failed and no cached forecast exists. Error: {err_msg}") from e
+        # 4. If no cache exists, return a graceful response with status provider_temporarily_unavailable
+        fallback_data = {"_fallback_status": "provider_temporarily_unavailable"}
+        friendly_msg = "Live weather provider is temporarily rate-limited. Forecast data is temporarily unavailable."
+        warnings.append(friendly_msg)
+        warnings.append("Live weather provider rate-limited the request and no cached weather data is available.")
+        logger.warning("No cache exists and live weather forecast is unavailable.")
+        return fallback_data, warnings
 
 
 def summarize_live_weather_forecast(forecast_data: dict, warnings: list[str] = None) -> dict:
@@ -540,6 +563,51 @@ def summarize_live_weather_forecast(forecast_data: dict, warnings: list[str] = N
     if warnings is None:
         warnings = []
         
+    # Check if this is a fallback due to unavailable provider and no cache
+    if forecast_data.get("_fallback_status") == "provider_temporarily_unavailable":
+        summary = {
+            "status": "provider_temporarily_unavailable",
+            "source": "Open-Meteo Forecast API",
+            "location": {
+                "name": "Nasr City",
+                "lat": 30.0561,
+                "lon": 31.3300
+            },
+            "current": {
+                "time": datetime.datetime.now().isoformat(),
+                "temperature_2m": 0.0,
+                "apparent_temperature": 0.0,
+                "relative_humidity_2m": 0.0,
+                "rain": 0.0,
+                "precipitation": 0.0,
+                "wind_speed_10m": 0.0,
+                "weather_code": 0
+            },
+            "forecast_window": {
+                "hours": 24,
+                "rain_1h_mm": 0.0,
+                "rain_3h_mm": 0.0,
+                "rain_6h_mm": 0.0,
+                "rain_24h_mm": 0.0,
+                "max_precipitation_probability": 0.0,
+                "mean_temperature_2m": 0.0,
+                "mean_relative_humidity_2m": 0.0,
+                "mean_apparent_temperature": 0.0,
+                "mean_wind_speed_10m": 0.0
+            },
+            "rain_risk_expected": False,
+            "recommended_event_mode": "normal",
+            "warning": warnings[0] if warnings else "Live weather provider is temporarily unavailable.",
+            "warnings": warnings
+        }
+        
+        # Save live summary
+        paths.LIVE_WEATHER_SUMMARY_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with open(paths.LIVE_WEATHER_SUMMARY_PATH, "w", encoding="utf-8") as f:
+            json.dump(summary, f, indent=2)
+        logger.info(f"Saved fallback live weather summary to {paths.LIVE_WEATHER_SUMMARY_PATH}")
+        return summary
+
     current = forecast_data.get("current", {})
     hourly = forecast_data.get("hourly", {})
     
@@ -605,8 +673,13 @@ def summarize_live_weather_forecast(forecast_data: dict, warnings: list[str] = N
     rain_risk_expected = rain_24h > 0.1
     recommended_mode = "live" if rain_risk_expected else "normal"
     
+    # Determine the status
+    status = "ok" if not warnings else "ok_with_warnings"
+    if forecast_data.get("_fallback_status") == "ok_with_cached_weather":
+        status = "ok_with_cached_weather"
+    
     summary = {
-        "status": "ok" if not warnings else "ok_with_warnings",
+        "status": status,
         "source": "Open-Meteo Forecast API",
         "location": {
             "name": "Nasr City",
@@ -640,6 +713,9 @@ def summarize_live_weather_forecast(forecast_data: dict, warnings: list[str] = N
         "warnings": warnings
     }
     
+    if status == "ok_with_cached_weather":
+        summary["warning"] = "Live weather provider rate-limited the request. Cached weather data is being used."
+        
     # Save live summary
     paths.LIVE_WEATHER_SUMMARY_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(paths.LIVE_WEATHER_SUMMARY_PATH, "w", encoding="utf-8") as f:
