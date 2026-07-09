@@ -4,7 +4,7 @@
 
 ### Nasr City Weather Impact & Urban Heat Risk Dashboard
 
-**A live smart city dashboard for weather impact risk, emergency mobility, and urban heat intelligence in Nasr City, Cairo.**
+**A live smart city dashboard for weather impact, emergency mobility, and urban heat intelligence in Nasr City, Cairo.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Hugging%20Face-blue?style=for-the-badge&logo=huggingface)](https://mahmoudnagiubx-geoweather.hf.space/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
