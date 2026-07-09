@@ -392,7 +392,7 @@ Live examples:
 
 ---
 
-## 🎯 Recruiter Review Path
+## 🎯 Review Path
 
 If you are reviewing this project quickly, start here:
 
@@ -428,21 +428,6 @@ This makes the project relevant for:
 - logistics and mobility systems
 - geospatial AI research
 - climate resilience tools
-
----
-
-## 🧭 Future Improvements
-
-Potential next steps:
-
-- add more districts beyond Nasr City
-- connect local IoT weather stations
-- improve road-speed calibration with live traffic sources
-- add user role management for city operators
-- enhance route simulation under severe weather scenarios
-- add timeline playback for historical weather events
-- expand heat risk validation with more satellite scenes
-- package the dashboard as a reusable smart-city module
 
 ---
 
