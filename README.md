@@ -1,386 +1,463 @@
-# 🏙️ Egypt Smart City Digital Twin
+<div align="center">
 
-### AI-Powered Urban Monitoring, Prediction, and Digital Twin Platform
+# 🌦️ Geo Weather
 
-An advanced **AI-driven urban intelligence system** that creates a **digital twin of a city district**, enabling authorities and researchers to **monitor infrastructure, detect urban problems, and predict risks before they occur**.
+### Nasr City Weather Impact & Urban Heat Risk Dashboard
 
-The system integrates **Machine Learning, Computer Vision, Natural Language Processing, and Geospatial Analytics** to transform raw city data into **actionable insights for smarter urban management**.
+**A live smart-city digital twin dashboard for weather-impact risk, emergency mobility, and urban heat intelligence in Nasr City, Cairo.**
 
-<img src="Images/System Diagram.png" alt="System Architecture Diagram" width="1080">
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Hugging%20Face-blue?style=for-the-badge&logo=huggingface)](https://mahmoudnagiubx-geoweather.hf.space/)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![MapLibre](https://img.shields.io/badge/Maps-MapLibre-396CB2?style=for-the-badge)](https://maplibre.org/)
+[![Machine Learning](https://img.shields.io/badge/ML-Scikit--Learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
 
----
-
-# 🌍 Project Vision
-
-Modern cities generate enormous amounts of data from:
-
-- infrastructure systems
-- transportation networks
-- environmental sensors
-- satellite imagery
-- citizen feedback platforms
-
-However, in many developing regions, including Egypt, these data sources remain **fragmented and underutilized**.
-
-This project builds a **digital twin of a city district** that continuously:
-
-- monitors urban conditions
-- detects emerging issues
-- predicts future risks
-- supports decision-making
-
-Instead of reacting **after problems occur**, city authorities can **anticipate risks, optimize resources, and improve urban resilience**.
+</div>
 
 ---
 
-# ⚠️ Urban Problems Addressed
+## 🚀 Live Application
 
-Urban areas face recurring challenges that are currently handled through **reactive systems**.
+Try the deployed application here:
 
-## 🛣 Infrastructure Issues
-- Road damage and potholes
-- Water pipeline leaks
-- Garbage accumulation
-- Unmonitored construction activity
+👉 **[Geo Weather Live Demo](https://mahmoudnagiubx-geoweather.hf.space/)**
 
-## 🌧 Environmental Risks
-- Sudden flooding after rainfall
-- Urban heat island effects
-- Poor waste management
+Health endpoints:
 
-## 🚗 Transportation Challenges
-- Traffic congestion
-- Emergency vehicle delays
-- Road closures and construction disruptions
-
-## 🏢 Administrative Challenges
-- Citizen complaints scattered across different platforms
-- Lack of centralized monitoring systems
-- Limited predictive tools for urban planning
-
-The platform introduces **predictive urban intelligence** using AI and geospatial modeling.
+- [`/api/weather-impact/health`](https://mahmoudnagiubx-geoweather.hf.space/api/weather-impact/health)
+- [`/api/weather-impact/heat/health`](https://mahmoudnagiubx-geoweather.hf.space/api/weather-impact/heat/health)
 
 ---
 
-# 🎯 Project Objectives
+## 📌 Project Overview
 
-The system aims to:
+**Geo Weather** is a full-stack geospatial AI project that demonstrates how smart-city systems can transform open urban data into practical decision-support intelligence.
 
-- Build a **digital twin model** of a city district
-- Integrate **multiple urban data sources** into one platform
-- Automatically **detect infrastructure and environmental problems**
-- **Predict urban risks** before they occur
-- Provide **decision-support tools** for planners
-- Improve **emergency response efficiency**
+The system focuses on **Nasr City, Cairo** and answers questions such as:
 
----
+- Which zones may become riskier after rainfall?
+- Which urban areas show stronger heat exposure?
+- How can weather affect emergency mobility and route safety?
+- Why does the model consider a zone or route risky?
+- How can live data, geospatial analysis, routing, and explainable AI work together in one dashboard?
 
-# 👥 Target Users
-
-## 🏛 Government Authorities
-Urban planning departments and municipal authorities.
-
-Use cases:
-- monitor infrastructure
-- prioritize repairs
-- analyze urban growth
-- manage city risks
-
-## 🚑 Emergency Services
-Ambulance, fire, and disaster response teams.
-
-Use cases:
-- identify optimal routes
-- avoid flooded streets
-- avoid traffic congestion
-
-## 🔬 Researchers and Analysts
-Urban planners and data scientists.
-
-Use cases:
-- analyze urban patterns
-- study city dynamics
-- evaluate smart-city models
-
-## 👨‍👩‍👧 Citizens *(Future Extension)*
-Public dashboards may allow citizens to:
-
-- view traffic conditions
-- report infrastructure issues
-- monitor environmental risks
+The project was built as a polished DP / capstone-style smart-city module and is designed to be understandable for evaluators, recruiters, and engineering reviewers.
 
 ---
 
-# 📍 Prototype Case Study
+## 🖼️ Screenshots
 
-The prototype will focus on **one district in Egypt**.
+### Landing Page
 
-### Recommended District
-**New Cairo**
+![Geo Weather Landing Page](docs/images/geoweather-landing-page.png)
 
-Reasons:
+### Rain Risk & Live Weather Dashboard
 
-- rapidly developing urban area
-- high construction activity
-- significant traffic congestion
-- strong satellite coverage
-- ideal for smart-city experimentation
+![Geo Weather Rain Dashboard](docs/images/geoweather-rain-dashboard.png)
 
-The architecture is **scalable to full cities in the future**.
+### Urban Heat Risk Mode
+
+![Geo Weather Heat Dashboard](docs/images/geoweather-heat-dashboard.png)
 
 ---
 
-# 🚀 System Modules
+## ✨ Key Features
 
-## MVP Modules
+### 1. Live Smart-City Weather Dashboard
 
-The first working version includes **seven core AI modules**.
+Geo Weather presents a clean operational dashboard with:
 
-### 🌊 Flood Prediction
-Predict flood-risk zones using:
+- current weather conditions
+- rainfall probability
+- wind speed and humidity
+- precipitation status
+- 7-day forecast
+- air quality information
+- map-based risk visualization
+- compact operational cards for quick understanding
 
-- rainfall
-- terrain elevation
-- drainage data
+### 2. Rain Risk Intelligence
 
-### 🚦 Traffic Prediction
-Forecast traffic congestion using **time-series models**.
+The rain-risk module estimates relative weather-impact risk using engineered geospatial and weather features. It visualizes risk zones directly on the map so users can understand the city situation spatially instead of reading raw numbers.
 
-### 🚧 Road Damage Detection
-Detect potholes and cracks using **computer vision models**.
+### 3. Weather-Aware Routing
 
-### 🏗 Construction Detection
-Identify new building activity using **satellite imagery change detection**.
+The project supports route intelligence designed around emergency mobility. The goal is not only to show a route, but to compare route choices under weather-impact conditions and help users understand safer movement options.
 
-### 🗣 Complaint Analysis
-Analyze Arabic citizen complaints using **NLP models**.
+### 4. Urban Heat Risk Module
 
-### 🗑 Garbage Monitoring
-Detect illegal waste dumping areas using **image analysis**.
+Geo Weather includes an urban heat risk mode that highlights areas with stronger heat impact using satellite-derived land-surface temperature patterns and engineered urban features.
 
-### 📊 District Risk Score
-Aggregate all signals into a **single district health score**.
+Heat mode includes:
 
----
+- hottest zone summary
+- maximum anomaly
+- analyzed zone count
+- heat exposure profile
+- heat model insight
+- heat safety guidance
 
-# 🔮 Advanced Modules (Future Work)
+### 5. Explainable AI Panels
 
-After the MVP, additional intelligence modules can be added.
+A core strength of the project is **explainability**. Users can inspect model-driven insights instead of only seeing a final score.
 
-- 🚑 Emergency Route Optimization
-- 🚰 Infrastructure Failure Prediction
-- 🌡 Urban Heat Island Detection
-- 💰 Economic Impact Estimation
-- 🤖 AI Urban Assistant (Natural Language Interface)
+The dashboard includes explanation areas for:
 
----
+- selected zones
+- route tradeoffs
+- model insight
+- important risk drivers
+- heat and weather-impact factors
 
-# 🧠 System Architecture
+### 6. Smart Search and Map Navigation
 
-The platform follows a **layered modular architecture**, enabling scalability and easier development.
+The project includes map search behavior to help users move quickly to streets, places, or important city features without manually panning and zooming across the map.
 
-## Architecture Layers
+### 7. Live Deployment
 
-### 1️⃣ Data Acquisition Layer
-Collects urban data from multiple sources:
-
-- weather APIs
-- traffic data
-- satellite imagery
-- citizen complaints
-- road images
-- infrastructure GIS layers
-- demographic datasets
+The application is deployed publicly using Hugging Face Spaces and can be opened by reviewers from a browser without local setup.
 
 ---
 
-### 2️⃣ Data Storage Layer
+## 🧠 What Makes This Project Strong
 
-Multiple storage systems are used:
+This is not just a weather dashboard. It combines multiple engineering layers into one working system:
 
-- **PostgreSQL** – structured data
-- **PostGIS** – geospatial data
-- **Object Storage** – images and satellite tiles
-- **Model Artifact Storage** – trained models
-- **Vector Storage** – embeddings for AI assistant
+| Layer | What It Does |
+|---|---|
+| Geospatial pipeline | Builds Nasr City boundaries, roads, zones, and map-ready layers |
+| Weather pipeline | Uses weather data to support live and scenario-based risk estimation |
+| Machine learning | Trains and exports risk models and model artifacts |
+| Urban heat analysis | Uses satellite-derived heat indicators and geospatial features |
+| Routing engine | Compares routes using weather-aware road risk logic |
+| Explainability | Shows why zones or routes are considered risky |
+| API layer | Exposes results through FastAPI endpoints |
+| Frontend dashboard | Provides a polished React + MapLibre interactive interface |
+| Deployment | Runs as a live application on Hugging Face Spaces |
 
----
+For recruiters, this project demonstrates:
 
-### 3️⃣ Data Processing Layer
-
-Responsible for:
-
-- data cleaning
-- geospatial transformations
-- NLP preprocessing
-- computer vision preprocessing
-- time-series feature engineering
-
----
-
-### 4️⃣ AI Intelligence Layer
-
-Core AI modules include:
-
-- Flood prediction
-- Traffic forecasting
-- Complaint analysis
-- Road damage detection
-- Construction detection
-- Garbage monitoring
-- Infrastructure stress prediction
-- Heat risk detection
-- Economic impact estimation
-
-Each module produces standardized geospatial outputs.
+- full-stack engineering
+- machine learning engineering
+- geospatial data processing
+- API design
+- frontend product thinking
+- deployment and debugging
+- explainable AI awareness
+- real-world smart-city problem solving
 
 ---
 
-### 5️⃣ Digital Twin Integration Layer
+## 🏗️ System Architecture
 
-This layer combines all AI outputs into a **virtual representation of the district**.
-
-The digital twin maintains the current state of:
-
-- traffic conditions
-- flood risks
-- infrastructure health
-- waste hotspots
-- construction activity
-- environmental stress
-
----
-
-### 6️⃣ Backend & API Layer
-
-Backend built with:
-
-**FastAPI**
-
-Responsibilities:
-
-- serve AI predictions
-- expose geospatial layers
-- generate risk alerts
-- provide analytics APIs
-
----
-
-### 7️⃣ Visualization Layer
-
-Frontend built using:
-
-**React + Mapbox**
-
-Dashboard features:
-
-- interactive city map
-- urban risk layers
-- analytics panels
-- alerts and warnings
-- emergency routing visualization
-
----
-
-# 📊 System Outputs
-
-The platform produces an **interactive urban intelligence dashboard** displaying:
-
-- flood risk zones
-- traffic congestion predictions
-- road damage locations
-- complaint hotspots
-- garbage accumulation areas
-- construction detection zones
-- infrastructure stress indicators
-
-It also generates:
-
-- district risk score
-- predictive alerts
-- urban analytics insights
-
----
-
-# 🛠 Technologies Used
-
-## Machine Learning
-- Random Forest
-- Gradient Boosting
-- CNN-LSTM
-
-## Computer Vision
-- YOLO
-- U-Net
-- Mask R-CNN
-
-## Natural Language Processing
-- AraBERT
-- CAMeLBERT
-- AraBART
-
-## Geospatial Analytics
-- GeoPandas
-- PostGIS
-
-## Backend
-- FastAPI
-
-## Frontend
-- React
-- Mapbox
-
----
-
-# 📂 Proposed Project Structure
-```smart-urban-intelligence/
-│
-├── backend/
-│ ├── api/
-│ ├── services/
-│ ├── ml_models/
-│ ├── preprocessing/
-│ └── database/
-│
-├── frontend/
-│ ├── dashboard/
-│ ├── map_layers/
-│ └── analytics_panels/
-│
-├── datasets/
-├── notebooks/
-├── models/
-└── docs/
+```text
+Open Data Sources
+    ↓
+Geospatial Processing Pipeline
+    ↓
+Weather + Heat + Road Feature Engineering
+    ↓
+Risk Models and Route Calculations
+    ↓
+FastAPI Backend
+    ↓
+React + TypeScript + MapLibre Dashboard
+    ↓
+Live Hugging Face Deployment
 ```
 
 ---
 
-# 📈 Success Criteria
+## 🗺️ Data Sources
 
-The project will be considered successful if it achieves:
+Geo Weather is designed around open and accessible data sources, including:
 
-- a working **digital twin dashboard**
-- integration of **multiple AI modules**
-- reliable **urban risk prediction**
-- accurate **geospatial visualization**
-- actionable **decision-support insights**
-
----
-
-# 🔮 Future Impact
-
-This project can evolve into a **full smart-city intelligence platform** capable of:
-
-- city-scale digital twins
-- autonomous urban monitoring
-- AI-driven infrastructure planning
-- predictive disaster management
-
-It demonstrates how **AI can transform urban governance and sustainability**.
+- **OpenStreetMap / OSMnx** — road network, map context, and urban features
+- **Open-Meteo** — live and forecast weather data
+- **Landsat** — satellite-derived land-surface temperature indicators for heat analysis
+- **GHSL Built-Up Surface** — built environment density indicators
+- **ESA WorldCover** — land-cover and vegetation-related features
+- **SRTM elevation data** — elevation and slope context where applicable
+- **MapLibre / OpenStreetMap tiles** — browser-based map rendering
 
 ---
 
-# 👨‍💻 Authors
+## 🤖 Machine Learning & Analytics
 
-Machine Learning Engineering Students  
-AI / Data Science Enthusiast  
+The project uses a hybrid approach:
+
+1. **Rule-based geospatial scoring** for interpretable early-stage risk estimation.
+2. **Machine learning models** for stronger tabular risk prediction and model artifacts.
+3. **Explainability outputs** for human-readable model reasoning.
+
+Implemented model and analytics work includes:
+
+- weather-impact risk modeling
+- urban heat anomaly modeling
+- feature engineering reports
+- model benchmark reports
+- exported model artifacts
+- route comparison outputs
+- zone-level explanation factors
+
+---
+
+## 🧪 Verified Quality Checks
+
+The project has been developed with automated verification and repeated build checks.
+
+Latest reported verification included:
+
+- **Backend tests:** `146 / 146` passing
+- **Frontend tests:** `43 / 43` passing
+- **Frontend production build:** passing
+- **Live backend health endpoint:** working
+- **Live heat health endpoint:** working
+- **Hugging Face deployment:** running
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+
+- Python
+- FastAPI
+- Pydantic
+- GeoPandas
+- Shapely
+- OSMnx
+- NetworkX
+- scikit-learn
+- Uvicorn
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- MapLibre GL JS
+- Tailwind CSS
+- Framer Motion / motion UI patterns
+
+### Data / ML / Geospatial
+
+- OpenStreetMap
+- Open-Meteo
+- Landsat-derived heat features
+- GHSL built-up features
+- ESA WorldCover
+- GeoJSON spatial layers
+- Joblib model artifacts
+
+### Deployment
+
+- Hugging Face Spaces
+- Docker
+- Git LFS for large geospatial/model files
+
+---
+
+## 📁 Repository Structure
+
+```text
+.
+├── backend/
+│   └── app/
+│       ├── main.py
+│       ├── config.py
+│       ├── tests/
+│       └── weather_impact/
+│           ├── router.py
+│           ├── service.py
+│           ├── weather.py
+│           ├── routing.py
+│           ├── heat.py
+│           ├── heat_model.py
+│           ├── heat_service.py
+│           ├── explain.py
+│           ├── schemas.py
+│           └── paths.py
+│
+├── frontend/
+│   ├── src/
+│   │   ├── App.tsx
+│   │   ├── components/
+│   │   ├── api/
+│   │   └── styles/
+│   └── package.json
+│
+├── docs/
+│   ├── images/
+│   └── nasr_city_weather_impact/
+│
+├── deliverables/
+│   ├── presentation/
+│   ├── source_code_zip/
+│   ├── team_excel/
+│   └── video_demo/
+│
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## ⚙️ Run Locally
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/MahmoudNagiubX/Egypt-Smart-City-Digital-Twin.git
+cd Egypt-Smart-City-Digital-Twin
+```
+
+### 2. Backend setup
+
+#### Windows PowerShell
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r backend\requirements.txt
+```
+
+Run the backend:
+
+```powershell
+python -m uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Open:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### 3. Frontend setup
+
+Open a second terminal:
+
+```powershell
+cd frontend
+npm install
+Set-Content -Path ".env.local" -Value "VITE_API_BASE_URL=http://127.0.0.1:8000/api/weather-impact"
+npm run dev
+```
+
+Open the local frontend URL shown by Vite, usually:
+
+```text
+http://127.0.0.1:5173/
+```
+
+---
+
+## ✅ Test Commands
+
+### Backend
+
+```bash
+pytest backend/app/tests
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm test
+npm run build
+```
+
+---
+
+## 🔌 Example API Endpoints
+
+```http
+GET /api/weather-impact/health
+GET /api/weather-impact/search
+GET /api/weather-impact/heat/health
+GET /api/weather-impact/heat/layer/latest
+GET /api/weather-impact/heat/summary
+GET /api/weather-impact/heat/explain/zone/{zone_code}
+GET /api/weather-impact/heat/model/summary
+```
+
+Live examples:
+
+- [Backend health](https://mahmoudnagiubx-geoweather.hf.space/api/weather-impact/health)
+- [Heat health](https://mahmoudnagiubx-geoweather.hf.space/api/weather-impact/heat/health)
+
+---
+
+## 🎯 Recruiter Review Path
+
+If you are reviewing this project quickly, start here:
+
+1. Open the **Live Demo**.
+2. View the landing page and dashboard layout.
+3. Switch between **Rain Risk** and **Heat Risk** modes.
+4. Open the map controls and inspect layers.
+5. Click a zone and view explainability.
+6. Check the FastAPI health endpoints.
+7. Review the backend `weather_impact` package.
+8. Review the React dashboard components.
+
+This gives a clear view of the product, engineering depth, and ML/geospatial work.
+
+---
+
+## 🧩 Why This Matters
+
+Cities are affected by weather in ways that are spatial, operational, and time-sensitive. A normal weather app tells you the temperature. Geo Weather goes further by connecting weather to:
+
+- risky areas
+- road movement
+- emergency mobility
+- urban heat exposure
+- explainable model reasoning
+- geospatial decision support
+
+This makes the project relevant for:
+
+- smart city teams
+- emergency response planning
+- urban analytics
+- logistics and mobility systems
+- geospatial AI research
+- climate resilience tools
+
+---
+
+## 🧭 Future Improvements
+
+Potential next steps:
+
+- add more districts beyond Nasr City
+- connect local IoT weather stations
+- improve road-speed calibration with live traffic sources
+- add user role management for city operators
+- enhance route simulation under severe weather scenarios
+- add timeline playback for historical weather events
+- expand heat risk validation with more satellite scenes
+- package the dashboard as a reusable smart-city module
+
+---
+
+## 👤 Author
+
+**Mahmoud Nagib**  
+Software Engineering Student · AI / ML & Full-Stack Engineering  
+
+- GitHub: [@MahmoudNagiubX](https://github.com/MahmoudNagiubX)
+- Live Project: [Geo Weather](https://mahmoudnagiubx-geoweather.hf.space/)
+
+---
+
+## ⭐ Closing Note
+
+Geo Weather demonstrates how AI, geospatial data, and full-stack engineering can be combined into a practical smart-city decision-support product.
+
+It is a prototype, but it is built with a production-style mindset: APIs, maps, tests, deployment, model artifacts, documentation, and a clear real-world use case.
