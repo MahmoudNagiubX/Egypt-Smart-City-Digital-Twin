@@ -8,11 +8,16 @@
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Hugging%20Face-blue?style=for-the-badge&logo=huggingface)](https://mahmoudnagiubx-geoweather.hf.space/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![MapLibre](https://img.shields.io/badge/Maps-MapLibre-396CB2?style=for-the-badge)](https://maplibre.org/)
 [![Machine Learning](https://img.shields.io/badge/ML-Scikit--Learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
 
 </div>
+
+---
+
+### Landing Page
+
+![Geo Weather Landing Page](docs/images/geoweather-landing-page.png)
 
 ---
 
@@ -46,10 +51,6 @@ The project was built as a polished DP / capstone-style smart-city module and is
 ---
 
 ## 🖼️ Screenshots
-
-### Landing Page
-
-![Geo Weather Landing Page](docs/images/geoweather-landing-page.png)
 
 ### Rain Risk & Live Weather Dashboard
 
