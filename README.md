@@ -27,11 +27,6 @@ Try the deployed application here:
 
 👉 **[Geo Weather Live Demo](https://mahmoudnagiubx-geoweather.hf.space/)**
 
-Health endpoints:
-
-- [`/api/weather-impact/health`](https://mahmoudnagiubx-geoweather.hf.space/api/weather-impact/health)
-- [`/api/weather-impact/heat/health`](https://mahmoudnagiubx-geoweather.hf.space/api/weather-impact/heat/health)
-
 ---
 
 ## 📌 Project Overview
